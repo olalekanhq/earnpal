@@ -138,7 +138,7 @@ function Dashboard() {
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground leading-none mb-1">Current Balance</p>
-                <p className="text-2xl font-black text-foreground leading-none">{profile?.points_balance?.toLocaleString() || 0} <span className="text-xs font-bold text-primary align-top ml-1">PTS</span></p>
+                <p className="text-3xl font-black text-foreground leading-none">{profile?.points_balance?.toLocaleString() || 0} <span className="text-xs font-bold text-primary align-top ml-1">POINTS</span></p>
               </div>
             </div>
           </div>
