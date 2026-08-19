@@ -112,7 +112,8 @@ export function TasksManager() {
       category: task.category || "social",
       is_active: task.is_active,
       link_url: task.link_url || "",
-      verification_required: task.verification_required || false
+      verification_required: task.verification_required || false,
+      is_featured: task.is_featured || false
     });
     setIsDialogOpen(true);
   };
