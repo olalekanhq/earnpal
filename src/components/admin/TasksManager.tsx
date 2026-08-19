@@ -15,12 +15,15 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star, Search, Filter } from "lucide-react";
 
 export function TasksManager() {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterActive, setFilterActive] = useState<"all" | "active" | "inactive">("all");
+  const [filterFeatured, setFilterFeatured] = useState<"all" | "featured" | "standard">("all");
   
   const [formData, setFormData] = useState({
     title: "",
@@ -118,28 +121,38 @@ export function TasksManager() {
     setIsDialogOpen(true);
   };
 
-  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+  
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h3 className="text-xl font-black uppercase tracking-tight">Manage Tasks</h3>
           <p className="text-sm text-muted-foreground font-medium">Create activities for users to earn points.</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) {
-            setEditingTask(null);
-            resetForm();
-          }
-        }}>
-          <DialogTrigger asChild>
-            <Button className="rounded-xl font-black uppercase tracking-widest text-xs h-11 shadow-lg shadow-primary/20">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Task
-            </Button>
-          </DialogTrigger>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search tasks..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 h-11 w-full md:w-64 rounded-xl border-border/50 bg-background"
+            />
+          </div>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) {
+              setEditingTask(null);
+              resetForm();
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button className="rounded-xl font-black uppercase tracking-widest text-xs h-11 shadow-lg shadow-primary/20">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Task
+              </Button>
+            </DialogTrigger>
           <DialogContent className="rounded-2xl max-w-md">
             <DialogHeader>
               <DialogTitle className="font-black text-xl uppercase tracking-tight">
@@ -249,6 +262,50 @@ export function TasksManager() {
         </Dialog>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2">
+        <Button 
+          variant={filterActive === "all" ? "default" : "outline"} 
+          size="sm" 
+          className="rounded-lg font-bold px-3 h-8 text-[10px] uppercase tracking-wider"
+          onClick={() => setFilterActive("all")}
+        >
+          All Status
+        </Button>
+        <Button 
+          variant={filterActive === "active" ? "default" : "outline"} 
+          size="sm" 
+          className="rounded-lg font-bold px-3 h-8 text-[10px] uppercase tracking-wider"
+          onClick={() => setFilterActive("active")}
+        >
+          Active
+        </Button>
+        <Button 
+          variant={filterActive === "inactive" ? "default" : "outline"} 
+          size="sm" 
+          className="rounded-lg font-bold px-3 h-8 text-[10px] uppercase tracking-wider"
+          onClick={() => setFilterActive("inactive")}
+        >
+          Inactive
+        </Button>
+        <div className="w-px h-4 bg-border/50 mx-1" />
+        <Button 
+          variant={filterFeatured === "all" ? "default" : "outline"} 
+          size="sm" 
+          className="rounded-lg font-bold px-3 h-8 text-[10px] uppercase tracking-wider"
+          onClick={() => setFilterFeatured("all")}
+        >
+          All Tasks
+        </Button>
+        <Button 
+          variant={filterFeatured === "featured" ? "default" : "outline"} 
+          size="sm" 
+          className="rounded-lg font-bold px-3 h-8 text-[10px] uppercase tracking-wider"
+          onClick={() => setFilterFeatured("featured")}
+        >
+          Featured
+        </Button>
+      </div>
+
       <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
         <Table>
           <TableHeader>
@@ -261,14 +318,32 @@ export function TasksManager() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tasks?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground font-medium">
-                  No tasks created yet.
-                </TableCell>
+            {isLoading ? (
+               <TableRow>
+                <TableCell colSpan={5} className="text-center py-12"><Loader2 className="h-8 w-8 animate-spin mx-auto" /></TableCell>
               </TableRow>
-            ) : (
-              tasks?.map((task: any) => (
+            ) : (() => {
+              const filtered = tasks?.filter((task: any) => {
+                const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                    task.description?.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesActive = filterActive === "all" ? true : 
+                                    (filterActive === "active" ? task.is_active : !task.is_active);
+                const matchesFeatured = filterFeatured === "all" ? true : 
+                                      (filterFeatured === "featured" ? task.is_featured : !task.is_featured);
+                return matchesSearch && matchesActive && matchesFeatured;
+              });
+
+              if (!filtered || filtered.length === 0) {
+                return (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-12 text-muted-foreground font-medium">
+                      No tasks found matching your filters.
+                    </TableCell>
+                  </TableRow>
+                );
+              }
+
+              return filtered.map((task: any) => (
                 <TableRow key={task.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
                     <div className="flex items-center gap-2">
@@ -326,9 +401,8 @@ export function TasksManager() {
                       </Button>
                     </div>
                   </TableCell>
-                </TableRow>
-              ))
-            )}
+              );
+            })()}
           </TableBody>
         </Table>
       </div>
