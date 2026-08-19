@@ -113,7 +113,7 @@ export function Navigation() {
       <div className="flex-1 space-y-8">
         {menuGroups.map((group) => (
           <div key={group.label} className="space-y-2">
-            <h3 className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <h3 className="px-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
               {group.label}
             </h3>
             <div className="space-y-1">
