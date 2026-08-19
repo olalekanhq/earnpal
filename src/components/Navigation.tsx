@@ -223,7 +223,7 @@ export function Navigation() {
       {/* Mobile Top Bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border-b border-border/40 shadow-sm">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5">
+          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5" aria-label="Open menu">
             <Menu className="h-6 w-6 text-foreground" />
           </Button>
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter text-primary">
@@ -236,7 +236,7 @@ export function Navigation() {
            <NotificationsPopover />
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background" aria-label="User menu">
                 <Avatar className="h-full w-full">
                   <AvatarImage src={profile?.avatar_url || ""} />
                   <AvatarFallback className="bg-primary/5 text-primary">
@@ -301,6 +301,7 @@ export function Navigation() {
             size="icon" 
             className="absolute right-2 top-2"
             onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -343,7 +344,7 @@ export function Navigation() {
           <NotificationsPopover />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background transition-transform hover:scale-105 active:scale-95">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background transition-transform hover:scale-105 active:scale-95" aria-label="User profile menu">
                 <Avatar className="h-full w-full">
                   <AvatarImage src={profile?.avatar_url || ""} />
                   <AvatarFallback className="bg-primary/5 text-primary">
