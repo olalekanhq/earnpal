@@ -113,8 +113,8 @@ function LandingPage() {
       <section className="py-24 bg-[#F8F9FB] border-t border-border/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="text-sm font-bold uppercase text-primary tracking-widest">Platform Features</span>
-            <h2 className="text-4xl md:text-5xl font-bold uppercase mt-4">Everything you need to scale</h2>
+            <span className="text-xs font-bold uppercase text-primary tracking-widest">Platform Features</span>
+            <h2 className="text-4xl md:text-5xl font-black mt-4">Everything you need to scale</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
