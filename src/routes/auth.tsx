@@ -306,7 +306,7 @@ function AuthPage() {
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10">
         {/* Auth Card Side */}
         <div className="flex justify-center order-2 lg:order-1">
           <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] flex flex-col max-h-[90dvh]">
