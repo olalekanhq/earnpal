@@ -145,8 +145,8 @@ export function Navigation() {
         <div className="flex items-center gap-3 px-2 mb-6">
           <Avatar className="h-10 w-10 border border-border shadow-sm">
             <AvatarImage src={profile?.avatar_url || ""} />
-            <AvatarFallback className="bg-primary/10 text-primary font-bold">
-              {profile?.username?.[0]?.toUpperCase() || profile?.full_name?.[0]?.toUpperCase() || "?"}
+            <AvatarFallback className="bg-primary/5 text-primary">
+              <User className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
@@ -179,10 +179,10 @@ export function Navigation() {
         </Link>
         <div className="flex items-center gap-2">
            <NotificationsPopover />
-           <Avatar className="h-8 w-8 border shadow-sm">
+           <Avatar className="h-9 w-9 border-2 border-primary/10 shadow-sm">
             <AvatarImage src={profile?.avatar_url || ""} />
-            <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
-              {profile?.username?.[0]?.toUpperCase() || "?"}
+            <AvatarFallback className="bg-primary/5 text-primary">
+              <User className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
         </div>
@@ -212,7 +212,7 @@ export function Navigation() {
       </aside>
 
       {/* Desktop Top Header (for desktop view only) */}
-      <header className="hidden md:flex fixed top-0 right-0 z-30 h-16 items-center justify-end px-8 bg-background/50 backdrop-blur-sm pointer-events-none">
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-end px-8 bg-transparent pointer-events-none">
         <div className="flex items-center gap-4 pointer-events-auto">
           <div className="flex items-center gap-3 bg-white border border-border/50 shadow-sm px-4 py-1.5 rounded-full">
             <Coins className="h-4 w-4 text-primary" strokeWidth={2} />
