@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as LandingRouteImport } from './routes/landing'
 import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -33,9 +35,19 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
   path: '/earn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RedeemRoute = RedeemRouteImport.update({
@@ -63,7 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
+  '/landing': typeof LandingRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -73,7 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
+  '/landing': typeof LandingRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -84,7 +100,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
+  '/landing': typeof LandingRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -96,7 +114,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/dashboard'
     | '/earn'
+    | '/landing'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -106,7 +126,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/dashboard'
     | '/earn'
+    | '/landing'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -116,7 +138,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/dashboard'
     | '/earn'
+    | '/landing'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -127,7 +151,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   EarnRoute: typeof EarnRoute
+  LandingRoute: typeof LandingRoute
   RedeemRoute: typeof RedeemRoute
   ReferRoute: typeof ReferRoute
   SettingsRoute: typeof SettingsRoute
@@ -156,11 +182,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/earn': {
       id: '/earn'
       path: '/earn'
       fullPath: '/earn'
       preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/redeem': {
@@ -208,7 +248,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   EarnRoute: EarnRoute,
+  LandingRoute: LandingRoute,
   RedeemRoute: RedeemRoute,
   ReferRoute: ReferRoute,
   SettingsRoute: SettingsRoute,

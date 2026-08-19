@@ -11,7 +11,8 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const isAuthPage = location.pathname === "/auth";
-  if (isAuthPage) return null;
+  const isLandingPage = location.pathname === "/";
+  if (isAuthPage || isLandingPage) return null;
 
   const { data: profile } = useQuery({
     queryKey: ["profile"],
@@ -39,7 +40,7 @@ export function Navigation() {
   };
 
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Earn", href: "/earn", icon: Coins },
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
