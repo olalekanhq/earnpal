@@ -64,9 +64,9 @@ function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Unified Control in One Dashboard</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
-              <Button className="font-bold uppercase" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Unified Control in One Dashboard</h2>
+              <p className="text-lg text-muted-foreground font-medium leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
+              <Button className="font-bold rounded-xl h-12 px-8" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
             </div>
             <div className="bg-white p-4 rounded-3xl border shadow-2xl shadow-primary/10 rotate-2 hover:rotate-0 transition-transform">
                <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center border">
