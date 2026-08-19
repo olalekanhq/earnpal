@@ -11,7 +11,8 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const isAuthPage = location.pathname === "/auth";
-  if (isAuthPage) return null;
+  const isLandingPage = location.pathname === "/";
+  if (isAuthPage || isLandingPage) return null;
 
   const { data: profile } = useQuery({
     queryKey: ["profile"],
