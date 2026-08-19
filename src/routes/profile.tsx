@@ -159,7 +159,7 @@ function ProfilePage() {
               </div>
               <div className="space-y-0.5">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Referrals</p>
-                <p className="font-bold">{referralCount}</p>
+                <p className="font-black">{referralCount}</p>
               </div>
             </div>
 
