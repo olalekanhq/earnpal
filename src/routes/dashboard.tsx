@@ -128,7 +128,7 @@ function Dashboard() {
               Welcome, <span className="text-primary">{profile?.username || profile?.full_name?.split(' ')[0] || 'User'}</span>
             </h1>
             <p className="mt-2 text-lg text-muted-foreground font-medium">
-              You've accumulated <span className="text-foreground font-black underline decoration-primary underline-offset-4">{profile?.points_balance?.toLocaleString() || 0}</span> points.
+              You've accumulated <span className="text-foreground font-black underline decoration-primary decoration-4 underline-offset-4">{profile?.points_balance?.toLocaleString() || 0}</span> points.
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -138,7 +138,7 @@ function Dashboard() {
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground leading-none mb-1">Current Balance</p>
-                <p className="text-2xl font-black text-foreground leading-none">{profile?.points_balance?.toLocaleString() || 0} <span className="text-xs font-bold text-primary align-top ml-1">PTS</span></p>
+                <p className="text-3xl font-black text-foreground leading-none">{profile?.points_balance?.toLocaleString() || 0} <span className="text-xs font-bold text-primary align-top ml-1">POINTS</span></p>
               </div>
             </div>
           </div>
@@ -319,7 +319,7 @@ function Dashboard() {
                         <p className="text-xs font-bold text-primary uppercase">
                           {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
                             ? 'Already Claimed'
-                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS`
+                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} POINTS`
                           }
                         </p>
                       </div>
