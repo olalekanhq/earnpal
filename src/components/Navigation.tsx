@@ -1,23 +1,28 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield, Settings, User } from "lucide-react";
+import { 
+  Coins, 
+  LayoutDashboard, 
+  Gift, 
+  Share2, 
+  LogOut, 
+  Menu, 
+  X, 
+  Shield, 
+  Settings, 
+  User,
+  Bell
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { NotificationsPopover } from "./NotificationsPopover";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Navigation() {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isAuthPage = location.pathname === "/auth";
   const isLandingPage = location.pathname === "/";
@@ -76,111 +81,149 @@ export function Navigation() {
     window.location.href = "/auth";
   };
 
-  const navItems = [
-    { name: "Earn", href: "/earn", icon: Coins },
-    { name: "Referral", href: "/refer", icon: Share2 },
-    ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: Shield }] : []),
-    { name: "Profile", href: "/profile", icon: User },
-    { name: "Settings", href: "/settings", icon: Settings },
+  const menuGroups = [
+    {
+      label: "Main Menu",
+      items: [
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { name: "Earn Points", href: "/earn", icon: Coins },
+        { name: "Redeem", href: "/redeem", icon: Gift },
+        { name: "Referral", href: "/refer", icon: Share2 },
+      ]
+    },
+    {
+      label: "Account",
+      items: [
+        { name: "Profile", href: "/profile", icon: User },
+        { name: "Settings", href: "/settings", icon: Settings },
+        ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", icon: Shield }] : []),
+      ]
+    }
   ];
 
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full py-6 px-4">
+      <div className="flex items-center gap-3 px-2 mb-8">
+        <div className="bg-primary p-2 rounded-xl">
+          <Coins className="h-6 w-6 text-primary-foreground" />
+        </div>
+        <span className="font-bold text-xl tracking-tight">Earn Pal</span>
+      </div>
+
+      <div className="flex-1 space-y-8">
+        {menuGroups.map((group) => (
+          <div key={group.label} className="space-y-2">
+            <h3 className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {group.label}
+            </h3>
+            <div className="space-y-1">
+              {group.items.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                    location.pathname === item.href
+                      ? "bg-primary/10 text-primary shadow-sm"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "h-5 w-5 transition-colors",
+                    location.pathname === item.href ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                  )} strokeWidth={1.8} />
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-auto pt-6 border-t border-border/50">
+        <div className="flex items-center gap-3 px-2 mb-6">
+          <Avatar className="h-10 w-10 border border-border shadow-sm">
+            <AvatarImage src={profile?.avatar_url || ""} />
+            <AvatarFallback className="bg-primary/10 text-primary font-bold">
+              {profile?.username?.[0]?.toUpperCase() || profile?.full_name?.[0]?.toUpperCase() || "?"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold truncate">{profile?.username || "User"}</p>
+            <p className="text-xs text-muted-foreground truncate">{profile?.full_name || ""}</p>
+          </div>
+        </div>
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl px-3 h-11"
+          onClick={handleLogout}
+        >
+          <LogOut className="mr-3 h-5 w-5" strokeWidth={1.8} />
+          <span className="font-medium">Logout</span>
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl text-primary hover:opacity-80 transition-opacity">
-          <Coins className="h-6 w-6" />
+    <>
+      {/* Mobile Top Bar */}
+      <div className="md:hidden sticky top-0 z-40 w-full flex items-center justify-between h-16 px-4 bg-background/80 backdrop-blur-md border-b">
+        <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
+          <Menu className="h-6 w-6" />
+        </Button>
+        <Link to="/dashboard" className="flex items-center gap-2 font-bold text-lg">
+          <Coins className="h-5 w-5 text-primary" />
           <span>Earn Pal</span>
         </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {navItems.filter(item => item.name !== "Profile" && item.name !== "Settings").map((item) => (
-            <Link 
-
-              key={item.name} 
-              to={item.href}
-              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === item.href ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.name}
-            </Link>
-          ))}
-        </div>
-
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
-            <Coins className="h-4 w-4 text-primary" />
-            <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
-          </div>
-          <NotificationsPopover />
-          <Button variant="ghost" size="icon" asChild title="Profile">
-            <Link to="/profile">
-              <User className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button variant="ghost" size="icon" asChild title="Settings">
-            <Link to="/settings">
-              <Settings className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
-            <LogOut className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Mobile Nav Toggle */}
-        <div className="md:hidden flex items-center gap-2">
-          <div className="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 mr-2">
-            <Coins className="h-4 w-4 text-primary" />
-            <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
-          </div>
-          <NotificationsPopover />
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full h-9 w-9 border"
-                aria-label="Open menu"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 mt-2 rounded-xl">
-              <DropdownMenuLabel>
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{profile?.username || 'User'}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{profile?.full_name || ''}</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {navItems.map((item) => (
-                <DropdownMenuItem key={item.name} asChild>
-                  <Link 
-                    to={item.href}
-                    className="flex items-center w-full gap-2 cursor-pointer"
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="text-destructive focus:text-destructive cursor-pointer"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex items-center gap-2">
+           <NotificationsPopover />
+           <Avatar className="h-8 w-8 border shadow-sm">
+            <AvatarImage src={profile?.avatar_url || ""} />
+            <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
+              {profile?.username?.[0]?.toUpperCase() || "?"}
+            </AvatarFallback>
+          </Avatar>
         </div>
       </div>
-    </nav>
 
+      {/* Mobile Overlay Sidebar */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="relative w-72 h-full bg-background animate-in slide-in-from-left duration-300">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-2 top-2"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            <SidebarContent />
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-background border-r">
+        <SidebarContent />
+      </aside>
+
+      {/* Desktop Top Header (for desktop view only) */}
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-16 items-center justify-end px-8 bg-background/50 backdrop-blur-sm pointer-events-none">
+        <div className="flex items-center gap-4 pointer-events-auto">
+          <div className="flex items-center gap-3 bg-white border shadow-sm px-4 py-1.5 rounded-full">
+            <Coins className="h-4 w-4 text-primary" strokeWidth={2} />
+            <span className="text-sm font-bold text-foreground">
+              {profile?.points_balance?.toLocaleString() || 0}
+              <span className="text-[10px] text-muted-foreground ml-1 font-semibold uppercase tracking-wider">Points</span>
+            </span>
+          </div>
+          <NotificationsPopover />
+        </div>
+      </header>
+    </>
   );
 }

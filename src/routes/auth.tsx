@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { Coins, Loader2, Mail, Lock, User, CheckCircle2 } from "lucide-react";
+import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -263,19 +263,25 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-1 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4 relative overflow-hidden">
+      {/* Abstract Background Shapes */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+
+      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white/80 backdrop-blur-xl">
+        <CardHeader className="space-y-2 text-center pb-8">
           <div className="flex justify-center mb-4">
-            <div className="flex items-center gap-2 font-black text-2xl text-primary">
-              <Coins className="h-8 w-8" />
+            <div className="flex items-center gap-3 font-bold text-3xl text-primary tracking-tight">
+              <div className="bg-primary p-2 rounded-2xl shadow-lg shadow-primary/20">
+                <Coins className="h-8 w-8 text-primary-foreground" />
+              </div>
               <span>EARN PAL</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-black uppercase">
-            {showReset ? "Reset Password" : "Welcome"}
+          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+            {showReset ? "Reset Password" : "Welcome back"}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-muted-foreground font-medium">
             {showReset 
               ? "Enter your email to receive a reset link" 
               : "Access your dashboard to start earning rewards"}
@@ -322,27 +328,28 @@ function AuthPage() {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-11 font-black uppercase" disabled={resetLoading}>
+              <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {resetSent ? "RESEND LINK" : "SEND RESET LINK"}
               </Button>
               <Button 
                 type="button" 
-                variant="link" 
-                className="w-full font-bold"
+                variant="ghost" 
+                className="w-full font-bold rounded-xl text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowReset(false);
                   setError("");
                 }}
               >
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 BACK TO LOGIN
               </Button>
             </form>
           ) : (
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="font-bold">Log in</TabsTrigger>
-                <TabsTrigger value="signup" className="font-bold">Sign up</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl">
+                <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
+                <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
               </TabsList>
               <TabsContent value="login">
                 <form onSubmit={handleEmailLogin} className="space-y-4 pt-4">
@@ -387,7 +394,7 @@ function AuthPage() {
                       />
                     </div>
                   </div>
-                  <Button type="submit" className="w-full h-11 font-black uppercase" disabled={loading}>
+                  <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10 mt-2" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Log in
                   </Button>
@@ -461,7 +468,7 @@ function AuthPage() {
                       onChange={(e) => setReferralCode(e.target.value)}
                     />
                   </div>
-                  <Button type="submit" className="w-full h-11 font-black uppercase mt-2" disabled={loading}>
+                  <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10 mt-4" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
