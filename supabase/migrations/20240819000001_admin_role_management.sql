@@ -12,8 +12,7 @@ BEGIN
     END IF;
 END $$;
 
--- Policies for user_roles to allow admins to manage roles
--- We use a security definer function to avoid recursion
+-- Role management functions
 CREATE OR REPLACE FUNCTION public.assign_role(target_user_id UUID, new_role public.app_role)
 RETURNS void
 LANGUAGE plpgsql
@@ -21,7 +20,6 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- Check if the executor is an admin
   IF NOT EXISTS (
     SELECT 1 FROM public.user_roles 
     WHERE user_id = auth.uid() AND role = 'admin'
@@ -42,7 +40,6 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- Check if the executor is an admin
   IF NOT EXISTS (
     SELECT 1 FROM public.user_roles 
     WHERE user_id = auth.uid() AND role = 'admin'
