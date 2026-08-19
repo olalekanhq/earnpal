@@ -143,10 +143,10 @@ function LandingPage() {
           <h2 className="text-4xl md:text-6xl font-black tracking-tight">Ready to start earning?</h2>
           <p className="text-xl opacity-90 font-medium max-w-2xl mx-auto">Join thousands of users who are already turning their daily digital activity into real-world rewards.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-bold uppercase shadow-xl" asChild>
+            <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-bold shadow-xl rounded-xl bg-white text-primary hover:bg-white/90 border-none" asChild>
               <Link to="/auth">Create your account →</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-bold border-primary-foreground/20 hover:bg-primary-foreground/10 uppercase" asChild>
+            <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-bold border-white/20 hover:bg-white/10 text-white rounded-xl" asChild>
               <Link to="/auth">Log in</Link>
             </Button>
           </div>
