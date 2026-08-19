@@ -166,6 +166,7 @@ function RedeemPage() {
           </div>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
