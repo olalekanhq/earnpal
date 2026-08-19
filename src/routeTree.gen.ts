@@ -20,6 +20,8 @@ import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
+import { Route as ApiPublicSitemapRouteImport } from './routes/api/public/sitemap'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +78,16 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const ApiPublicRobotsRoute = ApiPublicRobotsRouteImport.update({
+  id: '/api/public/robots',
+  path: '/api/public/robots',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSitemapRoute = ApiPublicSitemapRouteImport.update({
+  id: '/api/public/sitemap',
+  path: '/api/public/sitemap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +101,8 @@ export interface FileRoutesByFullPath {
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/robots': typeof ApiPublicRobotsRoute
+  '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +116,8 @@ export interface FileRoutesByTo {
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/robots': typeof ApiPublicRobotsRoute
+  '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +132,8 @@ export interface FileRoutesById {
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/robots': typeof ApiPublicRobotsRoute
+  '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +149,8 @@ export interface FileRouteTypes {
     | '/refer'
     | '/settings'
     | '/auth/callback'
+    | '/api/public/robots'
+    | '/api/public/sitemap'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +164,8 @@ export interface FileRouteTypes {
     | '/refer'
     | '/settings'
     | '/auth/callback'
+    | '/api/public/robots'
+    | '/api/public/sitemap'
   id:
     | '__root__'
     | '/'
@@ -157,6 +179,8 @@ export interface FileRouteTypes {
     | '/refer'
     | '/settings'
     | '/auth/callback'
+    | '/api/public/robots'
+    | '/api/public/sitemap'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,6 +194,8 @@ export interface RootRouteChildren {
   RedeemRoute: typeof RedeemRoute
   ReferRoute: typeof ReferRoute
   SettingsRoute: typeof SettingsRoute
+  ApiPublicRobotsRoute: typeof ApiPublicRobotsRoute
+  ApiPublicSitemapRoute: typeof ApiPublicSitemapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -251,6 +277,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/api/public/robots': {
+      id: '/api/public/robots'
+      path: '/api/public/robots'
+      fullPath: '/api/public/robots'
+      preLoaderRoute: typeof ApiPublicRobotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/sitemap': {
+      id: '/api/public/sitemap'
+      path: '/api/public/sitemap'
+      fullPath: '/api/public/sitemap'
+      preLoaderRoute: typeof ApiPublicSitemapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -275,6 +315,8 @@ const rootRouteChildren: RootRouteChildren = {
   RedeemRoute: RedeemRoute,
   ReferRoute: ReferRoute,
   SettingsRoute: SettingsRoute,
+  ApiPublicRobotsRoute: ApiPublicRobotsRoute,
+  ApiPublicSitemapRoute: ApiPublicSitemapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

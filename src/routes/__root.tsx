@@ -97,32 +97,66 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
-      { title: "Earn Pal — Reward Your Time" },
-      { name: "description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
-      { name: "author", content: "Earn Pal" },
-      { property: "og:title", content: "Earn Pal — Reward Your Time" },
-      { property: "og:description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
-      { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=1200" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap",
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-    ],
-  }),
+  head: () => {
+    const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.lovable.app';
+    const canonicalUrl = typeof window !== 'undefined' ? `${url}${window.location.pathname}` : url;
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
+        { title: "Earn Pal — Reward Your Time" },
+        { name: "description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
+        { name: "author", content: "Earn Pal" },
+        { property: "og:title", content: "Earn Pal — Reward Your Time" },
+        { property: "og:description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: canonicalUrl },
+        { property: "og:image", content: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=1200" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: "@Lovable" },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl },
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap",
+        },
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Earn Pal",
+            "url": url,
+            "logo": `${url}/logo.png`,
+            "description": "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes."
+          })
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Earn Pal",
+            "url": url,
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": `${url}/search?q={search_term_string}`,
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }
+      ]
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
