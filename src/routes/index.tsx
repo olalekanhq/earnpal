@@ -9,6 +9,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    title: "Dashboard | Paid Point",
+    meta: [
+      { name: "description", content: "Manage your points and complete tasks on Paid Point." },
+      { property: "og:title", content: "Dashboard | Paid Point" },
+    ],
+  }),
   beforeLoad: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
