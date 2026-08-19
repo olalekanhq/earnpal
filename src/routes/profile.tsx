@@ -90,7 +90,10 @@ function ProfilePage() {
 
   const handlePasswordChange = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!newPassword) return toast.error("Enter a new password");
+    if (!newPassword) {
+      toast.error("Enter a new password");
+      return;
+    }
     setIsChangingPassword(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
