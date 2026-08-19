@@ -10,7 +10,9 @@ import {
   Shield, 
   Settings, 
   User,
-  Bell
+  Bell,
+  History,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -19,6 +21,14 @@ import { useQuery } from "@tanstack/react-query";
 import { NotificationsPopover } from "./NotificationsPopover";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navigation() {
   const location = useLocation();
@@ -183,12 +193,45 @@ export function Navigation() {
         </div>
         <div className="flex items-center gap-2">
            <NotificationsPopover />
-           <Avatar className="h-9 w-9 border-2 border-primary/10 shadow-sm ring-2 ring-background">
-            <AvatarImage src={profile?.avatar_url || ""} />
-            <AvatarFallback className="bg-primary/5 text-primary">
-              <User className="h-4 w-4" />
-            </AvatarFallback>
-          </Avatar>
+           <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background">
+                <Avatar className="h-full w-full">
+                  <AvatarImage src={profile?.avatar_url || ""} />
+                  <AvatarFallback className="bg-primary/5 text-primary">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 mt-2 rounded-2xl p-2 shadow-xl border-border/40" align="end">
+              <DropdownMenuLabel className="font-black px-3 py-2">
+                <div className="flex flex-col space-y-0.5">
+                  <p className="text-sm font-black">{profile?.username || "User"}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{profile?.points_balance?.toLocaleString()} Points</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-border/40 my-1" />
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                <Link to="/profile" className="flex items-center w-full">
+                  <User className="mr-3 h-4 w-4" />
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                <Link to="/earn" className="flex items-center w-full">
+                  <History className="mr-3 h-4 w-4" />
+                  Points History
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm text-destructive focus:text-destructive focus:bg-destructive/5">
+                <button onClick={handleLogout} className="flex items-center w-full">
+                  <LogOut className="mr-3 h-4 w-4" />
+                  Sign out
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -256,14 +299,55 @@ export function Navigation() {
           </div>
           <div className="h-8 w-[1px] bg-border/60 mx-1" />
           <NotificationsPopover />
-          <Link to="/profile">
-            <Avatar className="h-9 w-9 border-2 border-primary/10 shadow-sm transition-transform hover:scale-105 active:scale-95">
-              <AvatarImage src={profile?.avatar_url || ""} />
-              <AvatarFallback className="bg-primary/5 text-primary">
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 border-2 border-primary/10 shadow-sm ring-2 ring-background transition-transform hover:scale-105 active:scale-95">
+                <Avatar className="h-full w-full">
+                  <AvatarImage src={profile?.avatar_url || ""} />
+                  <AvatarFallback className="bg-primary/5 text-primary">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64 mt-2 rounded-2xl p-2 shadow-xl border-border/40" align="end">
+              <DropdownMenuLabel className="font-black px-4 py-3">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-black">{profile?.username || "User"}</p>
+                  <div className="flex items-center gap-1.5 bg-primary/5 w-fit px-2 py-0.5 rounded-lg">
+                    <Coins className="h-3 w-3 text-primary" />
+                    <p className="text-[10px] text-primary uppercase tracking-wider font-black">{profile?.points_balance?.toLocaleString()} Points</p>
+                  </div>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-border/40 my-1 mx-2" />
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
+                <Link to="/profile" className="flex items-center w-full">
+                  <User className="mr-3 h-4 w-4" strokeWidth={2.5} />
+                  My Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
+                <Link to="/earn" className="flex items-center w-full">
+                  <History className="mr-3 h-4 w-4" strokeWidth={2.5} />
+                  Points History
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
+                <Link to="/settings" className="flex items-center w-full">
+                  <Settings className="mr-3 h-4 w-4" strokeWidth={2.5} />
+                  Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-border/40 my-1 mx-2" />
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-destructive/5 focus:text-destructive cursor-pointer px-3 py-2.5 font-bold text-sm text-destructive">
+                <button onClick={handleLogout} className="flex items-center w-full">
+                  <LogOut className="mr-3 h-4 w-4" strokeWidth={2.5} />
+                  Sign out
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
     </>
