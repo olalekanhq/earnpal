@@ -161,8 +161,8 @@ export function TasksManager() {
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reward (Points)</label>
                   <Input 
                     type="number"
-                    value={formData.points_reward} 
-                    onChange={(e) => setFormData({...formData, points_reward: parseInt(e.target.value) || 0})}
+                    value={formData.points} 
+                    onChange={(e) => setFormData({...formData, points: parseInt(e.target.value) || 0})}
                     className="rounded-xl h-12"
                   />
                 </div>
