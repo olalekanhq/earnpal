@@ -23,9 +23,15 @@ function AuthPage() {
   const search = useSearch({ from: "/auth" });
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Can be email or username
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [referralCode, setReferralCode] = useState("");
+  const [showVerification, setShowVerification] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
