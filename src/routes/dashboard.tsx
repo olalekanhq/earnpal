@@ -79,26 +79,28 @@ function Dashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
       
-      // Call RPC or handle logic to update streak
-      const { error } = await supabase.from('points_transactions').insert({
-        user_id: user.id,
-        amount: 20,
-        type: 'earn',
-        description: 'Daily login bonus'
+      const { data, error } = await supabase.rpc('claim_daily_reward', {
+        _user_id: user.id
       });
+      
       if (error) throw error;
       
-      // Update streak activity
-      await supabase.from('user_streaks').upsert({
-        user_id: user.id,
-        last_activity_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' });
+      // The result is a JSON object with 'success', 'message', 'points', etc.
+      const result = data as any;
+      if (!result.success) {
+        throw new Error(result.message || "Failed to claim reward");
+      }
+      
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
       queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
-      toast.success("Daily bonus claimed! +20 points");
+      toast.success(`Daily bonus claimed! +${result.points} points`);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Already claimed today or error occurred");
     }
   });
 
@@ -287,7 +289,7 @@ function Dashboard() {
                       </div>
                       <div>
                         <p className="font-bold text-foreground">Daily Reward</p>
-                        <p className="text-xs font-bold text-primary uppercase">Claim +20 PTS</p>
+                        <p className="text-xs font-bold text-primary uppercase">Claim {streak?.current_streak >= 6 ? '+25' : '+20'} PTS</p>
                       </div>
                     </div>
                     <Button size="sm" variant="secondary" className="font-bold" disabled={claimDailyStreak.isPending}>
