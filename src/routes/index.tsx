@@ -8,10 +8,14 @@ export const Route = createFileRoute("/")({
   head: () => ({
     title: "Earn Pal | The Ultimate Rewards Platform",
     meta: [
-      { name: "description", content: "Earn points for simple tasks, refer friends, and redeem for amazing prizes on Earn Pal." },
-      { property: "og:title", content: "Earn Pal | The Ultimate Rewards Platform" },
+      { name: "description", content: "Earn points for simple tasks, refer friends, and redeem for amazing prizes on Earn Pal. Join the most intelligent earning platform today." },
+      { property: "og:title", content: "Earn Pal | Reward Your Time" },
+      { property: "og:description", content: "Turn your time into real rewards. Join Earn Pal and start earning today." },
       { property: "og:image", content: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=1200" },
+      { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Earn Pal | Reward Your Time" },
+      { name: "twitter:description", content: "The ultimate rewards community. Complete tasks, refer friends, and unlock premium rewards." },
     ],
   }),
   beforeLoad: async () => {
