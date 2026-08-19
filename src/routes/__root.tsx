@@ -146,7 +146,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />
-      <Outlet />
+      <main className={isLandingPage ? "" : "pt-0"}>
+        <Outlet />
+      </main>
       <Toaster />
       <Onboarding />
     </QueryClientProvider>
