@@ -44,6 +44,7 @@ export function Navigation() {
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
     ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: Shield }] : []),
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
