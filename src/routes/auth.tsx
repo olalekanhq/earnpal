@@ -268,17 +268,15 @@ function AuthPage() {
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
 
-      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white/80 backdrop-blur-xl">
-        <CardHeader className="space-y-2 text-center pb-8">
-          <div className="flex justify-center mb-4">
-            <div className="flex items-center gap-3 font-bold text-3xl text-primary tracking-tight">
-              <div className="bg-primary p-2 rounded-2xl shadow-lg shadow-primary/20">
-                <Coins className="h-8 w-8 text-primary-foreground" />
-              </div>
+      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white p-8 md:p-10 rounded-[2.5rem]">
+        <CardHeader className="space-y-2 text-center pb-8 p-0">
+          <div className="flex justify-center mb-6">
+            <div className="flex items-center gap-2 font-black text-3xl text-primary tracking-tighter">
+              <Coins className="h-7 w-7" />
               <span>EARN PAL</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+          <CardTitle className="text-2xl font-black tracking-tight text-foreground">
             {showReset ? "Reset Password" : "Welcome back"}
           </CardTitle>
           <CardDescription className="text-muted-foreground font-medium">
