@@ -15,9 +15,14 @@ export const Route = createFileRoute("/admin")({
     if (!isAdmin) throw redirect({ to: "/" });
   },
   component: () => (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Administration</h1>
-      <AdminPanel />
+    <div className="min-h-screen bg-accent/5 pb-12">
+      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <div>
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Administration</h1>
+          <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
+        </div>
+        <AdminPanel />
+      </div>
     </div>
   ),
 });
