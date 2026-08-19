@@ -122,7 +122,7 @@ function ProfilePage() {
   return (
     <div className="pb-12 px-4 md:px-8 max-w-4xl mx-auto space-y-8">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">My Profile</h1>
+        <h1 className="text-3xl font-black tracking-tight text-foreground">My Profile</h1>
         <p className="text-muted-foreground">Manage your identity and account settings.</p>
       </header>
 
