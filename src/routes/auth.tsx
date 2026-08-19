@@ -544,6 +544,44 @@ function AuthPage() {
         </CardContent>
           </Card>
         </div>
+
+        {/* Mockup Image Side (Desktop Only) */}
+        <div className="hidden lg:flex flex-col justify-center animate-in fade-in slide-in-from-right duration-1000 order-1 lg:order-2">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-violet-600/20 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative bg-card rounded-[2.5rem] border border-border/50 overflow-hidden shadow-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000" 
+                alt="Earn Pal Dashboard Preview" 
+                className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-12">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-12 w-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                    <Coins className="h-7 w-7 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-3xl font-black tracking-tight text-white uppercase drop-shadow-sm">Earn Pal</h3>
+                </div>
+                <p className="text-xl font-bold text-white/90 leading-relaxed max-w-md drop-shadow-md">
+                  Join thousands of users earning daily rewards through simple tasks and referrals.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-12 grid grid-cols-3 gap-6">
+            {[
+              { label: "Daily Tasks", value: "20+ active" },
+              { label: "Total Users", value: "50k+" },
+              { label: "Paid Out", value: "$250k+" }
+            ].map((stat) => (
+              <div key={stat.label} className="p-4 rounded-2xl bg-card/50 border border-border/30 backdrop-blur-sm">
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-lg font-bold text-foreground">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
