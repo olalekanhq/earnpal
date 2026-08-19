@@ -274,6 +274,7 @@ export type Database = {
       }
     }
     Functions: {
+      claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       get_user_email_by_username: {
         Args: { _username: string }
         Returns: string
