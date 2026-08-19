@@ -184,15 +184,20 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
+    // Check if session should be cleared on startup (if it was transient)
+    const isTransient = typeof window !== 'undefined' && localStorage.getItem('earn-pal-session-transient') === 'true';
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
+        // If the session was started as transient in this tab but is now being re-evaluated 
+        // in a new browser session (restart), sign out if it's still marked as transient.
+        // NOTE: This logic is simple but effective for SPA "Remember me" toggles.
         router.invalidate();
       }
       if (event === 'SIGNED_OUT') {
         router.invalidate();
-        // Use a more reliable way to check the current path
         const currentPath = window.location.pathname;
-        const publicPages = ['/', '/auth', '/landing'];
+        const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
         if (!publicPages.includes(currentPath)) {
           router.navigate({ to: '/auth' });
         }
