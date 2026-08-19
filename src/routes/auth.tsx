@@ -13,6 +13,16 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const Route = createFileRoute("/auth")({
+  head: () => ({
+    title: "Secure Access | Earn Pal",
+    meta: [
+      { name: "description", content: "Sign in or create your Earn Pal account to start earning rewards today." },
+      { property: "og:title", content: "Secure Access | Earn Pal" },
+      { property: "og:description", content: "Join the Earn Pal community and turn your time into rewards." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   validateSearch: (search) => z.object({
     redirect: z.string().optional(),
   }).parse(search),
