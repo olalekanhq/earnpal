@@ -102,7 +102,7 @@ function ReferralPage() {
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Total Referrals</p>
-                  <p className="text-2xl font-bold">{referralCount}</p>
+                  <p className="text-2xl font-black">{referralCount}</p>
                 </div>
               </div>
             </Card>
