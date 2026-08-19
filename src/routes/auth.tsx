@@ -393,7 +393,7 @@ function AuthPage() {
                 </TabsList>
               </div>
               <TabsContent value="login">
-                <form onSubmit={handleEmailLogin} className="space-y-3 md:space-y-4 pt-4">
+                <form onSubmit={handleEmailLogin} className="space-y-3 pt-4">
                   <div className="space-y-2">
                     <Label htmlFor="identifier">Email or Username</Label>
                     <div className="relative">
