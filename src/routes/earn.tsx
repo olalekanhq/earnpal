@@ -31,11 +31,12 @@ function EarnPage() {
   ];
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto px-4 py-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Earn Points</h1>
-        <p className="text-muted-foreground">Complete simple tasks to earn points and level up.</p>
-      </div>
+    <div className="min-h-screen bg-accent/5 pb-12">
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        <div>
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Earn Points</h1>
+          <p className="text-muted-foreground font-medium">Complete simple tasks to earn points and level up.</p>
+        </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
         {categories.map((cat) => (
