@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/refer")({
       { property: "og:title", content: "Referral Program | Earn Pal" },
       { property: "og:description", content: "Share your unique link and watch your points balance grow." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 75 points for every signup.` },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 75 points for every referral.` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -79,7 +79,7 @@ function ReferralPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Referral Program</h1>
-          <p className="text-muted-foreground font-medium">Invite friends and earn 75 points for every signup.</p>
+          <p className="text-muted-foreground font-medium">Invite friends and earn 75 points for every referral. Your friend gets 50 points!</p>
         </div>
       </header>
 
@@ -323,7 +323,7 @@ function ReferralPage() {
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-bold text-primary">3</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-medium">You instantly receive 75 points once their registration is verified.</p>
+                <p className="text-xs text-muted-foreground font-medium">You receive 75 points and your friend gets 50 points once their registration is verified.</p>
               </div>
             </div>
           </Card>
