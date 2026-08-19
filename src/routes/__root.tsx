@@ -98,9 +98,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => {
-    const location = useLocation();
     const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.lovable.app';
-    const canonicalUrl = `${url}${location.pathname}`;
+    const canonicalUrl = typeof window !== 'undefined' ? `${url}${window.location.pathname}` : url;
 
     return {
       meta: [

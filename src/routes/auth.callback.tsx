@@ -13,9 +13,9 @@ function AuthCallback() {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        navigate({ to: "/dashboard", search: {} });
+        navigate({ to: "/dashboard" });
       } else if (event === "SIGNED_OUT") {
-        navigate({ to: "/auth", search: {} });
+        navigate({ to: "/auth" });
       }
     });
 
