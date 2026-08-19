@@ -3,7 +3,9 @@ import { supabase } from '@/integrations/supabase/client'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ location }) => {
+    // getSession() will recover the session from storage on refresh
     const { data: { session } } = await supabase.auth.getSession()
+    
     if (!session) {
       throw redirect({
         to: '/auth',
