@@ -134,7 +134,7 @@ function ReferralPage() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
             <div className="relative z-10 space-y-6">
               <div className="space-y-2">
-                <h2 className="text-2xl font-bold">Your Referral Link</h2>
+                <h2 className="text-2xl font-black">Your Referral Link</h2>
                 <p className="text-primary-foreground/80 font-medium">Copy your link and share it on social media to earn rewards.</p>
               </div>
               
