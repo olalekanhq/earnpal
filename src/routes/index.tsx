@@ -110,7 +110,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Grid: More Capabilities */}
-      <section className="py-24 bg-background border-t">
+      <section className="py-24 bg-[#F8F9FB] border-t border-border/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-sm font-bold uppercase text-primary tracking-widest">Platform Features</span>
