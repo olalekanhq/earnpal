@@ -203,8 +203,8 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex h-[100dvh] items-center justify-center bg-accent/5 p-4 overflow-hidden">
-        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary max-h-[90vh] overflow-y-auto">
+      <div className="flex min-h-[100dvh] md:h-screen items-center justify-center bg-accent/5 p-4 overflow-hidden">
+        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 p-4 rounded-full">
@@ -263,12 +263,12 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex h-[100dvh] items-center justify-center bg-[#F8F9FB] p-4 relative overflow-hidden">
+    <div className="flex min-h-[100dvh] md:h-screen items-center justify-center bg-[#F8F9FB] p-4 relative overflow-hidden">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
 
-      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] max-h-[95vh] overflow-y-auto">
+      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] my-auto">
         <CardHeader className="space-y-2 text-center pb-6 p-0">
           <div className="flex justify-center mb-4 md:mb-6">
             <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
