@@ -145,6 +145,7 @@ function RootComponent() {
   }, [router]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get('ref');
     
@@ -164,10 +165,12 @@ function RootComponent() {
       <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden">
         <Navigation />
         <main className={cn(
-          "flex-1 transition-all duration-300 min-h-screen w-full",
-          isLandingPage ? "" : "md:pl-72"
+          "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
+          !isLandingPage && "md:pl-72"
         )}>
-          <Outlet />
+          <div className={cn("flex-1", !isLandingPage && "pt-20 md:pt-0")}>
+            <Outlet />
+          </div>
         </main>
       </div>
       <Toaster />

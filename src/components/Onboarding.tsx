@@ -19,7 +19,7 @@ export function Onboarding() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       
-      const hasSeen = localStorage.getItem(`onboarding_seen_${user.id}`);
+      const hasSeen = typeof window !== 'undefined' ? localStorage.getItem(`onboarding_seen_${user.id}`) : null;
       if (!hasSeen) setIsOpen(true);
     };
     checkOnboarding();
@@ -27,7 +27,7 @@ export function Onboarding() {
 
   const finish = () => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) localStorage.setItem(`onboarding_seen_${user.id}`, "true");
+      if (user && typeof window !== 'undefined') localStorage.setItem(`onboarding_seen_${user.id}`, "true");
       setIsOpen(false);
     });
   };
