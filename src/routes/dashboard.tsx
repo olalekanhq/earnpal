@@ -222,7 +222,7 @@ function Dashboard() {
           <div className="grid grid-cols-2 gap-4">
             <Card className="border-none shadow-sm bg-white p-4 space-y-1 group">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Referrals</p>
-              <p className="text-2xl font-bold group-hover:text-primary transition-colors">{referralCount}</p>
+              <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
             </Card>
             <Card className="border-none shadow-sm bg-white p-4 space-y-1 group">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rank</p>
