@@ -155,7 +155,7 @@ function ProfilePage() {
             <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/50 mb-6">
               <div className="space-y-0.5">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Points</p>
-                <p className="font-bold text-primary">{profile?.points_balance?.toLocaleString() || 0}</p>
+                <p className="font-black text-primary">{profile?.points_balance?.toLocaleString() || 0}</p>
               </div>
               <div className="space-y-0.5">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Referrals</p>
