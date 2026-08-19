@@ -51,7 +51,7 @@ function RedeemPage() {
 
   const filteredRewards = activeCategory === "All" 
     ? rewards 
-    : rewards?.filter(r => r.category === activeCategory);
+    : rewards?.filter((r: any) => r.category === activeCategory);
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
