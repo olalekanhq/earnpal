@@ -15,11 +15,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as LandingRouteImport } from './routes/landing'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ApiPublicOgRouteImport } from './routes/api/public/og'
 import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
 import { Route as ApiPublicSitemapRouteImport } from './routes/api/public/sitemap'
 
@@ -53,6 +56,11 @@ const LandingRoute = LandingRouteImport.update({
   path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -73,10 +81,20 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiPublicOgRoute = ApiPublicOgRouteImport.update({
+  id: '/api/public/og',
+  path: '/api/public/og',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicRobotsRoute = ApiPublicRobotsRouteImport.update({
   id: '/api/public/robots',
@@ -96,11 +114,14 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
@@ -111,11 +132,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
@@ -127,11 +151,14 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
 }
@@ -144,11 +171,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/privacy'
     | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
+    | '/terms'
     | '/auth/callback'
+    | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
   fileRoutesByTo: FileRoutesByTo
@@ -159,11 +189,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/privacy'
     | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
+    | '/terms'
     | '/auth/callback'
+    | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
   id:
@@ -174,11 +207,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/privacy'
     | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
+    | '/terms'
     | '/auth/callback'
+    | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
   fileRoutesById: FileRoutesById
@@ -190,10 +226,13 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EarnRoute: typeof EarnRoute
   LandingRoute: typeof LandingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   RedeemRoute: typeof RedeemRoute
   ReferRoute: typeof ReferRoute
   SettingsRoute: typeof SettingsRoute
+  TermsRoute: typeof TermsRoute
+  ApiPublicOgRoute: typeof ApiPublicOgRoute
   ApiPublicRobotsRoute: typeof ApiPublicRobotsRoute
   ApiPublicSitemapRoute: typeof ApiPublicSitemapRoute
 }
@@ -242,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -270,12 +316,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/callback'
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/public/og': {
+      id: '/api/public/og'
+      path: '/api/public/og'
+      fullPath: '/api/public/og'
+      preLoaderRoute: typeof ApiPublicOgRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/robots': {
       id: '/api/public/robots'
@@ -311,10 +371,13 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EarnRoute: EarnRoute,
   LandingRoute: LandingRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   RedeemRoute: RedeemRoute,
   ReferRoute: ReferRoute,
   SettingsRoute: SettingsRoute,
+  TermsRoute: TermsRoute,
+  ApiPublicOgRoute: ApiPublicOgRoute,
   ApiPublicRobotsRoute: ApiPublicRobotsRoute,
   ApiPublicSitemapRoute: ApiPublicSitemapRoute,
 }
