@@ -580,7 +580,8 @@ function AuthPage() {
             </Tabs>
           )}
         </CardContent>
-      </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
