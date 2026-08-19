@@ -152,6 +152,13 @@ function AuthPage() {
                     required 
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="referral-code">Referral Code (Optional)</Label>
+                  <Input 
+                    id="referral-code" 
+                    placeholder="e.g. 5a2b3c"
+                  />
+                </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create account
