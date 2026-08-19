@@ -149,10 +149,12 @@ export function Navigation() {
               <User className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold truncate">{profile?.username || "User"}</p>
-            <p className="text-xs text-muted-foreground truncate">{profile?.full_name || ""}</p>
-          </div>
+          {profile && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold truncate">{profile.username || "User"}</p>
+              <p className="text-xs text-muted-foreground truncate">{profile.full_name || ""}</p>
+            </div>
+          )}
         </div>
         <Button 
           variant="ghost" 
