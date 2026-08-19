@@ -192,10 +192,14 @@ function ProfilePage() {
                     <Label htmlFor="full-name" className="text-sm font-semibold">Full Name</Label>
                     <Input id="full-name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="rounded-xl h-11" />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone-number" className="text-sm font-semibold">Phone Number</Label>
+                    <Input id="phone-number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="rounded-xl h-11" placeholder="+1 (555) 000-0000" />
+                  </div>
                   <Button 
                     className="w-full rounded-xl font-bold h-11 mt-2" 
-                    onClick={() => updateProfile.mutate({ full_name: fullName })}
-                    disabled={updateProfile.isPending || fullName === profile?.full_name}
+                    onClick={() => updateProfile.mutate({ full_name: fullName, phone_number: phoneNumber })}
+                    disabled={updateProfile.isPending || (fullName === profile?.full_name && phoneNumber === (profile?.phone_number || ""))}
                   >
                     Save Changes
                   </Button>
