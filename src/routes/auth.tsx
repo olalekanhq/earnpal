@@ -32,6 +32,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const navigate = useNavigate();
   const search = useSearch({ from: "/auth" });
   const [loading, setLoading] = useState(false);
@@ -384,8 +385,8 @@ function AuthPage() {
               </Button>
             </form>
           ) : (
-            <Tabs defaultValue="login" className="w-full flex flex-col h-full overflow-hidden">
-              <div className="px-1 flex-shrink-0">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full flex flex-col h-full overflow-hidden">
+              <div className="hidden px-1 flex-shrink-0">
                 <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
                   <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
                   <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
@@ -458,6 +459,18 @@ function AuthPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
+                  <div className="text-center pt-2">
+                    <p className="text-sm text-muted-foreground">
+                      Don't have an account?{" "}
+                      <button 
+                        type="button" 
+                        onClick={() => setActiveTab("signup")}
+                        className="text-primary font-bold hover:underline"
+                      >
+                        Sign up
+                      </button>
+                    </p>
+                  </div>
                 </form>
               </TabsContent>
               <TabsContent value="signup" className="flex-grow overflow-y-auto px-1 pr-2 custom-scrollbar">
@@ -539,6 +552,18 @@ function AuthPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
+                  <div className="text-center pt-2">
+                    <p className="text-sm text-muted-foreground">
+                      Already have an account?{" "}
+                      <button 
+                        type="button" 
+                        onClick={() => setActiveTab("login")}
+                        className="text-primary font-bold hover:underline"
+                      >
+                        Log in
+                      </button>
+                    </p>
+                  </div>
                 </form>
               </TabsContent>
             </Tabs>
