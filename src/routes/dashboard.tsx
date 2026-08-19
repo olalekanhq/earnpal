@@ -177,14 +177,25 @@ function Dashboard() {
               <p className="text-xs font-medium mt-1 text-muted-foreground">Don't break the chain!</p>
               
               <div className="mt-4">
-                <Button 
-                  size="sm" 
-                  className="w-full font-bold shadow-lg shadow-primary/20" 
-                  disabled={claimDailyStreak.isPending}
-                  onClick={() => claimDailyStreak.mutate()}
-                >
-                  {claimDailyStreak.isPending ? "Claiming..." : "Claim Daily Reward"}
-                </Button>
+                {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="w-full font-bold opacity-60 cursor-not-allowed" 
+                    disabled
+                  >
+                    Claimed Today
+                  </Button>
+                ) : (
+                  <Button 
+                    size="sm" 
+                    className="w-full font-bold shadow-lg shadow-primary/20" 
+                    disabled={claimDailyStreak.isPending}
+                    onClick={() => claimDailyStreak.mutate()}
+                  >
+                    {claimDailyStreak.isPending ? "Claiming..." : "Claim Daily Reward"}
+                  </Button>
+                )}
               </div>
             </CardContent>
             {streak && streak.current_streak > 0 && (
