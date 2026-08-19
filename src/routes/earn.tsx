@@ -9,6 +9,16 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 export const Route = createFileRoute("/earn")({
+  head: () => ({
+    title: "Earn Points | Earn Pal",
+    meta: [
+      { name: "description", content: "Complete tasks, watch ads, and participate in surveys to earn points on Earn Pal." },
+      { property: "og:title", content: "Earn Points | Earn Pal" },
+      { property: "og:description", content: "Unlock new ways to earn points every day." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
