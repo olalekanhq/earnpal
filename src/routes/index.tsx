@@ -167,8 +167,8 @@ function LandingPage() {
               <Link to="/redeem" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Redeem</Link>
               <Link to="/auth" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Login</Link>
             </div>
-            <p className="text-sm font-medium text-muted-foreground">
-              © 2026 EARN PAL. ALL RIGHTS RESERVED.
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              © 2026 Earn Pal. All rights reserved.
             </p>
           </div>
         </div>
