@@ -232,6 +232,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by: string | null
         }
         Insert: {
           created_at?: string | null
@@ -239,6 +240,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by?: string | null
         }
         Update: {
           created_at?: string | null
@@ -246,6 +248,7 @@ export type Database = {
           status?: string
           task_id?: string
           user_id?: string
+          verified_by?: string | null
         }
         Relationships: [
           {
