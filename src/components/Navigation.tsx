@@ -1,9 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X } from "lucide-react";
+import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { NotificationsPopover } from "./NotificationsPopover";
 
 export function Navigation() {
   const location = useLocation();
@@ -22,6 +23,16 @@ export function Navigation() {
     },
   });
 
+  const { data: isAdmin } = useQuery({
+    queryKey: ["isAdmin"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return false;
+      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' });
+      return data;
+    },
+  });
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/auth";
@@ -32,6 +43,7 @@ export function Navigation() {
     { name: "Earn", href: "/earn", icon: Coins },
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
+    ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: Shield }] : []),
   ];
 
   return (
@@ -63,6 +75,7 @@ export function Navigation() {
             <Coins className="h-4 w-4 text-primary" />
             <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
           </div>
+          <NotificationsPopover />
           <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
             <LogOut className="h-4 w-4" />
           </Button>
