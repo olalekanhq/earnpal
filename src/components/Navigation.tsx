@@ -192,7 +192,7 @@ export function Navigation() {
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="relative w-72 h-full bg-background animate-in slide-in-from-left duration-300">
+          <div className="relative w-72 h-full bg-white animate-in slide-in-from-left duration-300 shadow-2xl">
             <Button 
               variant="ghost" 
               size="icon" 
