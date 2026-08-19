@@ -82,6 +82,27 @@ function AuthPage() {
     }
   };
 
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    setResetLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: window.location.origin + "/auth",
+      });
+      if (error) throw error;
+      setResetSent(true);
+      toast.success("Reset link sent to your email!");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4">
       <Card className="w-full max-w-md shadow-xl">
