@@ -221,24 +221,39 @@ function AuthPage() {
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetEmail.includes("@")) {
-      setError("Please enter a valid email address.");
+    const input = resetEmail.trim();
+    if (!input) {
+      setError("Please enter your email or username.");
       return;
     }
+    setError("");
     setResetLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: window.location.origin + "/auth",
-      });
-      if (error) throw error;
+      let targetEmail = input;
+
+      if (!targetEmail.includes("@")) {
+        const { data } = await supabase.rpc('lookup_login_email', {
+          _username: targetEmail
+        });
+        targetEmail = (data as string | null) ?? "";
+      }
+
+      if (targetEmail) {
+        const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+          redirectTo: window.location.origin + "/auth",
+        });
+        if (error) throw error;
+      }
+
       setResetSent(true);
-      toast.success("Reset link sent to your email!");
+      toast.success("If an account exists, a reset link has been sent.");
     } catch (error: any) {
       setError(error.message);
     } finally {
       setResetLoading(false);
     }
   };
+
 
   if (showVerification) {
     return (
