@@ -89,9 +89,9 @@ function LandingPage() {
       </section>
       
       {/* FAQ Section */}
-      <section className="py-24 bg-accent/10 border-t">
+      <section className="py-24 bg-white border-t border-border/50">
         <div className="container mx-auto px-4 max-w-2xl">
-          <h2 className="text-3xl font-bold uppercase mb-12 text-center">Frequently asked questions</h2>
+          <h2 className="text-3xl font-black mb-12 text-center">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="1">
               <AccordionTrigger className="text-lg font-bold">How do I start earning?</AccordionTrigger>
