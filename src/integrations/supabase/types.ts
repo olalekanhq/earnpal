@@ -190,6 +190,38 @@ export type Database = {
         }
         Relationships: []
       }
+      task_submissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          status: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          status: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          status?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
           category: string | null
@@ -198,8 +230,10 @@ export type Database = {
           icon_name: string | null
           id: string
           is_active: boolean
+          link_url: string | null
           points: number
           title: string
+          verification_required: boolean | null
         }
         Insert: {
           category?: string | null
@@ -208,8 +242,10 @@ export type Database = {
           icon_name?: string | null
           id?: string
           is_active?: boolean
+          link_url?: string | null
           points: number
           title: string
+          verification_required?: boolean | null
         }
         Update: {
           category?: string | null
@@ -218,8 +254,10 @@ export type Database = {
           icon_name?: string | null
           id?: string
           is_active?: boolean
+          link_url?: string | null
           points?: number
           title?: string
+          verification_required?: boolean | null
         }
         Relationships: []
       }
@@ -292,6 +330,10 @@ export type Database = {
       increment_referral_clicks: {
         Args: { target_referral_code: string }
         Returns: undefined
+      }
+      submit_task: {
+        Args: { _task_id: string; _user_id: string }
+        Returns: Json
       }
     }
     Enums: {
