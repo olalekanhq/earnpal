@@ -27,14 +27,16 @@ export const Route = createFileRoute("/auth")({
   }),
   validateSearch: (search) => z.object({
     redirect: z.string().optional(),
+    mode: z.enum(["login", "signup"]).optional(),
+    ref: z.string().optional(),
   }).parse(search),
   component: AuthPage,
 });
 
 function AuthPage() {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const navigate = useNavigate();
   const search = useSearch({ from: "/auth" });
+  const [activeTab, setActiveTab] = useState<"login" | "signup">(search.mode || "login");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [email, setEmail] = useState("");
@@ -43,24 +45,27 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
-  const [referralCode, setReferralCode] = useState("");
+  const [referralCode, setReferralCode] = useState(search.ref || "");
   const [showVerification, setShowVerification] = useState(false);
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [resending, setResending] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if (ref) setReferralCode(ref);
-  }, []);
-
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  useEffect(() => {
+    if (search.mode) {
+      setActiveTab(search.mode);
+    }
+    if (search.ref) {
+      setReferralCode(search.ref);
+    }
+  }, [search.mode, search.ref]);
+
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
@@ -327,12 +332,18 @@ function AuthPage() {
                 </div>
               </div>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
-                {showReset ? "Reset Password" : "Welcome back"}
+                {showReset 
+                  ? "Reset Password" 
+                  : activeTab === "login" 
+                    ? "Welcome back" 
+                    : "Create Account"}
               </CardTitle>
               <CardDescription className="text-muted-foreground font-medium">
                 {showReset 
                   ? "Enter your email to receive a reset link" 
-                  : "Access your dashboard to start earning rewards"}
+                  : activeTab === "login"
+                    ? "Access your dashboard to start earning rewards"
+                    : "Join the Earn Pal community and start earning today"}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 overflow-hidden flex-grow p-0">
@@ -398,7 +409,7 @@ function AuthPage() {
             </form>
           ) : (
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full flex flex-col h-full overflow-hidden">
-              <div className="hidden px-1 flex-shrink-0">
+              <div className="px-1 flex-shrink-0">
                 <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
                   <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
                   <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
