@@ -14,6 +14,16 @@ import { toast } from "sonner";
 import { ImageCropper } from "@/components/ImageCropper";
 
 export const Route = createFileRoute("/profile")({
+  head: () => ({
+    title: "My Profile | Earn Pal",
+    meta: [
+      { name: "description", content: "Manage your Earn Pal account, identity, and security settings." },
+      { property: "og:title", content: "My Profile | Earn Pal" },
+      { property: "og:description", content: "View your badges, points balance, and account history." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
