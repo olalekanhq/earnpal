@@ -164,8 +164,8 @@ function RootComponent() {
       <div className="flex min-h-screen bg-background text-foreground">
         <Navigation />
         <main className={cn(
-          "flex-1 transition-all duration-300",
-          isLandingPage ? "" : "md:pl-72 pt-16 md:pt-4"
+          "flex-1 transition-all duration-300 min-h-screen",
+          isLandingPage ? "" : "md:pl-72"
         )}>
           <Outlet />
         </main>
