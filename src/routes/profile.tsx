@@ -188,7 +188,7 @@ function ProfilePage() {
             
             <div className="space-y-1 mb-6">
               <h2 className="text-xl font-black text-foreground">{profile?.full_name || "New User"}</h2>
-              <p className="text-sm font-medium text-muted-foreground">@{profile?.username}</p>
+              <p className="text-sm font-medium text-muted-foreground">@{profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : ''}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/50 mb-6">

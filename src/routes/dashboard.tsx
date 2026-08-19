@@ -102,7 +102,7 @@ function Dashboard() {
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
-          Welcome back, {profile?.username || profile?.full_name?.split(' ')[0] || 'User'}! 👋
+          Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
         </h1>
         <p className="text-muted-foreground">
           Here's what's happening with your rewards today.
