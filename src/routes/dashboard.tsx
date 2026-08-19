@@ -83,11 +83,14 @@ function Dashboard() {
         _user_id: user.id
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Claim error:", error);
+        throw new Error(error.message || "An unexpected error occurred while claiming your reward.");
+      }
       
-      // The result is a JSON object with 'success', 'message', 'points', etc.
       const result = data as any;
       if (!result.success) {
+        // This handles our "Already claimed today" message specifically
         throw new Error(result.message || "Failed to claim reward");
       }
       
@@ -97,10 +100,10 @@ function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
       queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
-      toast.success(`Daily bonus claimed! +${result.points} points`);
+      toast.success(result.message || `Daily bonus claimed! +${result.points} points`);
     },
     onError: (error: any) => {
-      toast.error(error.message || "Already claimed today or error occurred");
+      toast.error(error.message || "Failed to claim reward. Please try again later.");
     }
   });
 
@@ -174,14 +177,25 @@ function Dashboard() {
               <p className="text-xs font-medium mt-1 text-muted-foreground">Don't break the chain!</p>
               
               <div className="mt-4">
-                <Button 
-                  size="sm" 
-                  className="w-full font-bold shadow-lg shadow-primary/20" 
-                  disabled={claimDailyStreak.isPending}
-                  onClick={() => claimDailyStreak.mutate()}
-                >
-                  {claimDailyStreak.isPending ? "Claiming..." : "Claim Daily Reward"}
-                </Button>
+                {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="w-full font-bold opacity-60 cursor-not-allowed" 
+                    disabled
+                  >
+                    Claimed Today
+                  </Button>
+                ) : (
+                  <Button 
+                    size="sm" 
+                    className="w-full font-bold shadow-lg shadow-primary/20" 
+                    disabled={claimDailyStreak.isPending}
+                    onClick={() => claimDailyStreak.mutate()}
+                  >
+                    {claimDailyStreak.isPending ? "Claiming..." : "Claim Daily Reward"}
+                  </Button>
+                )}
               </div>
             </CardContent>
             {streak && streak.current_streak > 0 && (
@@ -279,21 +293,44 @@ function Dashboard() {
                 </div>
 
                 <div 
-                  className="p-4 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all cursor-pointer group"
-                  onClick={() => !claimDailyStreak.isPending && claimDailyStreak.mutate()}
+                  className={`p-4 rounded-2xl border-2 transition-all group ${
+                    streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                      ? 'border-muted bg-muted/20 opacity-70 cursor-not-allowed'
+                      : 'border-primary/20 bg-primary/5 hover:bg-primary/10 cursor-pointer'
+                  }`}
+                  onClick={() => {
+                    const claimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+                    if (!claimedToday && !claimDailyStreak.isPending) {
+                      claimDailyStreak.mutate();
+                    }
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-primary text-primary-foreground rounded-xl group-hover:rotate-12 transition-transform">
+                      <div className={`p-3 rounded-xl transition-transform ${
+                        streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                          ? 'bg-muted text-muted-foreground'
+                          : 'bg-primary text-primary-foreground group-hover:rotate-12'
+                      }`}>
                         <Gift className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-bold text-foreground">Daily Reward</p>
-                        <p className="text-xs font-bold text-primary uppercase">Claim {(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS</p>
+                        <p className="text-xs font-bold text-primary uppercase">
+                          {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                            ? 'Already Claimed'
+                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS`
+                          }
+                        </p>
                       </div>
                     </div>
-                    <Button size="sm" variant="secondary" className="font-bold" disabled={claimDailyStreak.isPending}>
-                      {claimDailyStreak.isPending ? "..." : "Claim"}
+                    <Button 
+                      size="sm" 
+                      variant={streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "ghost" : "secondary"} 
+                      className="font-bold" 
+                      disabled={claimDailyStreak.isPending || !!(streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString())}
+                    >
+                      {claimDailyStreak.isPending ? "..." : (streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "✓" : "Claim")}
                     </Button>
                   </div>
                 </div>
