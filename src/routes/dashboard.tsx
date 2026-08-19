@@ -117,7 +117,7 @@ function Dashboard() {
         {/* Main Balance Card - Inspired by Reference */}
         <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-bold uppercase tracking-widest opacity-70">Total Balance</CardTitle>
+            <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">Total Balance</CardTitle>
           </CardHeader>
           <CardContent className="pt-2 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
             <div className="space-y-1">
