@@ -82,6 +82,7 @@ export type Database = {
           email_notifications: boolean | null
           full_name: string | null
           id: string
+          phone_number: string | null
           points_balance: number
           push_notifications: boolean | null
           referral_clicks: number | null
@@ -97,6 +98,7 @@ export type Database = {
           email_notifications?: boolean | null
           full_name?: string | null
           id: string
+          phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
           referral_clicks?: number | null
@@ -112,6 +114,7 @@ export type Database = {
           email_notifications?: boolean | null
           full_name?: string | null
           id?: string
+          phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
           referral_clicks?: number | null
