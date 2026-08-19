@@ -156,8 +156,8 @@ function Dashboard() {
           </CardHeader>
           <CardContent className="pt-2 flex-1 flex flex-col justify-between">
             <div className="space-y-1">
-              <div className="text-3xl font-bold">{streak?.current_streak || 0} Days</div>
-              <p className="text-xs text-muted-foreground">Keep claiming daily to earn bonus points!</p>
+              <div className="text-3xl font-bold tracking-tight">{streak?.current_streak || 0} Days</div>
+              <p className="text-[11px] text-muted-foreground font-medium">Claim daily to earn bonus points</p>
             </div>
             <div className="mt-6">
               <Button 
