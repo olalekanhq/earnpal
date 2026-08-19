@@ -1,12 +1,15 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
   beforeLoad: async () => {
@@ -17,6 +20,13 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfilePage() {
+  const queryClient = useQueryClient();
+  const [fullName, setFullName] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -26,6 +36,86 @@ function ProfilePage() {
       return data;
     },
   });
+
+  useEffect(() => {
+    if (profile?.full_name) {
+      setFullName(profile.full_name);
+    }
+  }, [profile]);
+
+  const updateProfile = useMutation({
+    mutationFn: async (updates: any) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("profiles")
+        .update(updates)
+        .eq("id", user.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Profile updated successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to update profile");
+    },
+  });
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      await updateProfile.mutateAsync({ avatar_url: data.publicUrl });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to upload avatar");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword) {
+      toast.error("Please enter a new password");
+      return;
+    }
+    
+    setIsChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) throw error;
+      
+      toast.success("Password updated successfully!");
+      setNewPassword("");
+      setCurrentPassword("");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update password");
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
 
   const { data: referralCount } = useQuery({
     queryKey: ["referralCount"],
@@ -55,12 +145,28 @@ function ProfilePage() {
           <div className="h-32 bg-gradient-to-r from-primary to-primary/60" />
           <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
             <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-12">
-              <Avatar className="h-32 w-32 border-4 border-background shadow-2xl">
-                <AvatarImage src={profile?.avatar_url || ""} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-4xl font-black">
-                  {profile?.full_name?.[0] || profile?.username?.[0] || "?"}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative inline-block group">
+                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl">
+                  <AvatarImage src={profile?.avatar_url || ""} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-4xl font-black">
+                    {profile?.full_name?.[0] || profile?.username?.[0] || "?"}
+                  </AvatarFallback>
+                </Avatar>
+                <label 
+                  htmlFor="avatar-upload"
+                  className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform border-4 border-background"
+                >
+                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
+                  <input 
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                    disabled={isUploading}
+                  />
+                </label>
+              </div>
               <div className="flex-1 space-y-1 mb-2">
                 <h1 className="text-3xl font-black text-foreground">{profile?.full_name || "New User"}</h1>
                 <p className="text-primary font-bold">@{profile?.username || "username"}</p>
@@ -69,7 +175,7 @@ function ProfilePage() {
                 <Button asChild variant="outline" className="font-bold">
                   <Link to="/settings">
                     <SettingsIcon className="mr-2 h-4 w-4" />
-                    Edit Profile
+                    Settings
                   </Link>
                 </Button>
               </div>
@@ -118,18 +224,74 @@ function ProfilePage() {
         <div className="grid gap-8 md:grid-cols-2">
           <Card className="border-none shadow-md">
             <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-xl font-black uppercase">Edit Profile</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="full-name" className="font-bold">Full Name</Label>
+                <Input 
+                  id="full-name" 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Enter your full name"
+                  className="font-medium"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username" className="font-bold text-muted-foreground">Username</Label>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm font-medium">
+                  <span className="text-muted-foreground">@</span>
+                  <span>{profile?.username}</span>
+                </div>
+              </div>
+              <Button 
+                onClick={() => updateProfile.mutate({ full_name: fullName })}
+                disabled={updateProfile.isPending || fullName === profile?.full_name}
+                className="w-full font-black uppercase shadow-lg shadow-primary/20"
+              >
+                {updateProfile.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-md">
+            <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-xl font-black uppercase">Change Password</CardTitle>
+            </CardHeader>
+            <form onSubmit={handlePasswordChange}>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password" title="New Password">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="new-password"
+                      type="password"
+                      placeholder="Enter new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="pl-10 font-medium"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="pt-0">
+                <Button 
+                  type="submit"
+                  disabled={isChangingPassword}
+                  className="w-full font-black uppercase shadow-lg shadow-primary/20"
+                >
+                  {isChangingPassword ? "Updating..." : "Update Password"}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+
+          <Card className="border-none shadow-md">
+            <CardHeader className="border-b border-border/50">
               <CardTitle className="text-xl font-black uppercase">Information</CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                  <User className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase">Full Name</p>
-                  <p className="font-bold">{profile?.full_name || "Not set"}</p>
-                </div>
-              </div>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/10 p-2 rounded-lg text-primary">
                   <Mail className="h-5 w-5" />
@@ -163,10 +325,6 @@ function ProfilePage() {
               <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
                 <span className="text-sm font-bold text-muted-foreground">Signups</span>
                 <span className="text-xl font-black">{referralCount}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
-                <span className="text-sm font-bold text-muted-foreground">Bonus Points</span>
-                <span className="text-xl font-black text-primary">{(referralCount || 0) * 50}</span>
               </div>
               <Button asChild className="w-full font-black uppercase mt-2">
                 <Link to="/refer">View Referral Details</Link>
