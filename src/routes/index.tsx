@@ -372,6 +372,26 @@ function Dashboard() {
                   </div>
                 </div>
 
+                <div className="space-y-3 pt-2">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-1">Recommended for you</p>
+                  {recommendedTasks?.map((task) => (
+                    <div key={task.id} className="flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/30 transition-colors group cursor-pointer" asChild>
+                      <Link to="/earn">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-accent rounded-lg group-hover:bg-primary/10 transition-colors">
+                            <Zap className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold truncate max-w-[120px]">{task.title}</p>
+                            <p className="text-[10px] text-primary font-black">+{task.points} PTS</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+
                 <Button className="w-full py-6 text-md font-black shadow-lg shadow-primary/20" asChild>
                   <Link to="/earn">EXPLORE ALL TASKS</Link>
                 </Button>
