@@ -288,8 +288,8 @@ function AuthPage() {
         <CardContent className="grid gap-4">
           {!showReset && (
             <>
-              <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-11">
-                <img src="https://www.google.com/favicon.ico" className="mr-2 h-4 w-4" alt="Google" />
+              <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-12 rounded-xl border-border/50 bg-accent/5 hover:bg-accent/10 transition-all">
+                <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="Google" />
                 Continue with Google
               </Button>
               <div className="relative">
