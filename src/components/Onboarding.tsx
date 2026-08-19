@@ -9,12 +9,20 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocation } from "@tanstack/react-router";
 
 export function Onboarding() {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
 
   useEffect(() => {
+    // Don't show onboarding on auth page
+    if (location.pathname === '/auth') {
+      setIsOpen(false);
+      return;
+    }
+
     const checkOnboarding = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -23,7 +31,7 @@ export function Onboarding() {
       if (!hasSeen) setIsOpen(true);
     };
     checkOnboarding();
-  }, []);
+  }, [location.pathname]);
 
   const finish = () => {
     supabase.auth.getUser().then(({ data: { user } }) => {
