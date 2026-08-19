@@ -268,6 +268,7 @@ export type Database = {
           id: string | null
           points_balance: number | null
           rank: number | null
+          username: string | null
         }
         Relationships: []
       }
