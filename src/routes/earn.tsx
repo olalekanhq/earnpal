@@ -46,7 +46,7 @@ function EarnPage() {
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Earn Points</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Earn Points</h1>
           <p className="text-muted-foreground font-medium">Complete simple tasks to earn points and level up.</p>
         </div>
       </header>
