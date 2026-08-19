@@ -107,7 +107,7 @@ function AuthPage() {
 
       const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
       if (error) throw error;
-      navigate({ to: search.redirect || "/dashboard" });
+      navigate({ to: (search.redirect as any) || "/dashboard", search: {} });
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -160,7 +160,7 @@ function AuthPage() {
       if (error) throw error;
       
       toast.success("Account verified successfully!");
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/dashboard", search: {} });
     } catch (error: any) {
       setError(error.message);
     } finally {
