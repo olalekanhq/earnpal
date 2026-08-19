@@ -178,9 +178,9 @@ function Dashboard() {
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Recent Activity */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <h2 className="text-xl font-bold">Recent Activity</h2>
-            <Link to="/earn" className="text-sm font-bold text-primary hover:underline">View all</Link>
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-xl font-bold tracking-tight">Recent Activity</h2>
+            <Link to="/earn" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest">View all</Link>
           </div>
           <Card className="border-none shadow-sm bg-white">
             <CardContent className="p-0">
