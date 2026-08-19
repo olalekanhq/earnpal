@@ -9,7 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff, Share2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -46,6 +47,11 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [referralCode, setReferralCode] = useState(search.ref || "");
+  const [referralStatus, setReferralStatus] = useState<{ loading: boolean; owner: string | null; error: boolean }>({ 
+    loading: false, 
+    owner: null, 
+    error: false 
+  });
   const [showVerification, setShowVerification] = useState(false);
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -63,8 +69,43 @@ function AuthPage() {
     }
     if (search.ref) {
       setReferralCode(search.ref);
+      validateReferral(search.ref);
     }
   }, [search.mode, search.ref]);
+
+  const validateReferral = async (code: string) => {
+    if (!code || code.trim().length < 3) {
+      setReferralStatus({ loading: false, owner: null, error: false });
+      return;
+    }
+    
+    setReferralStatus(prev => ({ ...prev, loading: true, error: false }));
+    try {
+      const { data, error } = await supabase.rpc('check_referral_code', { _code: code.trim() });
+      
+      if (error) throw error;
+      
+      const result = Array.isArray(data) ? data[0] : data;
+      
+      if (result && result.is_valid) {
+        setReferralStatus({ loading: false, owner: result.username, error: false });
+      } else {
+        setReferralStatus({ loading: false, owner: null, error: true });
+      }
+    } catch (err) {
+      console.error("Referral validation error:", err);
+      setReferralStatus({ loading: false, owner: null, error: true });
+    }
+  };
+
+  const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+    setReferralCode(val);
+    
+    // Simple debounce for manual entry
+    const timeout = setTimeout(() => validateReferral(val), 500);
+    return () => clearTimeout(timeout);
+  };
 
 
   const validate = (type: 'login' | 'signup') => {
@@ -564,12 +605,40 @@ function AuthPage() {
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor="referral-code">Referral Code (Optional)</Label>
-                    <Input 
-                      id="referral-code" 
-                      placeholder="e.g. 5a2b3c"
-                      value={referralCode}
-                      onChange={(e) => setReferralCode(e.target.value)}
-                    />
+                    <div className="relative">
+                      <Share2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className={cn(
+                          "pl-9",
+                          referralStatus.owner && "border-green-500/50 ring-green-500/20",
+                          referralStatus.error && "border-destructive/50 ring-destructive/20"
+                        )}
+                        id="referral-code" 
+                        placeholder="e.g. 5a2b3c"
+                        value={referralCode}
+                        onChange={handleReferralChange}
+                      />
+                      {referralStatus.loading && (
+                        <div className="absolute right-3 top-3">
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        </div>
+                      )}
+                      {referralStatus.owner && (
+                        <div className="absolute right-3 top-3">
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        </div>
+                      )}
+                    </div>
+                    {referralStatus.owner && (
+                      <p className="text-[10px] font-black text-green-600 uppercase tracking-widest mt-1">
+                        ✓ Referrer: {referralStatus.owner.charAt(0).toUpperCase() + referralStatus.owner.slice(1)}
+                      </p>
+                    )}
+                    {referralStatus.error && referralCode && (
+                      <p className="text-[10px] font-black text-destructive uppercase tracking-widest mt-1">
+                        ✕ Invalid referral code
+                      </p>
+                    )}
                   </div>
                   <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
