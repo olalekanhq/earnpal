@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navigation } from "@/components/Navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "@/components/Onboarding";
+import { ThemeProvider } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -167,19 +168,21 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden w-full">
-        <Navigation />
-        <main className={cn(
-          "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
-          !isLandingPage && "md:ml-72"
-        )}>
-          <div className={cn("flex-1 w-full", !isLandingPage && "pt-20")}>
-            <Outlet />
-          </div>
-        </main>
-      </div>
-      <Toaster />
-      <Onboarding />
+      <ThemeProvider defaultTheme="light" storageKey="earn-pal-theme">
+        <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden w-full">
+          <Navigation />
+          <main className={cn(
+            "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
+            !isLandingPage && "md:ml-72"
+          )}>
+            <div className={cn("flex-1 w-full", !isLandingPage && "pt-20")}>
+              <Outlet />
+            </div>
+          </main>
+        </div>
+        <Toaster />
+        <Onboarding />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

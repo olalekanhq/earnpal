@@ -12,8 +12,11 @@ import {
   User,
   Bell,
   History,
-  ChevronRight
+  ChevronRight,
+  Moon,
+  Sun
 } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +57,7 @@ export function Navigation() {
   // Custom transparent navbar for landing page
   if (isLandingPage) {
     return (
-      <nav className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border/50">
+      <nav className="fixed top-0 z-50 w-full bg-card/80 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
             <Coins className="h-7 w-7" />
@@ -72,6 +75,7 @@ export function Navigation() {
             <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
               <Link to="/auth">Get Started</Link>
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -217,7 +221,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-20 px-4 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border-b border-border/40 shadow-sm">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5">
             <Menu className="h-6 w-6 text-foreground" />
@@ -228,6 +232,7 @@ export function Navigation() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
+           <ThemeToggle />
            <NotificationsPopover />
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -287,7 +292,7 @@ export function Navigation() {
         />
         <div 
           className={cn(
-            "relative w-72 h-full bg-white shadow-2xl transition-transform duration-300 ease-in-out",
+            "relative w-72 h-full bg-card shadow-2xl transition-transform duration-300 ease-in-out",
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
@@ -304,12 +309,12 @@ export function Navigation() {
       </div>
 
       {/* Desktop Sidebar (Persistent) */}
-      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-white border-r border-border/50">
+      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-card border-r border-border/50">
         <SidebarContent />
       </aside>
 
       {/* Desktop Top Bar */}
-      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 left-0 bg-white/80 backdrop-blur-md border-b border-border/40">
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 left-0 bg-card/80 backdrop-blur-md border-b border-border/40">
         <div className="flex flex-col">
           <h1 className="text-lg font-black uppercase tracking-tight text-foreground">
             {location.pathname === "/dashboard" && "Dashboard Overview"}
@@ -334,6 +339,7 @@ export function Navigation() {
             </span>
           </div>
           <div className="h-8 w-[1px] bg-border/60 mx-1" />
+          <ThemeToggle />
           <NotificationsPopover />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

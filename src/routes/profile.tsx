@@ -163,7 +163,7 @@ function ProfilePage() {
 
       <div className="grid gap-8 md:grid-cols-12 items-start">
         {/* Profile Card */}
-        <Card className="md:col-span-5 border-none shadow-sm overflow-hidden bg-white">
+        <Card className="md:col-span-5 border-none shadow-sm overflow-hidden bg-card">
           <div className="h-24 bg-primary/10" />
           <CardContent className="relative pt-0 pb-8 px-6 text-center">
             <div className="inline-block relative -mt-12 mb-4 group">
@@ -224,7 +224,7 @@ function ProfilePage() {
         <div className="md:col-span-7 space-y-6">
           {isEditing ? (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
                   <CardTitle className="text-lg font-bold">Edit Profile</CardTitle>
                 </CardHeader>
@@ -297,7 +297,7 @@ function ProfilePage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-sm bg-white">
+              <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
                   <CardTitle className="text-lg font-bold">Security</CardTitle>
                   <CardDescription>Update your password to keep your account safe.</CardDescription>
@@ -334,7 +334,7 @@ function ProfilePage() {
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <Card className="border-none shadow-sm bg-white p-6">
+              <Card className="border-none shadow-sm bg-card p-6">
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="font-black text-lg">Earning Summary</h3>
                   <div className="bg-primary/10 px-3 py-1 rounded-full text-xs font-bold text-primary">LVL {Math.floor((profile?.points_balance || 0) / 1000) + 1}</div>
@@ -370,7 +370,7 @@ function ProfilePage() {
               </Card>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
                   <div className="bg-blue-50 p-3 rounded-xl text-blue-600">
                     <Mail className="h-5 w-5" />
                   </div>
@@ -379,7 +379,7 @@ function ProfilePage() {
                     <p className="text-sm font-semibold truncate max-w-[150px]">{profile?.email || 'N/A'}</p>
                   </div>
                 </Card>
-                <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
                   <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
                     <User className="h-5 w-5" />
                   </div>
@@ -388,7 +388,7 @@ function ProfilePage() {
                     <p className="text-sm font-semibold">{profile?.phone_number || 'Not added'}</p>
                   </div>
                 </Card>
-                <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
                   <div className="bg-green-50 p-3 rounded-xl text-green-600">
                     <Calendar className="h-5 w-5" />
                   </div>

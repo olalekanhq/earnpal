@@ -141,7 +141,7 @@ function Dashboard() {
         </Card>
 
         {/* Daily Streak Card */}
-        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-white group">
+        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
@@ -178,7 +178,7 @@ function Dashboard() {
             <h2 className="text-xl font-black tracking-tight text-foreground">Recent Activity</h2>
             <Link to="/earn" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
           </div>
-          <Card className="border-none shadow-sm bg-white">
+          <Card className="border-none shadow-sm bg-card">
             <CardContent className="p-0">
               <div className="divide-y divide-border/50">
                 {recentTransactions?.length ? recentTransactions.map((tx) => (
@@ -216,11 +216,11 @@ function Dashboard() {
         <div className="lg:col-span-4 space-y-6">
           <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Quick Stats</h2>
           <div className="grid grid-cols-2 gap-4">
-            <Card className="border-none shadow-sm bg-white p-4 space-y-1 group">
+            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Referrals</p>
               <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
             </Card>
-            <Card className="border-none shadow-sm bg-white p-4 space-y-1 group">
+            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rank</p>
               <p className="text-2xl font-black group-hover:text-primary transition-colors">#{Math.floor(Math.random() * 100) + 1}</p>
             </Card>

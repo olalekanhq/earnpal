@@ -85,7 +85,7 @@ function ReferralPage() {
         {/* Left Column: Stats & Link */}
         <div className="md:col-span-8 space-y-6">
           <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-            <Card className="border-none shadow-sm bg-white p-4">
+            <Card className="border-none shadow-sm bg-card p-4">
               <div className="flex flex-col h-full justify-between gap-2">
                 <div className="p-2 bg-blue-50 w-fit rounded-lg text-blue-600">
                   <MousePointerClick className="h-4 w-4" />
@@ -96,7 +96,7 @@ function ReferralPage() {
                 </div>
               </div>
             </Card>
-            <Card className="border-none shadow-sm bg-white p-4">
+            <Card className="border-none shadow-sm bg-card p-4">
               <div className="flex flex-col h-full justify-between gap-2">
                 <div className="p-2 bg-primary/10 w-fit rounded-lg text-primary">
                   <Users className="h-4 w-4" />
@@ -107,7 +107,7 @@ function ReferralPage() {
                 </div>
               </div>
             </Card>
-            <Card className="border-none shadow-sm bg-white p-4">
+            <Card className="border-none shadow-sm bg-card p-4">
               <div className="flex flex-col h-full justify-between gap-2">
                 <div className="p-2 bg-green-50 w-fit rounded-lg text-green-600">
                   <Gift className="h-4 w-4" />
@@ -118,7 +118,7 @@ function ReferralPage() {
                 </div>
               </div>
             </Card>
-            <Card className="border-none shadow-sm bg-white p-4">
+            <Card className="border-none shadow-sm bg-card p-4">
               <div className="flex flex-col h-full justify-between gap-2">
                 <div className="p-2 bg-orange-50 w-fit rounded-lg text-orange-600">
                   <TrendingUp className="h-4 w-4" />
@@ -168,13 +168,13 @@ function ReferralPage() {
           </Card>
 
           <Tabs defaultValue="signups" className="w-full">
-            <TabsList className="bg-white/50 border border-border/50 p-1 rounded-xl h-11 w-full max-w-[300px]">
-              <TabsTrigger value="signups" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">Signups</TabsTrigger>
-              <TabsTrigger value="leaderboard" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm">Leaderboard</TabsTrigger>
+            <TabsList className="bg-card/50 border border-border/50 p-1 rounded-xl h-11 w-full max-w-[300px]">
+              <TabsTrigger value="signups" className="rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm">Signups</TabsTrigger>
+              <TabsTrigger value="leaderboard" className="rounded-lg font-bold data-[state=active]:bg-card data-[state=active]:shadow-sm">Leaderboard</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signups" className="mt-4 space-y-4">
-              <Card className="border-none shadow-sm bg-white overflow-hidden">
+              <Card className="border-none shadow-sm bg-card overflow-hidden">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg font-bold">Recent Signups</CardTitle>
                 </CardHeader>
@@ -214,7 +214,7 @@ function ReferralPage() {
             </TabsContent>
 
             <TabsContent value="leaderboard" className="mt-4">
-              <Card className="border-none shadow-sm bg-white overflow-hidden">
+              <Card className="border-none shadow-sm bg-card overflow-hidden">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg font-bold flex items-center gap-2">
                     <Trophy className="h-5 w-5 text-yellow-500" />
@@ -261,7 +261,7 @@ function ReferralPage() {
 
         {/* Right Column: Milestones & Info */}
         <div className="md:col-span-4 space-y-6">
-          <Card className="border-none shadow-sm bg-white p-6">
+          <Card className="border-none shadow-sm bg-card p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold">Next Milestone</h3>
               <div className="bg-orange-50 px-2 py-1 rounded-lg">
@@ -302,7 +302,7 @@ function ReferralPage() {
             </div>
           </Card>
 
-          <Card className="border-none shadow-sm bg-white p-6 space-y-4">
+          <Card className="border-none shadow-sm bg-card p-6 space-y-4">
             <h3 className="font-black text-sm uppercase tracking-widest">How it works</h3>
             <div className="space-y-4">
               <div className="flex gap-3">

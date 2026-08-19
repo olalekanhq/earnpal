@@ -32,7 +32,7 @@ function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden bg-[#F8F9FB]">
+      <section className="relative pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden bg-muted/30">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20 animate-in fade-in slide-in-from-bottom-2 uppercase tracking-widest">
@@ -60,7 +60,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Section: Dashboard Highlight */}
-      <section className="py-24 bg-white border-y border-border/50">
+      <section className="py-24 bg-card border-y border-border/50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
@@ -68,7 +68,7 @@ function LandingPage() {
               <p className="text-lg text-muted-foreground font-medium leading-relaxed">Track your task progress, manage referral bonuses, and watch your points grow in real-time. Our intuitive dashboard makes earning simple and transparent.</p>
               <Button className="font-bold rounded-xl h-12 px-8" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
             </div>
-            <div className="bg-[#F8F9FB] p-6 rounded-[2.5rem] border border-border/50 shadow-2xl shadow-primary/5 rotate-2 hover:rotate-0 transition-all duration-500">
+            <div className="bg-muted/30 p-6 rounded-[2.5rem] border border-border/50 shadow-2xl shadow-primary/5 rotate-2 hover:rotate-0 transition-all duration-500">
                <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center border">
                   <Layout className="h-16 w-16 text-primary/50" />
                </div>
@@ -78,7 +78,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Section: Scalability */}
-      <section className="py-24 bg-[#F8F9FB]">
+      <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight">Earn More with Your Network</h2>
@@ -89,7 +89,7 @@ function LandingPage() {
       </section>
       
       {/* FAQ Section */}
-      <section className="py-24 bg-white border-t border-border/50">
+      <section className="py-24 bg-card border-t border-border/50">
         <div className="container mx-auto px-4 max-w-2xl">
           <h2 className="text-3xl font-black mb-12 text-center">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="w-full">
@@ -110,7 +110,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Grid: More Capabilities */}
-      <section className="py-24 bg-[#F8F9FB] border-t border-border/50">
+      <section className="py-24 bg-muted/30 border-t border-border/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase text-primary tracking-widest">Platform Features</span>
@@ -125,7 +125,7 @@ function LandingPage() {
               { title: "Enterprise Security", icon: ShieldCheck, desc: "Multi-layer protection ensuring your account and data are never compromised." },
               { title: "Global Reach", icon: Rocket, desc: "Available worldwide with localized rewards for different regions." },
             ].map((feature, i) => (
-              <div key={i} className="p-8 rounded-[2rem] border-none shadow-sm bg-white hover:shadow-xl transition-all duration-300 space-y-4 group">
+              <div key={i} className="p-8 rounded-[2rem] border-none shadow-sm bg-card hover:shadow-xl transition-all duration-300 space-y-4 group">
                 <div className="bg-primary/10 w-fit p-3 rounded-2xl text-primary group-hover:scale-110 transition-transform">
                   <feature.icon className="h-6 w-6" />
                 </div>
@@ -154,7 +154,7 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t bg-background">
+      <footer className="py-12 border-t bg-card">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2 font-black text-2xl text-primary">
