@@ -96,18 +96,19 @@ function AuthPage() {
     if (!validate('login')) return;
     setLoading(true);
     try {
-      let loginEmail = identifier;
+      let loginEmail = identifier.trim();
       
-      if (!identifier.includes("@")) {
-        const { data, error: rpcError } = await supabase.rpc('get_user_email_by_username', {
-          _username: identifier
+      if (!loginEmail.includes("@")) {
+        const { data, error: rpcError } = await supabase.rpc('lookup_login_email', {
+          _username: loginEmail
         });
 
         if (rpcError || !data) {
-          throw new Error("Could not find account with that username.");
+          throw new Error("Incorrect username/email or password.");
         }
         loginEmail = data;
       }
+
 
       // In Supabase, the client initialization determines the storage.
       // Since the auto-generated client uses localStorage by default,
@@ -220,24 +221,39 @@ function AuthPage() {
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetEmail.includes("@")) {
-      setError("Please enter a valid email address.");
+    const input = resetEmail.trim();
+    if (!input) {
+      setError("Please enter your email or username.");
       return;
     }
+    setError("");
     setResetLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: window.location.origin + "/auth",
-      });
-      if (error) throw error;
+      let targetEmail = input;
+
+      if (!targetEmail.includes("@")) {
+        const { data } = await supabase.rpc('lookup_login_email', {
+          _username: targetEmail
+        });
+        targetEmail = (data as string | null) ?? "";
+      }
+
+      if (targetEmail) {
+        const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+          redirectTo: window.location.origin + "/auth",
+        });
+        if (error) throw error;
+      }
+
       setResetSent(true);
-      toast.success("Reset link sent to your email!");
+      toast.success("If an account exists, a reset link has been sent.");
     } catch (error: any) {
       setError(error.message);
     } finally {
       setResetLoading(false);
     }
   };
+
 
   if (showVerification) {
     return (
@@ -357,19 +373,22 @@ function AuthPage() {
           {showReset ? (
             <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="reset-email">Reset Email</Label>
+                <Label htmlFor="reset-email">Email or Username</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input 
                     className="pl-9"
                     id="reset-email" 
-                    type="email" 
-                    placeholder="m@example.com" 
+                    type="text" 
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    placeholder="email or username" 
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     required 
                   />
                 </div>
+
               </div>
               <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-md shadow-primary/10" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -420,7 +439,7 @@ function AuthPage() {
                         className="text-sm font-bold text-primary hover:underline"
                         onClick={() => {
                           setShowReset(true);
-                          setResetEmail(identifier.includes("@") ? identifier : "");
+                          setResetEmail(identifier.trim());
                           setError("");
                         }}
                       >
