@@ -201,6 +201,7 @@ function ReferralPage() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
