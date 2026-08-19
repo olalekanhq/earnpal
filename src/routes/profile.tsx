@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { ImageCropper } from "@/components/ImageCropper";
 
 export const Route = createFileRoute("/profile")({
   beforeLoad: async ({ location }) => {
@@ -36,6 +37,8 @@ function ProfilePage() {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+  const [isCropOpen, setIsCropOpen] = useState(false);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
@@ -47,24 +50,22 @@ function ProfilePage() {
     },
   });
 
-  useEffect(() => {
-    if (profile?.full_name) {
-      setFullName(profile.full_name);
-    }
-    if (profile?.username) {
-      setUsername(profile.username);
-    }
+  const resetForm = () => {
+    if (profile?.full_name) setFullName(profile.full_name);
+    if (profile?.username) setUsername(profile.username);
     if (profile?.phone_number) {
-      // Basic extraction logic: try to find the space after country code
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
-        const firstPart = parts[0];
-        setCountryCode(firstPart);
+        setCountryCode(parts[0]);
         setPhoneBody(parts.slice(1).join(" "));
       } else {
         setPhoneBody(profile.phone_number);
       }
     }
+  };
+
+  useEffect(() => {
+    resetForm();
   }, [profile]);
 
   const updateProfile = useMutation({
@@ -82,16 +83,31 @@ function ProfilePage() {
     onError: (error: any) => toast.error(error.message || "Failed to update profile"),
   });
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>): Promise<string | undefined> => {
+  const handleAvatarSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropImage(reader.result as string);
+      setIsCropOpen(true);
+    };
+    reader.readAsDataURL(file);
+    // Reset the input value so the same file can be selected again if needed
+    event.target.value = "";
+  };
+
+  const handleAvatarUpload = async (blob: Blob) => {
     try {
-      const file = event.target.files?.[0];
-      if (!file) return;
+      setIsCropOpen(false);
       setIsUploading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
+      
+      const filePath = `${user.id}/${Math.random()}.jpg`;
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, blob, {
+        contentType: 'image/jpeg'
+      });
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage
@@ -99,12 +115,11 @@ function ProfilePage() {
         .getPublicUrl(filePath);
 
       await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
-      return data.publicUrl;
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
-      return undefined;
     } finally {
       setIsUploading(false);
+      setCropImage(null);
     }
   };
 
@@ -190,10 +205,17 @@ function ProfilePage() {
             <Button 
               variant="outline" 
               className="w-full rounded-xl font-bold gap-2"
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => {
+                if (isEditing) {
+                  resetForm();
+                  setIsEditing(false);
+                } else {
+                  setIsEditing(true);
+                }
+              }}
             >
-              <Edit3 className="h-4 w-4" />
-              {isEditing ? "View Profile" : "Edit Profile"}
+              {isEditing ? <X className="h-4 w-4" /> : <Edit3 className="h-4 w-4" />}
+              {isEditing ? "Cancel" : "Edit Profile"}
             </Button>
           </CardContent>
         </Card>
