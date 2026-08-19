@@ -21,7 +21,35 @@ export function Navigation() {
 
   const isAuthPage = location.pathname === "/auth";
   const isLandingPage = location.pathname === "/";
-  if (isAuthPage || isLandingPage) return null;
+  
+  if (isAuthPage) return null;
+
+  // Custom transparent navbar for landing page
+  if (isLandingPage) {
+    return (
+      <nav className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b">
+        <div className="container mx-auto px-4 flex h-20 items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
+            <Coins className="h-8 w-8" />
+            <span>Earn Pal</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/earn" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
+            <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
+            <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" className="font-black uppercase hidden sm:flex" asChild>
+              <Link to="/auth">Log in</Link>
+            </Button>
+            <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
+              <Link to="/auth">Get Started</Link>
+            </Button>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const { data: profile } = useQuery({
     queryKey: ["profile"],
