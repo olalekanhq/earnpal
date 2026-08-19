@@ -35,8 +35,11 @@ function EarnPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
-      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
+      const { data: tasksData, error: tasksError } = await supabase.from("tasks").select("*").eq("is_active", true);
+      if (tasksError) throw tasksError;
+      const { data: submissions, error: submissionsError } = await supabase.from("task_submissions").select("task_id, status").eq("user_id", user.id);
+      if (submissionsError) throw submissionsError;
+
       
       const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
       
