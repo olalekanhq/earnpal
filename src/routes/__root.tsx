@@ -121,6 +121,21 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get('ref');
+    
+    if (refCode) {
+      const trackClick = async () => {
+        const { error } = await supabase.rpc('increment_referral_clicks', {
+          target_referral_code: refCode
+        });
+        if (error) console.error("Error tracking referral click:", error);
+      };
+      trackClick();
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />
