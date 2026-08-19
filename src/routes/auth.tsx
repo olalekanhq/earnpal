@@ -136,50 +136,95 @@ function AuthPage() {
               {error}
             </div>
           )}
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login" className="font-bold">Log in</TabsTrigger>
-              <TabsTrigger value="signup" className="font-bold">Sign up</TabsTrigger>
-            </TabsList>
-            <TabsContent value="login">
-              <form onSubmit={handleEmailLogin} className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      className="pl-9"
-                      id="email" 
-                      type="email" 
-                      placeholder="m@example.com" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required 
-                    />
-                  </div>
+          {showReset ? (
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Reset Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    className="pl-9"
+                    id="reset-email" 
+                    type="email" 
+                    placeholder="m@example.com" 
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required 
+                  />
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
+              </div>
+              <Button type="submit" className="w-full font-black uppercase" disabled={resetLoading}>
+                {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {resetSent ? "RESEND LINK" : "SEND RESET LINK"}
+              </Button>
+              <Button 
+                type="button" 
+                variant="link" 
+                className="w-full font-bold"
+                onClick={() => {
+                  setShowReset(false);
+                  setError("");
+                }}
+              >
+                BACK TO LOGIN
+              </Button>
+            </form>
+          ) : (
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login" className="font-bold">Log in</TabsTrigger>
+                <TabsTrigger value="signup" className="font-bold">Sign up</TabsTrigger>
+              </TabsList>
+              <TabsContent value="login">
+                <form onSubmit={handleEmailLogin} className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="email" 
+                        type="email" 
+                        placeholder="m@example.com" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required 
+                      />
+                    </div>
                   </div>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      className="pl-9"
-                      id="password" 
-                      type="password" 
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required 
-                    />
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Password</Label>
+                      <button 
+                        type="button"
+                        className="text-sm font-bold text-primary hover:underline"
+                        onClick={() => {
+                          setShowReset(true);
+                          setResetEmail(email);
+                          setError("");
+                        }}
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="password" 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required 
+                      />
+                    </div>
                   </div>
-                </div>
-                <Button type="submit" className="w-full font-black uppercase" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Log in
-                </Button>
-              </form>
-            </TabsContent>
+                  <Button type="submit" className="w-full font-black uppercase" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Log in
+                  </Button>
+                </form>
+              </TabsContent>
             <TabsContent value="signup">
               <form onSubmit={handleEmailSignUp} className="space-y-4 pt-4">
                 <div className="space-y-2">
