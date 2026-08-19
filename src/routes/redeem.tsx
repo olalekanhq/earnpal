@@ -121,7 +121,7 @@ function RedeemPage() {
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start mb-2">
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2 py-0.5 font-bold uppercase text-[9px]">
-                  {reward.category || 'Featured'}
+                  {(reward as any).category || 'Featured'}
                 </Badge>
               </div>
               <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors">{reward.title}</CardTitle>
