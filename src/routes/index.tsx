@@ -29,133 +29,80 @@ function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden bg-background">
+      <section className="relative pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden bg-background bg-grid">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20 animate-in fade-in slide-in-from-bottom-2">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20 animate-in fade-in slide-in-from-bottom-2">
               <Zap className="h-4 w-4" />
-              <span>EARN PAL IS NOW LIVE</span>
+              <span>THE FUTURE OF REWARDS IS HERE</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
-              Turn Your <span className="text-primary">Time</span> Into <span className="text-primary underline decoration-primary/30">Rewards</span>
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
+              Grow your Digital Empire <span className="text-primary italic">Without the Chaos</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
-              The simplest way to earn points online. Complete daily tasks, refer your squad, and cash out for premium gifts.
+              Unified control for marketplace tasks, referrals, and earning—all in one intelligent dashboard.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <Button size="lg" className="text-lg px-8 h-14 font-black shadow-xl shadow-primary/20 group" asChild>
+              <Button size="lg" className="text-lg px-8 h-14 font-black shadow-xl shadow-primary/20 group uppercase" asChild>
                 <Link to="/auth">
-                  GET STARTED NOW <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  Get Started →
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-black" asChild>
-                <Link to="/earn">VIEW ALL TASKS</Link>
+              <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-black uppercase text-foreground/70 hover:text-foreground" asChild>
+                <Link to="/earn">Learn more</Link>
               </Button>
             </div>
           </div>
         </div>
-        
-        {/* Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-0 pointer-events-none opacity-20">
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary rounded-full blur-[120px] mix-blend-multiply" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-400 rounded-full blur-[120px] mix-blend-multiply" />
-        </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 border-y bg-accent/5">
+      {/* Feature Section: Dashboard Highlight */}
+      <section className="py-24 bg-accent/10 border-y">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Active Users", value: "50K+" },
-              { label: "Points Paid", value: "12M+" },
-              { label: "Tasks Done", value: "850K+" },
-              { label: "Happy Earners", value: "99%" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-black text-foreground">{stat.value}</div>
-                <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{stat.label}</div>
-              </div>
-            ))}
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div className="space-y-6">
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">Unified Control in One Dashboard</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
+              <Button className="font-black uppercase" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
+            </div>
+            <div className="bg-white p-4 rounded-3xl border shadow-2xl shadow-primary/10 rotate-2 hover:rotate-0 transition-transform">
+               <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center border">
+                  <Layout className="h-16 w-16 text-primary/50" />
+               </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Feature Section: Scalability */}
       <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">How It Works</h2>
-            <p className="text-muted-foreground font-medium max-w-xl mx-auto text-lg">
-              Three simple steps to start cashing in on your daily activity.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Complete Tasks",
-                desc: "Follow socials, watch videos, or take surveys. New tasks added every hour.",
-                icon: Zap,
-                color: "bg-blue-500",
-              },
-              {
-                title: "Grow Your Team",
-                desc: "Refer friends and earn 10% of their earnings forever. No caps on referrals.",
-                icon: Users,
-                color: "bg-primary",
-              },
-              {
-                title: "Redeem Rewards",
-                desc: "Convert your hard-earned points into gift cards, crypto, or cash instantly.",
-                icon: Gift,
-                color: "bg-purple-500",
-              },
-            ].map((feature, i) => (
-              <div key={i} className="group p-8 rounded-3xl border bg-card hover:border-primary/50 transition-all hover:shadow-2xl hover:shadow-primary/5">
-                <div className={`${feature.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <feature.icon className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-black mb-4 uppercase">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed font-medium">{feature.desc}</p>
-              </div>
-            ))}
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">Limitless Growth and Scale</h2>
+            <p className="text-lg text-muted-foreground">Built on enterprise-grade infrastructure, Earn Pal effortlessly handles your traffic spikes, high transaction volumes, and thousands of concurrent users as your business scales.</p>
+            <Button size="lg" className="uppercase font-black" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
           </div>
         </div>
       </section>
-
-      {/* Social Proof Section */}
-      <section className="py-24 bg-accent/5">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 space-y-6">
-              <h2 className="text-4xl md:text-5xl font-black uppercase leading-none">
-                Safe. Secure. <br />
-                <span className="text-primary">Reliable.</span>
-              </h2>
-              <p className="text-lg text-muted-foreground font-medium">
-                We use enterprise-grade security to ensure your data and earnings are always protected. Join a community that values your privacy.
-              </p>
-              <div className="space-y-4">
-                {[
-                  "SSL Encrypted Transactions",
-                  "Verified Redemption Partners",
-                  "24/7 Dedicated Support",
-                  "Anti-Fraud Protection Systems",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-green-500" />
-                    <span className="font-bold text-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex-1 w-full max-w-md">
-              <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 to-blue-400/20 border-2 border-primary/10 flex items-center justify-center p-8 relative">
-                 <ShieldCheck className="h-32 w-32 text-primary animate-pulse" />
-                 <div className="absolute inset-0 border-[20px] border-background/50 rounded-3xl" />
-              </div>
-            </div>
-          </div>
+      
+      {/* FAQ Section */}
+      <section className="py-24 bg-accent/10 border-t">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <h2 className="text-3xl font-black uppercase mb-12 text-center">Frequently asked questions</h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="1">
+              <AccordionTrigger className="text-lg font-bold">How do I start earning?</AccordionTrigger>
+              <AccordionContent>Simply sign up and head to the Tasks page. Complete any listed task to start accumulating points instantly.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="2">
+              <AccordionTrigger className="text-lg font-bold">Is referral tracking real-time?</AccordionTrigger>
+              <AccordionContent>Yes, our system tracks clicks, signups, and point accruals in real-time on your dedicated Referrals Dashboard.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="3">
+              <AccordionTrigger className="text-lg font-bold">How secure are my points?</AccordionTrigger>
+              <AccordionContent>We use enterprise-grade encryption and anti-fraud systems to ensure your points balance is always accurate and secure.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
