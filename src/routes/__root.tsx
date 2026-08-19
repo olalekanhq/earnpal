@@ -125,8 +125,23 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const location = useLocation();
+  const router = useRouter();
   const isLandingPage = location.pathname === "/";
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        router.invalidate();
+      }
+      if (event === 'SIGNED_OUT') {
+        router.invalidate();
+        router.navigate({ to: '/auth' });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

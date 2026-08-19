@@ -10,7 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const Route = createFileRoute("/redeem")({
   beforeLoad: async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw redirect({ to: "/auth" });
+    if (!session) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const { data: { session: retrySession } } = await supabase.auth.getSession();
+      if (!retrySession) throw redirect({ to: "/auth", search: { redirect: window.location.pathname } });
+    }
   },
   component: RedeemPage,
 });

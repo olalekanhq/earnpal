@@ -17,11 +17,23 @@ export const Route = createFileRoute("/dashboard")({
     ],
   }),
   beforeLoad: async () => {
+    // Check session, but try to be resilient to initialization race conditions
     const { data: { session } } = await supabase.auth.getSession();
+    
     if (!session) {
-      throw redirect({
-        to: "/auth",
-      });
+      // Small delay to allow Supabase to initialize if it's currently hydrating
+      // This helps with page refreshes where the storage might not be read yet
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const { data: { session: retrySession } } = await supabase.auth.getSession();
+      
+      if (!retrySession) {
+        throw redirect({
+          to: "/auth",
+          search: {
+            redirect: window.location.pathname,
+          },
+        });
+      }
     }
   },
   component: Dashboard,

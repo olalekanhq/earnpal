@@ -16,6 +16,9 @@ export const Route = createFileRoute("/")({
   }),
   beforeLoad: async () => {
     const { data: { session } } = await supabase.auth.getSession();
+    
+    // We only redirect if we definitely have a session.
+    // If not, we don't wait/retry here because the landing page is public.
     if (session) {
       throw redirect({
         to: "/dashboard",
