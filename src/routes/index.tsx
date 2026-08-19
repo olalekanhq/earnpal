@@ -10,10 +10,10 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    title: "Dashboard | Paid Point",
+    title: "Dashboard | Earn Pal",
     meta: [
-      { name: "description", content: "Manage your points and complete tasks on Paid Point." },
-      { property: "og:title", content: "Dashboard | Paid Point" },
+      { name: "description", content: "Manage your points and complete tasks on Earn Pal." },
+      { property: "og:title", content: "Dashboard | Earn Pal" },
     ],
   }),
   beforeLoad: async () => {
