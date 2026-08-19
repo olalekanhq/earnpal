@@ -2,11 +2,14 @@ import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 import { supabase } from '@/integrations/supabase/client'
 
 export const Route = createFileRoute('/_authenticated')({
+  // Sessions live in browser storage, so the server can never see them.
+  // Rendering this subtree client-only prevents the SSR pass from redirecting
+  // signed-in users to /auth on a hard refresh.
+  ssr: false,
   beforeLoad: async ({ location }) => {
-    // getSession() will recover the session from storage on refresh
-    const { data: { session } } = await supabase.auth.getSession()
-    
-    if (!session) {
+    const { data, error } = await supabase.auth.getUser()
+
+    if (error || !data.user) {
       throw redirect({
         to: '/auth',
         search: {
@@ -14,7 +17,8 @@ export const Route = createFileRoute('/_authenticated')({
         },
       })
     }
-    return { session }
+
+    return { user: data.user }
   },
   component: () => <Outlet />,
 })
