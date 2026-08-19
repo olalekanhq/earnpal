@@ -154,7 +154,7 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t bg-background">
+      <footer className="py-12 border-t bg-card">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2 font-black text-2xl text-primary">
