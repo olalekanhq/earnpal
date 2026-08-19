@@ -145,12 +145,28 @@ function ProfilePage() {
           <div className="h-32 bg-gradient-to-r from-primary to-primary/60" />
           <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
             <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-12">
-              <Avatar className="h-32 w-32 border-4 border-background shadow-2xl">
-                <AvatarImage src={profile?.avatar_url || ""} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-4xl font-black">
-                  {profile?.full_name?.[0] || profile?.username?.[0] || "?"}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative inline-block group">
+                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl">
+                  <AvatarImage src={profile?.avatar_url || ""} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-4xl font-black">
+                    {profile?.full_name?.[0] || profile?.username?.[0] || "?"}
+                  </AvatarFallback>
+                </Avatar>
+                <label 
+                  htmlFor="avatar-upload"
+                  className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform border-4 border-background"
+                >
+                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
+                  <input 
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                    disabled={isUploading}
+                  />
+                </label>
+              </div>
               <div className="flex-1 space-y-1 mb-2">
                 <h1 className="text-3xl font-black text-foreground">{profile?.full_name || "New User"}</h1>
                 <p className="text-primary font-bold">@{profile?.username || "username"}</p>
@@ -159,7 +175,7 @@ function ProfilePage() {
                 <Button asChild variant="outline" className="font-bold">
                   <Link to="/settings">
                     <SettingsIcon className="mr-2 h-4 w-4" />
-                    Edit Profile
+                    Settings
                   </Link>
                 </Button>
               </div>
