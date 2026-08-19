@@ -29,7 +29,8 @@ export function TasksManager() {
     category: "social",
     is_active: true,
     link_url: "",
-    verification_required: false
+    verification_required: false,
+    is_featured: false
   });
 
   const { data: tasks, isLoading } = useQuery({
