@@ -246,7 +246,7 @@ function ProfilePage() {
                         <Gift className="h-4 w-4" />
                       </div>
                       <div className="text-left">
-                        <p className="text-sm font-bold text-foreground leading-tight">Ready to redeem?</p>
+                        <p className="text-sm font-black text-foreground leading-tight">Ready to redeem?</p>
                         <p className="text-xs text-muted-foreground font-medium">Check available rewards</p>
                       </div>
                     </div>
