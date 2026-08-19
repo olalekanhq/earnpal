@@ -27,6 +27,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
