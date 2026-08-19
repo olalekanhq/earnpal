@@ -316,14 +316,14 @@ function AuthPage() {
                 alt="Earn Pal Dashboard Preview" 
                 className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent flex flex-col justify-end p-12">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-12">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-12 w-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
                     <Coins className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h3 className="text-3xl font-black tracking-tight text-foreground uppercase">Earn Pal</h3>
+                  <h3 className="text-3xl font-black tracking-tight text-white uppercase drop-shadow-sm">Earn Pal</h3>
                 </div>
-                <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
+                <p className="text-xl font-bold text-white/90 leading-relaxed max-w-md drop-shadow-md">
                   Join thousands of users earning daily rewards through simple tasks and referrals.
                 </p>
               </div>
