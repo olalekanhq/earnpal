@@ -108,11 +108,17 @@ function AuthPage() {
         loginEmail = data;
       }
 
-      // Configure persistence based on "Remember me"
-      await supabase.auth.setSession({
-        access_token: '',
-        refresh_token: '',
-      }); // Reset session before sign in if needed, but Supabase handles it via options
+      // In Supabase, the client initialization determines the storage.
+      // Since the auto-generated client uses localStorage by default,
+      // it persists across browser restarts.
+      // If "Remember me" is unchecked, we can't easily change the client's storage provider
+      // at runtime without re-initializing it.
+      // Instead, we will store a flag to clear the session on browser close if not remembered.
+      if (!rememberMe) {
+        localStorage.setItem('earn-pal-session-transient', 'true');
+      } else {
+        localStorage.removeItem('earn-pal-session-transient');
+      }
 
       const { error } = await supabase.auth.signInWithPassword({ 
         email: loginEmail, 
@@ -121,18 +127,6 @@ function AuthPage() {
 
       if (error) throw error;
       
-      // Since supabase-js client is initialized with persistSession: true,
-      // and uses localStorage by default, if the user UNCHECKS "Remember me",
-      // we might want to switch to sessionStorage or clear on tab close.
-      // However, the standard implementation for "Remember me" in Supabase SPA
-      // is usually about the session length or using localStorage vs sessionStorage.
-      // Given our client is static, we'll handle this by clearing session on unload if not remembered.
-      if (!rememberMe) {
-        window.addEventListener('beforeunload', () => {
-          supabase.auth.signOut();
-        });
-      }
-
       navigate({ to: (search.redirect as any) || "/dashboard" });
     } catch (error: any) {
       setError(error.message);
