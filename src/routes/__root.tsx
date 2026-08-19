@@ -167,13 +167,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden">
+      <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden w-full">
         <Navigation />
         <main className={cn(
           "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
           !isLandingPage && "md:pl-72"
         )}>
-          <div className={cn("flex-1", !isLandingPage && "pt-20 md:pt-0")}>
+          <div className={cn("flex-1 w-full", !isLandingPage && "pt-20 md:pt-0")}>
             <Outlet />
           </div>
         </main>

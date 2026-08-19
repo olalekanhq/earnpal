@@ -190,25 +190,39 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Overlay Sidebar */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="relative w-72 h-full bg-white animate-in slide-in-from-left duration-300 shadow-2xl">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="absolute right-2 top-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <X className="h-5 w-5" />
-            </Button>
-            <SidebarContent />
-          </div>
+      {/* Mobile Overlay Sidebar (Off-canvas Drawer) */}
+      <div 
+        className={cn(
+          "md:hidden fixed inset-0 z-50 flex transition-opacity duration-300",
+          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+      >
+        <div 
+          className={cn(
+            "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
+          )} 
+          onClick={() => setIsMobileMenuOpen(false)} 
+        />
+        <div 
+          className={cn(
+            "relative w-72 h-full bg-white shadow-2xl transition-transform duration-300 ease-in-out",
+            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="absolute right-2 top-2"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </Button>
+          <SidebarContent />
         </div>
-      )}
+      </div>
 
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar (Persistent) */}
       <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-white border-r border-border/50">
         <SidebarContent />
       </aside>
