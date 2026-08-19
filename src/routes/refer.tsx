@@ -1,12 +1,15 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Share2, Users, Gift, Copy, Check, Twitter, MessageSquare, Mail } from "lucide-react";
+import { Share2, Users, Gift, Copy, Check, Twitter, MessageSquare, Mail, Trophy, TrendingUp, Info } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Route = createFileRoute("/refer")({
   beforeLoad: async () => {
@@ -28,6 +31,27 @@ function ReferralPage() {
     },
   });
 
+  const { data: leaderboard } = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: async () => {
+      const { data } = await supabase.from("leaderboard").select("*").limit(10);
+      return data;
+    },
+  });
+
+  const { data: referralCount } = useQuery({
+    queryKey: ["referralCount"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return 0;
+      const { count } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("referred_by", user.id);
+      return count || 0;
+    },
+  });
+
   const referralLink = `${window.location.origin}/auth?ref=${profile?.referral_code}`;
 
   const copyToClipboard = () => {
@@ -37,11 +61,8 @@ function ReferralPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const shareStats = [
-    { label: "Total Referrals", value: "12", icon: Users },
-    { label: "Pending", value: "3", icon: Check },
-    { label: "Points Earned", value: "600", icon: Gift },
-  ];
+  const nextMilestone = 10;
+  const progress = ((referralCount || 0) / nextMilestone) * 100;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto px-4 py-8">
@@ -52,72 +73,133 @@ function ReferralPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3 mb-8">
-        {shareStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
+      <Tabs defaultValue="dashboard" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto mb-8">
+          <TabsTrigger value="dashboard">My Dashboard</TabsTrigger>
+          <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="dashboard" className="space-y-6 animate-in fade-in-50 duration-500">
+          <div className="grid gap-6 md:grid-cols-3">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Referrals</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{referralCount || 0}</div>
+                <p className="text-xs text-muted-foreground">Successful invites</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Points Earned</CardTitle>
+                <Gift className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{(referralCount || 0) * 50}</div>
+                <p className="text-xs text-muted-foreground">From referrals</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Rewards Progress</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span>{referralCount || 0} referrals</span>
+                  <span>{nextMilestone} milestone</span>
+                </div>
+                <Progress value={progress} className="h-2" />
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="border-primary/20 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="text-xl text-center">Your Unique Referral Link</CardTitle>
+              <CardDescription className="text-center">Share this link with your friends to start earning.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+            <CardContent className="space-y-6">
+              <div className="flex gap-2">
+                <Input 
+                  readOnly 
+                  value={referralLink} 
+                  className="font-mono text-xs md:text-sm bg-background"
+                />
+                <Button onClick={copyToClipboard} size="icon" className="shrink-0">
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+
+              <div className="flex justify-center gap-4">
+                <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-blue-400 hover:border-blue-400">
+                  <Twitter className="h-5 w-5" />
+                </Button>
+                <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-green-500 hover:border-green-500">
+                  <MessageSquare className="h-5 w-5" />
+                </Button>
+                <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-primary hover:border-primary">
+                  <Mail className="h-5 w-5" />
+                </Button>
+                <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-primary hover:border-primary">
+                  <Share2 className="h-5 w-5" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
 
-      <Card className="max-w-2xl mx-auto border-primary/20 bg-primary/5">
-        <CardHeader>
-          <CardTitle className="text-xl text-center">Your Unique Referral Link</CardTitle>
-          <CardDescription className="text-center">Share this link with your friends to start earning.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex gap-2">
-            <Input 
-              readOnly 
-              value={referralLink} 
-              className="font-mono text-xs md:text-sm bg-background"
-            />
-            <Button onClick={copyToClipboard} size="icon" className="shrink-0">
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
-          </div>
-
-          <div className="flex justify-center gap-4">
-            <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-blue-400 hover:border-blue-400">
-              <Twitter className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-green-500 hover:border-green-500">
-              <MessageSquare className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-primary hover:border-primary">
-              <Mail className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="icon" className="rounded-full h-12 w-12 hover:text-primary hover:border-primary">
-              <Share2 className="h-5 w-5" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="max-w-2xl mx-auto mt-12 space-y-4">
-        <h2 className="text-xl font-bold">How it works</h2>
-        <div className="grid gap-4">
-          {[
-            { step: 1, text: "Share your unique referral link with friends." },
-            { step: 2, text: "Your friends sign up using your link." },
-            { step: 3, text: "They complete their first task to verify their account." },
-            { step: 4, text: "You both get 50 bonus points!" },
-          ].map((item) => (
-            <div key={item.step} className="flex gap-4 items-start p-4 bg-muted/50 rounded-lg border">
-              <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold shrink-0">
-                {item.step}
-              </div>
-              <p className="pt-1">{item.text}</p>
+          <div className="max-w-2xl mx-auto mt-8 p-4 bg-blue-50 border border-blue-100 rounded-lg flex gap-3 text-blue-800">
+            <Info className="h-5 w-5 shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold mb-1">Referral Rewards Progress</p>
+              <p>You need {nextMilestone - (referralCount || 0)} more referrals to unlock the "Super Referrer" badge and a 200 point bonus!</p>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="leaderboard" className="animate-in fade-in-50 duration-500">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-yellow-500" />
+                Top Referrers
+              </CardTitle>
+              <CardDescription>The community's most active referrers this month.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {leaderboard?.map((user, idx) => (
+                  <div key={user.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                    <div className="flex items-center gap-4">
+                      <div className="w-6 font-bold text-muted-foreground">#{idx + 1}</div>
+                      <Avatar>
+                        <AvatarImage src={user.avatar_url || ""} />
+                        <AvatarFallback>{user.full_name?.[0] || "?"}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{user.full_name || "Anonymous User"}</div>
+                        <div className="text-xs text-muted-foreground">{user.points_balance} points</div>
+                      </div>
+                    </div>
+                    {idx < 3 && (
+                      <Trophy className={`h-5 w-5 ${
+                        idx === 0 ? "text-yellow-500" : idx === 1 ? "text-slate-400" : "text-amber-600"
+                      }`} />
+                    )}
+                  </div>
+                ))}
+                {!leaderboard?.length && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No data available yet. Be the first to top the charts!
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
