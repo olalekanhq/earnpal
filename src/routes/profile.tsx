@@ -158,13 +158,17 @@ function ProfilePage() {
                   {profile?.username?.[0]?.toUpperCase() || "?"}
                 </AvatarFallback>
               </Avatar>
-              <button 
-                onClick={() => document.getElementById('avatar-upload')?.click()}
-                className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
-              >
-                <Camera className="h-5 w-5" />
-              </button>
-              <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
+              {isEditing && (
+                <>
+                  <button 
+                    onClick={() => document.getElementById('avatar-upload')?.click()}
+                    className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
+                  >
+                    {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
+                  </button>
+                  <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
+                </>
+              )}
             </div>
             
             <div className="space-y-1 mb-6">
