@@ -140,6 +140,13 @@ export function AdminPanel() {
               Users
             </TabsTrigger>
             <TabsTrigger 
+              value="tasks" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <ListTodo className="h-4 w-4 mr-2" />
+              Tasks
+            </TabsTrigger>
+            <TabsTrigger 
               value="rewards" 
               className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
             >
@@ -158,6 +165,10 @@ export function AdminPanel() {
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <UsersManager />
+        </TabsContent>
+        
+        <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <TasksManager />
         </TabsContent>
         
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
