@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as LandingRouteImport } from './routes/landing'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as ReferRouteImport } from './routes/refer'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -50,6 +51,11 @@ const LandingRoute = LandingRouteImport.update({
   path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RedeemRoute = RedeemRouteImport.update({
   id: '/redeem',
   path: '/redeem',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
+  '/profile': typeof ProfileRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
   '/settings': typeof SettingsRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/earn'
     | '/landing'
+    | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EarnRoute: typeof EarnRoute
   LandingRoute: typeof LandingRoute
+  ProfileRoute: typeof ProfileRoute
   RedeemRoute: typeof RedeemRoute
   ReferRoute: typeof ReferRoute
   SettingsRoute: typeof SettingsRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/landing'
       fullPath: '/landing'
       preLoaderRoute: typeof LandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/redeem': {
@@ -251,6 +271,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EarnRoute: EarnRoute,
   LandingRoute: LandingRoute,
+  ProfileRoute: ProfileRoute,
   RedeemRoute: RedeemRoute,
   ReferRoute: ReferRoute,
   SettingsRoute: SettingsRoute,

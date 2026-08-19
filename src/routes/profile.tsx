@@ -166,7 +166,7 @@ function ProfilePage() {
               </div>
               <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
                 <span className="text-sm font-bold text-muted-foreground">Bonus Points</span>
-                <span className="text-xl font-black text-primary">{referralCount * 50}</span>
+                <span className="text-xl font-black text-primary">{(referralCount || 0) * 50}</span>
               </div>
               <Button asChild className="w-full font-black uppercase mt-2">
                 <Link to="/refer">View Referral Details</Link>
