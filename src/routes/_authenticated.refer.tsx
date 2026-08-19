@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/refer")({
       { property: "og:title", content: "Referral Program | Earn Pal" },
       { property: "og:description", content: "Share your unique link and watch your points balance grow." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 50 points for every signup.` },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 75 points for every signup.` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -79,7 +79,7 @@ function ReferralPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Referral Program</h1>
-          <p className="text-muted-foreground font-medium">Invite friends and earn 50 points for every signup.</p>
+          <p className="text-muted-foreground font-medium">Invite friends and earn 75 points for every signup.</p>
         </div>
       </header>
 
@@ -116,7 +116,7 @@ function ReferralPage() {
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Points Earned</p>
-                  <p className="text-2xl font-black">{referralCount * 50}</p>
+                  <p className="text-2xl font-black">{referralCount * 75}</p>
                 </div>
               </div>
             </Card>
@@ -198,7 +198,7 @@ function ReferralPage() {
                             </div>
                           </div>
                           <div className="bg-green-50 px-2 py-1 rounded-lg">
-                            <span className="text-[10px] font-bold text-green-600 uppercase">+50 Pts</span>
+                            <span className="text-[10px] font-bold text-green-600 uppercase">+75 Pts</span>
                           </div>
                         </div>
                       ))}
@@ -323,7 +323,7 @@ function ReferralPage() {
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-bold text-primary">3</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-medium">You instantly receive 50 points once their registration is verified.</p>
+                <p className="text-xs text-muted-foreground font-medium">You instantly receive 75 points once their registration is verified.</p>
               </div>
             </div>
           </Card>
