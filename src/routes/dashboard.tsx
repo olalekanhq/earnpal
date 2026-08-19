@@ -148,7 +148,7 @@ function Dashboard() {
         <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-white group">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Daily Streak</CardTitle>
+              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
               <div className="bg-orange-50 p-2 rounded-xl text-orange-600 group-hover:scale-110 transition-transform">
                 <Clock className="h-4 w-4" />
               </div>
