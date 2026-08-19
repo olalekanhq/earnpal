@@ -392,9 +392,9 @@ function AuthPage() {
                       />
                     </div>
                   </div>
-                  <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10 mt-2" disabled={loading}>
+                   <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-2" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Log in
+                    Sign in
                   </Button>
                 </form>
               </TabsContent>
