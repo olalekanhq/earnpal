@@ -229,17 +229,41 @@ export function Navigation() {
         <SidebarContent />
       </aside>
 
-      {/* Desktop Top Header (for desktop view only) */}
-      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-end px-8 bg-transparent pointer-events-none">
-        <div className="flex items-center gap-4 pointer-events-auto">
-          <div className="flex items-center gap-3 bg-white border border-border/50 shadow-sm px-4 py-1.5 rounded-full">
-            <Coins className="h-4 w-4 text-primary" strokeWidth={2} />
-            <span className="text-sm font-bold text-foreground">
+      {/* Desktop Top Bar */}
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 w-full bg-white/80 backdrop-blur-md border-b border-border/40">
+        <div className="flex flex-col">
+          <h1 className="text-lg font-black uppercase tracking-tight text-foreground">
+            {location.pathname === "/dashboard" && "Dashboard Overview"}
+            {location.pathname === "/earn" && "Earn Points"}
+            {location.pathname === "/refer" && "Referral Program"}
+            {location.pathname === "/redeem" && "Redeem Rewards"}
+            {location.pathname === "/profile" && "Your Profile"}
+            {location.pathname === "/settings" && "Account Settings"}
+            {location.pathname === "/admin" && "Admin Control Panel"}
+          </h1>
+          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest -mt-1">
+            Welcome back, {profile?.username || "User"}
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 bg-primary/5 border border-primary/10 shadow-sm px-4 py-2 rounded-2xl">
+            <Coins className="h-4 w-4 text-primary" strokeWidth={2.5} />
+            <span className="text-sm font-black text-foreground">
               {profile?.points_balance?.toLocaleString() || 0}
-              <span className="text-[10px] text-muted-foreground ml-1 font-semibold uppercase tracking-wider">Points</span>
+              <span className="text-[10px] text-muted-foreground ml-1.5 font-black uppercase tracking-wider">Points</span>
             </span>
           </div>
+          <div className="h-8 w-[1px] bg-border/60 mx-1" />
           <NotificationsPopover />
+          <Link to="/profile">
+            <Avatar className="h-9 w-9 border-2 border-primary/10 shadow-sm transition-transform hover:scale-105 active:scale-95">
+              <AvatarImage src={profile?.avatar_url || ""} />
+              <AvatarFallback className="bg-primary/5 text-primary">
+                <User className="h-4 w-4" />
+              </AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       </header>
     </>
