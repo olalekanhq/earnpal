@@ -4,8 +4,14 @@ import { AdminPanel } from "@/components/AdminPanel";
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw redirect({ to: "/auth" });
+    let { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const { data: { session: retrySession } } = await supabase.auth.getSession();
+      session = retrySession;
+    }
+    
+    if (!session) throw redirect({ to: "/auth", search: { redirect: window.location.pathname } });
     
     const { data: isAdmin } = await supabase.rpc("has_role", { 
       _user_id: session.user.id, 
