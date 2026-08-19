@@ -22,9 +22,9 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
-import { RedemptionsManager } from "./RedemptionsManager";
-import { RewardsManager } from "./RewardsManager";
-import { UsersManager } from "./UsersManager";
+import { RedemptionsManager } from "./admin/RedemptionsManager";
+import { RewardsManager } from "./admin/RewardsManager";
+import { UsersManager } from "./admin/UsersManager";
 import { cn } from "@/lib/utils";
 
 export function AdminPanel() {
