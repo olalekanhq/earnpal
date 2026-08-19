@@ -150,17 +150,28 @@ function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-md relative overflow-hidden">
+          <Card className="border-none shadow-md relative overflow-hidden flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Daily Streak</CardTitle>
               <Clock className="h-5 w-5 text-orange-500" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <div className="text-3xl font-black">{streak?.current_streak || 0} Days</div>
               <p className="text-xs font-medium mt-1 text-muted-foreground">Don't break the chain!</p>
+              
+              <div className="mt-4">
+                <Button 
+                  size="sm" 
+                  className="w-full font-bold shadow-lg shadow-primary/20" 
+                  disabled={claimDailyStreak.isPending}
+                  onClick={() => claimDailyStreak.mutate()}
+                >
+                  {claimDailyStreak.isPending ? "Claiming..." : "Claim Daily Reward"}
+                </Button>
+              </div>
             </CardContent>
             {streak && streak.current_streak > 0 && (
-               <div className="absolute -right-2 -bottom-2 opacity-5">
+               <div className="absolute -right-2 -bottom-2 opacity-5 pointer-events-none">
                  <Clock className="h-24 w-24" />
                </div>
             )}

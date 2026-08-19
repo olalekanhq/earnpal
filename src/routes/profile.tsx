@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -332,6 +332,45 @@ function ProfilePage() {
             </CardContent>
           </Card>
         </div>
+
+        <Card className="border-none shadow-md bg-card">
+          <CardHeader className="border-b border-border/50">
+            <CardTitle className="text-xl font-black uppercase flex items-center gap-2">
+              <Gift className="h-5 w-5 text-primary" />
+              Earnings Summary & Rewards
+            </CardTitle>
+            <CardDescription>Track your progress and redeem your hard-earned points</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-accent/50 border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase mb-2">Total Points Balance</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-3xl font-black text-primary">{(profile?.points_balance || 0).toLocaleString()} <span className="text-sm">PTS</span></span>
+                    <Coins className="h-8 w-8 text-primary/20" />
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  You earn points by completing tasks, referring friends, and maintaining your daily streak. Keep going to reach the next level!
+                </p>
+              </div>
+              
+              <div className="flex flex-col justify-center gap-4">
+                <div className="text-center md:text-left">
+                  <h3 className="font-bold text-lg">Ready to spend?</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Redeem your points for gift cards, vouchers, and other amazing rewards.</p>
+                </div>
+                <Button asChild className="w-full py-6 text-lg font-black uppercase shadow-lg shadow-primary/20 group">
+                  <Link to="/redeem">
+                    Go to Redeem Center
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
