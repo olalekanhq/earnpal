@@ -162,8 +162,8 @@ function Dashboard() {
             <div className="mt-6">
               <Button 
                 className={cn(
-                  "w-full rounded-xl font-bold py-6 transition-all",
-                  isClaimedToday ? "bg-muted text-muted-foreground cursor-default" : "shadow-md shadow-primary/10"
+                  "w-full rounded-xl font-bold h-12 transition-all",
+                  isClaimedToday ? "bg-muted text-muted-foreground border-none shadow-none cursor-default" : "shadow-md shadow-primary/10"
                 )}
                 disabled={isClaimedToday || claimDailyStreak.isPending}
                 onClick={() => claimDailyStreak.mutate()}
