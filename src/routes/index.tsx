@@ -125,10 +125,12 @@ function LandingPage() {
               { title: "Enterprise Security", icon: ShieldCheck, desc: "Multi-layer protection ensuring your account and data are never compromised." },
               { title: "Global Reach", icon: Rocket, desc: "Available worldwide with localized rewards for different regions." },
             ].map((feature, i) => (
-              <div key={i} className="p-8 rounded-3xl border bg-card hover:shadow-xl transition-all space-y-4">
-                <feature.icon className="h-10 w-10 text-primary" />
-                <h3 className="text-2xl font-bold uppercase">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
+              <div key={i} className="p-8 rounded-[2rem] border-none shadow-sm bg-white hover:shadow-xl transition-all duration-300 space-y-4 group">
+                <div className="bg-primary/10 w-fit p-3 rounded-2xl text-primary group-hover:scale-110 transition-transform">
+                  <feature.icon className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl font-bold">{feature.title}</h3>
+                <p className="text-muted-foreground font-medium leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
