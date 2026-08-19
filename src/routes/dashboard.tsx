@@ -293,21 +293,44 @@ function Dashboard() {
                 </div>
 
                 <div 
-                  className="p-4 rounded-2xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all cursor-pointer group"
-                  onClick={() => !claimDailyStreak.isPending && claimDailyStreak.mutate()}
+                  className={`p-4 rounded-2xl border-2 transition-all group ${
+                    streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                      ? 'border-muted bg-muted/20 opacity-70 cursor-not-allowed'
+                      : 'border-primary/20 bg-primary/5 hover:bg-primary/10 cursor-pointer'
+                  }`}
+                  onClick={() => {
+                    const claimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+                    if (!claimedToday && !claimDailyStreak.isPending) {
+                      claimDailyStreak.mutate();
+                    }
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-primary text-primary-foreground rounded-xl group-hover:rotate-12 transition-transform">
+                      <div className={`p-3 rounded-xl transition-transform ${
+                        streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                          ? 'bg-muted text-muted-foreground'
+                          : 'bg-primary text-primary-foreground group-hover:rotate-12'
+                      }`}>
                         <Gift className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-bold text-foreground">Daily Reward</p>
-                        <p className="text-xs font-bold text-primary uppercase">Claim {(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS</p>
+                        <p className="text-xs font-bold text-primary uppercase">
+                          {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
+                            ? 'Already Claimed'
+                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS`
+                          }
+                        </p>
                       </div>
                     </div>
-                    <Button size="sm" variant="secondary" className="font-bold" disabled={claimDailyStreak.isPending}>
-                      {claimDailyStreak.isPending ? "..." : "Claim"}
+                    <Button 
+                      size="sm" 
+                      variant={streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "ghost" : "secondary"} 
+                      className="font-bold" 
+                      disabled={claimDailyStreak.isPending || (streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString())}
+                    >
+                      {claimDailyStreak.isPending ? "..." : (streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "✓" : "Claim")}
                     </Button>
                   </div>
                 </div>
