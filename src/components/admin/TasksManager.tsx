@@ -91,7 +91,7 @@ export function TasksManager() {
     setFormData({
       title: "",
       description: "",
-      points_reward: 0,
+      points: 0,
       category: "social",
       is_active: true
     });
@@ -102,7 +102,7 @@ export function TasksManager() {
     setFormData({
       title: task.title,
       description: task.description || "",
-      points_reward: task.points_reward,
+      points: task.points,
       category: task.category || "social",
       is_active: task.is_active
     });
