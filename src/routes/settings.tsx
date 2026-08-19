@@ -103,10 +103,10 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-accent/5 pb-12">
+    <div className="min-h-screen bg-[#F8F9FB] pb-12">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Settings</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="text-muted-foreground font-medium">Manage your account and preferences</p>
             <Button asChild variant="outline" size="sm" className="font-bold">
