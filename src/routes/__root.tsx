@@ -188,7 +188,11 @@ function RootComponent() {
     if (typeof window !== 'undefined' && localStorage.getItem('earn-pal-session-transient') === 'true') {
       // Clear the transient flag and sign out to force fresh login after restart
       localStorage.removeItem('earn-pal-session-transient');
-      supabase.auth.signOut();
+      // Only sign out if we are not on a public page to avoid immediate redirect loops
+      const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
+      if (!publicPages.includes(window.location.pathname)) {
+        supabase.auth.signOut();
+      }
     }
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
