@@ -29,10 +29,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const isAuthPage = location.pathname === "/auth";
   const isLandingPage = location.pathname === "/";
@@ -87,8 +99,13 @@ export function Navigation() {
   });
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/auth";
+    try {
+      await supabase.auth.signOut();
+      toast.success("Successfully signed out. See you soon!");
+      window.location.href = "/auth";
+    } catch (error) {
+      toast.error("Error signing out. Please try again.");
+    }
   };
 
   const menuGroups = [
@@ -166,11 +183,11 @@ export function Navigation() {
             </div>
           )}
         </div>
-        <Button 
-          variant="ghost" 
-          className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl px-3 h-11"
-          onClick={handleLogout}
-        >
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl px-3 h-11"
+            onClick={() => setShowLogoutDialog(true)}
+          >
           <LogOut className="mr-3 h-5 w-5" strokeWidth={1.8} />
           <span className="font-bold">Logout</span>
         </Button>
@@ -180,6 +197,25 @@ export function Navigation() {
 
   return (
     <>
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent className="rounded-2xl border-border/40 max-w-[400px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-black text-xl">Sign out of Earn Pal?</AlertDialogTitle>
+            <AlertDialogDescription className="font-medium">
+              You'll need to sign back in to access your rewards and track your progress.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-xl font-bold border-border/40">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleLogout}
+              className="rounded-xl font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Sign Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {/* Mobile Top Bar */}
       <div className="md:hidden sticky top-0 left-0 z-40 w-full flex items-center justify-between h-20 px-4 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
         <div className="flex items-center gap-2">
@@ -225,7 +261,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm text-destructive focus:text-destructive focus:bg-destructive/5">
-                <button onClick={handleLogout} className="flex items-center w-full">
+                <button onClick={() => setShowLogoutDialog(true)} className="flex items-center w-full">
                   <LogOut className="mr-3 h-4 w-4" />
                   Sign out
                 </button>
@@ -341,7 +377,7 @@ export function Navigation() {
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border/40 my-1 mx-2" />
               <DropdownMenuItem asChild className="rounded-xl focus:bg-destructive/5 focus:text-destructive cursor-pointer px-3 py-2.5 font-bold text-sm text-destructive">
-                <button onClick={handleLogout} className="flex items-center w-full">
+                <button onClick={() => setShowLogoutDialog(true)} className="flex items-center w-full">
                   <LogOut className="mr-3 h-4 w-4" strokeWidth={2.5} />
                   Sign out
                 </button>
