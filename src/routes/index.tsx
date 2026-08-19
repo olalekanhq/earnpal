@@ -81,9 +81,9 @@ function LandingPage() {
       <section className="py-24 bg-[#F8F9FB]">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Limitless Growth and Scale</h2>
-            <p className="text-lg text-muted-foreground">Built on enterprise-grade infrastructure, Earn Pal effortlessly handles your traffic spikes, high transaction volumes, and thousands of concurrent users as your business scales.</p>
-            <Button size="lg" className="uppercase font-bold" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Limitless Growth and Scale</h2>
+            <p className="text-lg text-muted-foreground font-medium">Built on enterprise-grade infrastructure, Earn Pal effortlessly handles your traffic spikes, high transaction volumes, and thousands of concurrent users as your business scales.</p>
+            <Button size="lg" className="rounded-xl font-bold h-14 px-10" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
           </div>
         </div>
       </section>
