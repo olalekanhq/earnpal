@@ -186,14 +186,11 @@ function RootComponent() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // The 'SIGNED_IN' event fires on mount if a valid session is restored from storage.
-    // The 'INITIAL_SESSION' event also fires on mount.
+    // Handle session persistence and transient session logic
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log(`[Auth] Event: ${event}`, !!session);
       
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        // If we just signed in and rememberMe was FALSE, mark the session as transient in storage
-        // This is a safety check in case the login page didn't set it correctly
         router.invalidate();
       }
       
@@ -207,16 +204,22 @@ function RootComponent() {
       }
     });
 
-    // Check for transient session handling on mount
+    // CRITICAL: Handle transient session cleanup
+    // We only clear the session if BOTH are true:
+    // 1. It was marked as transient (Remember Me was unchecked)
+    // 2. This is a fresh browser session (sessionStorage was wiped by closing the tab/browser)
     const isTransient = localStorage.getItem('earn-pal-session-transient') === 'true';
     const isFreshSession = sessionStorage.getItem('earn-pal-session-active') === null;
 
     if (isTransient && isFreshSession) {
-      console.log('[Auth] Detected transient session in new browser context. Signing out.');
+      console.log('[Auth] Transient session detected in new browser context. Clearing.');
       localStorage.removeItem('earn-pal-session-transient');
-      supabase.auth.signOut();
+      // Use sign out to clear storage and redirect
+      supabase.auth.signOut().then(() => {
+        router.invalidate();
+      });
     } else if (isTransient) {
-      // Mark as active in current session storage so refreshes don't log out
+      // If we are refreshing an existing tab, restore the session-active flag
       sessionStorage.setItem('earn-pal-session-active', 'true');
     }
 
