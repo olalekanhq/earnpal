@@ -302,7 +302,7 @@ function ReferralPage() {
           </Card>
 
           <Card className="border-none shadow-sm bg-white p-6 space-y-4">
-            <h3 className="font-bold text-sm">How it works</h3>
+            <h3 className="font-black text-sm uppercase tracking-widest">How it works</h3>
             <div className="space-y-4">
               <div className="flex gap-3">
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
