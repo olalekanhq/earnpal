@@ -27,6 +27,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -45,6 +46,9 @@ function ProfilePage() {
   useEffect(() => {
     if (profile?.full_name) {
       setFullName(profile.full_name);
+    }
+    if (profile?.phone_number) {
+      setPhoneNumber(profile.phone_number);
     }
   }, [profile]);
 
@@ -188,10 +192,14 @@ function ProfilePage() {
                     <Label htmlFor="full-name" className="text-sm font-semibold">Full Name</Label>
                     <Input id="full-name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="rounded-xl h-11" />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone-number" className="text-sm font-semibold">Phone Number</Label>
+                    <Input id="phone-number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="rounded-xl h-11" placeholder="+1 (555) 000-0000" />
+                  </div>
                   <Button 
                     className="w-full rounded-xl font-bold h-11 mt-2" 
-                    onClick={() => updateProfile.mutate({ full_name: fullName })}
-                    disabled={updateProfile.isPending || fullName === profile?.full_name}
+                    onClick={() => updateProfile.mutate({ full_name: fullName, phone_number: phoneNumber })}
+                    disabled={updateProfile.isPending || (fullName === profile?.full_name && phoneNumber === (profile?.phone_number || ""))}
                   >
                     Save Changes
                   </Button>
@@ -264,6 +272,15 @@ function ProfilePage() {
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Email</p>
                     <p className="text-sm font-semibold truncate max-w-[150px]">{profile?.email || 'N/A'}</p>
+                  </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">
+                  <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
+                    <User className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Phone</p>
+                    <p className="text-sm font-semibold">{profile?.phone_number || 'Not added'}</p>
                   </div>
                 </Card>
                 <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">

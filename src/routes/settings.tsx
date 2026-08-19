@@ -180,45 +180,31 @@ function SettingsPage() {
             <Card className="border-none shadow-sm bg-white">
               <CardHeader className="border-b border-border/50">
                 <CardTitle className="text-xl font-black">Account Details</CardTitle>
-                <CardDescription>Update your public profile information</CardDescription>
+                <CardDescription>View your account information. To edit your details, visit your profile.</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="full-name" className="font-bold">Full Name</Label>
-                  <Input 
-                    id="full-name" 
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Enter your full name"
-                    className="font-medium"
-                  />
+                  <Label className="font-bold">Full Name</Label>
+                  <p className="text-sm font-medium p-2.5 bg-muted/30 rounded-xl border border-border/20">{profile?.full_name || "Not set"}</p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="font-bold">Username</Label>
-                  <Input 
-                    id="username" 
-                    value={profile?.username || ""} 
-                    disabled 
-                    className="font-medium bg-muted"
-                  />
+                  <Label className="font-bold">Username</Label>
+                  <p className="text-sm font-medium p-2.5 bg-muted/30 rounded-xl border border-border/20">{profile?.username || "Not set"}</p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="font-bold">Email Address</Label>
-                  <Input 
-                    id="email" 
-                    value={profile?.email || ""} 
-                    disabled 
-                    className="font-medium bg-muted"
-                  />
+                  <Label className="font-bold">Email Address</Label>
+                  <p className="text-sm font-medium p-2.5 bg-muted/30 rounded-xl border border-border/20">{profile?.email || "Not set"}</p>
                 </div>
+                {profile?.phone_number && (
+                  <div className="space-y-2">
+                    <Label className="font-bold">Phone Number</Label>
+                    <p className="text-sm font-medium p-2.5 bg-muted/30 rounded-xl border border-border/20">{profile.phone_number}</p>
+                  </div>
+                )}
               </CardContent>
               <CardFooter className="border-t border-border/50 bg-accent/5 py-4">
-                <Button 
-                  onClick={() => updateProfile.mutate({ full_name: fullName })}
-                  disabled={updateProfile.isPending || fullName === profile?.full_name}
-                  className="font-bold px-8 shadow-lg shadow-primary/20"
-                >
-                  {updateProfile.isPending ? "Saving..." : "Save Changes"}
+                <Button asChild className="font-bold px-8 shadow-lg shadow-primary/20">
+                  <Link to="/profile">Edit Profile</Link>
                 </Button>
               </CardFooter>
             </Card>
