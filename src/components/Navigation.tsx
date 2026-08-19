@@ -59,8 +59,9 @@ export function Navigation() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
+          {navItems.filter(item => item.name !== "Profile" && item.name !== "Settings").map((item) => (
             <Link 
+
               key={item.name} 
               to={item.href}
               className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
