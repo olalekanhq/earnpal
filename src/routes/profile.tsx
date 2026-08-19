@@ -148,7 +148,7 @@ function ProfilePage() {
             </div>
             
             <div className="space-y-1 mb-6">
-              <h2 className="text-xl font-bold text-foreground">{profile?.full_name || "New User"}</h2>
+              <h2 className="text-xl font-black text-foreground">{profile?.full_name || "New User"}</h2>
               <p className="text-sm font-medium text-muted-foreground">@{profile?.username}</p>
             </div>
 
