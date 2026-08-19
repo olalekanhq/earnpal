@@ -161,6 +161,13 @@ export function AdminPanel() {
               <Clock className="h-4 w-4 mr-2" />
               Redemptions
             </TabsTrigger>
+            <TabsTrigger 
+              value="audit" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <ShieldCheck className="h-4 w-4 mr-2" />
+              Audit Logs
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -178,6 +185,10 @@ export function AdminPanel() {
         
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <RedemptionsManager />
+        </TabsContent>
+
+        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <AuditLogs />
         </TabsContent>
       </Tabs>
     </div>
