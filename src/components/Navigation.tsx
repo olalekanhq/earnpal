@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield } from "lucide-react";
+import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
