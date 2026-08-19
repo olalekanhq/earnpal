@@ -54,7 +54,7 @@ function ReferralPage() {
   });
 
   const referralCount = referrals?.length || 0;
-  const referralLink = `${window.location.origin}/auth?ref=${profile?.referral_code}`;
+  const referralLink = `${window.location.origin}/?ref=${profile?.referral_code}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(referralLink);
