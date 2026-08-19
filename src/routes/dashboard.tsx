@@ -236,7 +236,7 @@ function Dashboard() {
                 <Share2 className="h-5 w-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-bold text-lg text-foreground leading-tight">Invite your friends</h3>
+                <h3 className="font-black text-lg text-foreground leading-tight">Invite your friends</h3>
                 <p className="text-xs text-muted-foreground font-medium">Earn 50 points for every verified referral signup.</p>
               </div>
               <Button className="w-full rounded-xl font-bold shadow-sm" asChild>
