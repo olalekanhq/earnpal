@@ -60,7 +60,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Section: Dashboard Highlight */}
-      <section className="py-24 bg-accent/10 border-y">
+      <section className="py-24 bg-white border-y border-border/50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
