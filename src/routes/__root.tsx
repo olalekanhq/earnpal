@@ -186,27 +186,14 @@ function RootComponent() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check if session should be cleared on startup (if it was transient)
-    const isTransient = localStorage.getItem('earn-pal-session-transient') === 'true';
-    const isFreshSession = sessionStorage.getItem('earn-pal-session-active') === null;
-
-    if (isTransient && isFreshSession) {
-      // Clear the transient flag and sign out to force fresh login after restart
-      localStorage.removeItem('earn-pal-session-transient');
-      
-      const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
-      if (!publicPages.includes(window.location.pathname)) {
-        supabase.auth.signOut();
-      }
-    } else if (isTransient) {
-      // If it's not a fresh session but marked as transient, ensure the active flag persists in sessionStorage
-      sessionStorage.setItem('earn-pal-session-active', 'true');
-    }
-    
+    // Handle session persistence and transient session logic
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
+      console.log(`[Auth] Event: ${event}`, !!session);
+      
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         router.invalidate();
       }
+      
       if (event === 'SIGNED_OUT') {
         router.invalidate();
         const currentPath = window.location.pathname;
@@ -216,6 +203,25 @@ function RootComponent() {
         }
       }
     });
+
+    // CRITICAL: Handle transient session cleanup
+    // We only clear the session if BOTH are true:
+    // 1. It was marked as transient (Remember Me was unchecked)
+    // 2. This is a fresh browser session (sessionStorage was wiped by closing the tab/browser)
+    const isTransient = localStorage.getItem('earn-pal-session-transient') === 'true';
+    const isFreshSession = sessionStorage.getItem('earn-pal-session-active') === null;
+
+    if (isTransient && isFreshSession) {
+      console.log('[Auth] Transient session detected in new browser context. Clearing.');
+      localStorage.removeItem('earn-pal-session-transient');
+      // Use sign out to clear storage and redirect
+      supabase.auth.signOut().then(() => {
+        router.invalidate();
+      });
+    } else if (isTransient) {
+      // If we are refreshing an existing tab, restore the session-active flag
+      sessionStorage.setItem('earn-pal-session-active', 'true');
+    }
 
     return () => subscription.unsubscribe();
   }, [router]);
