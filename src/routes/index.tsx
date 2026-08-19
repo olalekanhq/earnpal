@@ -39,7 +39,7 @@ function LandingPage() {
               <Zap className="h-4 w-4" />
               <span>THE FUTURE OF REWARDS IS HERE</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
               Grow your Digital Empire <span className="text-primary italic">Without the Chaos</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
