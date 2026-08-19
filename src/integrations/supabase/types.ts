@@ -389,6 +389,13 @@ export type Database = {
       }
     }
     Functions: {
+      assign_role: {
+        Args: {
+          new_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       get_user_email_by_username: {
         Args: { _username: string }
@@ -403,6 +410,13 @@ export type Database = {
       }
       increment_referral_clicks: {
         Args: { target_referral_code: string }
+        Returns: undefined
+      }
+      remove_role: {
+        Args: {
+          role_to_remove: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
         Returns: undefined
       }
       submit_task: {
