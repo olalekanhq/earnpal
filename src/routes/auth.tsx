@@ -203,8 +203,8 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4">
-        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+      <div className="flex h-[100dvh] items-center justify-center bg-accent/5 p-4 overflow-hidden">
+        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary max-h-[90vh] overflow-y-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 p-4 rounded-full">
@@ -263,15 +263,15 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8F9FB] p-4 relative overflow-hidden">
+    <div className="flex h-[100dvh] items-center justify-center bg-[#F8F9FB] p-4 relative overflow-hidden">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
 
-      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white p-8 md:p-10 rounded-[2.5rem]">
-        <CardHeader className="space-y-2 text-center pb-8 p-0">
-          <div className="flex justify-center mb-6">
-            <div className="flex items-center gap-2 font-black text-3xl text-primary tracking-tighter">
+      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] max-h-[95vh] overflow-y-auto">
+        <CardHeader className="space-y-2 text-center pb-6 p-0">
+          <div className="flex justify-center mb-4 md:mb-6">
+            <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
               <Coins className="h-7 w-7" />
               <span>EARN PAL</span>
             </div>
@@ -350,7 +350,7 @@ function AuthPage() {
                 <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
               </TabsList>
               <TabsContent value="login">
-                <form onSubmit={handleEmailLogin} className="space-y-4 pt-4">
+                <form onSubmit={handleEmailLogin} className="space-y-3 md:space-y-4 pt-4">
                   <div className="space-y-2">
                     <Label htmlFor="identifier">Email or Username</Label>
                     <div className="relative">
@@ -392,7 +392,7 @@ function AuthPage() {
                       />
                     </div>
                   </div>
-                   <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-2" disabled={loading}>
+                   <Button type="submit" className="w-full h-11 md:h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-2" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
