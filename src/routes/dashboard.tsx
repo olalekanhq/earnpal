@@ -10,10 +10,13 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
-    title: "Dashboard | Earn Pal",
+    title: "My Dashboard | Earn Pal — Reward Your Time",
     meta: [
-      { name: "description", content: "Manage your points and complete tasks on Earn Pal." },
-      { property: "og:title", content: "Dashboard | Earn Pal" },
+      { name: "description", content: "Track your rewards, daily streaks, and points balance on your Earn Pal dashboard." },
+      { property: "og:title", content: "My Dashboard | Earn Pal" },
+      { property: "og:description", content: "Check your progress and redeem points for amazing prizes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ location }) => {
