@@ -184,15 +184,23 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     // Check if session should be cleared on startup (if it was transient)
-    if (typeof window !== 'undefined' && localStorage.getItem('earn-pal-session-transient') === 'true') {
+    const isTransient = localStorage.getItem('earn-pal-session-transient') === 'true';
+    const isFreshSession = sessionStorage.getItem('earn-pal-session-active') === null;
+
+    if (isTransient && isFreshSession) {
       // Clear the transient flag and sign out to force fresh login after restart
       localStorage.removeItem('earn-pal-session-transient');
-      // Only sign out if we are not on a public page to avoid immediate redirect loops
+      
       const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
       if (!publicPages.includes(window.location.pathname)) {
         supabase.auth.signOut();
       }
+    } else if (isTransient) {
+      // If it's not a fresh session but marked as transient, ensure the active flag persists in sessionStorage
+      sessionStorage.setItem('earn-pal-session-active', 'true');
     }
     
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
