@@ -1,12 +1,14 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Trophy } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -102,6 +104,38 @@ function Dashboard() {
     },
   });
 
+  const { data: popularRewards } = useQuery({
+    queryKey: ["popularRewards"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("rewards")
+        .select("*")
+        .eq("is_active", true)
+        .limit(3);
+      return data;
+    },
+  });
+
+  const { data: recommendedTasks } = useQuery({
+    queryKey: ["recommendedTasks"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("is_active", true)
+        .limit(3);
+      return data;
+    },
+  });
+
+  const { data: leaderboard } = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: async () => {
+      const { data } = await supabase.from("leaderboard").select("*").limit(10);
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
@@ -186,7 +220,7 @@ function Dashboard() {
             <Card className="border-none shadow-md">
               <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-6">
                 <div>
-                  <CardTitle className="text-xl font-bold">Recent Activity</CardTitle>
+                  <CardTitle className="text-xl font-bold uppercase tracking-tight">Recent Activity</CardTitle>
                   <CardDescription>Your history of earnings and redemptions</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" asChild className="hidden sm:flex">
@@ -211,7 +245,7 @@ function Dashboard() {
                       </div>
                     </div>
                   )) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-8">
                        <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                          <Clock className="h-8 w-8 text-muted-foreground" />
                        </div>
@@ -222,13 +256,78 @@ function Dashboard() {
                     </div>
                   )}
                 </div>
-                <Button variant="ghost" className="w-full mt-8 border-t rounded-none pt-4" asChild>
-                  <Link to="/earn" className="flex items-center justify-center gap-2 text-primary font-bold">
-                    View full activity report <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </Button>
               </CardContent>
             </Card>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-black uppercase tracking-tight">Hot Rewards</h2>
+                <Button variant="ghost" size="sm" asChild className="text-primary font-bold">
+                  <Link to="/redeem">See All <ChevronRight className="h-4 w-4 ml-1" /></Link>
+                </Button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {popularRewards?.length ? popularRewards.map((reward) => (
+                  <Card key={reward.id} className="border-none shadow-sm overflow-hidden group">
+                    <div className="aspect-video relative bg-muted">
+                      {reward.image_url ? (
+                        <img src={reward.image_url} alt={reward.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground/30">
+                          <Gift className="h-8 w-8" />
+                        </div>
+                      )}
+                      <div className="absolute top-2 right-2">
+                        <div className="bg-background/90 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-black text-primary border border-primary/20">
+                          {reward.cost_points} PTS
+                        </div>
+                      </div>
+                    </div>
+                    <CardContent className="p-3">
+                      <p className="font-bold text-sm truncate">{reward.title}</p>
+                      <Button variant="secondary" size="sm" className="w-full mt-2 h-8 text-[10px] font-bold" asChild>
+                        <Link to="/redeem">REDEEM</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )) : (
+                  [1, 2, 3].map((i) => (
+                    <Card key={i} className="border-none shadow-sm overflow-hidden bg-muted/20 p-4 flex flex-col items-center justify-center min-h-[140px] text-center">
+                      <Gift className="h-8 w-8 text-muted-foreground/30 mb-2" />
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase">Coming Soon</p>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-black uppercase tracking-tight">Community Leaders</h2>
+              <Card className="border-none shadow-md divide-y divide-border/50">
+                {leaderboard?.slice(0, 3).map((user, idx) => (
+                  <div key={user.id} className="flex items-center justify-between p-4 bg-card">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${
+                        idx === 0 ? "bg-yellow-100 text-yellow-700" : 
+                        idx === 1 ? "bg-slate-100 text-slate-700" : 
+                        "bg-orange-100 text-orange-700"
+                      }`}>
+                        #{idx + 1}
+                      </div>
+                      <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
+                        <AvatarImage src={user.avatar_url || ""} />
+                        <AvatarFallback className="font-bold text-xs">{user.full_name?.[0] || "?"}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-bold text-sm">{user.full_name || "Anonymous"}</p>
+                        <p className="text-xs text-muted-foreground font-medium">{user.points_balance?.toLocaleString()} points</p>
+                      </div>
+                    </div>
+                    {idx === 0 && <TrendingUp className="h-4 w-4 text-green-500" />}
+                  </div>
+                ))}
+              </Card>
+            </div>
           </div>
 
           <div className="lg:col-span-4 space-y-8">
@@ -271,6 +370,24 @@ function Dashboard() {
                       {claimDailyStreak.isPending ? "..." : "Claim"}
                     </Button>
                   </div>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-1">Recommended for you</p>
+                  {recommendedTasks?.map((task) => (
+                    <Link key={task.id} to="/earn" className="flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/30 transition-colors group cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-accent rounded-lg group-hover:bg-primary/10 transition-colors">
+                          <Zap className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold truncate max-w-[120px]">{task.title}</p>
+                          <p className="text-[10px] text-primary font-black">+{task.points} PTS</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                    </Link>
+                  ))}
                 </div>
 
                 <Button className="w-full py-6 text-md font-black shadow-lg shadow-primary/20" asChild>
