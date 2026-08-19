@@ -230,6 +230,7 @@ export type Database = {
           icon_name: string | null
           id: string
           is_active: boolean
+          is_featured: boolean | null
           link_url: string | null
           points: number
           title: string
@@ -242,6 +243,7 @@ export type Database = {
           icon_name?: string | null
           id?: string
           is_active?: boolean
+          is_featured?: boolean | null
           link_url?: string | null
           points: number
           title: string
@@ -254,6 +256,7 @@ export type Database = {
           icon_name?: string | null
           id?: string
           is_active?: boolean
+          is_featured?: boolean | null
           link_url?: string | null
           points?: number
           title?: string
