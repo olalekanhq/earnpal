@@ -281,6 +281,8 @@ function AuthPage() {
                   <Input 
                     id="referral-code" 
                     placeholder="e.g. 5a2b3c"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
                   />
                 </div>
                 <Button type="submit" className="w-full font-black uppercase" disabled={loading}>
