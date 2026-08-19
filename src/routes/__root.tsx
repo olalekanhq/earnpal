@@ -20,18 +20,7 @@ import { Onboarding } from "@/components/Onboarding";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 
-import { createFileRoute } from "@tanstack/react-router";
-
 function NotFoundComponent() {
-  head: () => ({
-    title: "Page Not Found | Earn Pal",
-    meta: [
-      { name: "description", content: "The page you're looking for doesn't exist or has been moved." },
-      { property: "og:title", content: "404 - Lost in the Vault | Earn Pal" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center text-center max-w-md">
