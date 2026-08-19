@@ -1,10 +1,19 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { NotificationsPopover } from "./NotificationsPopover";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+
 
 export function Navigation() {
   const location = useLocation();
@@ -100,62 +109,71 @@ export function Navigation() {
             <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
           </div>
           <NotificationsPopover />
-          <div className="relative">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full h-9 w-9 border"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <User className="h-5 w-5" />}
-            </Button>
-
-            {/* Mobile Dropdown - Overlaying instead of pushing down */}
-            {isOpen && (
-              <>
-                <div 
-                  className="fixed inset-0 z-40 bg-background/20 backdrop-blur-sm md:hidden" 
-                  onClick={() => setIsOpen(false)}
-                />
-                <div className="absolute right-0 mt-2 w-64 z-50 rounded-xl border bg-card p-2 shadow-xl animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                  <div className="px-3 py-2 border-b mb-1">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Menu</p>
-                  </div>
-                  <div className="grid gap-1">
-                    {navItems.map((item) => (
-                      <Link 
-                        key={item.name} 
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className={`flex items-center gap-3 p-2.5 rounded-lg text-sm font-medium transition-all hover:bg-accent active:scale-95 ${
-                          location.pathname === item.href ? "bg-primary/10 text-primary" : "text-foreground/80"
-                        }`}
-                      >
-                        <div className={`p-1.5 rounded-md ${location.pathname === item.href ? "bg-primary/20" : "bg-muted"}`}>
-                          <item.icon className="h-4 w-4" />
-                        </div>
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="mt-1 pt-1 border-t">
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start gap-3 p-2.5 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg text-sm transition-all" 
-                      onClick={handleLogout}
-                    >
-                      <div className="p-1.5 rounded-md bg-destructive/10">
-                        <LogOut className="h-4 w-4" />
-                      </div>
-                      Log out
-                    </Button>
+          
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full h-9 w-9 border"
+                aria-label="Open menu"
+              >
+                <User className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0 border-l">
+              <SheetHeader className="p-6 border-b text-left">
+                <SheetTitle className="flex items-center gap-2 text-primary">
+                  <Coins className="h-6 w-6" />
+                  Earn Pal
+                </SheetTitle>
+              </SheetHeader>
+              
+              <div className="flex flex-col h-[calc(100vh-80px)]">
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  <div className="px-3 py-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Navigation</p>
+                    <div className="grid gap-1">
+                      {navItems.map((item) => (
+                        <SheetClose asChild key={item.name}>
+                          <Link 
+                            to={item.href}
+                            className={`flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all hover:bg-accent active:scale-95 ${
+                              location.pathname === item.href ? "bg-primary/10 text-primary" : "text-foreground/80"
+                            }`}
+                          >
+                            <div className={`p-2 rounded-lg ${location.pathname === item.href ? "bg-primary/20" : "bg-muted"}`}>
+                              <item.icon className="h-5 w-5" />
+                            </div>
+                            {item.name}
+                          </Link>
+                        </SheetClose>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </>
-            )}
-          </div>
+
+                <div className="p-4 border-t mt-auto">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start gap-3 p-3 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl text-sm font-medium transition-all" 
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <div className="p-2 rounded-lg bg-destructive/10">
+                      <LogOut className="h-5 w-5" />
+                    </div>
+                    Log out
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>
+
   );
 }
