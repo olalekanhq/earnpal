@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3 } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ function ProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
@@ -217,7 +218,21 @@ function ProfilePage() {
                       <Label htmlFor="new-password text-sm font-semibold">New Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
-                        <Input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="pl-10 rounded-xl h-11" placeholder="Min 6 characters" />
+                        <Input 
+                          id="new-password" 
+                          type={showNewPassword ? "text" : "password"} 
+                          value={newPassword} 
+                          onChange={(e) => setNewPassword(e.target.value)} 
+                          className="pl-10 pr-10 rounded-xl h-11" 
+                          placeholder="Min 6 characters" 
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-3 top-3.5 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
                       </div>
                     </div>
                     <Button type="submit" className="w-full rounded-xl font-bold h-11 mt-2" disabled={isChangingPassword}>
