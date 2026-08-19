@@ -25,7 +25,9 @@ import {
 import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
+import { TasksManager } from "./admin/TasksManager";
 import { cn } from "@/lib/utils";
+import { ListTodo } from "lucide-react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
