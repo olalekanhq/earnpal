@@ -190,6 +190,24 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string | null
+          referee_id: string
+          referrer_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          referee_id: string
+          referrer_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          referee_id?: string
+          referrer_id?: string | null
+        }
+        Relationships: []
+      }
       rewards: {
         Row: {
           category: string | null
