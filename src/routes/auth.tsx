@@ -404,8 +404,6 @@ function AuthPage() {
                         placeholder="email or username" 
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
-                        autoCapitalize="none"
-                        autoCorrect="off"
                         required 
                       />
                     </div>

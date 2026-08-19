@@ -30,9 +30,7 @@ function RedeemPage() {
   const { data: rewards, isLoading } = useQuery({
     queryKey: ["rewards"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("rewards").select("*").eq("is_active", true);
-      if (error) throw error;
-
+      const { data } = await supabase.from("rewards").select("*").eq("is_active", true);
       return data || [];
     },
   });
