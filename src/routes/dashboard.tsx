@@ -83,11 +83,14 @@ function Dashboard() {
         _user_id: user.id
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Claim error:", error);
+        throw new Error(error.message || "An unexpected error occurred while claiming your reward.");
+      }
       
-      // The result is a JSON object with 'success', 'message', 'points', etc.
       const result = data as any;
       if (!result.success) {
+        // This handles our "Already claimed today" message specifically
         throw new Error(result.message || "Failed to claim reward");
       }
       
@@ -97,10 +100,10 @@ function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
       queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
-      toast.success(`Daily bonus claimed! +${result.points} points`);
+      toast.success(result.message || `Daily bonus claimed! +${result.points} points`);
     },
     onError: (error: any) => {
-      toast.error(error.message || "Already claimed today or error occurred");
+      toast.error(error.message || "Failed to claim reward. Please try again later.");
     }
   });
 
