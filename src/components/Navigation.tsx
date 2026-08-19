@@ -169,7 +169,7 @@ export function Navigation() {
   return (
     <>
       {/* Mobile Top Bar */}
-      <div className="md:hidden sticky top-0 z-40 w-full flex items-center justify-between h-16 px-4 bg-background/80 backdrop-blur-md border-b">
+      <div className="md:hidden sticky top-0 z-40 w-full flex items-center justify-between h-16 px-4 bg-white/80 backdrop-blur-md border-b border-border/50">
         <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
           <Menu className="h-6 w-6" />
         </Button>
