@@ -114,6 +114,7 @@ export type Database = {
           email: string
           email_notifications: boolean | null
           full_name: string | null
+          has_claimed_welcome_bonus: boolean | null
           id: string
           phone_number: string | null
           points_balance: number
@@ -130,6 +131,7 @@ export type Database = {
           email: string
           email_notifications?: boolean | null
           full_name?: string | null
+          has_claimed_welcome_bonus?: boolean | null
           id: string
           phone_number?: string | null
           points_balance?: number
@@ -146,6 +148,7 @@ export type Database = {
           email?: string
           email_notifications?: boolean | null
           full_name?: string | null
+          has_claimed_welcome_bonus?: boolean | null
           id?: string
           phone_number?: string | null
           points_balance?: number
@@ -450,7 +453,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      check_referral_code: {
+        Args: { _code: string }
+        Returns: {
+          is_valid: boolean
+          username: string
+        }[]
+      }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
+      claim_welcome_bonus: { Args: { _user_id: string }; Returns: Json }
       get_user_email_by_username: {
         Args: { _username: string }
         Returns: string
