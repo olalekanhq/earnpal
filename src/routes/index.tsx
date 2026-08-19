@@ -68,7 +68,7 @@ function LandingPage() {
               <p className="text-lg text-muted-foreground font-medium leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
               <Button className="font-bold rounded-xl h-12 px-8" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
             </div>
-            <div className="bg-white p-4 rounded-3xl border shadow-2xl shadow-primary/10 rotate-2 hover:rotate-0 transition-transform">
+            <div className="bg-[#F8F9FB] p-6 rounded-[2.5rem] border border-border/50 shadow-2xl shadow-primary/5 rotate-2 hover:rotate-0 transition-all duration-500">
                <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center border">
                   <Layout className="h-16 w-16 text-primary/50" />
                </div>
