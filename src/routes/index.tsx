@@ -106,6 +106,48 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* Feature Grid: More Capabilities */}
+      <section className="py-24 bg-background border-t">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="text-sm font-black uppercase text-primary tracking-widest">Platform Features</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase mt-4">Everything you need to scale</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Marketplace Hub", icon: Globe, desc: "A centralized location for all available tasks, categorized by difficulty and reward." },
+              { title: "Smart Referrals", icon: Users, desc: "Automated tracking and payout for every user you bring to the platform." },
+              { title: "Real-time Stats", icon: BarChart3, desc: "Detailed analytics on your performance, click rates, and conversion metrics." },
+              { title: "Instant Payouts", icon: Zap, desc: "Lightning-fast redemption processing for gift cards and other rewards." },
+              { title: "Enterprise Security", icon: ShieldCheck, desc: "Multi-layer protection ensuring your account and data are never compromised." },
+              { title: "Global Reach", icon: Rocket, desc: "Available worldwide with localized rewards for different regions." },
+            ].map((feature, i) => (
+              <div key={i} className="p-8 rounded-3xl border bg-card hover:shadow-xl transition-all space-y-4">
+                <feature.icon className="h-10 w-10 text-primary" />
+                <h3 className="text-2xl font-black uppercase">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Section: Final Call to Action */}
+      <section className="py-24 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 text-center space-y-8">
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight">Ready to start earning?</h2>
+          <p className="text-xl opacity-90 font-medium max-w-2xl mx-auto">Join thousands of users who are already turning their daily digital activity into real-world rewards.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-black uppercase shadow-xl" asChild>
+              <Link to="/auth">Create your account →</Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-black border-primary-foreground/20 hover:bg-primary-foreground/10 uppercase" asChild>
+              <Link to="/auth">Log in</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 border-t bg-background">
         <div className="container mx-auto px-4">
