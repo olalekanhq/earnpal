@@ -448,6 +448,7 @@ export type Database = {
         Args: { target_referral_code: string }
         Returns: undefined
       }
+      lookup_login_email: { Args: { _username: string }; Returns: string }
       remove_role: {
         Args: {
           role_to_remove: Database["public"]["Enums"]["app_role"]
