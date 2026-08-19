@@ -66,12 +66,6 @@ function AuthPage() {
     }
   }, [search.mode, search.ref]);
 
-  const [showReset, setShowReset] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-  const [resetLoading, setResetLoading] = useState(false);
-  const [resetSent, setResetSent] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
