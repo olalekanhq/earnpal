@@ -153,10 +153,6 @@ function SettingsPage() {
 
             <nav className="space-y-1">
               <Button variant="ghost" className="w-full justify-start gap-3 font-bold text-primary bg-primary/5">
-                <User className="h-4 w-4" />
-                Account
-              </Button>
-              <Button variant="ghost" className="w-full justify-start gap-3 font-bold text-muted-foreground hover:text-primary">
                 <Bell className="h-4 w-4" />
                 Notifications
               </Button>
