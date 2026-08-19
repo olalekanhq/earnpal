@@ -46,7 +46,7 @@ function ReferralPage() {
       if (!user) return [];
       const { data } = await supabase
         .from("profiles")
-        .select("id, full_name, email, created_at, points_balance")
+        .select("id, full_name, username, email, created_at, points_balance")
         .eq("referred_by", user.id)
         .order('created_at', { ascending: false });
       return data || [];
@@ -194,11 +194,11 @@ function ReferralPage() {
                     <div className="flex items-center gap-4">
                       <Avatar>
                         <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                          {ref.full_name?.[0] || (ref.email?.[0]?.toUpperCase() || '?')}
+                          {ref.full_name?.[0] || ref.username?.[0] || (ref.email?.[0]?.toUpperCase() || '?')}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-bold text-foreground">{ref.full_name || "New User"}</p>
+                        <p className="font-bold text-foreground">{ref.full_name || ref.username || "New User"}</p>
                         <p className="text-xs text-muted-foreground">Joined {new Date(ref.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
@@ -235,10 +235,10 @@ function ReferralPage() {
                       <div className="w-6 font-black text-muted-foreground">#{idx + 1}</div>
                       <Avatar className="border-2 border-background">
                         <AvatarImage src={user.avatar_url || ""} />
-                        <AvatarFallback className="font-bold">{user.full_name?.[0] || "?"}</AvatarFallback>
+                        <AvatarFallback className="font-bold">{user.full_name?.[0] || user.username?.[0] || "?"}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-bold">{user.full_name || "Anonymous User"}</div>
+                        <div className="font-bold">{user.full_name || user.username || "Anonymous User"}</div>
                         <div className="text-xs text-muted-foreground font-medium">{(user.points_balance || 0).toLocaleString()} points</div>
                       </div>
                     </div>
