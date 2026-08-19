@@ -137,16 +137,17 @@ function RootComponent() {
       }
       if (event === 'SIGNED_OUT') {
         router.invalidate();
-        // Only redirect to auth if we are not on a public page
+        // Use a more reliable way to check the current path
+        const currentPath = window.location.pathname;
         const publicPages = ['/', '/auth', '/landing'];
-        if (!publicPages.includes(location.pathname)) {
+        if (!publicPages.includes(currentPath)) {
           router.navigate({ to: '/auth' });
         }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [router, location.pathname]);
+  }, [router]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
