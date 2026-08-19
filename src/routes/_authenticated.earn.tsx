@@ -55,7 +55,7 @@ function EarnPage() {
 
   const filteredTasks = activeCategory === "All" 
     ? tasks 
-    : tasks?.filter(t => t.category === activeCategory);
+    : (tasks as any[])?.filter((t: any) => t.category === activeCategory);
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
@@ -84,7 +84,7 @@ function EarnPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTasks?.length ? filteredTasks.map((task) => (
+        {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
           <Card key={task.id} className="group border-none shadow-sm bg-white overflow-hidden flex flex-col transition-all hover:shadow-md">
             <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
             <CardHeader className="pb-4">
