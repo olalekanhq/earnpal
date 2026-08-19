@@ -80,10 +80,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PAID POINT — Earn. Refer. Redeem." },
+      { title: "Paid Point — Earn. Refer. Redeem." },
       { name: "description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
-      { name: "author", content: "PAID POINT" },
-      { property: "og:title", content: "PAID POINT — Earn. Refer. Redeem." },
+      { name: "author", content: "Paid Point" },
+      { property: "og:title", content: "Paid Point — Earn. Refer. Redeem." },
       { property: "og:description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
