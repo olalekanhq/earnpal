@@ -46,6 +46,11 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [referralCode, setReferralCode] = useState(search.ref || "");
+  const [referralStatus, setReferralStatus] = useState<{ loading: boolean; owner: string | null; error: boolean }>({ 
+    loading: false, 
+    owner: null, 
+    error: false 
+  });
   const [showVerification, setShowVerification] = useState(false);
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -63,8 +68,43 @@ function AuthPage() {
     }
     if (search.ref) {
       setReferralCode(search.ref);
+      validateReferral(search.ref);
     }
   }, [search.mode, search.ref]);
+
+  const validateReferral = async (code: string) => {
+    if (!code || code.trim().length < 3) {
+      setReferralStatus({ loading: false, owner: null, error: false });
+      return;
+    }
+    
+    setReferralStatus(prev => ({ ...prev, loading: true, error: false }));
+    try {
+      const { data, error } = await supabase.rpc('check_referral_code', { _code: code.trim() });
+      
+      if (error) throw error;
+      
+      const result = Array.isArray(data) ? data[0] : data;
+      
+      if (result && result.is_valid) {
+        setReferralStatus({ loading: false, owner: result.username, error: false });
+      } else {
+        setReferralStatus({ loading: false, owner: null, error: true });
+      }
+    } catch (err) {
+      console.error("Referral validation error:", err);
+      setReferralStatus({ loading: false, owner: null, error: true });
+    }
+  };
+
+  const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+    setReferralCode(val);
+    
+    // Simple debounce for manual entry
+    const timeout = setTimeout(() => validateReferral(val), 500);
+    return () => clearTimeout(timeout);
+  };
 
 
   const validate = (type: 'login' | 'signup') => {

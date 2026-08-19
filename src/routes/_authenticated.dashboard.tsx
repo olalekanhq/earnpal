@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { WelcomeBonusModal } from "@/components/WelcomeBonusModal";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -117,6 +118,7 @@ function Dashboard() {
 
   return (
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
+      <WelcomeBonusModal />
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
