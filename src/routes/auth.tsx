@@ -38,16 +38,33 @@ function AuthPage() {
     const ref = params.get('ref');
     if (ref) setReferralCode(ref);
   }, []);
+
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
 
-  const validate = () => {
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address.");
-      return false;
+  const validate = (type: 'login' | 'signup') => {
+    if (type === 'login') {
+      if (!identifier) {
+        setError("Please enter your email or username.");
+        return false;
+      }
+    } else {
+      if (!email.includes("@")) {
+        setError("Please enter a valid email address.");
+        return false;
+      }
+      if (username.length < 3) {
+        setError("Username must be at least 3 characters.");
+        return false;
+      }
+      if (!fullName) {
+        setError("Please enter your full name.");
+        return false;
+      }
     }
+    
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return false;
@@ -58,10 +75,23 @@ function AuthPage() {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate('login')) return;
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      let loginEmail = identifier;
+      
+      if (!identifier.includes("@")) {
+        const { data, error: rpcError } = await supabase.rpc('get_user_email_by_username', {
+          _username: identifier
+        });
+
+        if (rpcError || !data) {
+          throw new Error("Could not find account with that username.");
+        }
+        loginEmail = data;
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
       if (error) throw error;
       navigate({ to: search.redirect || "/dashboard" });
     } catch (error: any) {
@@ -73,29 +103,54 @@ function AuthPage() {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate('signup')) return;
     setLoading(true);
     try {
       const options: any = { 
         email, 
         password,
-      };
-      
-      if (referralCode) {
-        options.options = {
+        options: {
           data: {
-            referred_by: referralCode
+            username,
+            full_name: fullName,
+            referred_by: referralCode || null
           }
-        };
-      }
+        }
+      };
 
       const { error } = await supabase.auth.signUp(options);
       if (error) throw error;
-      toast.success("Check your email for the confirmation link!");
+      
+      setShowVerification(true);
+      toast.success("Verification code sent to your email!");
     } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otp || otp.length < 6) {
+      setError("Please enter the 6-digit code.");
+      return;
+    }
+    setIsVerifying(true);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: 'signup'
+      });
+      if (error) throw error;
+      
+      toast.success("Account verified successfully!");
+      navigate({ to: "/dashboard" });
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -129,6 +184,59 @@ function AuthPage() {
     }
   };
 
+  if (showVerification) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4">
+        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <Mail className="h-10 w-10 text-primary" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-black uppercase">Verify Your Email</CardTitle>
+            <CardDescription>
+              We've sent a 6-digit verification code to <span className="font-bold text-foreground">{email}</span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleVerifyOtp} className="space-y-4">
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
+                  {error}
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label htmlFor="otp">Verification Code</Label>
+                <Input 
+                  id="otp" 
+                  placeholder="000000" 
+                  className="text-center text-2xl tracking-[0.5em] font-black h-14"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  required 
+                />
+              </div>
+              <Button type="submit" className="w-full h-12 font-black uppercase" disabled={isVerifying}>
+                {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Verify Account
+              </Button>
+              <div className="text-center">
+                <button 
+                  type="button"
+                  className="text-sm font-bold text-primary hover:underline"
+                  onClick={() => setShowVerification(false)}
+                >
+                  Back to Sign Up
+                </button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4">
       <Card className="w-full max-w-md shadow-xl">
@@ -139,29 +247,39 @@ function AuthPage() {
               <span>EARN PAL</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-black uppercase">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-black uppercase">
+            {showReset ? "Reset Password" : "Welcome"}
+          </CardTitle>
           <CardDescription>
-            Enter your credentials to access your dashboard
+            {showReset 
+              ? "Enter your email to receive a reset link" 
+              : "Access your dashboard to start earning rewards"}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold">
-            <img src="https://www.google.com/favicon.ico" className="mr-2 h-4 w-4" alt="Google" />
-            Continue with Google
-          </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground font-bold">OR</span>
-            </div>
-          </div>
+          {!showReset && (
+            <>
+              <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-11">
+                <img src="https://www.google.com/favicon.ico" className="mr-2 h-4 w-4" alt="Google" />
+                Continue with Google
+              </Button>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground font-bold">OR</span>
+                </div>
+              </div>
+            </>
+          )}
+          
           {error && (
             <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
               {error}
             </div>
           )}
+
           {showReset ? (
             <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
@@ -179,7 +297,7 @@ function AuthPage() {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full font-black uppercase" disabled={resetLoading}>
+              <Button type="submit" className="w-full h-11 font-black uppercase" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {resetSent ? "RESEND LINK" : "SEND RESET LINK"}
               </Button>
@@ -204,16 +322,15 @@ function AuthPage() {
               <TabsContent value="login">
                 <form onSubmit={handleEmailLogin} className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="identifier">Email or Username</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input 
                         className="pl-9"
-                        id="email" 
-                        type="email" 
-                        placeholder="m@example.com" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        id="identifier" 
+                        placeholder="email or username" 
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
                         required 
                       />
                     </div>
@@ -226,7 +343,7 @@ function AuthPage() {
                         className="text-sm font-bold text-primary hover:underline"
                         onClick={() => {
                           setShowReset(true);
-                          setResetEmail(email);
+                          setResetEmail(identifier.includes("@") ? identifier : "");
                           setError("");
                         }}
                       >
@@ -245,61 +362,89 @@ function AuthPage() {
                       />
                     </div>
                   </div>
-                  <Button type="submit" className="w-full font-black uppercase" disabled={loading}>
+                  <Button type="submit" className="w-full h-11 font-black uppercase" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Log in
                   </Button>
                 </form>
               </TabsContent>
-            <TabsContent value="signup">
-              <form onSubmit={handleEmailSignUp} className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <TabsContent value="signup">
+                <form onSubmit={handleEmailSignUp} className="space-y-3 pt-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="full-name">Full Name</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="full-name" 
+                        placeholder="John Doe" 
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="signup-username">Username</Label>
+                    <div className="relative">
+                      <CheckCircle2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="signup-username" 
+                        placeholder="johndoe123" 
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                        required 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="signup-email" 
+                        type="email" 
+                        placeholder="m@example.com" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        className="pl-9"
+                        id="signup-password" 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="referral-code">Referral Code (Optional)</Label>
                     <Input 
-                      className="pl-9"
-                      id="signup-email" 
-                      type="email" 
-                      placeholder="m@example.com" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required 
+                      id="referral-code" 
+                      placeholder="e.g. 5a2b3c"
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value)}
                     />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      className="pl-9"
-                      id="signup-password" 
-                      type="password" 
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required 
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="referral-code">Referral Code (Optional)</Label>
-                  <Input 
-                    id="referral-code" 
-                    placeholder="e.g. 5a2b3c"
-                    value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value)}
-                  />
-                </div>
-                <Button type="submit" className="w-full font-black uppercase" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Create account
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        )}
-      </CardContent>
+                  <Button type="submit" className="w-full h-11 font-black uppercase mt-2" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Create account
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+          )}
+        </CardContent>
       </Card>
     </div>
   );
