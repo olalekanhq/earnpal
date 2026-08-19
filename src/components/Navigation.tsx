@@ -33,10 +33,8 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
 
-  const isAuthPage = location.pathname === "/auth";
-  const isLandingPage = location.pathname === "/";
-  
-  if (isAuthPage) return null;
+  if (location.pathname === "/auth") return null;
+
 
   const { data: profile } = useQuery({
     queryKey: ["profile"],
@@ -97,7 +95,7 @@ export function Navigation() {
   ];
 
   // Custom transparent navbar for landing page
-  if (isLandingPage) {
+  if (location.pathname === "/") {
     return (
       <nav className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b">
         <div className="container mx-auto px-4 flex h-20 items-center justify-between">
@@ -122,6 +120,7 @@ export function Navigation() {
       </nav>
     );
   }
+
 
   return (
     <>
@@ -250,7 +249,7 @@ export function Navigation() {
               <div className="bg-primary/10 p-2 rounded-xl">
                 <Coins className="h-6 w-6 text-primary" />
               </div>
-              <span className="font-black text-xl text-primary tracking-tight">Spectrey</span>
+              <span className="font-black text-xl text-primary tracking-tight">Earn Pal</span>
             </div>
           </div>
           
