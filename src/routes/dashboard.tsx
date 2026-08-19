@@ -122,7 +122,7 @@ function Dashboard() {
           <CardContent className="pt-2 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
             <div className="space-y-1">
               <div className="text-5xl font-bold tracking-tighter">
-                {profile?.points_balance?.toLocaleString() || 0}
+                {profile?.points_balance?.toLocaleString() || 0} <span className="text-xl opacity-60 ml-1">PTS</span>
               </div>
               <p className="text-sm font-medium opacity-80 flex items-center gap-1">
                 <TrendingUp className="h-4 w-4" />
