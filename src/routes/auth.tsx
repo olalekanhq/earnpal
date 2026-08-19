@@ -466,7 +466,7 @@ function AuthPage() {
                       onChange={(e) => setReferralCode(e.target.value)}
                     />
                   </div>
-                  <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10 mt-4" disabled={loading}>
+                  <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
