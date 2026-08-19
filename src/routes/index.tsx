@@ -78,7 +78,7 @@ function LandingPage() {
       </section>
 
       {/* Feature Section: Scalability */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-[#F8F9FB]">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
             <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Limitless Growth and Scale</h2>
