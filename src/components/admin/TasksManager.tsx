@@ -240,7 +240,7 @@ export function TasksManager() {
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
-                      +{task.points_reward} pts
+                      +{task.points} pts
                     </Badge>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
