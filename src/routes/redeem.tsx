@@ -67,7 +67,7 @@ function RedeemPage() {
           </div>
           <div>
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Available Balance</p>
-            <p className="text-xl font-bold">{profile?.points_balance?.toLocaleString() || 0} <span className="text-[10px] text-primary">PTS</span></p>
+            <p className="text-xl font-black">{profile?.points_balance?.toLocaleString() || 0} <span className="text-[10px] text-primary">PTS</span></p>
           </div>
         </Card>
       </header>
