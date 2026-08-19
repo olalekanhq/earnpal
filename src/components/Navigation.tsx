@@ -75,6 +75,7 @@ export function Navigation() {
             <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
               <Link to="/auth">Get Started</Link>
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
