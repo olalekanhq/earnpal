@@ -58,14 +58,14 @@ export function Onboarding() {
         </DialogHeader>
         <DialogFooter className="mt-6">
           {step > 1 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)}>
+            <Button variant="ghost" onClick={() => setStep(step - 1)} className="font-bold rounded-xl">
               Back
             </Button>
           )}
           {step < steps.length ? (
-            <Button onClick={() => setStep(step + 1)}>Next</Button>
+            <Button onClick={() => setStep(step + 1)} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Next</Button>
           ) : (
-            <Button onClick={finish}>Get Started</Button>
+            <Button onClick={finish} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Get Started</Button>
           )}
         </DialogFooter>
       </DialogContent>
