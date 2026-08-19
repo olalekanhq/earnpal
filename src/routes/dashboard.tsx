@@ -289,7 +289,7 @@ function Dashboard() {
                       </div>
                       <div>
                         <p className="font-bold text-foreground">Daily Reward</p>
-                        <p className="text-xs font-bold text-primary uppercase">Claim {streak?.current_streak >= 6 ? '+25' : '+20'} PTS</p>
+                        <p className="text-xs font-bold text-primary uppercase">Claim {(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS</p>
                       </div>
                     </div>
                     <Button size="sm" variant="secondary" className="font-bold" disabled={claimDailyStreak.isPending}>
