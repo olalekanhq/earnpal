@@ -1,7 +1,12 @@
 -- 1. User Roles System
-CREATE TYPE public.app_role AS ENUM ('admin', 'user');
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'app_role') THEN
+        CREATE TYPE public.app_role AS ENUM ('admin', 'user');
+    END IF;
+END $$;
 
-CREATE TABLE public.user_roles (
+CREATE TABLE IF NOT EXISTS public.user_roles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     role public.app_role NOT NULL DEFAULT 'user',
@@ -29,7 +34,7 @@ AS $$
 $$;
 
 -- 2. Notifications Table
-CREATE TABLE public.notifications (
+CREATE TABLE IF NOT EXISTS public.notifications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     title TEXT NOT NULL,
@@ -44,14 +49,20 @@ GRANT ALL ON public.notifications TO service_role;
 
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can read their own notifications" ON public.notifications
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can update their own notifications" ON public.notifications
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'notifications' AND policyname = 'Users can read their own notifications') THEN
+        CREATE POLICY "Users can read their own notifications" ON public.notifications
+            FOR SELECT TO authenticated USING (auth.uid() = user_id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'notifications' AND policyname = 'Users can update their own notifications') THEN
+        CREATE POLICY "Users can update their own notifications" ON public.notifications
+            FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+    END IF;
+END $$;
 
 -- 3. Streaks Table
-CREATE TABLE public.user_streaks (
+CREATE TABLE IF NOT EXISTS public.user_streaks (
     user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     current_streak INTEGER DEFAULT 0 NOT NULL,
     last_activity_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
@@ -63,15 +74,26 @@ GRANT ALL ON public.user_streaks TO service_role;
 
 ALTER TABLE public.user_streaks ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can read their own streak" ON public.user_streaks
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'user_streaks' AND policyname = 'Users can read their own streak') THEN
+        CREATE POLICY "Users can read their own streak" ON public.user_streaks
+            FOR SELECT TO authenticated USING (auth.uid() = user_id);
+    END IF;
+END $$;
 
 -- 4. Admin Policies (Example for rewards)
-CREATE POLICY "Admins can manage rewards" ON public.rewards
-    FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'admin'));
-
-CREATE POLICY "Admins can manage redemptions" ON public.redemptions
-    FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'rewards' AND policyname = 'Admins can manage rewards') THEN
+        CREATE POLICY "Admins can manage rewards" ON public.rewards
+            FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'redemptions' AND policyname = 'Admins can manage redemptions') THEN
+        CREATE POLICY "Admins can manage redemptions" ON public.redemptions
+            FOR ALL TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+    END IF;
+END $$;
 
 -- 5. Trigger for Notifications on points_transactions
 CREATE OR REPLACE FUNCTION public.notify_on_points_transaction()
@@ -88,6 +110,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS on_points_transaction ON public.points_transactions;
 CREATE TRIGGER on_points_transaction
     AFTER INSERT ON public.points_transactions
     FOR EACH ROW EXECUTE FUNCTION public.notify_on_points_transaction();
