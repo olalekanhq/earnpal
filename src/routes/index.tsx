@@ -159,7 +159,7 @@ function Dashboard() {
               <div className="text-3xl font-black">{streak?.current_streak || 0} Days</div>
               <p className="text-xs font-medium mt-1 text-muted-foreground">Don't break the chain!</p>
             </CardContent>
-            {streak?.current_streak > 0 && (
+            {streak && streak.current_streak > 0 && (
                <div className="absolute -right-2 -bottom-2 opacity-5">
                  <Clock className="h-24 w-24" />
                </div>
