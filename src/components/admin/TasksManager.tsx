@@ -271,7 +271,15 @@ export function TasksManager() {
               tasks?.map((task: any) => (
                 <TableRow key={task.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
-                    <div className="font-bold">{task.title}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="font-bold">{task.title}</div>
+                      {task.is_featured && (
+                        <Badge className="bg-amber-100 text-amber-600 hover:bg-amber-100 border-none font-black text-[9px] h-4 px-1.5 flex items-center gap-0.5">
+                          <Star className="h-2.5 w-2.5 fill-current" />
+                          FEATURED
+                        </Badge>
+                      )}
+                    </div>
                     <div className="text-xs text-muted-foreground line-clamp-1">{task.description}</div>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
