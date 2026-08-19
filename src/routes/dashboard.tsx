@@ -328,7 +328,7 @@ function Dashboard() {
                       size="sm" 
                       variant={streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "ghost" : "secondary"} 
                       className="font-bold" 
-                      disabled={claimDailyStreak.isPending || (streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString())}
+                      disabled={claimDailyStreak.isPending || !!(streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString())}
                     >
                       {claimDailyStreak.isPending ? "..." : (streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString() ? "✓" : "Claim")}
                     </Button>
