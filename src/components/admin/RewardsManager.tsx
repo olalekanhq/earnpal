@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, Image as ImageIcon, X } from "lucide-react";
 
 export function RewardsManager() {
   const queryClient = useQueryClient();
@@ -27,8 +27,10 @@ export function RewardsManager() {
     description: "",
     cost_points: 0,
     stock_count: 0,
-    is_active: true
+    is_active: true,
+    image_url: ""
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const { data: rewards, isLoading } = useQuery({
     queryKey: ["admin-rewards"],
@@ -93,7 +95,8 @@ export function RewardsManager() {
       description: "",
       cost_points: 0,
       stock_count: 0,
-      is_active: true
+      is_active: true,
+      image_url: ""
     });
   };
 
@@ -104,9 +107,38 @@ export function RewardsManager() {
       description: reward.description || "",
       cost_points: reward.cost_points,
       stock_count: reward.stock_count || 0,
-      is_active: reward.is_active
+      is_active: reward.is_active,
+      image_url: reward.image_url || ""
     });
     setIsDialogOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `reward-${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars') // Using avatars bucket for now as it exists
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, image_url: publicUrl }));
+      toast.success("Image uploaded successfully");
+    } catch (error: any) {
+      toast.error("Error uploading image: " + error.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -138,6 +170,37 @@ export function RewardsManager() {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reward Image</label>
+                <div className="flex items-center gap-4">
+                  {formData.image_url ? (
+                    <div className="relative h-20 w-20 rounded-xl overflow-hidden border border-border">
+                      <img src={formData.image_url} alt="Reward" className="h-full w-full object-cover" />
+                      <button 
+                        onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                        className="absolute top-1 right-1 bg-background/80 p-1 rounded-full text-destructive hover:bg-background"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="h-20 w-20 rounded-xl bg-accent/50 border border-dashed border-border flex items-center justify-center text-muted-foreground">
+                      <ImageIcon className="h-6 w-6" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <Input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload}
+                      disabled={isUploading}
+                      className="rounded-xl cursor-pointer"
+                    />
+                    <p className="text-[10px] text-muted-foreground mt-1 px-1">Upload a clear image of the reward (optional).</p>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Title</label>
                 <Input 
@@ -220,8 +283,21 @@ export function RewardsManager() {
               rewards?.map((reward: any) => (
                 <TableRow key={reward.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
-                    <div className="font-bold">{reward.title}</div>
-                    <div className="text-xs text-muted-foreground line-clamp-1">{reward.description}</div>
+                    <div className="flex items-center gap-3">
+                      {reward.image_url ? (
+                        <div className="h-10 w-10 rounded-lg overflow-hidden border border-border flex-shrink-0">
+                          <img src={reward.image_url} alt={reward.title} className="h-full w-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center text-muted-foreground flex-shrink-0">
+                          <ImageIcon className="h-5 w-5" />
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-bold">{reward.title}</div>
+                        <div className="text-xs text-muted-foreground line-clamp-1">{reward.description}</div>
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
