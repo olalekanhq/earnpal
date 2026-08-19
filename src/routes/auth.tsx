@@ -373,19 +373,22 @@ function AuthPage() {
           {showReset ? (
             <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="reset-email">Reset Email</Label>
+                <Label htmlFor="reset-email">Email or Username</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input 
                     className="pl-9"
                     id="reset-email" 
-                    type="email" 
-                    placeholder="m@example.com" 
+                    type="text" 
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    placeholder="email or username" 
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     required 
                   />
                 </div>
+
               </div>
               <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-md shadow-primary/10" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
