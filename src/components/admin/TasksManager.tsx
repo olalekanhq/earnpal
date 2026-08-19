@@ -202,7 +202,7 @@ export function TasksManager() {
               </Button>
               <Button 
                 onClick={() => upsertTaskMutation.mutate(formData)}
-                disabled={upsertTaskMutation.isPending || !formData.title || formData.points_reward <= 0}
+                disabled={upsertTaskMutation.isPending || !formData.title || formData.points <= 0}
                 className="rounded-xl font-black uppercase tracking-widest text-xs"
               >
                 {upsertTaskMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
