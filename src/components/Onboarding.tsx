@@ -49,9 +49,9 @@ export function Onboarding() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{steps[step - 1]?.title || "Welcome"}</DialogTitle>
+      <DialogContent className="rounded-[2rem] border-none shadow-2xl p-8">
+        <DialogHeader className="space-y-4">
+          <DialogTitle className="text-2xl font-black tracking-tight">{steps[step - 1]?.title || "Welcome"}</DialogTitle>
           <DialogDescription className="pt-4 text-base">
             {steps[step - 1]?.description || ""}
           </DialogDescription>
