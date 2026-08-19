@@ -128,7 +128,7 @@ function Dashboard() {
               Welcome, <span className="text-primary">{profile?.username || profile?.full_name?.split(' ')[0] || 'User'}</span>
             </h1>
             <p className="mt-2 text-lg text-muted-foreground font-medium">
-              You've accumulated <span className="text-foreground font-black underline decoration-primary underline-offset-4">{profile?.points_balance?.toLocaleString() || 0}</span> points.
+              You've accumulated <span className="text-foreground font-black underline decoration-primary decoration-4 underline-offset-4">{profile?.points_balance?.toLocaleString() || 0}</span> points.
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
