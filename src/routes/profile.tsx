@@ -138,6 +138,8 @@ function ProfilePage() {
     );
   }
 
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
@@ -145,232 +147,128 @@ function ProfilePage() {
           <div className="h-32 bg-gradient-to-r from-primary to-primary/60" />
           <CardContent className="relative pt-0 pb-8 px-6 md:px-10">
             <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-12">
-              <div className="relative inline-block group">
+              <div className="relative inline-block">
                 <Avatar className="h-32 w-32 border-4 border-background shadow-2xl">
                   <AvatarImage src={profile?.avatar_url || ""} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-4xl font-black">
                     {profile?.full_name?.[0] || profile?.username?.[0] || "?"}
                   </AvatarFallback>
                 </Avatar>
-                <label 
-                  htmlFor="avatar-upload"
-                  className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform border-4 border-background"
-                >
-                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
-                  <input 
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleAvatarUpload}
-                    disabled={isUploading}
-                  />
-                </label>
               </div>
               <div className="flex-1 space-y-1 mb-2">
                 <h1 className="text-3xl font-black text-foreground">{profile?.full_name || "New User"}</h1>
                 <p className="text-primary font-bold">@{profile?.username || "username"}</p>
               </div>
               <div className="flex gap-2 mb-2">
-                <Button asChild variant="outline" className="font-bold">
-                  <Link to="/settings">
-                    <SettingsIcon className="mr-2 h-4 w-4" />
-                    Settings
-                  </Link>
+                <Button 
+                  variant="outline" 
+                  className="font-bold"
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  <SettingsIcon className="mr-2 h-4 w-4" />
+                  {isEditing ? "View Profile" : "Edit Profile"}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card className="border-none shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Coins className="h-3 w-3" />
-                Total Points
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-black text-primary">{(profile?.points_balance || 0).toLocaleString()}</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-none shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Share2 className="h-3 w-3" />
-                Referrals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-black text-foreground">{referralCount}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Award className="h-3 w-3" />
-                Level
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-black text-foreground">{Math.floor((profile?.points_balance || 0) / 1000) + 1}</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-2">
-          <Card className="border-none shadow-md">
-            <CardHeader className="border-b border-border/50">
-              <CardTitle className="text-xl font-black uppercase">Edit Profile</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="full-name" className="font-bold">Full Name</Label>
-                <Input 
-                  id="full-name" 
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter your full name"
-                  className="font-medium"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="username" className="font-bold text-muted-foreground">Username</Label>
-                <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm font-medium">
-                  <span className="text-muted-foreground">@</span>
-                  <span>{profile?.username}</span>
-                </div>
-              </div>
-              <Button 
-                onClick={() => updateProfile.mutate({ full_name: fullName })}
-                disabled={updateProfile.isPending || fullName === profile?.full_name}
-                className="w-full font-black uppercase shadow-lg shadow-primary/20"
-              >
-                {updateProfile.isPending ? "Saving..." : "Save Changes"}
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-md">
-            <CardHeader className="border-b border-border/50">
-              <CardTitle className="text-xl font-black uppercase">Change Password</CardTitle>
-            </CardHeader>
-            <form onSubmit={handlePasswordChange}>
+        {isEditing ? (
+          <div className="grid gap-8 md:grid-cols-2">
+            <Card className="border-none shadow-md">
+              <CardHeader className="border-b border-border/50">
+                <CardTitle className="text-xl font-black uppercase">Edit Profile Details</CardTitle>
+              </CardHeader>
               <CardContent className="pt-6 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="new-password" title="New Password">New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      id="new-password"
-                      type="password"
-                      placeholder="Enter new password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="pl-10 font-medium"
-                    />
-                  </div>
+                  <Label htmlFor="full-name" className="font-bold">Full Name</Label>
+                  <Input 
+                    id="full-name" 
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="font-medium"
+                  />
                 </div>
-              </CardContent>
-              <CardFooter className="pt-0">
+                <div className="space-y-2">
+                  <Label className="font-bold text-muted-foreground">Username</Label>
+                  <div className="p-2 bg-muted rounded-md text-sm font-medium">@{profile?.username}</div>
+                </div>
+                <div className="space-y-2">
+                   <Label className="font-bold">Profile Picture</Label>
+                   <div className="flex items-center gap-4">
+                     <Button variant="secondary" onClick={() => document.getElementById('avatar-upload')?.click()}>
+                        <Camera className="mr-2 h-4 w-4" /> Change Image
+                     </Button>
+                     <input 
+                        id="avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarUpload}
+                        disabled={isUploading}
+                      />
+                   </div>
+                </div>
                 <Button 
-                  type="submit"
-                  disabled={isChangingPassword}
+                  onClick={() => updateProfile.mutate({ full_name: fullName })}
+                  disabled={updateProfile.isPending || fullName === profile?.full_name}
                   className="w-full font-black uppercase shadow-lg shadow-primary/20"
                 >
-                  {isChangingPassword ? "Updating..." : "Update Password"}
+                  {updateProfile.isPending ? "Saving..." : "Save Changes"}
                 </Button>
-              </CardFooter>
-            </form>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card className="border-none shadow-md">
-            <CardHeader className="border-b border-border/50">
-              <CardTitle className="text-xl font-black uppercase">Information</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase">Email Address</p>
-                  <p className="font-bold">{profile?.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                  <Calendar className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase">Joined On</p>
-                  <p className="font-bold">{new Date(profile?.created_at || "").toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-md bg-gradient-to-br from-primary/10 to-transparent border-l-4 border-l-primary">
-            <CardHeader>
-              <CardTitle className="text-xl font-black uppercase">Referral Stats</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
-                <span className="text-sm font-bold text-muted-foreground">Clicks</span>
-                <span className="text-xl font-black">{profile?.referral_clicks || 0}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
-                <span className="text-sm font-bold text-muted-foreground">Signups</span>
-                <span className="text-xl font-black">{referralCount}</span>
-              </div>
-              <Button asChild className="w-full font-black uppercase mt-2">
-                <Link to="/refer">View Referral Details</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-none shadow-md bg-card">
-          <CardHeader className="border-b border-border/50">
-            <CardTitle className="text-xl font-black uppercase flex items-center gap-2">
-              <Gift className="h-5 w-5 text-primary" />
-              Earnings Summary & Rewards
-            </CardTitle>
-            <CardDescription>Track your progress and redeem your hard-earned points</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-accent/50 border border-border/50">
-                  <p className="text-xs font-bold text-muted-foreground uppercase mb-2">Total Points Balance</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-black text-primary">{(profile?.points_balance || 0).toLocaleString()} <span className="text-sm">PTS</span></span>
-                    <Coins className="h-8 w-8 text-primary/20" />
+            <Card className="border-none shadow-md">
+              <CardHeader className="border-b border-border/50">
+                <CardTitle className="text-xl font-black uppercase">Security</CardTitle>
+              </CardHeader>
+              <form onSubmit={handlePasswordChange}>
+                <CardContent className="pt-6 space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">New Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        id="new-password"
+                        type="password"
+                        placeholder="Enter new password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="pl-10 font-medium"
+                      />
+                    </div>
                   </div>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  You earn points by completing tasks, referring friends, and maintaining your daily streak. Keep going to reach the next level!
-                </p>
-              </div>
-              
-              <div className="flex flex-col justify-center gap-4">
-                <div className="text-center md:text-left">
-                  <h3 className="font-bold text-lg">Ready to spend?</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Redeem your points for gift cards, vouchers, and other amazing rewards.</p>
-                </div>
-                <Button asChild className="w-full py-6 text-lg font-black uppercase shadow-lg shadow-primary/20 group">
-                  <Link to="/redeem">
-                    Go to Redeem Center
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+                <CardFooter>
+                  <Button 
+                    type="submit"
+                    disabled={isChangingPassword}
+                    className="w-full font-black uppercase shadow-lg shadow-primary/20"
+                  >
+                    {isChangingPassword ? "Updating..." : "Update Password"}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+             <Card className="border-none shadow-md">
+               <CardHeader className="pb-2"><CardTitle className="text-xs font-black uppercase text-muted-foreground">Points</CardTitle></CardHeader>
+               <CardContent><div className="text-3xl font-black text-primary">{(profile?.points_balance || 0).toLocaleString()}</div></CardContent>
+             </Card>
+             <Card className="border-none shadow-md">
+               <CardHeader className="pb-2"><CardTitle className="text-xs font-black uppercase text-muted-foreground">Referrals</CardTitle></CardHeader>
+               <CardContent><div className="text-3xl font-black">{referralCount}</div></CardContent>
+             </Card>
+             <Card className="border-none shadow-md">
+               <CardHeader className="pb-2"><CardTitle className="text-xs font-black uppercase text-muted-foreground">Level</CardTitle></CardHeader>
+               <CardContent><div className="text-3xl font-black">{Math.floor((profile?.points_balance || 0) / 1000) + 1}</div></CardContent>
+             </Card>
+          </div>
+        )}
       </div>
     </div>
   );
