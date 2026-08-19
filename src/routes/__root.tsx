@@ -145,6 +145,7 @@ function RootComponent() {
   }, [router]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get('ref');
     
