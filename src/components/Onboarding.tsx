@@ -52,7 +52,7 @@ export function Onboarding() {
       <DialogContent className="rounded-[2rem] border-none shadow-2xl p-8">
         <DialogHeader className="space-y-4">
           <DialogTitle className="text-2xl font-black tracking-tight">{steps[step - 1]?.title || "Welcome"}</DialogTitle>
-          <DialogDescription className="pt-4 text-base">
+          <DialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed">
             {steps[step - 1]?.description || ""}
           </DialogDescription>
         </DialogHeader>
