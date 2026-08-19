@@ -189,6 +189,15 @@ function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="username" className="font-bold">Username</Label>
+                  <Input 
+                    id="username" 
+                    value={profile?.username || ""} 
+                    disabled 
+                    className="font-medium bg-muted"
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="email" className="font-bold">Email Address</Label>
                   <Input 
                     id="email" 
@@ -196,7 +205,6 @@ function SettingsPage() {
                     disabled 
                     className="font-medium bg-muted"
                   />
-                  <p className="text-xs text-muted-foreground">Contact support to change your email.</p>
                 </div>
               </CardContent>
               <CardFooter className="border-t border-border/50 bg-accent/5 py-4">
