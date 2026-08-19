@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navigation } from "@/components/Navigation";
+import { Coins } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "@/components/Onboarding";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -50,28 +51,32 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+      <div className="flex flex-col items-center animate-pulse">
+        <div className="bg-primary/10 p-4 rounded-3xl mb-4 shadow-xl shadow-primary/10">
+          <Coins className="h-12 w-12 text-primary" strokeWidth={2.5} />
+        </div>
+        <div className="flex items-center gap-2 font-black text-2xl text-primary tracking-tighter uppercase">
+          <span>Earn Pal</span>
+        </div>
+        <p className="mt-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
+          Loading your experience...
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex gap-3">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="text-xs font-black uppercase tracking-widest text-primary hover:underline"
           >
-            Try again
+            Try Again
           </button>
+          <span className="text-muted-foreground/30">|</span>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground"
           >
-            Go home
+            Go Home
           </a>
         </div>
       </div>
