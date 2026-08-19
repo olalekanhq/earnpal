@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,9 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [username, setUsername] = useState("");
+  const [countryCode, setCountryCode] = useState("+234");
+  const [phoneBody, setPhoneBody] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -48,8 +51,18 @@ function ProfilePage() {
     if (profile?.full_name) {
       setFullName(profile.full_name);
     }
+    if (profile?.username) {
+      setUsername(profile.username);
+    }
     if (profile?.phone_number) {
-      setPhoneNumber(profile.phone_number);
+      // Basic extraction logic: try to find the space after country code
+      const parts = profile.phone_number.split(" ");
+      if (parts.length >= 2) {
+        setCountryCode(parts[0]);
+        setPhoneBody(parts.slice(1).join(" "));
+      } else {
+        setPhoneBody(profile.phone_number);
+      }
     }
   }, [profile]);
 
@@ -194,13 +207,50 @@ function ProfilePage() {
                     <Input id="full-name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="rounded-xl h-11" />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="username" className="text-sm font-semibold">Username</Label>
+                    <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="rounded-xl h-11" />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="phone-number" className="text-sm font-semibold">Phone Number</Label>
-                    <Input id="phone-number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="rounded-xl h-11" placeholder="+1 (555) 000-0000" />
+                    <div className="flex gap-2">
+                      <Select value={countryCode} onValueChange={setCountryCode}>
+                        <SelectTrigger className="w-[110px] rounded-xl h-11">
+                          <SelectValue placeholder="Code" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="+234">+234 (NG)</SelectItem>
+                          <SelectItem value="+1">+1 (US)</SelectItem>
+                          <SelectItem value="+44">+44 (UK)</SelectItem>
+                          <SelectItem value="+91">+91 (IN)</SelectItem>
+                          <SelectItem value="+27">+27 (ZA)</SelectItem>
+                          <SelectItem value="+254">+254 (KE)</SelectItem>
+                          <SelectItem value="+233">+233 (GH)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input 
+                        id="phone-number" 
+                        value={phoneBody} 
+                        onChange={(e) => setPhoneBody(e.target.value)} 
+                        className="flex-1 rounded-xl h-11" 
+                        placeholder="8123456789" 
+                      />
+                    </div>
                   </div>
                   <Button 
                     className="w-full rounded-xl font-bold h-11 mt-2" 
-                    onClick={() => updateProfile.mutate({ full_name: fullName, phone_number: phoneNumber })}
-                    disabled={updateProfile.isPending || (fullName === profile?.full_name && phoneNumber === (profile?.phone_number || ""))}
+                    onClick={() => {
+                      const combinedPhone = `${countryCode} ${phoneBody}`.trim();
+                      updateProfile.mutate({ 
+                        full_name: fullName, 
+                        username: username,
+                        phone_number: combinedPhone 
+                      });
+                    }}
+                    disabled={updateProfile.isPending || (
+                      fullName === profile?.full_name && 
+                      username === profile?.username &&
+                      `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "")
+                    )}
                   >
                     Save Changes
                   </Button>
