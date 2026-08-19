@@ -69,7 +69,7 @@ function SettingsPage() {
       if (!user) throw new Error("Not authenticated");
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -77,11 +77,11 @@ function SettingsPage() {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
+      const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
 
-      await updateProfile.mutateAsync({ avatar_url: publicUrl });
+      await updateProfile.mutateAsync({ avatar_url: data.publicUrl });
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
     } finally {
