@@ -132,17 +132,21 @@ function RootComponent() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
+      if (event === 'SIGNED_IN' && session) {
         router.invalidate();
       }
       if (event === 'SIGNED_OUT') {
         router.invalidate();
-        router.navigate({ to: '/auth' });
+        // Only redirect to auth if we are not on a public page
+        const publicPages = ['/', '/auth', '/landing'];
+        if (!publicPages.includes(location.pathname)) {
+          router.navigate({ to: '/auth' });
+        }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, [router, location.pathname]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
