@@ -173,7 +173,7 @@ export function Navigation() {
         <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
           <Menu className="h-6 w-6" />
         </Button>
-        <Link to="/dashboard" className="flex items-center gap-2 font-bold text-lg">
+        <Link to="/dashboard" className="flex items-center gap-2 font-black text-lg uppercase tracking-tighter">
           <Coins className="h-5 w-5 text-primary" />
           <span>Earn Pal</span>
         </Link>
