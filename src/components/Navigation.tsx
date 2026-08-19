@@ -12,8 +12,11 @@ import {
   User,
   Bell,
   History,
-  ChevronRight
+  ChevronRight,
+  Moon,
+  Sun
 } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -228,6 +231,7 @@ export function Navigation() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
+           <ThemeToggle />
            <NotificationsPopover />
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -334,6 +338,7 @@ export function Navigation() {
             </span>
           </div>
           <div className="h-8 w-[1px] bg-border/60 mx-1" />
+          <ThemeToggle />
           <NotificationsPopover />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

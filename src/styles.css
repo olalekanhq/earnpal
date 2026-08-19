@@ -98,8 +98,8 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
+  --background: oklch(0.12 0.02 264);
+  --foreground: oklch(0.98 0.01 247);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
@@ -143,9 +143,10 @@
   }
 
   .bg-grid {
-    background-image: linear-gradient(to right, oklch(0.929 0.013 255.508 / 0.4) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0.929 0.013 255.508 / 0.4) 1px, transparent 1px);
+    background-image: linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
     background-size: 40px 40px;
+    opacity: 0.4;
   }
 
   h1, h2, h3, h4, h5, h6 {
