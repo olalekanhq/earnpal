@@ -4,10 +4,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Check, X, Loader2, ExternalLink } from "lucide-react";
+import { Check, X, Loader2, ExternalLink, Search } from "lucide-react";
 import { format } from "date-fns";
 
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+
 export function RedemptionsManager() {
+  const [searchTerm, setSearchTerm] = useState("");
   const queryClient = useQueryClient();
 
   const { data: redemptions, isLoading } = useQuery({
@@ -58,8 +62,26 @@ export function RedemptionsManager() {
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
+  const filteredRedemptions = redemptions?.filter((r: any) => 
+    r.profiles?.username?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    r.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.rewards?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search redemptions..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 h-11 w-full md:w-64 rounded-xl border-border/50 bg-background"
+          />
+        </div>
+      </div>
       <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
         <Table>
           <TableHeader>
@@ -80,7 +102,7 @@ export function RedemptionsManager() {
                 </TableCell>
               </TableRow>
             ) : (
-              redemptions?.map((r: any) => (
+              filteredRedemptions?.map((r: any) => (
                 <TableRow key={r.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
                     <div className="font-bold">{r.profiles?.full_name || r.profiles?.username}</div>
