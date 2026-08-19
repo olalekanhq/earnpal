@@ -105,7 +105,7 @@ function Dashboard() {
   return (
     <div className="pb-12 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
       <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username || profile?.full_name?.split(' ')[0] || 'User'}! 👋
         </h1>
         <p className="text-muted-foreground">
