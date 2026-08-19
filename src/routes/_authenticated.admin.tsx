@@ -3,8 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminPanel } from "@/components/AdminPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
+  beforeLoad: async ({ location, context }) => {
+    const session = (context as any).session;
     
     if (!session) {
       throw redirect({

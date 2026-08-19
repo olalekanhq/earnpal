@@ -21,15 +21,6 @@ export const Route = createFileRoute("/_authenticated/redeem")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({
-        to: "/auth",
-        search: { redirect: location.pathname },
-      });
-    }
-  },
   component: RedeemPage,
 });
 
