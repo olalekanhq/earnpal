@@ -47,6 +47,9 @@ function ProfilePage() {
     if (profile?.full_name) {
       setFullName(profile.full_name);
     }
+    if (profile?.phone_number) {
+      setPhoneNumber(profile.phone_number);
+    }
   }, [profile]);
 
   const updateProfile = useMutation({
