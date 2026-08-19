@@ -1,10 +1,12 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -19,6 +21,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
+  const queryClient = useQueryClient();
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -27,6 +30,57 @@ function Dashboard() {
       const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       return data;
     },
+  });
+
+  const { data: streak } = useQuery({
+    queryKey: ["streak"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+      const { data } = await supabase.from("user_streaks").select("*").eq("user_id", user.id).single();
+      return data;
+    },
+  });
+
+  const { data: referralCount } = useQuery({
+    queryKey: ["referralCount"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return 0;
+      const { count } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("referred_by", user.id);
+      return count || 0;
+    },
+  });
+
+  const claimDailyStreak = useMutation({
+    mutationFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+      
+      // Call RPC or handle logic to update streak
+      const { error } = await supabase.from('points_transactions').insert({
+        user_id: user.id,
+        amount: 20,
+        type: 'earn',
+        description: 'Daily login bonus'
+      });
+      if (error) throw error;
+      
+      // Update streak activity
+      await supabase.from('user_streaks').upsert({
+        user_id: user.id,
+        last_activity_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["streak"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+      toast.success("Daily bonus claimed! +20 points");
+    }
   });
 
   const { data: recentTransactions } = useQuery({
@@ -58,12 +112,12 @@ function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-primary text-primary-foreground">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
             <TrendingUp className="h-4 w-4 opacity-70" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{profile?.points_balance || 0}</div>
-            <p className="text-xs opacity-70">+20.1% from last month</p>
+            <p className="text-xs opacity-70">Points earned</p>
           </CardContent>
         </Card>
         <Card>
@@ -72,8 +126,8 @@ function Dashboard() {
             <Share2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">3 pending verification</p>
+            <div className="text-2xl font-bold">{referralCount}</div>
+            <p className="text-xs text-muted-foreground">Successful invites</p>
           </CardContent>
         </Card>
         <Card>
@@ -82,18 +136,21 @@ function Dashboard() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5 Days</div>
-            <p className="text-xs text-muted-foreground">Keep it up!</p>
+            <div className="text-2xl font-bold">{streak?.current_streak || 0} Days</div>
+            <p className="text-xs text-muted-foreground">Keep the streak alive!</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Level 2</CardTitle>
-            <div className="text-xs font-bold text-muted-foreground">450 / 1000</div>
+            <CardTitle className="text-sm font-medium">Progress</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent className="space-y-2">
-            <Progress value={45} className="h-2" />
-            <p className="text-xs text-muted-foreground">550 pts to Level 3</p>
+            <div className="flex justify-between items-center text-xs">
+              <span>Level 1</span>
+              <span>{(profile?.points_balance || 0) % 1000} / 1000</span>
+            </div>
+            <Progress value={((profile?.points_balance || 0) % 1000) / 10} className="h-2" />
           </CardContent>
         </Card>
       </div>
@@ -148,9 +205,12 @@ function Dashboard() {
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors cursor-pointer">
+            <div 
+              className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors cursor-pointer group"
+              onClick={() => !claimDailyStreak.isPending && claimDailyStreak.mutate()}
+            >
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 text-purple-600 rounded-lg">
+                <div className="p-2 bg-purple-100 text-purple-600 rounded-lg group-hover:bg-purple-200">
                   <Gift className="h-4 w-4" />
                 </div>
                 <div>
@@ -158,7 +218,9 @@ function Dashboard() {
                   <p className="text-xs text-muted-foreground">+20 Points</p>
                 </div>
               </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              <Button size="sm" variant="ghost" disabled={claimDailyStreak.isPending}>
+                {claimDailyStreak.isPending ? "Claiming..." : "Claim"}
+              </Button>
             </div>
             <Button className="w-full" asChild>
               <Link to="/earn">See More Tasks</Link>
