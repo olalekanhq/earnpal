@@ -218,7 +218,7 @@ function SettingsPage() {
               </CardFooter>
             </Card>
 
-            <Card className="border-none shadow-md">
+            <Card className="border-none shadow-sm bg-white">
               <CardHeader className="border-b border-border/50">
                 <CardTitle className="text-xl font-bold">Notification Preferences</CardTitle>
                 <CardDescription>Control how you receive alerts and updates</CardDescription>
