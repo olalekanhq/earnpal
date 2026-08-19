@@ -119,7 +119,7 @@ function Dashboard() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-bold uppercase tracking-widest opacity-70">Total Balance</CardTitle>
           </CardHeader>
-          <CardContent className="pt-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <CardContent className="pt-2 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
             <div className="space-y-1">
               <div className="text-5xl font-bold tracking-tighter">
                 {profile?.points_balance?.toLocaleString() || 0}
