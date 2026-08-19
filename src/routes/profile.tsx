@@ -222,7 +222,7 @@ function ProfilePage() {
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <Card className="border-none shadow-sm bg-white p-6">
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-bold text-lg">Earning Summary</h3>
+                  <h3 className="font-black text-lg">Earning Summary</h3>
                   <div className="bg-primary/10 px-3 py-1 rounded-full text-xs font-bold text-primary">LVL {Math.floor((profile?.points_balance || 0) / 1000) + 1}</div>
                 </div>
                 
