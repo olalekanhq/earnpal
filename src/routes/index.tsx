@@ -140,7 +140,7 @@ function LandingPage() {
       {/* Feature Section: Final Call to Action */}
       <section className="py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center space-y-8">
-          <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tight">Ready to start earning?</h2>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight">Ready to start earning?</h2>
           <p className="text-xl opacity-90 font-medium max-w-2xl mx-auto">Join thousands of users who are already turning their daily digital activity into real-world rewards.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-bold uppercase shadow-xl" asChild>
