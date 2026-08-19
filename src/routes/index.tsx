@@ -50,12 +50,12 @@ function LandingPage() {
               Complete simple tasks, refer your friends, and unlock premium rewards. Join the most intelligent earning platform today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <Button size="lg" className="text-lg px-8 h-14 font-bold shadow-xl shadow-primary/20 group uppercase" asChild>
+              <Button size="lg" className="text-lg px-8 h-14 font-black shadow-xl shadow-primary/20 group uppercase rounded-[1.25rem]" asChild>
                 <Link to="/auth">
                   Get Started →
                 </Link>
               </Button>
-              <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-bold uppercase text-foreground/70 hover:text-foreground" asChild>
+              <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-black uppercase text-foreground/70 hover:text-foreground rounded-[1.25rem]" asChild>
                 <Link to="/earn">Learn more</Link>
               </Button>
             </div>
@@ -165,10 +165,12 @@ function LandingPage() {
               <Coins className="h-6 w-6" />
               <span className="tracking-tighter">EARN PAL</span>
             </div>
-            <div className="flex gap-8">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
               <Link to="/" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Home</Link>
               <Link to="/earn" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Earn</Link>
               <Link to="/redeem" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Redeem</Link>
+              <Link to="/privacy" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Privacy</Link>
+              <Link to="/terms" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Terms</Link>
               <Link to="/auth" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Login</Link>
             </div>
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">

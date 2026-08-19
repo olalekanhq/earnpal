@@ -17,7 +17,8 @@ export const Route = createFileRoute("/redeem")({
       { property: "og:title", content: "Redeem Points | Earn Pal" },
       { property: "og:description", content: "Browse our marketplace and pick your favorite rewards." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Redeem Rewards&description=Exchange points for gift cards.` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ location }) => {

@@ -112,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
-        { property: "og:image", content: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=1200" },
+        { property: "og:image", content: `${url}/api/public/og?title=Earn Pal&description=Reward Your Time` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@Lovable" },
       ],

@@ -12,6 +12,8 @@ Allow: /
 Allow: /earn
 Allow: /redeem
 Allow: /refer
+Allow: /privacy
+Allow: /terms
 Disallow: /admin
 Disallow: /settings
 Disallow: /api/
