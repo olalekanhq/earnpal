@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star, Search, Filter } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star, Search } from "lucide-react";
 
 export function TasksManager() {
   const queryClient = useQueryClient();
@@ -121,8 +121,6 @@ export function TasksManager() {
     setIsDialogOpen(true);
   };
 
-  
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -153,113 +151,114 @@ export function TasksManager() {
                 Add Task
               </Button>
             </DialogTrigger>
-          <DialogContent className="rounded-2xl max-w-md">
-            <DialogHeader>
-              <DialogTitle className="font-black text-xl uppercase tracking-tight">
-                {editingTask ? "Edit Task" : "Add New Task"}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Title</label>
-                <Input 
-                  value={formData.title} 
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  placeholder="e.g. Follow us on Twitter"
-                  className="rounded-xl h-12"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Description</label>
-                <Textarea 
-                  value={formData.description} 
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="What should the user do?"
-                  className="rounded-xl min-h-[80px]"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <DialogContent className="rounded-2xl max-w-md">
+              <DialogHeader>
+                <DialogTitle className="font-black text-xl uppercase tracking-tight">
+                  {editingTask ? "Edit Task" : "Add New Task"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reward (Points)</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Title</label>
                   <Input 
-                    type="number"
-                    value={formData.points} 
-                    onChange={(e) => setFormData({...formData, points: parseInt(e.target.value) || 0})}
+                    value={formData.title} 
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    placeholder="e.g. Follow us on Twitter"
                     className="rounded-xl h-12"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Category</label>
-                  <select 
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full rounded-xl h-12 px-3 bg-background border border-input focus:ring-2 focus:ring-primary text-sm font-bold"
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Description</label>
+                  <Textarea 
+                    value={formData.description} 
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    placeholder="What should the user do?"
+                    className="rounded-xl min-h-[80px]"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reward (Points)</label>
+                    <Input 
+                      type="number"
+                      value={formData.points} 
+                      onChange={(e) => setFormData({...formData, points: parseInt(e.target.value) || 0})}
+                      className="rounded-xl h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Category</label>
+                    <select 
+                      value={formData.category}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      className="w-full rounded-xl h-12 px-3 bg-background border border-input focus:ring-2 focus:ring-primary text-sm font-bold"
+                    >
+                      <option value="social">Social</option>
+                      <option value="daily">Daily</option>
+                      <option value="survey">Survey</option>
+                      <option value="offer">Offer</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Task Link (URL)</label>
+                  <Input 
+                    value={formData.link_url} 
+                    onChange={(e) => setFormData({...formData, link_url: e.target.value})}
+                    placeholder="e.g. https://twitter.com/..."
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={cn("rounded-lg px-3 font-bold", formData.is_active ? "text-green-600 bg-green-50" : "text-muted-foreground")}
+                    onClick={() => setFormData({...formData, is_active: !formData.is_active})}
                   >
-                    <option value="social">Social</option>
-                    <option value="daily">Daily</option>
-                    <option value="survey">Survey</option>
-                    <option value="offer">Offer</option>
-                  </select>
+                    {formData.is_active ? <CheckCircle2 className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                    {formData.is_active ? "Active" : "Inactive"}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={cn("rounded-lg px-3 font-bold", formData.verification_required ? "text-primary bg-primary/5" : "text-muted-foreground")}
+                    onClick={() => setFormData({...formData, verification_required: !formData.verification_required})}
+                  >
+                    {formData.verification_required ? <ShieldCheck className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                    {formData.verification_required ? "Verification Required" : "Instant Reward"}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={cn("rounded-lg px-3 font-bold", formData.is_featured ? "text-amber-600 bg-amber-50" : "text-muted-foreground")}
+                    onClick={() => setFormData({...formData, is_featured: !formData.is_featured})}
+                  >
+                    {formData.is_featured ? <Star className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                    {formData.is_featured ? "Featured Task" : "Standard Task"}
+                  </Button>
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Task Link (URL)</label>
-                <Input 
-                  value={formData.link_url} 
-                  onChange={(e) => setFormData({...formData, link_url: e.target.value})}
-                  placeholder="e.g. https://twitter.com/..."
-                  className="rounded-xl h-12"
-                />
-              </div>
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <DialogFooter>
                 <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className={cn("rounded-lg px-3 font-bold", formData.is_active ? "text-green-600 bg-green-50" : "text-muted-foreground")}
-                  onClick={() => setFormData({...formData, is_active: !formData.is_active})}
+                  variant="outline" 
+                  onClick={() => setIsDialogOpen(false)}
+                  className="rounded-xl font-bold border-border/40"
                 >
-                  {formData.is_active ? <CheckCircle2 className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
-                  {formData.is_active ? "Active" : "Inactive"}
+                  Cancel
                 </Button>
                 <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className={cn("rounded-lg px-3 font-bold", formData.verification_required ? "text-primary bg-primary/5" : "text-muted-foreground")}
-                  onClick={() => setFormData({...formData, verification_required: !formData.verification_required})}
+                  onClick={() => upsertTaskMutation.mutate(formData)}
+                  disabled={upsertTaskMutation.isPending || !formData.title || formData.points <= 0}
+                  className="rounded-xl font-black uppercase tracking-widest text-xs"
                 >
-                  {formData.verification_required ? <ShieldCheck className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
-                  {formData.verification_required ? "Verification Required" : "Instant Reward"}
+                  {upsertTaskMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                  {editingTask ? "Update Task" : "Create Task"}
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className={cn("rounded-lg px-3 font-bold", formData.is_featured ? "text-amber-600 bg-amber-50" : "text-muted-foreground")}
-                  onClick={() => setFormData({...formData, is_featured: !formData.is_featured})}
-                >
-                  {formData.is_featured ? <Star className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
-                  {formData.is_featured ? "Featured Task" : "Standard Task"}
-                </Button>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsDialogOpen(false)}
-                className="rounded-xl font-bold border-border/40"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={() => upsertTaskMutation.mutate(formData)}
-                disabled={upsertTaskMutation.isPending || !formData.title || formData.points <= 0}
-                className="rounded-xl font-black uppercase tracking-widest text-xs"
-              >
-                {upsertTaskMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                {editingTask ? "Update Task" : "Create Task"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -319,11 +318,11 @@ export function TasksManager() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-               <TableRow>
+              <TableRow>
                 <TableCell colSpan={5} className="text-center py-12"><Loader2 className="h-8 w-8 animate-spin mx-auto" /></TableCell>
               </TableRow>
             ) : (() => {
-              const filtered = tasks?.filter((task: any) => {
+              const filtered = (tasks as any[])?.filter((task: any) => {
                 const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                     task.description?.toLowerCase().includes(searchTerm.toLowerCase());
                 const matchesActive = filterActive === "all" ? true : 
@@ -401,7 +400,8 @@ export function TasksManager() {
                       </Button>
                     </div>
                   </TableCell>
-              );
+                </TableRow>
+              ));
             })()}
           </TableBody>
         </Table>
