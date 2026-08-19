@@ -162,10 +162,10 @@ function LandingPage() {
               <span className="tracking-tighter">EARN PAL</span>
             </div>
             <div className="flex gap-8">
-              <Link to="/" className="text-sm font-bold text-muted-foreground hover:text-foreground">HOME</Link>
-              <Link to="/earn" className="text-sm font-bold text-muted-foreground hover:text-foreground">EARN</Link>
-              <Link to="/redeem" className="text-sm font-bold text-muted-foreground hover:text-foreground">REDEEM</Link>
-              <Link to="/auth" className="text-sm font-bold text-muted-foreground hover:text-foreground">LOGIN</Link>
+              <Link to="/" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Home</Link>
+              <Link to="/earn" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Earn</Link>
+              <Link to="/redeem" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Redeem</Link>
+              <Link to="/auth" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Login</Link>
             </div>
             <p className="text-sm font-medium text-muted-foreground">
               © 2026 EARN PAL. ALL RIGHTS RESERVED.
