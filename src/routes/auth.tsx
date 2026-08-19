@@ -69,7 +69,7 @@ function AuthPage() {
           <div className="flex justify-center mb-4">
             <div className="flex items-center gap-2 font-bold text-2xl text-primary">
               <Coins className="h-8 w-8" />
-              <span>PAID POINT</span>
+              <span>EARN PAL</span>
             </div>
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>

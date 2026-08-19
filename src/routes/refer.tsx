@@ -70,7 +70,7 @@ function ReferralPage() {
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Refer & Earn</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
-            Invite your friends to <span className="text-primary font-bold">Paid Point</span> and earn <span className="text-foreground font-bold">50 points</span> for each person who signs up.
+            Invite your friends to <span className="text-primary font-bold">Earn Pal</span> and earn <span className="text-foreground font-bold">50 points</span> for each person who signs up.
           </p>
         </div>
 

@@ -52,7 +52,7 @@ export function Navigation() {
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 font-bold text-xl text-primary">
           <Coins className="h-6 w-6" />
-          <span>Paid Point</span>
+          <span>Earn Pal</span>
         </div>
 
         {/* Desktop Nav */}
