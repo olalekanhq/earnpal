@@ -39,19 +39,19 @@ function LandingPage() {
               <Zap className="h-4 w-4" />
               <span>THE FUTURE OF REWARDS IS HERE</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-foreground uppercase leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
               Grow your Digital Empire <span className="text-primary italic">Without the Chaos</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
               Unified control for marketplace tasks, referrals, and earning—all in one intelligent dashboard.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <Button size="lg" className="text-lg px-8 h-14 font-black shadow-xl shadow-primary/20 group uppercase" asChild>
+              <Button size="lg" className="text-lg px-8 h-14 font-bold shadow-xl shadow-primary/20 group uppercase" asChild>
                 <Link to="/auth">
                   Get Started →
                 </Link>
               </Button>
-              <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-black uppercase text-foreground/70 hover:text-foreground" asChild>
+              <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-bold uppercase text-foreground/70 hover:text-foreground" asChild>
                 <Link to="/earn">Learn more</Link>
               </Button>
             </div>
@@ -64,9 +64,9 @@ function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">Unified Control in One Dashboard</h2>
+              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Unified Control in One Dashboard</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
-              <Button className="font-black uppercase" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
+              <Button className="font-bold uppercase" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
             </div>
             <div className="bg-white p-4 rounded-3xl border shadow-2xl shadow-primary/10 rotate-2 hover:rotate-0 transition-transform">
                <div className="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center border">
@@ -81,9 +81,9 @@ function LandingPage() {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">Limitless Growth and Scale</h2>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Limitless Growth and Scale</h2>
             <p className="text-lg text-muted-foreground">Built on enterprise-grade infrastructure, Earn Pal effortlessly handles your traffic spikes, high transaction volumes, and thousands of concurrent users as your business scales.</p>
-            <Button size="lg" className="uppercase font-black" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
+            <Button size="lg" className="uppercase font-bold" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
           </div>
         </div>
       </section>
@@ -91,7 +91,7 @@ function LandingPage() {
       {/* FAQ Section */}
       <section className="py-24 bg-accent/10 border-t">
         <div className="container mx-auto px-4 max-w-2xl">
-          <h2 className="text-3xl font-black uppercase mb-12 text-center">Frequently asked questions</h2>
+          <h2 className="text-3xl font-bold uppercase mb-12 text-center">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="1">
               <AccordionTrigger className="text-lg font-bold">How do I start earning?</AccordionTrigger>
@@ -113,8 +113,8 @@ function LandingPage() {
       <section className="py-24 bg-background border-t">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="text-sm font-black uppercase text-primary tracking-widest">Platform Features</span>
-            <h2 className="text-4xl md:text-5xl font-black uppercase mt-4">Everything you need to scale</h2>
+            <span className="text-sm font-bold uppercase text-primary tracking-widest">Platform Features</span>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase mt-4">Everything you need to scale</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -127,7 +127,7 @@ function LandingPage() {
             ].map((feature, i) => (
               <div key={i} className="p-8 rounded-3xl border bg-card hover:shadow-xl transition-all space-y-4">
                 <feature.icon className="h-10 w-10 text-primary" />
-                <h3 className="text-2xl font-black uppercase">{feature.title}</h3>
+                <h3 className="text-2xl font-bold uppercase">{feature.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
               </div>
             ))}
@@ -138,13 +138,13 @@ function LandingPage() {
       {/* Feature Section: Final Call to Action */}
       <section className="py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center space-y-8">
-          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight">Ready to start earning?</h2>
+          <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tight">Ready to start earning?</h2>
           <p className="text-xl opacity-90 font-medium max-w-2xl mx-auto">Join thousands of users who are already turning their daily digital activity into real-world rewards.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-black uppercase shadow-xl" asChild>
+            <Button size="lg" variant="secondary" className="text-lg px-8 h-14 font-bold uppercase shadow-xl" asChild>
               <Link to="/auth">Create your account →</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-black border-primary-foreground/20 hover:bg-primary-foreground/10 uppercase" asChild>
+            <Button size="lg" variant="outline" className="text-lg px-8 h-14 font-bold border-primary-foreground/20 hover:bg-primary-foreground/10 uppercase" asChild>
               <Link to="/auth">Log in</Link>
             </Button>
           </div>
@@ -155,7 +155,7 @@ function LandingPage() {
       <footer className="py-12 border-t bg-background">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-2 font-black text-2xl text-primary">
+            <div className="flex items-center gap-2 font-bold text-2xl text-primary">
               <Coins className="h-8 w-8" />
               <span>EARN PAL</span>
             </div>
