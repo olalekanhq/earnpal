@@ -319,7 +319,7 @@ function Dashboard() {
                         <p className="text-xs font-bold text-primary uppercase">
                           {streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString()
                             ? 'Already Claimed'
-                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} PTS`
+                            : `Claim ${(streak?.current_streak ?? 0) >= 6 ? '+25' : '+20'} POINTS`
                           }
                         </p>
                       </div>
