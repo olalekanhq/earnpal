@@ -33,7 +33,7 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
 
-  if (isAuthPage) return null;
+  if (location.pathname === "/auth") return null;
 
 
   const { data: profile } = useQuery({
