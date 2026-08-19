@@ -84,6 +84,7 @@ export type Database = {
           id: string
           points_balance: number
           push_notifications: boolean | null
+          referral_clicks: number | null
           referral_code: string | null
           referred_by: string | null
           updated_at: string
@@ -97,6 +98,7 @@ export type Database = {
           id: string
           points_balance?: number
           push_notifications?: boolean | null
+          referral_clicks?: number | null
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string
@@ -110,6 +112,7 @@ export type Database = {
           id?: string
           points_balance?: number
           push_notifications?: boolean | null
+          referral_clicks?: number | null
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string
@@ -273,6 +276,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_referral_clicks: {
+        Args: { target_referral_code: string }
+        Returns: undefined
       }
     }
     Enums: {
