@@ -217,6 +217,15 @@ export function TasksManager() {
                   {formData.verification_required ? <ShieldCheck className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
                   {formData.verification_required ? "Verification Required" : "Instant Reward"}
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={cn("rounded-lg px-3 font-bold", formData.is_featured ? "text-amber-600 bg-amber-50" : "text-muted-foreground")}
+                  onClick={() => setFormData({...formData, is_featured: !formData.is_featured})}
+                >
+                  {formData.is_featured ? <Star className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                  {formData.is_featured ? "Featured Task" : "Standard Task"}
+                </Button>
               </div>
             </div>
             <DialogFooter>
