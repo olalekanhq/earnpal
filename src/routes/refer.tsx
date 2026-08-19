@@ -78,7 +78,7 @@ function ReferralPage() {
 
       <Tabs defaultValue="dashboard" className="w-full">
         <TabsList className="grid w-full grid-cols-3 max-w-[600px] mx-auto mb-8">
-          <TabsTrigger value="dashboard" className="font-bold">Dashboard</TabsTrigger>
+          <TabsTrigger value="dashboard" className="font-bold">Referral Dashboard</TabsTrigger>
           <TabsTrigger value="status" className="font-bold">My Referrals</TabsTrigger>
           <TabsTrigger value="leaderboard" className="font-bold">Leaderboard</TabsTrigger>
         </TabsList>
