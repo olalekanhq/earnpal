@@ -97,7 +97,7 @@ function ProfilePage() {
         .from('avatars')
         .getPublicUrl(filePath);
 
-      await updateProfile.mutateAsync({ avatar_url: data.publicUrl });
+      await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
       return data.publicUrl;
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
