@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +25,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 });
 
 function EarnPage() {
+  const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
@@ -154,6 +155,7 @@ function EarnPage() {
                     } else {
                       toast.success((data as any)?.message || "Task submitted!");
                       refetchTasks();
+                      queryClient.invalidateQueries({ queryKey: ["profile"] });
                       setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
                     }
                     setCompletingTaskId(null);
