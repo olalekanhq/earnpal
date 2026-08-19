@@ -142,7 +142,7 @@ function AuthPage() {
           data: {
             username,
             full_name: fullName,
-            referred_by: referralCode || null
+            referral_code: referralCode || null
           }
         }
       };
