@@ -157,9 +157,9 @@ function LandingPage() {
       <footer className="py-12 border-t bg-background">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-2 font-bold text-2xl text-primary">
-              <Coins className="h-8 w-8" />
-              <span>EARN PAL</span>
+            <div className="flex items-center gap-2 font-black text-2xl text-primary">
+              <Coins className="h-6 w-6" />
+              <span className="tracking-tighter">EARN PAL</span>
             </div>
             <div className="flex gap-8">
               <Link to="/" className="text-sm font-bold text-muted-foreground hover:text-foreground">HOME</Link>
