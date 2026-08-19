@@ -96,18 +96,19 @@ function AuthPage() {
     if (!validate('login')) return;
     setLoading(true);
     try {
-      let loginEmail = identifier;
+      let loginEmail = identifier.trim();
       
-      if (!identifier.includes("@")) {
-        const { data, error: rpcError } = await supabase.rpc('get_user_email_by_username', {
-          _username: identifier
+      if (!loginEmail.includes("@")) {
+        const { data, error: rpcError } = await supabase.rpc('lookup_login_email', {
+          _username: loginEmail
         });
 
         if (rpcError || !data) {
-          throw new Error("Could not find account with that username.");
+          throw new Error("Incorrect username/email or password.");
         }
         loginEmail = data;
       }
+
 
       // In Supabase, the client initialization determines the storage.
       // Since the auto-generated client uses localStorage by default,
