@@ -75,7 +75,7 @@ function EarnPage() {
             variant={activeCategory === cat.name ? 'default' : 'outline'} 
             className={cn(
               "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-              activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-white border-none shadow-sm"
+              activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
             )}
             onClick={() => setActiveCategory(cat.name)}
           >
@@ -87,14 +87,14 @@ function EarnPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
-          <Card key={task.id} className="group border-none shadow-sm bg-white overflow-hidden flex flex-col transition-all hover:shadow-md">
+          <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
             <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start mb-3">
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
                   {task.category}
                 </Badge>
-                <div className="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded-lg">
+                <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
                   <Coins className="h-3 w-3 text-green-600" />
                   <span className="text-green-600 font-bold text-xs">{task.points}</span>
                 </div>
@@ -189,7 +189,7 @@ function EarnPage() {
           </Card>
         )) : !isLoading && (
           <div className="col-span-full py-20 text-center space-y-4">
-            <div className="bg-white w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
+            <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
               <Coins className="h-8 w-8" />
             </div>
             <div className="space-y-1">
@@ -200,7 +200,7 @@ function EarnPage() {
         )}
         
         {isLoading && Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="border-none shadow-sm bg-white h-[280px] animate-pulse">
+          <Card key={i} className="border-none shadow-sm bg-card h-[280px] animate-pulse">
             <div className="h-1.5 w-full bg-muted/50" />
             <div className="p-6 space-y-4">
               <div className="flex justify-between">
