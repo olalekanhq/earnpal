@@ -169,22 +169,22 @@ export function Navigation() {
   return (
     <>
       {/* Mobile Top Bar */}
-      <div className="md:hidden sticky top-0 left-0 z-40 w-full flex items-center justify-between h-20 px-6 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5 -ml-2">
+      <div className="md:hidden sticky top-0 left-0 z-40 w-full flex items-center justify-between h-20 px-4 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5">
             <Menu className="h-6 w-6 text-foreground" />
           </Button>
-          <Link to="/dashboard" className="flex items-center gap-2 font-black text-xl uppercase tracking-tighter text-primary">
-            <Coins className="h-6 w-6" strokeWidth={2.5} />
-            <span className="hidden xs:inline">Earn Pal</span>
+          <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter text-primary">
+            <Coins className="h-5 w-5" strokeWidth={2.5} />
+            <span className="leading-tight">Earn Pal</span>
           </Link>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
            <NotificationsPopover />
-           <Avatar className="h-10 w-10 border-2 border-primary/10 shadow-sm ring-2 ring-background">
+           <Avatar className="h-9 w-9 border-2 border-primary/10 shadow-sm ring-2 ring-background">
             <AvatarImage src={profile?.avatar_url || ""} />
             <AvatarFallback className="bg-primary/5 text-primary">
-              <User className="h-5 w-5" />
+              <User className="h-4 w-4" />
             </AvatarFallback>
           </Avatar>
         </div>
