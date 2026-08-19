@@ -345,7 +345,7 @@ function AuthPage() {
             </form>
           ) : (
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl">
+              <TabsList className="grid w-full grid-cols-2 bg-[#F8F9FB] p-1 rounded-xl h-12">
                 <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
                 <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
               </TabsList>
