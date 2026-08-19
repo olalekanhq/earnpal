@@ -174,7 +174,7 @@ function SettingsPage() {
           <div className="md:col-span-2 space-y-6">
             <Card className="border-none shadow-sm bg-white">
               <CardHeader className="border-b border-border/50">
-                <CardTitle className="text-xl font-bold">Account Details</CardTitle>
+                <CardTitle className="text-xl font-black">Account Details</CardTitle>
                 <CardDescription>Update your public profile information</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 space-y-4">
