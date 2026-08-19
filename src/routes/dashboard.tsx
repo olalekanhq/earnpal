@@ -129,11 +129,11 @@ function Dashboard() {
                 +12% from last week
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button variant="secondary" className="rounded-xl font-bold px-6" asChild>
+            <div className="flex gap-2">
+              <Button variant="secondary" className="rounded-xl font-bold px-6 h-11 bg-white text-primary hover:bg-white/90 border-none shadow-sm" asChild>
                 <Link to="/earn">Start Earning</Link>
               </Button>
-              <Button variant="outline" className="rounded-xl font-bold px-6 bg-white/10 border-white/20 hover:bg-white/20" asChild>
+              <Button variant="outline" className="rounded-xl font-bold px-6 h-11 bg-white/10 border-white/20 hover:bg-white/20 text-white" asChild>
                 <Link to="/redeem">Redeem</Link>
               </Button>
             </div>
