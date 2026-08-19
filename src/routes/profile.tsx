@@ -58,7 +58,8 @@ function ProfilePage() {
       // Basic extraction logic: try to find the space after country code
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
-        setCountryCode(parts[0]);
+        const firstPart = parts[0];
+        setCountryCode(firstPart);
         setPhoneBody(parts.slice(1).join(" "));
       } else {
         setPhoneBody(profile.phone_number);
