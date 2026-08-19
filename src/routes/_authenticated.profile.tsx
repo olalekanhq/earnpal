@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ImageCropper } from "@/components/ImageCropper";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     title: "My Profile | Earn Pal",
     meta: [
@@ -25,15 +25,6 @@ export const Route = createFileRoute("/profile")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({
-        to: "/auth",
-        search: { redirect: location.pathname },
-      });
-    }
-  },
   component: ProfilePage,
 });
 

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export const Route = createFileRoute("/earn")({
+export const Route = createFileRoute("/_authenticated/earn")({
   head: () => ({
     title: "Earn Points | Earn Pal",
     meta: [
@@ -20,15 +20,6 @@ export const Route = createFileRoute("/earn")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({
-        to: "/auth",
-        search: { redirect: location.pathname },
-      });
-    }
-  },
   component: EarnPage,
 });
 

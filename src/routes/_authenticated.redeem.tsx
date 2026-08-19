@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/redeem")({
+export const Route = createFileRoute("/_authenticated/redeem")({
   head: () => ({
     title: "Redeem Rewards | Earn Pal",
     meta: [
@@ -21,15 +21,6 @@ export const Route = createFileRoute("/redeem")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({
-        to: "/auth",
-        search: { redirect: location.pathname },
-      });
-    }
-  },
   component: RedeemPage,
 });
 
