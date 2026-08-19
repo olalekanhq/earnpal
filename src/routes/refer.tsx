@@ -12,6 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Route = createFileRoute("/refer")({
+  head: () => ({
+    title: "Refer Friends | Earn Pal",
+    meta: [
+      { name: "description", content: "Invite your friends to Earn Pal and earn bonus points for every verified signup." },
+      { property: "og:title", content: "Referral Program | Earn Pal" },
+      { property: "og:description", content: "Share your unique link and watch your points balance grow." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {

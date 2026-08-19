@@ -20,6 +20,8 @@ import { Onboarding } from "@/components/Onboarding";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 
+import { createFileRoute } from "@tanstack/react-router";
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

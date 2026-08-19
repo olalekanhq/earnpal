@@ -10,6 +10,16 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/redeem")({
+  head: () => ({
+    title: "Redeem Rewards | Earn Pal",
+    meta: [
+      { name: "description", content: "Exchange your earned points for gift cards, vouchers, and premium products." },
+      { property: "og:title", content: "Redeem Points | Earn Pal" },
+      { property: "og:description", content: "Browse our marketplace and pick your favorite rewards." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
