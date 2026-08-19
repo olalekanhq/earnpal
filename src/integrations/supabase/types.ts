@@ -190,6 +190,41 @@ export type Database = {
         }
         Relationships: []
       }
+      task_audit_logs: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_status: string
+          old_status: string | null
+          task_submission_id: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status: string
+          old_status?: string | null
+          task_submission_id: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string
+          old_status?: string | null
+          task_submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_audit_logs_task_submission_id_fkey"
+            columns: ["task_submission_id"]
+            isOneToOne: false
+            referencedRelation: "task_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_submissions: {
         Row: {
           created_at: string | null

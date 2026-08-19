@@ -1,13 +1,15 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2 } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, ShieldCheck, ListTodo, Info, Loader2, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -26,6 +28,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const queryClient = useQueryClient();
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -114,6 +119,50 @@ function Dashboard() {
   });
 
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+
+  const handleTaskAction = async (task: any) => {
+    const currentUiState = taskUiStates[task.id] || 'idle';
+    
+    if (currentUiState === 'idle') {
+      if (task.link_url) {
+        window.open(task.link_url, '_blank');
+      }
+      
+      setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
+      
+      // Wait for 5 seconds before allowing confirmation
+      setTimeout(() => {
+        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+      }, 5000);
+      return;
+    }
+
+    if (currentUiState === 'awaiting_confirmation') {
+      setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await (supabase.rpc as any)('submit_task', {
+        _user_id: user.id,
+        _task_id: task.id
+      });
+
+      if (error) {
+        toast.error(error.message);
+        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+      } else if (data && !(data as any).success) {
+        toast.error((data as any).message);
+        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+      } else {
+        toast.success((data as any)?.message || "Task submitted!");
+        queryClient.invalidateQueries({ queryKey: ["featured-tasks"] });
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
+        setIsTaskModalOpen(false);
+      }
+    }
+  };
 
   return (
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
@@ -223,19 +272,9 @@ function Dashboard() {
                         "w-full rounded-xl font-bold h-11 transition-all",
                         isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
                       )}
-                      onClick={async () => {
-                        if (isCompleted) return;
-                        
-                        const taskAny = task as any;
-                        if (taskAny.link_url) {
-                          window.open(taskAny.link_url, '_blank');
-                        }
-                        
-                        // Navigate to earn page to complete task or show feedback
-                        // Since we want the user to carry it out, we'll open the link and then they can verify on the earn page
-                        // Or we could implement the verification logic here too.
-                        // Let's keep it simple: open link and toast instruction.
-                        toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
+                      onClick={() => {
+                        setSelectedTask(task);
+                        setIsTaskModalOpen(true);
                       }}
                       disabled={isCompleted && submission?.status === 'verified'}
                     >
@@ -246,7 +285,7 @@ function Dashboard() {
                         </div>
                       ) : (
                         <>
-                          Start Task
+                          View Task
                           <ChevronRight className="ml-2 h-4 w-4" />
                         </>
                       )}
@@ -338,6 +377,110 @@ function Dashboard() {
           </Card>
         </div>
       </div>
+
+      {/* Task Details Modal */}
+      <Dialog open={isTaskModalOpen} onOpenChange={setIsTaskModalOpen}>
+        <DialogContent className="rounded-2xl max-w-md border-none shadow-2xl">
+          {selectedTask && (
+            <>
+              <DialogHeader className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
+                    {selectedTask.category}
+                  </Badge>
+                  <div className="flex items-center gap-1 bg-green-50 px-2.5 py-1 rounded-xl">
+                    <Coins className="h-3.5 w-3.5 text-green-600" />
+                    <span className="text-green-600 font-black text-sm">+{selectedTask.points} PTS</span>
+                  </div>
+                </div>
+                <DialogTitle className="text-2xl font-black tracking-tight leading-tight">
+                  {selectedTask.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm font-medium leading-relaxed">
+                  {selectedTask.description}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="py-4 space-y-6">
+                <div className="space-y-3">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <ListTodo className="h-3 w-3" />
+                    How to complete
+                  </h4>
+                  <div className="grid gap-3">
+                    <div className="flex gap-3 items-start p-3 rounded-xl bg-accent/50 border border-border/50">
+                      <div className="bg-primary text-primary-foreground text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</div>
+                      <p className="text-xs font-medium">Click the link below to visit the external task page.</p>
+                    </div>
+                    <div className="flex gap-3 items-start p-3 rounded-xl bg-accent/50 border border-border/50">
+                      <div className="bg-primary text-primary-foreground text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</div>
+                      <p className="text-xs font-medium">Carry out the required action (e.g. follow, subscribe, survey).</p>
+                    </div>
+                    <div className="flex gap-3 items-start p-3 rounded-xl bg-accent/50 border border-border/50">
+                      <div className="bg-primary text-primary-foreground text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</div>
+                      <p className="text-xs font-medium">Return here and click "Confirm Completion" to claim your points.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedTask.verification_required && (
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-100 text-amber-700">
+                    <Info className="h-4 w-4 shrink-0" />
+                    <p className="text-[11px] font-bold">This task requires manual verification. Points may take up to 24h to appear.</p>
+                  </div>
+                )}
+              </div>
+
+              <DialogFooter className="flex-col sm:flex-col gap-2">
+                <Button 
+                  className={cn(
+                    "w-full rounded-xl font-black h-12 uppercase tracking-widest text-xs",
+                    (selectedTask.task_submissions?.[0]?.status === 'verified' || selectedTask.task_submissions?.[0]?.status === 'pending') 
+                      ? "bg-green-500/10 text-green-600 border-none hover:bg-green-500/20" 
+                      : "shadow-lg shadow-primary/20"
+                  )}
+                  onClick={() => handleTaskAction(selectedTask)}
+                  disabled={
+                    selectedTask.task_submissions?.[0]?.status === 'verified' || 
+                    taskUiStates[selectedTask.id] === 'submitting'
+                  }
+                >
+                  {selectedTask.task_submissions?.[0]?.status === 'verified' ? (
+                    <>
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Task Completed
+                    </>
+                  ) : selectedTask.task_submissions?.[0]?.status === 'pending' ? (
+                    <>
+                      <Clock className="mr-2 h-4 w-4" />
+                      Verifying...
+                    </>
+                  ) : taskUiStates[selectedTask.id] === 'verifying' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : taskUiStates[selectedTask.id] === 'awaiting_confirmation' ? (
+                    "Confirm Completion"
+                  ) : (
+                    <>
+                      Start Task
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full rounded-xl font-bold h-10 text-muted-foreground"
+                  onClick={() => setIsTaskModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
