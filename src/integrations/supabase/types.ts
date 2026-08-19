@@ -88,6 +88,7 @@ export type Database = {
           referral_code: string | null
           referred_by: string | null
           updated_at: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -102,6 +103,7 @@ export type Database = {
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -116,6 +118,7 @@ export type Database = {
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -270,6 +273,10 @@ export type Database = {
       }
     }
     Functions: {
+      get_user_email_by_username: {
+        Args: { _username: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
