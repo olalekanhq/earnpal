@@ -107,11 +107,11 @@ function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-              Welcome back, <span className="text-primary">{profile?.full_name?.split(' ')[0] || 'User'}</span>!
+            <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl uppercase">
+              Welcome, <span className="text-primary">{profile?.full_name?.split(' ')[0] || 'User'}</span>
             </h1>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Your journey to rewards continues. You've accumulated <span className="font-semibold text-foreground">{profile?.points_balance || 0}</span> points.
+            <p className="mt-2 text-lg text-muted-foreground font-medium">
+              You've accumulated <span className="text-foreground font-black underline decoration-primary underline-offset-4">{profile?.points_balance?.toLocaleString() || 0}</span> points.
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
