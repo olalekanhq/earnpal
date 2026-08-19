@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,12 +26,23 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
 
-  const { data: tasks, isLoading } = useQuery({
+  const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
-      const { data } = await supabase.from("tasks").select("*").eq("is_active", true);
-      return data || [];
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
+      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
+      
+      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
+      
+      return (tasksData as any)?.map((task: any) => ({
+        ...task,
+        status: submissionsMap.get(task.id) || null
+      })) || [];
     },
   });
 
@@ -43,7 +55,7 @@ function EarnPage() {
 
   const filteredTasks = activeCategory === "All" 
     ? tasks 
-    : tasks?.filter(t => t.category === activeCategory);
+    : (tasks as any[])?.filter((t: any) => t.category === activeCategory);
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
@@ -72,7 +84,7 @@ function EarnPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTasks?.length ? filteredTasks.map((task) => (
+        {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
           <Card key={task.id} className="group border-none shadow-sm bg-white overflow-hidden flex flex-col transition-all hover:shadow-md">
             <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
             <CardHeader className="pb-4">
@@ -99,8 +111,50 @@ function EarnPage() {
                   <span>Verified</span>
                 </div>
               </div>
-              <Button className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all">
-                Start Earning
+              <Button 
+                className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id}
+                onClick={async () => {
+                  const taskAny = task as any;
+                  if (taskAny.link_url) {
+                    window.open(taskAny.link_url, '_blank');
+                  }
+                  
+                  setCompletingTaskId(task.id);
+                  const { data: { user } } = await supabase.auth.getUser();
+                  if (!user) return;
+
+                  const { data, error } = await (supabase.rpc as any)('submit_task', {
+                    _user_id: user.id,
+                    _task_id: task.id
+                  });
+
+                  if (error) {
+                    toast.error(error.message);
+                  } else if (data && !(data as any).success) {
+                    toast.error((data as any).message);
+                  } else {
+                    toast.success((data as any)?.message || "Task submitted!");
+                    refetchTasks();
+                  }
+                  setCompletingTaskId(null);
+                }}
+              >
+                {completingTaskId === task.id ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : task.status === 'verified' ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Completed
+                  </>
+                ) : task.status === 'pending' ? (
+                  <>
+                    <Clock className="h-4 w-4 mr-2" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Start Earning"
+                )}
               </Button>
             </CardContent>
           </Card>
