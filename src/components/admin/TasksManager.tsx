@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck } from "lucide-react";
 
 export function TasksManager() {
   const queryClient = useQueryClient();
@@ -27,7 +27,9 @@ export function TasksManager() {
     description: "",
     points: 0,
     category: "social",
-    is_active: true
+    is_active: true,
+    link_url: "",
+    verification_required: false
   });
 
   const { data: tasks, isLoading } = useQuery({
@@ -93,7 +95,9 @@ export function TasksManager() {
       description: "",
       points: 0,
       category: "social",
-      is_active: true
+      is_active: true,
+      link_url: "",
+      verification_required: false
     });
   };
 
@@ -104,7 +108,9 @@ export function TasksManager() {
       description: task.description || "",
       points: task.points,
       category: task.category || "social",
-      is_active: task.is_active
+      is_active: task.is_active,
+      link_url: task.link_url || "",
+      verification_required: task.verification_required || false
     });
     setIsDialogOpen(true);
   };
@@ -180,7 +186,16 @@ export function TasksManager() {
                   </select>
                 </div>
               </div>
-              <div className="flex items-center gap-2 pt-2">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Task Link (URL)</label>
+                <Input 
+                  value={formData.link_url} 
+                  onChange={(e) => setFormData({...formData, link_url: e.target.value})}
+                  placeholder="e.g. https://twitter.com/..."
+                  className="rounded-xl h-12"
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -189,6 +204,15 @@ export function TasksManager() {
                 >
                   {formData.is_active ? <CheckCircle2 className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
                   {formData.is_active ? "Active" : "Inactive"}
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={cn("rounded-lg px-3 font-bold", formData.verification_required ? "text-primary bg-primary/5" : "text-muted-foreground")}
+                  onClick={() => setFormData({...formData, verification_required: !formData.verification_required})}
+                >
+                  {formData.verification_required ? <ShieldCheck className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                  {formData.verification_required ? "Verification Required" : "Instant Reward"}
                 </Button>
               </div>
             </div>

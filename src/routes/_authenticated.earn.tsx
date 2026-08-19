@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,12 +26,23 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
 
-  const { data: tasks, isLoading } = useQuery({
+  const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
-      const { data } = await supabase.from("tasks").select("*").eq("is_active", true);
-      return data || [];
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data: tasksData } = await supabase.from("tasks").select("*").eq("is_active", true);
+      const { data: submissions } = await supabase.from("task_submissions").select("task_id, status").eq("user_id", user.id);
+      
+      const submissionsMap = new Map(submissions?.map(s => [s.task_id, s.status]));
+      
+      return tasksData?.map(task => ({
+        ...task,
+        status: submissionsMap.get(task.id) || null
+      })) || [];
     },
   });
 
@@ -99,8 +111,49 @@ function EarnPage() {
                   <span>Verified</span>
                 </div>
               </div>
-              <Button className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all">
-                Start Earning
+              <Button 
+                className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id}
+                onClick={async () => {
+                  if (task.link_url) {
+                    window.open(task.link_url, '_blank');
+                  }
+                  
+                  setCompletingTaskId(task.id);
+                  const { data: { user } } = await supabase.auth.getUser();
+                  if (!user) return;
+
+                  const { data, error } = await supabase.rpc('submit_task', {
+                    _user_id: user.id,
+                    _task_id: task.id
+                  });
+
+                  if (error) {
+                    toast.error(error.message);
+                  } else if (data && !data.success) {
+                    toast.error(data.message);
+                  } else {
+                    toast.success(data.message || "Task submitted!");
+                    refetchTasks();
+                  }
+                  setCompletingTaskId(null);
+                }}
+              >
+                {completingTaskId === task.id ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : task.status === 'verified' ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Completed
+                  </>
+                ) : task.status === 'pending' ? (
+                  <>
+                    <Clock className="h-4 w-4 mr-2" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Start Earning"
+                )}
               </Button>
             </CardContent>
           </Card>
