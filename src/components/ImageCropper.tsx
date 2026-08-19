@@ -106,7 +106,7 @@ export function ImageCropper({ image, onCropComplete, onCancel, open }: ImageCro
             min={1}
             max={3}
             step={0.1}
-            onValueChange={(val) => setZoom(val[0])}
+            onValueChange={(val) => setZoom(val[0] ?? 1)}
           />
         </div>
         <DialogFooter className="gap-2 sm:gap-0">
