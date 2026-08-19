@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Coins, ArrowRight, ShieldCheck, Zap, Users, Gift, CheckCircle2, Layout, BarChart3, Rocket, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { z } from "zod";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,7 +19,21 @@ export const Route = createFileRoute("/")({
       { name: "twitter:description", content: "The ultimate rewards community. Complete tasks, refer friends, and unlock premium rewards." },
     ],
   }),
-  beforeLoad: async () => {
+  validateSearch: (search) => z.object({
+    ref: z.string().optional(),
+  }).parse(search),
+  beforeLoad: async ({ search }) => {
+    // If there's a referral code, redirect to signup immediately
+    if (search.ref) {
+      throw redirect({
+        to: "/auth",
+        search: {
+          mode: "signup",
+          ref: search.ref,
+        },
+      });
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
     
     // We only redirect if we definitely have a session.
