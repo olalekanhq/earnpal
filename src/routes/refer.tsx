@@ -91,7 +91,7 @@ function ReferralPage() {
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Link Clicks</p>
-                  <p className="text-2xl font-bold">{profile?.referral_clicks || 0}</p>
+                  <p className="text-2xl font-black">{profile?.referral_clicks || 0}</p>
                 </div>
               </div>
             </Card>
