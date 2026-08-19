@@ -62,7 +62,7 @@ function RedeemPage() {
           <p className="text-muted-foreground font-medium">Exchange your points for amazing gift cards and rewards.</p>
         </div>
         
-        <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4 min-w-[200px]">
+        <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4 min-w-[200px]">
           <div className="bg-primary/10 p-3 rounded-2xl text-primary">
             <Wallet className="h-5 w-5" />
           </div>
@@ -81,7 +81,7 @@ function RedeemPage() {
               variant={activeCategory === cat.name ? 'default' : 'outline'} 
               className={cn(
                 "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-                activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-white border-none shadow-sm"
+                activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
               )}
               onClick={() => setActiveCategory(cat.name)}
             >
@@ -99,7 +99,7 @@ function RedeemPage() {
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredRewards?.length ? filteredRewards.map((reward) => (
-          <Card key={reward.id} className="group border-none shadow-sm bg-white overflow-hidden flex flex-col transition-all hover:shadow-md">
+          <Card key={reward.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
             <div className="aspect-[16/9] bg-accent/30 relative overflow-hidden">
               {reward.image_url ? (
                 <img 
@@ -113,7 +113,7 @@ function RedeemPage() {
                 </div>
               )}
               <div className="absolute top-3 right-3">
-                <Badge className="bg-white/90 backdrop-blur-sm text-foreground border-none shadow-sm font-bold rounded-lg px-2.5 py-1">
+                <Badge className="bg-card/90 backdrop-blur-sm text-foreground border-none shadow-sm font-bold rounded-lg px-2.5 py-1">
                   <Coins className="h-3 w-3 mr-1.5 text-primary inline" />
                   {reward.cost_points.toLocaleString()}
                 </Badge>
@@ -140,7 +140,7 @@ function RedeemPage() {
           </Card>
         )) : !isLoading && (
           <div className="col-span-full py-20 text-center space-y-4">
-            <div className="bg-white w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
+            <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
               <ShoppingBag className="h-8 w-8" />
             </div>
             <div className="space-y-1">
@@ -151,7 +151,7 @@ function RedeemPage() {
         )}
 
         {isLoading && Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="border-none shadow-sm bg-white h-[320px] animate-pulse">
+          <Card key={i} className="border-none shadow-sm bg-card h-[320px] animate-pulse">
             <div className="aspect-[16/9] bg-muted/50 w-full" />
             <div className="p-6 space-y-4">
               <div className="h-4 w-16 bg-muted rounded" />
