@@ -184,15 +184,21 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
+    // Check if session should be cleared on startup (if it was transient)
+    if (typeof window !== 'undefined' && localStorage.getItem('earn-pal-session-transient') === 'true') {
+      // Clear the transient flag and sign out to force fresh login after restart
+      localStorage.removeItem('earn-pal-session-transient');
+      supabase.auth.signOut();
+    }
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
         router.invalidate();
       }
       if (event === 'SIGNED_OUT') {
         router.invalidate();
-        // Use a more reliable way to check the current path
         const currentPath = window.location.pathname;
-        const publicPages = ['/', '/auth', '/landing'];
+        const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
         if (!publicPages.includes(currentPath)) {
           router.navigate({ to: '/auth' });
         }
