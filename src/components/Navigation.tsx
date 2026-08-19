@@ -123,7 +123,7 @@ export function Navigation() {
                   to={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all group",
                     location.pathname === item.href
                       ? "bg-primary/10 text-primary shadow-sm"
                       : "text-muted-foreground hover:bg-accent hover:text-foreground"
