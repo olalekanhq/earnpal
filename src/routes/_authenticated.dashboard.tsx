@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, ShieldCheck, ListTodo, Info, Loader2, ArrowRight } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, ShieldCheck, ListTodo, Info, Loader2, ArrowRight, History } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useState } from "react";
+import { UserActivityFeed } from "@/components/UserActivityFeed";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -306,44 +307,9 @@ function Dashboard() {
       )}
 
       <div className="grid gap-8 lg:grid-cols-12">
-        {/* Recent Activity */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-xl font-black tracking-tight text-foreground">Recent Activity</h2>
-            <Link to="/earn" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
-          </div>
-          <Card className="border-none shadow-sm bg-card">
-            <CardContent className="p-0">
-              <div className="divide-y divide-border/50">
-                {recentTransactions?.length ? recentTransactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "p-2.5 rounded-xl transition-transform group-hover:scale-110",
-                        tx.type === 'earn' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                      )}>
-                        {tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-foreground">{tx.description}</p>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{new Date(tx.created_at).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className={cn(
-                      "text-sm font-black",
-                      tx.type === 'earn' ? 'text-green-600' : 'text-red-600'
-                    )}>
-                      {tx.type === 'earn' ? '+' : '-'}{tx.amount}
-                    </div>
-                  </div>
-                )) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <p className="text-sm font-medium">No recent activity yet.</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Activity Feed */}
+        <div className="lg:col-span-8">
+          <UserActivityFeed />
         </div>
 
         {/* Quick Stats & Promo */}

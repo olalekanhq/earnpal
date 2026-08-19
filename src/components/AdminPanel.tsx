@@ -26,11 +26,29 @@ import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
+import { UserSubmissionsManager } from "./admin/UserSubmissionsManager";
 import { cn } from "@/lib/utils";
 import { AuditLogManager } from "./admin/AuditLogManager";
-import { ListTodo, History } from "lucide-react";
+import { ListTodo, History, CheckSquare } from "lucide-react";
 
 export function AdminPanel() {
+  const { data: userRoles } = useQuery({
+    queryKey: ["currentUserRoles"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      return data?.map(r => r.role) || [];
+    }
+  });
+
+  const isAdmin = userRoles?.includes('admin');
+  const isModerator = userRoles?.includes('moderator');
+  const isTaskManager = userRoles?.includes('task_manager');
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
@@ -130,66 +148,101 @@ export function AdminPanel() {
       </div>
 
       {/* Main Content Area */}
-      <Tabs defaultValue="users" className="space-y-6">
+      <Tabs defaultValue={isAdmin || isModerator || isTaskManager ? (isAdmin ? "users" : (isTaskManager ? "tasks" : "submissions")) : "users"} className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-1">
           <TabsList className="bg-muted/50 p-1 rounded-2xl h-auto self-start">
-            <TabsTrigger 
-              value="users" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Users
-            </TabsTrigger>
-            <TabsTrigger 
-              value="tasks" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <ListTodo className="h-4 w-4 mr-2" />
-              Tasks
-            </TabsTrigger>
-            <TabsTrigger 
-              value="rewards" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <ShoppingBag className="h-4 w-4 mr-2" />
-              Rewards
-            </TabsTrigger>
-            <TabsTrigger 
-              value="redemptions" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Redemptions
-            </TabsTrigger>
-            <TabsTrigger 
-              value="audit" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <History className="h-4 w-4 mr-2" />
-              Audit Log
-            </TabsTrigger>
+            {isAdmin && (
+              <TabsTrigger 
+                value="users" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Users
+              </TabsTrigger>
+            )}
+            {(isAdmin || isTaskManager) && (
+              <TabsTrigger 
+                value="tasks" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <ListTodo className="h-4 w-4 mr-2" />
+                Tasks
+              </TabsTrigger>
+            )}
+            {(isAdmin || isModerator) && (
+              <TabsTrigger 
+                value="submissions" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <CheckSquare className="h-4 w-4 mr-2" />
+                Submissions
+              </TabsTrigger>
+            )}
+            {isAdmin && (
+              <TabsTrigger 
+                value="rewards" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Rewards
+              </TabsTrigger>
+            )}
+            {(isAdmin || isModerator) && (
+              <TabsTrigger 
+                value="redemptions" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <Clock className="h-4 w-4 mr-2" />
+                Redemptions
+              </TabsTrigger>
+            )}
+            {isAdmin && (
+              <TabsTrigger 
+                value="audit" 
+                className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+              >
+                <History className="h-4 w-4 mr-2" />
+                Audit Log
+              </TabsTrigger>
+            )}
           </TabsList>
         </div>
 
-        <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <UsersManager />
-        </TabsContent>
+        {isAdmin && (
+          <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <UsersManager />
+          </TabsContent>
+        )}
         
-        <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <TasksManager />
-        </TabsContent>
+        {(isAdmin || isTaskManager) && (
+          <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <TasksManager />
+          </TabsContent>
+        )}
+
+        {(isAdmin || isModerator) && (
+          <TabsContent value="submissions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <UserSubmissionsManager />
+          </TabsContent>
+        )}
         
-        <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RewardsManager />
-        </TabsContent>
+        {isAdmin && (
+          <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <RewardsManager />
+          </TabsContent>
+        )}
         
-        <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RedemptionsManager />
-        </TabsContent>
+        {(isAdmin || isModerator) && (
+          <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <RedemptionsManager />
+          </TabsContent>
+        )}
         
-        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <AuditLogManager />
-        </TabsContent>
+        {isAdmin && (
+          <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+            <AuditLogManager />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

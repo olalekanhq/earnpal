@@ -232,6 +232,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by: string | null
         }
         Insert: {
           created_at?: string | null
@@ -239,6 +240,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by?: string | null
         }
         Update: {
           created_at?: string | null
@@ -246,6 +248,7 @@ export type Database = {
           status?: string
           task_id?: string
           user_id?: string
+          verified_by?: string | null
         }
         Relationships: [
           {
@@ -296,6 +299,39 @@ export type Database = {
           points?: number
           title?: string
           verification_required?: boolean | null
+        }
+        Relationships: []
+      }
+      user_activity_logs: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          points_earned: number | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title?: string
+          type?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -375,7 +411,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "moderator" | "task_manager"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -503,7 +539,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "moderator", "task_manager"],
     },
   },
 } as const
