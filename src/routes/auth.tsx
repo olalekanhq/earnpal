@@ -32,6 +32,7 @@ function AuthPage() {
   const [showVerification, setShowVerification] = useState(false);
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -153,6 +154,22 @@ function AuthPage() {
       setIsVerifying(false);
     }
   };
+  
+  const handleResendOtp = async () => {
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+      if (error) throw error;
+      toast.success("Verification code resent!");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setResending(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
@@ -221,10 +238,18 @@ function AuthPage() {
                 {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Verify Account
               </Button>
-              <div className="text-center">
+              <div className="flex flex-col gap-2 text-center">
                 <button 
                   type="button"
-                  className="text-sm font-bold text-primary hover:underline"
+                  className="text-sm font-bold text-primary hover:underline disabled:opacity-50"
+                  onClick={handleResendOtp}
+                  disabled={resending}
+                >
+                  {resending ? "Resending..." : "Resend Code"}
+                </button>
+                <button 
+                  type="button"
+                  className="text-sm font-bold text-muted-foreground hover:underline"
                   onClick={() => setShowVerification(false)}
                 >
                   Back to Sign Up
