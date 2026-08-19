@@ -128,6 +128,14 @@ function Dashboard() {
     },
   });
 
+  const { data: leaderboard } = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: async () => {
+      const { data } = await supabase.from("leaderboard").select("*").limit(10);
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
