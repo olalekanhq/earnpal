@@ -120,7 +120,7 @@ function SettingsPage() {
 
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-1 space-y-4">
-            <Card className="border-none shadow-md overflow-hidden">
+            <Card className="border-none shadow-sm overflow-hidden bg-white">
               <CardContent className="pt-6 text-center">
                 <div className="relative inline-block group">
                   <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
