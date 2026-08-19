@@ -103,10 +103,10 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-accent/5 pb-12">
+    <div className="min-h-screen bg-[#F8F9FB] pb-12">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Settings</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="text-muted-foreground font-medium">Manage your account and preferences</p>
             <Button asChild variant="outline" size="sm" className="font-bold">
@@ -120,7 +120,7 @@ function SettingsPage() {
 
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-1 space-y-4">
-            <Card className="border-none shadow-md overflow-hidden">
+            <Card className="border-none shadow-sm overflow-hidden bg-white">
               <CardContent className="pt-6 text-center">
                 <div className="relative inline-block group">
                   <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
@@ -172,9 +172,9 @@ function SettingsPage() {
           </div>
 
           <div className="md:col-span-2 space-y-6">
-            <Card className="border-none shadow-md">
+            <Card className="border-none shadow-sm bg-white">
               <CardHeader className="border-b border-border/50">
-                <CardTitle className="text-xl font-bold">Account Details</CardTitle>
+                <CardTitle className="text-xl font-black">Account Details</CardTitle>
                 <CardDescription>Update your public profile information</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 space-y-4">
@@ -218,9 +218,9 @@ function SettingsPage() {
               </CardFooter>
             </Card>
 
-            <Card className="border-none shadow-md">
+            <Card className="border-none shadow-sm bg-white">
               <CardHeader className="border-b border-border/50">
-                <CardTitle className="text-xl font-bold">Notification Preferences</CardTitle>
+                <CardTitle className="text-xl font-black">Notification Preferences</CardTitle>
                 <CardDescription>Control how you receive alerts and updates</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 space-y-6">

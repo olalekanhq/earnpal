@@ -34,7 +34,7 @@ export function Onboarding() {
 
   const steps = [
     {
-      title: "Welcome to EARN PAL!",
+      title: "Welcome to Earn Pal!",
       description: "Start earning points today by completing simple tasks, referring friends, and participating in our daily activities.",
     },
     {
@@ -49,23 +49,23 @@ export function Onboarding() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{steps[step - 1]?.title || "Welcome"}</DialogTitle>
-          <DialogDescription className="pt-4 text-base">
+      <DialogContent className="rounded-[2rem] border-none shadow-2xl p-8">
+        <DialogHeader className="space-y-4">
+          <DialogTitle className="text-2xl font-black tracking-tight">{steps[step - 1]?.title || "Welcome"}</DialogTitle>
+          <DialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed">
             {steps[step - 1]?.description || ""}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-6">
           {step > 1 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)}>
+            <Button variant="ghost" onClick={() => setStep(step - 1)} className="font-bold rounded-xl">
               Back
             </Button>
           )}
           {step < steps.length ? (
-            <Button onClick={() => setStep(step + 1)}>Next</Button>
+            <Button onClick={() => setStep(step + 1)} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Next</Button>
           ) : (
-            <Button onClick={finish}>Get Started</Button>
+            <Button onClick={finish} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Get Started</Button>
           )}
         </DialogFooter>
       </DialogContent>

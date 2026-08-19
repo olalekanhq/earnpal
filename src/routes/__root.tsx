@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 import {
   Outlet,
   Link,
@@ -160,10 +161,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Navigation />
-      <main className={isLandingPage ? "" : "pt-0"}>
-        <Outlet />
-      </main>
+      <div className="flex min-h-screen bg-background text-foreground">
+        <Navigation />
+        <main className={cn(
+          "flex-1 transition-all duration-300",
+          isLandingPage ? "" : "md:pl-72 pt-16 md:pt-4"
+        )}>
+          <Outlet />
+        </main>
+      </div>
       <Toaster />
       <Onboarding />
     </QueryClientProvider>
