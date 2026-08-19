@@ -296,7 +296,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] md:h-screen items-center justify-center bg-background p-4 relative overflow-hidden">
+    <div className="flex min-h-[100dvh] md:h-screen w-full items-center justify-center bg-background p-4 relative overflow-hidden">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
@@ -305,24 +305,65 @@ function AuthPage() {
         <ThemeToggle />
       </div>
 
-      <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none relative z-10 bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] my-auto">
-        <CardHeader className="space-y-2 text-center pb-6 p-0">
-          <div className="flex justify-center mb-4 md:mb-6">
-            <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
-              <Coins className="h-7 w-7" />
-              <span>EARN PAL</span>
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
+        {/* Mockup Image Side (Desktop Only) */}
+        <div className="hidden lg:flex flex-col justify-center animate-in fade-in slide-in-from-left duration-1000">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-violet-600/20 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative bg-card rounded-[2.5rem] border border-border/50 overflow-hidden shadow-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000" 
+                alt="Earn Pal Dashboard Preview" 
+                className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent flex flex-col justify-end p-12">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-12 w-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                    <Coins className="h-7 w-7 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-3xl font-black tracking-tight text-foreground uppercase">Earn Pal</h3>
+                </div>
+                <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
+                  Join thousands of users earning daily rewards through simple tasks and referrals.
+                </p>
+              </div>
             </div>
           </div>
-          <CardTitle className="text-2xl font-black tracking-tight text-foreground">
-            {showReset ? "Reset Password" : "Welcome back"}
-          </CardTitle>
-          <CardDescription className="text-muted-foreground font-medium">
-            {showReset 
-              ? "Enter your email to receive a reset link" 
-              : "Access your dashboard to start earning rewards"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
+          
+          <div className="mt-12 grid grid-cols-3 gap-6">
+            {[
+              { label: "Daily Tasks", value: "20+ active" },
+              { label: "Total Users", value: "50k+" },
+              { label: "Paid Out", value: "$250k+" }
+            ].map((stat) => (
+              <div key={stat.label} className="p-4 rounded-2xl bg-card/50 border border-border/30 backdrop-blur-sm">
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-lg font-bold text-foreground">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Auth Card Side */}
+        <div className="flex justify-center">
+          <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem]">
+            <CardHeader className="space-y-2 text-center pb-6 p-0">
+              <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
+                <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
+                  <Coins className="h-7 w-7" />
+                  <span>EARN PAL</span>
+                </div>
+              </div>
+              <CardTitle className="text-2xl font-black tracking-tight text-foreground">
+                {showReset ? "Reset Password" : "Welcome back"}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground font-medium">
+                {showReset 
+                  ? "Enter your email to receive a reset link" 
+                  : "Access your dashboard to start earning rewards"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4">
           {!showReset && (
             <>
               <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-12 rounded-xl border-border/50 bg-accent/5 hover:bg-accent/10 transition-all">
@@ -540,6 +581,7 @@ function AuthPage() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
