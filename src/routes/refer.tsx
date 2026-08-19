@@ -113,7 +113,7 @@ function ReferralPage() {
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Points Earned</p>
-                  <p className="text-2xl font-bold">{referralCount * 50}</p>
+                  <p className="text-2xl font-black">{referralCount * 50}</p>
                 </div>
               </div>
             </Card>
