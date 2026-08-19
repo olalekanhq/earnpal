@@ -226,7 +226,7 @@ function Dashboard() {
             </Card>
             <Card className="border-none shadow-sm bg-white p-4 space-y-1 group">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rank</p>
-              <p className="text-2xl font-bold group-hover:text-primary transition-colors">#{Math.floor(Math.random() * 100) + 1}</p>
+              <p className="text-2xl font-black group-hover:text-primary transition-colors">#{Math.floor(Math.random() * 100) + 1}</p>
             </Card>
           </div>
 
