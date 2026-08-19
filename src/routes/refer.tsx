@@ -194,7 +194,7 @@ function ReferralPage() {
                     <div className="flex items-center gap-4">
                       <Avatar>
                         <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                          {ref.full_name?.[0] || ref.email[0].toUpperCase()}
+                          {ref.full_name?.[0] || (ref.email ? ref.email[0].toUpperCase() : '?')}
                         </AvatarFallback>
                       </Avatar>
                       <div>
