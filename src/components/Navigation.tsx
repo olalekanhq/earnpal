@@ -207,7 +207,7 @@ export function Navigation() {
       )}
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-background border-r">
+      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-white border-r border-border/50">
         <SidebarContent />
       </aside>
 
