@@ -115,7 +115,7 @@ function Dashboard() {
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {/* Main Balance Card - Inspired by Reference */}
-        <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+        <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium uppercase tracking-wider opacity-80">Earnings Growth</CardTitle>
           </CardHeader>
