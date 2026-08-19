@@ -160,7 +160,7 @@ export function Navigation() {
           onClick={handleLogout}
         >
           <LogOut className="mr-3 h-5 w-5" strokeWidth={1.8} />
-          <span className="font-medium">Logout</span>
+          <span className="font-bold">Logout</span>
         </Button>
       </div>
     </div>
