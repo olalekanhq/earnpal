@@ -159,6 +159,7 @@ export type Database = {
       }
       rewards: {
         Row: {
+          category: string | null
           cost_points: number
           created_at: string
           description: string | null
@@ -169,6 +170,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          category?: string | null
           cost_points: number
           created_at?: string
           description?: string | null
@@ -179,6 +181,7 @@ export type Database = {
           title: string
         }
         Update: {
+          category?: string | null
           cost_points?: number
           created_at?: string
           description?: string | null
@@ -190,6 +193,41 @@ export type Database = {
         }
         Relationships: []
       }
+      task_audit_logs: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_status: string
+          old_status: string | null
+          task_submission_id: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status: string
+          old_status?: string | null
+          task_submission_id: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string
+          old_status?: string | null
+          task_submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_audit_logs_task_submission_id_fkey"
+            columns: ["task_submission_id"]
+            isOneToOne: false
+            referencedRelation: "task_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_submissions: {
         Row: {
           created_at: string | null
@@ -197,6 +235,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by: string | null
         }
         Insert: {
           created_at?: string | null
@@ -204,6 +243,7 @@ export type Database = {
           status: string
           task_id: string
           user_id: string
+          verified_by?: string | null
         }
         Update: {
           created_at?: string | null
@@ -211,6 +251,7 @@ export type Database = {
           status?: string
           task_id?: string
           user_id?: string
+          verified_by?: string | null
         }
         Relationships: [
           {
@@ -261,6 +302,39 @@ export type Database = {
           points?: number
           title?: string
           verification_required?: boolean | null
+        }
+        Relationships: []
+      }
+      user_activity_logs: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          points_earned: number | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          title?: string
+          type?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -318,6 +392,13 @@ export type Database = {
       }
     }
     Functions: {
+      assign_role: {
+        Args: {
+          new_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       get_user_email_by_username: {
         Args: { _username: string }
@@ -334,13 +415,20 @@ export type Database = {
         Args: { target_referral_code: string }
         Returns: undefined
       }
+      remove_role: {
+        Args: {
+          role_to_remove: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
       submit_task: {
         Args: { _task_id: string; _user_id: string }
         Returns: Json
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "moderator" | "task_manager"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -468,7 +556,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "moderator", "task_manager"],
     },
   },
 } as const
