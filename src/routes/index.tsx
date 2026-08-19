@@ -102,6 +102,30 @@ function Dashboard() {
     },
   });
 
+  const { data: popularRewards } = useQuery({
+    queryKey: ["popularRewards"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("rewards")
+        .select("*")
+        .eq("is_active", true)
+        .limit(3);
+      return data;
+    },
+  });
+
+  const { data: recommendedTasks } = useQuery({
+    queryKey: ["recommendedTasks"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("is_active", true)
+        .limit(3);
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
