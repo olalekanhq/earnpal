@@ -45,6 +45,7 @@ export function Navigation() {
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
     ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: Shield }] : []),
+    { name: "Profile", href: "/profile", icon: User },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
@@ -78,6 +79,11 @@ export function Navigation() {
             <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
           </div>
           <NotificationsPopover />
+          <Button variant="ghost" size="icon" asChild title="Profile">
+            <Link to="/profile">
+              <User className="h-4 w-4" />
+            </Link>
+          </Button>
           <Button variant="ghost" size="icon" asChild title="Settings">
             <Link to="/settings">
               <Settings className="h-4 w-4" />
