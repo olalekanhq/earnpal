@@ -107,7 +107,15 @@ function SettingsPage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div>
           <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Settings</h1>
-          <p className="text-muted-foreground font-medium">Manage your account and preferences</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="text-muted-foreground font-medium">Manage your account and preferences</p>
+            <Button asChild variant="outline" size="sm" className="font-bold">
+              <Link to="/profile">
+                <User className="mr-2 h-4 w-4" />
+                View Public Profile
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
