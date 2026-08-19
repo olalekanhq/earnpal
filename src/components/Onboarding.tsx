@@ -34,7 +34,7 @@ export function Onboarding() {
 
   const steps = [
     {
-      title: "Welcome to EARN PAL!",
+      title: "Welcome to Earn Pal!",
       description: "Start earning points today by completing simple tasks, referring friends, and participating in our daily activities.",
     },
     {
