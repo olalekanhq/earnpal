@@ -132,12 +132,17 @@ function RootComponent() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
+      if (event === 'SIGNED_IN' && session) {
         router.invalidate();
       }
       if (event === 'SIGNED_OUT') {
         router.invalidate();
-        router.navigate({ to: '/auth' });
+        // Use a more reliable way to check the current path
+        const currentPath = window.location.pathname;
+        const publicPages = ['/', '/auth', '/landing'];
+        if (!publicPages.includes(currentPath)) {
+          router.navigate({ to: '/auth' });
+        }
       }
     });
 

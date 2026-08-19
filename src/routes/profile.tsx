@@ -12,12 +12,13 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      const { data: { session: retrySession } } = await supabase.auth.getSession();
-      if (!retrySession) throw redirect({ to: "/auth", search: { redirect: window.location.pathname } });
+      throw redirect({
+        to: "/auth",
+        search: { redirect: location.pathname },
+      });
     }
   },
   component: ProfilePage,
