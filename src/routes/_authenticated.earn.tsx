@@ -27,6 +27,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 function EarnPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
+  const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
 
   const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
@@ -113,36 +114,53 @@ function EarnPage() {
               </div>
               <Button 
                 className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
-                disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id}
+                disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                 onClick={async () => {
-                  const taskAny = task as any;
-                  if (taskAny.link_url) {
-                    window.open(taskAny.link_url, '_blank');
-                  }
+                  const currentUiState = taskUiStates[task.id] || 'idle';
                   
-                  setCompletingTaskId(task.id);
-                  const { data: { user } } = await supabase.auth.getUser();
-                  if (!user) return;
-
-                  const { data, error } = await (supabase.rpc as any)('submit_task', {
-                    _user_id: user.id,
-                    _task_id: task.id
-                  });
-
-                  if (error) {
-                    toast.error(error.message);
-                  } else if (data && !(data as any).success) {
-                    toast.error((data as any).message);
-                  } else {
-                    toast.success((data as any)?.message || "Task submitted!");
-                    refetchTasks();
+                  if (currentUiState === 'idle') {
+                    const taskAny = task as any;
+                    if (taskAny.link_url) {
+                      window.open(taskAny.link_url, '_blank');
+                    }
+                    
+                    setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
+                    
+                    // Wait for 5 seconds before allowing confirmation
+                    setTimeout(() => {
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                    }, 5000);
+                    return;
                   }
-                  setCompletingTaskId(null);
+
+                  if (currentUiState === 'awaiting_confirmation') {
+                    setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
+                    setCompletingTaskId(task.id);
+                    
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) return;
+
+                    const { data, error } = await (supabase.rpc as any)('submit_task', {
+                      _user_id: user.id,
+                      _task_id: task.id
+                    });
+
+                    if (error) {
+                      toast.error(error.message);
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                    } else if (data && !(data as any).success) {
+                      toast.error((data as any).message);
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                    } else {
+                      toast.success((data as any)?.message || "Task submitted!");
+                      refetchTasks();
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
+                    }
+                    setCompletingTaskId(null);
+                  }
                 }}
               >
-                {completingTaskId === task.id ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : task.status === 'verified' ? (
+                {task.status === 'verified' ? (
                   <>
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Completed
@@ -152,6 +170,15 @@ function EarnPage() {
                     <Clock className="h-4 w-4 mr-2" />
                     Verifying...
                   </>
+                ) : (taskUiStates[task.id] === 'verifying') ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Verifying...
+                  </>
+                ) : (taskUiStates[task.id] === 'awaiting_confirmation') ? (
+                  "Confirm Completion"
+                ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   "Start Earning"
                 )}
