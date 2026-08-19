@@ -25,7 +25,7 @@ export function TasksManager() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    points_reward: 0,
+    points: 0,
     category: "social",
     is_active: true
   });
