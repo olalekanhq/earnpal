@@ -186,21 +186,21 @@ function Dashboard() {
             <CardContent className="p-0">
               <div className="divide-y divide-border/50">
                 {recentTransactions?.length ? recentTransactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between p-4 group hover:bg-muted/30 transition-colors">
+                  <div key={tx.id} className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors">
                     <div className="flex items-center gap-4">
                       <div className={cn(
-                        "p-2.5 rounded-xl transition-transform group-hover:scale-105",
-                        tx.type === 'earn' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                        "p-2.5 rounded-xl transition-transform group-hover:scale-110",
+                        tx.type === 'earn' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
                       )}>
                         {tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
                       </div>
                       <div>
-                        <p className="font-semibold text-sm">{tx.description}</p>
-                        <p className="text-xs text-muted-foreground">{new Date(tx.created_at).toLocaleDateString()}</p>
+                        <p className="font-bold text-sm text-foreground">{tx.description}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{new Date(tx.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className={cn(
-                      "text-sm font-bold",
+                      "text-sm font-black",
                       tx.type === 'earn' ? 'text-green-600' : 'text-red-600'
                     )}>
                       {tx.type === 'earn' ? '+' : '-'}{tx.amount}
