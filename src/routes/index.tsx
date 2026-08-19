@@ -165,10 +165,12 @@ function LandingPage() {
               <Coins className="h-6 w-6" />
               <span className="tracking-tighter">EARN PAL</span>
             </div>
-            <div className="flex gap-8">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
               <Link to="/" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Home</Link>
               <Link to="/earn" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Earn</Link>
               <Link to="/redeem" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Redeem</Link>
+              <Link to="/privacy" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Privacy</Link>
+              <Link to="/terms" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Terms</Link>
               <Link to="/auth" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Login</Link>
             </div>
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
