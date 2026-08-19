@@ -161,10 +161,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen bg-background text-foreground">
+      <div className="flex min-h-screen bg-background text-foreground relative overflow-x-hidden">
         <Navigation />
         <main className={cn(
-          "flex-1 transition-all duration-300 min-h-screen",
+          "flex-1 transition-all duration-300 min-h-screen w-full",
           isLandingPage ? "" : "md:pl-72"
         )}>
           <Outlet />
