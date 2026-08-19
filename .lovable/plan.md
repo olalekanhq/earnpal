@@ -11,41 +11,35 @@ Implement a one-time welcome bonus claim popup for new users and improve the ref
 
 ### Database Schema & Logic
 - Add `has_claimed_welcome_bonus` boolean column to `public.profiles` (defaults to `false`).
-- Update `handle_new_user` and `reward_referrer_on_signup` to ensure consistent referral tracking.
-- Create a `claim_welcome_bonus` RPC function that marks the bonus as claimed and returns the amount if eligible.
+- Create a `check_referral_code` RPC function to validate codes during sign-up.
+- Create a `claim_welcome_bonus` RPC function that marks the bonus as claimed.
 
 ### Frontend Enhancements
 
 #### Sign-up Improvements (`src/routes/auth.tsx`)
-- Add a debounce effect or blur handler to the Referral Code input.
-- On code entry, query the `profiles` table to check if the code exists.
-- Show a real-time "Referrer: [Username] ✅" or "Invalid code ❌" status message below the input.
+- Add real-time validation to the Referral Code input.
+- Show a status message ("Referrer found: [Username]" or "Invalid code") immediately when the user finishes typing.
 
 #### Welcome Bonus Popup (`src/components/WelcomeBonusModal.tsx`)
-- Create a new modal component with high-quality "Earn Pal" branding.
-- The modal will trigger only if:
-  1. The user is logged in.
-  2. The user has a referrer (`referred_by` is not null).
-  3. The bonus hasn't been claimed yet (`has_claimed_welcome_bonus` is false).
-- Add a "Claim Bonus" button that calls the new RPC and triggers a confetti effect.
+- Create a branded modal for new users who joined via referral.
+- Includes a "Claim Your 50 Points" button with a confetti effect.
 
 #### Dashboard Integration (`src/routes/_authenticated.dashboard.tsx`)
-- Mount the `WelcomeBonusModal` at the top level.
-- Ensure it only checks/shows on the first successful login session.
+- Mount the `WelcomeBonusModal` to show on first login.
 
-## Technical Details
-- **Migration**:
-  ```sql
-  ALTER TABLE public.profiles ADD COLUMN has_claimed_welcome_bonus BOOLEAN DEFAULT FALSE;
+## Technical Details (SQL)
+```sql
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS has_claimed_welcome_bonus BOOLEAN DEFAULT FALSE;
 
-  CREATE OR REPLACE FUNCTION public.check_referral_code(_code TEXT)
-  RETURNS TABLE (username TEXT, exists BOOLEAN) 
-  LANGUAGE plpgsql SECURITY DEFINER AS $$
-  BEGIN
+CREATE OR REPLACE FUNCTION public.check_referral_code(_code TEXT)
+RETURNS TABLE (username TEXT, exists BOOLEAN) 
+LANGUAGE plpgsql SECURITY DEFINER 
+SET search_path = public
+AS $$
+BEGIN
     RETURN QUERY SELECT p.username, TRUE FROM public.profiles p WHERE p.referral_code = _code;
-  END;
-  $$;
+END;
+$$;
 
-  GRANT EXECUTE ON FUNCTION public.check_referral_code(TEXT) TO authenticated, anon;
-  ```
-- **State Management**: Use `localStorage` to prevent the modal from re-triggering within the same session if the user closes it without claiming (though `has_claimed_welcome_bonus` is the ultimate source of truth).
+GRANT EXECUTE ON FUNCTION public.check_referral_code(TEXT) TO authenticated, anon;
+```
