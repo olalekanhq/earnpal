@@ -263,24 +263,37 @@ function ProfilePage() {
                       />
                     </div>
                   </div>
-                  <Button 
-                    className="w-full rounded-xl font-bold h-11 mt-2" 
-                    onClick={() => {
-                      const combinedPhone = `${countryCode} ${phoneBody}`.trim();
-                      updateProfile.mutate({ 
-                        full_name: fullName, 
-                        username: username,
-                        phone_number: combinedPhone 
-                      });
-                    }}
-                    disabled={updateProfile.isPending || (
-                      fullName === profile?.full_name && 
-                      username === profile?.username &&
-                      `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "")
-                    )}
-                  >
-                    Save Changes
-                  </Button>
+                  <div className="flex gap-3 mt-2">
+                    <Button 
+                      variant="outline"
+                      className="flex-1 rounded-xl font-bold h-11"
+                      onClick={() => {
+                        resetForm();
+                        setIsEditing(false);
+                      }}
+                      disabled={updateProfile.isPending}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      className="flex-[2] rounded-xl font-bold h-11" 
+                      onClick={() => {
+                        const combinedPhone = `${countryCode} ${phoneBody}`.trim();
+                        updateProfile.mutate({ 
+                          full_name: fullName, 
+                          username: username,
+                          phone_number: combinedPhone 
+                        });
+                      }}
+                      disabled={updateProfile.isPending || (
+                        fullName === profile?.full_name && 
+                        username === profile?.username &&
+                        `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "")
+                      )}
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
