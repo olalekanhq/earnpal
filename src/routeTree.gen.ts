@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as RedeemRouteImport } from './routes/redeem'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const EarnRoute = EarnRouteImport.update({
   path: '/earn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RedeemRoute = RedeemRouteImport.update({
+  id: '/redeem',
+  path: '/redeem',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/redeem': typeof RedeemRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/redeem': typeof RedeemRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/redeem': typeof RedeemRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/earn'
+  fullPaths: '/' | '/auth' | '/earn' | '/redeem'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/earn'
-  id: '__root__' | '/' | '/auth' | '/earn'
+  to: '/' | '/auth' | '/earn' | '/redeem'
+  id: '__root__' | '/' | '/auth' | '/earn' | '/redeem'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   EarnRoute: typeof EarnRoute
+  RedeemRoute: typeof RedeemRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EarnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/redeem': {
+      id: '/redeem'
+      path: '/redeem'
+      fullPath: '/redeem'
+      preLoaderRoute: typeof RedeemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   EarnRoute: EarnRoute,
+  RedeemRoute: RedeemRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
