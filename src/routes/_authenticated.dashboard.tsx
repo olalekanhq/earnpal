@@ -223,8 +223,21 @@ function Dashboard() {
                         "w-full rounded-xl font-bold h-11 transition-all",
                         isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
                       )}
-                      asChild={!isCompleted}
-                      disabled={isCompleted}
+                      onClick={async () => {
+                        if (isCompleted) return;
+                        
+                        const taskAny = task as any;
+                        if (taskAny.link_url) {
+                          window.open(taskAny.link_url, '_blank');
+                        }
+                        
+                        // Navigate to earn page to complete task or show feedback
+                        // Since we want the user to carry it out, we'll open the link and then they can verify on the earn page
+                        // Or we could implement the verification logic here too.
+                        // Let's keep it simple: open link and toast instruction.
+                        toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
+                      }}
+                      disabled={isCompleted && submission?.status === 'verified'}
                     >
                       {isCompleted ? (
                         <div className="flex items-center gap-2">
@@ -232,10 +245,10 @@ function Dashboard() {
                           {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
                         </div>
                       ) : (
-                        <Link to="/earn">
+                        <>
                           Start Task
                           <ChevronRight className="ml-2 h-4 w-4" />
-                        </Link>
+                        </>
                       )}
                     </Button>
                   </CardContent>
