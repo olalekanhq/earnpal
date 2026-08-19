@@ -308,8 +308,8 @@ function AuthPage() {
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
         {/* Auth Card Side */}
         <div className="flex justify-center order-2 lg:order-1">
-          <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem]">
-            <CardHeader className="space-y-2 text-center pb-6 p-0">
+          <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] flex flex-col max-h-[90dvh]">
+            <CardHeader className="space-y-2 text-center pb-6 p-0 flex-shrink-0">
               <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
                 <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
                   <Coins className="h-7 w-7" />
@@ -325,7 +325,7 @@ function AuthPage() {
                   : "Access your dashboard to start earning rewards"}
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4">
+            <CardContent className="grid gap-4 overflow-hidden flex-grow p-0">
           {!showReset && (
             <>
               <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-12 rounded-xl border-border/50 bg-accent/5 hover:bg-accent/10 transition-all">
@@ -384,11 +384,13 @@ function AuthPage() {
               </Button>
             </form>
           ) : (
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
-                <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
-                <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
-              </TabsList>
+            <Tabs defaultValue="login" className="w-full flex flex-col h-full overflow-hidden">
+              <div className="px-1 flex-shrink-0">
+                <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
+                  <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
+                  <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
+                </TabsList>
+              </div>
               <TabsContent value="login">
                 <form onSubmit={handleEmailLogin} className="space-y-3 md:space-y-4 pt-4">
                   <div className="space-y-2">
@@ -458,8 +460,8 @@ function AuthPage() {
                   </Button>
                 </form>
               </TabsContent>
-              <TabsContent value="signup">
-                <form onSubmit={handleEmailSignUp} className="space-y-3 pt-4">
+              <TabsContent value="signup" className="flex-grow overflow-y-auto px-1 pr-2 custom-scrollbar">
+                <form onSubmit={handleEmailSignUp} className="space-y-3 pt-4 pb-2">
                   <div className="space-y-1">
                     <Label htmlFor="full-name">Full Name</Label>
                     <div className="relative">
