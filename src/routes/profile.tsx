@@ -224,18 +224,74 @@ function ProfilePage() {
         <div className="grid gap-8 md:grid-cols-2">
           <Card className="border-none shadow-md">
             <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-xl font-black uppercase">Edit Profile</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="full-name" className="font-bold">Full Name</Label>
+                <Input 
+                  id="full-name" 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Enter your full name"
+                  className="font-medium"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username" className="font-bold text-muted-foreground">Username</Label>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm font-medium">
+                  <span className="text-muted-foreground">@</span>
+                  <span>{profile?.username}</span>
+                </div>
+              </div>
+              <Button 
+                onClick={() => updateProfile.mutate({ full_name: fullName })}
+                disabled={updateProfile.isPending || fullName === profile?.full_name}
+                className="w-full font-black uppercase shadow-lg shadow-primary/20"
+              >
+                {updateProfile.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-md">
+            <CardHeader className="border-b border-border/50">
+              <CardTitle className="text-xl font-black uppercase">Change Password</CardTitle>
+            </CardHeader>
+            <form onSubmit={handlePasswordChange}>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password" title="New Password">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="new-password"
+                      type="password"
+                      placeholder="Enter new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="pl-10 font-medium"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="pt-0">
+                <Button 
+                  type="submit"
+                  disabled={isChangingPassword}
+                  className="w-full font-black uppercase shadow-lg shadow-primary/20"
+                >
+                  {isChangingPassword ? "Updating..." : "Update Password"}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+
+          <Card className="border-none shadow-md">
+            <CardHeader className="border-b border-border/50">
               <CardTitle className="text-xl font-black uppercase">Information</CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                  <User className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase">Full Name</p>
-                  <p className="font-bold">{profile?.full_name || "Not set"}</p>
-                </div>
-              </div>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/10 p-2 rounded-lg text-primary">
                   <Mail className="h-5 w-5" />
@@ -269,10 +325,6 @@ function ProfilePage() {
               <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
                 <span className="text-sm font-bold text-muted-foreground">Signups</span>
                 <span className="text-xl font-black">{referralCount}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded-xl border border-border/50">
-                <span className="text-sm font-bold text-muted-foreground">Bonus Points</span>
-                <span className="text-xl font-black text-primary">{(referralCount || 0) * 50}</span>
               </div>
               <Button asChild className="w-full font-black uppercase mt-2">
                 <Link to="/refer">View Referral Details</Link>
