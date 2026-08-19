@@ -270,7 +270,8 @@ function AuthPage() {
               </form>
             </TabsContent>
           </Tabs>
-        </CardContent>
+        )}
+      </CardContent>
       </Card>
     </div>
   );
