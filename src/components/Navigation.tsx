@@ -35,7 +35,7 @@ export function Navigation() {
       <nav className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
-            <Coins className="h-8 w-8" />
+            <Coins className="h-7 w-7" />
             <span>Earn Pal</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
