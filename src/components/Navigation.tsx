@@ -40,7 +40,7 @@ export function Navigation() {
   };
 
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Earn", href: "/earn", icon: Coins },
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
