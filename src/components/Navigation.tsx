@@ -178,7 +178,7 @@ export function Navigation() {
           </Avatar>
           {profile && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold truncate">{profile.username || "User"}</p>
+              <p className="text-sm font-bold truncate">{profile.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : "User"}</p>
               <p className="text-xs text-muted-foreground truncate">{profile.full_name || ""}</p>
             </div>
           )}
@@ -243,7 +243,7 @@ export function Navigation() {
             <DropdownMenuContent className="w-56 mt-2 rounded-2xl p-2 shadow-xl border-border/40" align="end">
               <DropdownMenuLabel className="font-black px-3 py-2">
                 <div className="flex flex-col space-y-0.5">
-                  <p className="text-sm font-black">{profile?.username || "User"}</p>
+                  <p className="text-sm font-black">{profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : "User"}</p>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{profile?.points_balance?.toLocaleString()} Points</p>
                 </div>
               </DropdownMenuLabel>
@@ -321,7 +321,7 @@ export function Navigation() {
             {location.pathname === "/admin" && "Admin Control Panel"}
           </h1>
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest -mt-1">
-            Welcome back, {profile?.username || "User"}
+            Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : "User"}
           </p>
         </div>
         
@@ -349,7 +349,7 @@ export function Navigation() {
             <DropdownMenuContent className="w-64 mt-2 rounded-2xl p-2 shadow-xl border-border/40" align="end">
               <DropdownMenuLabel className="font-black px-4 py-3">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-black">{profile?.username || "User"}</p>
+                  <p className="text-sm font-black">{profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : "User"}</p>
                   <div className="flex items-center gap-1.5 bg-primary/5 w-fit px-2 py-0.5 rounded-lg">
                     <Coins className="h-3 w-3 text-primary" />
                     <p className="text-[10px] text-primary uppercase tracking-wider font-black">{profile?.points_balance?.toLocaleString()} Points</p>
