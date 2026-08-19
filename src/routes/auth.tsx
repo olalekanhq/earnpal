@@ -439,7 +439,7 @@ function AuthPage() {
                         className="text-sm font-bold text-primary hover:underline"
                         onClick={() => {
                           setShowReset(true);
-                          setResetEmail(identifier.includes("@") ? identifier : "");
+                          setResetEmail(identifier.trim());
                           setError("");
                         }}
                       >
