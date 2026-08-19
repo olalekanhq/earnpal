@@ -217,7 +217,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden sticky top-0 left-0 z-40 w-full flex items-center justify-between h-20 px-4 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-20 px-4 bg-white/95 backdrop-blur-md border-b border-border/40 shadow-sm">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5">
             <Menu className="h-6 w-6 text-foreground" />
@@ -309,7 +309,7 @@ export function Navigation() {
       </aside>
 
       {/* Desktop Top Bar */}
-      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 w-full bg-white/80 backdrop-blur-md border-b border-border/40">
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 left-0 bg-white/80 backdrop-blur-md border-b border-border/40">
         <div className="flex flex-col">
           <h1 className="text-lg font-black uppercase tracking-tight text-foreground">
             {location.pathname === "/dashboard" && "Dashboard Overview"}

@@ -99,7 +99,7 @@ function Dashboard() {
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
 
   return (
-    <div className="pt-6 pb-12 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
+    <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username || profile?.full_name?.split(' ')[0] || 'User'}! 👋
