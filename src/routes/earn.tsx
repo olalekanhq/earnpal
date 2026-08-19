@@ -82,7 +82,7 @@ function EarnPage() {
                   <span className="text-green-600 font-bold text-xs">{task.points}</span>
                 </div>
               </div>
-              <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors">{task.title}</CardTitle>
+              <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
               <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
             </CardHeader>
             <CardContent className="mt-auto pt-0 pb-6 px-6">
