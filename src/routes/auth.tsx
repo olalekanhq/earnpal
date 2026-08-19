@@ -117,8 +117,12 @@ function AuthPage() {
       // Instead, we will store a flag to clear the session on browser close if not remembered.
       if (!rememberMe) {
         localStorage.setItem('earn-pal-session-transient', 'true');
+        // Set an additional flag for the current session to identify if we should 
+        // clear session storage when the tab is closed (sessionStorage is cleared when tab closes)
+        sessionStorage.setItem('earn-pal-session-active', 'true');
       } else {
         localStorage.removeItem('earn-pal-session-transient');
+        sessionStorage.removeItem('earn-pal-session-active');
       }
 
       const { error } = await supabase.auth.signInWithPassword({ 
