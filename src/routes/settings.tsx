@@ -108,7 +108,7 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] pb-12">
+    <div className="min-h-screen bg-background pb-12">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
@@ -125,7 +125,7 @@ function SettingsPage() {
 
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-1 space-y-4">
-            <Card className="border-none shadow-sm overflow-hidden bg-white">
+            <Card className="border-none shadow-sm overflow-hidden bg-card">
               <CardContent className="pt-6 text-center">
                 <div className="relative inline-block group">
                   <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
@@ -177,7 +177,7 @@ function SettingsPage() {
           </div>
 
           <div className="md:col-span-2 space-y-6">
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-card">
               <CardHeader className="border-b border-border/50">
                 <CardTitle className="text-xl font-black">Notification Preferences</CardTitle>
                 <CardDescription>Control how you receive alerts and updates</CardDescription>
