@@ -123,6 +123,8 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
