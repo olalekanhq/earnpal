@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as ReferRouteImport } from './routes/refer'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +48,11 @@ const ReferRoute = ReferRouteImport.update({
   path: '/refer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
+  '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
+  '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
@@ -79,15 +87,30 @@ export interface FileRoutesById {
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
   '/refer': typeof ReferRoute
+  '/settings': typeof SettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/auth' | '/earn' | '/redeem' | '/refer' | '/auth/callback'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/earn'
+    | '/redeem'
+    | '/refer'
+    | '/settings'
+    | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/admin' | '/auth' | '/earn' | '/redeem' | '/refer' | '/auth/callback'
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/earn'
+    | '/redeem'
+    | '/refer'
+    | '/settings'
+    | '/auth/callback'
   id:
     | '__root__'
     | '/'
@@ -96,6 +119,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/redeem'
     | '/refer'
+    | '/settings'
     | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
@@ -106,6 +130,7 @@ export interface RootRouteChildren {
   EarnRoute: typeof EarnRoute
   RedeemRoute: typeof RedeemRoute
   ReferRoute: typeof ReferRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReferRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/callback'
@@ -179,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   EarnRoute: EarnRoute,
   RedeemRoute: RedeemRoute,
   ReferRoute: ReferRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield } from "lucide-react";
+import { Coins, LayoutDashboard, Gift, Share2, LogOut, Menu, X, Shield, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -44,6 +44,7 @@ export function Navigation() {
     { name: "Redeem", href: "/redeem", icon: Gift },
     { name: "Referral", href: "/refer", icon: Share2 },
     ...(isAdmin ? [{ name: "Admin", href: "/admin", icon: Shield }] : []),
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
@@ -76,6 +77,11 @@ export function Navigation() {
             <span className="font-bold text-sm text-primary">{profile?.points_balance || 0}</span>
           </div>
           <NotificationsPopover />
+          <Button variant="ghost" size="icon" asChild title="Settings">
+            <Link to="/settings">
+              <Settings className="h-4 w-4" />
+            </Link>
+          </Button>
           <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
             <LogOut className="h-4 w-4" />
           </Button>

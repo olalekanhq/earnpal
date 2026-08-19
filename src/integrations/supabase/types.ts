@@ -79,9 +79,11 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           email: string
+          email_notifications: boolean | null
           full_name: string | null
           id: string
           points_balance: number
+          push_notifications: boolean | null
           referral_code: string | null
           referred_by: string | null
           updated_at: string
@@ -90,9 +92,11 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email: string
+          email_notifications?: boolean | null
           full_name?: string | null
           id: string
           points_balance?: number
+          push_notifications?: boolean | null
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string
@@ -101,9 +105,11 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email?: string
+          email_notifications?: boolean | null
           full_name?: string | null
           id?: string
           points_balance?: number
+          push_notifications?: boolean | null
           referral_code?: string | null
           referred_by?: string | null
           updated_at?: string

@@ -42,18 +42,25 @@ function RedeemPage() {
   ];
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Redeem Rewards</h1>
-          <p className="text-muted-foreground">Exchange your hard-earned points for amazing rewards.</p>
+    <div className="min-h-screen bg-accent/5 pb-12">
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Redeem Rewards</h1>
+            <p className="text-muted-foreground font-medium">Exchange your points for amazing rewards.</p>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-3 bg-card px-6 py-3 rounded-2xl shadow-sm border border-border">
+              <div className="bg-primary/10 p-2 rounded-xl">
+                <Coins className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground leading-none mb-1">Available Balance</p>
+                <p className="text-2xl font-black text-foreground leading-none">{profile?.points_balance?.toLocaleString() || 0} <span className="text-xs font-bold text-primary align-top ml-1">PTS</span></p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
-          <Coins className="h-5 w-5 text-primary" />
-          <span className="font-bold text-lg text-primary">{profile?.points_balance || 0}</span>
-          <span className="text-primary/70 text-sm font-medium">Available</span>
-        </div>
-      </div>
 
       <Tabs defaultValue="All" className="w-full">
         <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-transparent gap-2 mb-6">
@@ -159,6 +166,7 @@ function RedeemPage() {
           </div>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

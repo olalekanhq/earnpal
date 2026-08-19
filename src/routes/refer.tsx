@@ -82,37 +82,43 @@ function ReferralPage() {
 
         <TabsContent value="dashboard" className="space-y-6 animate-in fade-in-50 duration-500">
           <div className="grid gap-6 md:grid-cols-3">
-            <Card>
+            <Card className="border-none shadow-md overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Referrals</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{referralCount || 0}</div>
-                <p className="text-xs text-muted-foreground">Successful invites</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Points Earned</CardTitle>
-                <Gift className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{(referralCount || 0) * 50}</div>
-                <p className="text-xs text-muted-foreground">From referrals</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Rewards Progress</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span>{referralCount || 0} referrals</span>
-                  <span>{nextMilestone} milestone</span>
+                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Total Referrals</CardTitle>
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <Users className="h-4 w-4 text-primary" />
                 </div>
-                <Progress value={progress} className="h-2" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-black">{referralCount || 0}</div>
+                <p className="text-xs font-medium text-muted-foreground mt-1">Successful invites</p>
+              </CardContent>
+            </Card>
+            <Card className="border-none shadow-md overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Points Earned</CardTitle>
+                <div className="bg-green-500/10 p-2 rounded-lg">
+                  <Gift className="h-4 w-4 text-green-500" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-black">{(referralCount || 0) * 50}</div>
+                <p className="text-xs font-medium text-muted-foreground mt-1">From referrals</p>
+              </CardContent>
+            </Card>
+            <Card className="border-none shadow-md overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Progress</CardTitle>
+                <div className="bg-orange-500/10 p-2 rounded-lg">
+                  <TrendingUp className="h-4 w-4 text-orange-500" />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between text-xs font-bold uppercase tracking-tighter">
+                  <span className="text-muted-foreground">{referralCount || 0} INVITES</span>
+                  <span className="text-primary">{nextMilestone} TARGET</span>
+                </div>
+                <Progress value={progress} className="h-2 bg-accent" />
               </CardContent>
             </Card>
           </div>

@@ -51,32 +51,32 @@ export function AdminPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="border-none shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Total Users</CardTitle>
+            <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalUsers || 0}</div>
+            <div className="text-3xl font-black">{stats?.totalUsers || 0}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-none shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Points Issued</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Points Issued</CardTitle>
+            <TrendingUp className="h-5 w-5 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalPoints.toLocaleString() || 0}</div>
+            <div className="text-3xl font-black">{stats?.totalPoints.toLocaleString() || 0}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-none shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Redemptions</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Redemptions</CardTitle>
+            <ShoppingBag className="h-5 w-5 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.redemptions || 0}</div>
+            <div className="text-3xl font-black">{stats?.redemptions || 0}</div>
           </CardContent>
         </Card>
       </div>
