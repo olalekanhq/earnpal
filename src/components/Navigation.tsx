@@ -102,7 +102,7 @@ export function Navigation() {
     try {
       await supabase.auth.signOut();
       toast.success("Successfully signed out. See you soon!");
-      window.location.href = "/auth";
+      window.location.href = "/";
     } catch (error) {
       toast.error("Error signing out. Please try again.");
     }

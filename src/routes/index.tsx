@@ -37,13 +37,13 @@ function LandingPage() {
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20 animate-in fade-in slide-in-from-bottom-2 uppercase tracking-widest">
               <Zap className="h-3 w-3" />
-              <span>The future of rewards is here</span>
+              <span>The ultimate rewards community</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tight text-foreground leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
-              Grow your Digital Empire <span className="text-primary italic">Without the Chaos</span>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground leading-[0.9] animate-in fade-in slide-in-from-bottom-4 duration-500">
+              Turn Your Time Into <span className="text-primary italic">Real Rewards</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
-              Unified control for marketplace tasks, referrals, and earning—all in one intelligent dashboard.
+              Complete simple tasks, refer your friends, and unlock premium rewards. Join the most intelligent earning platform today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
               <Button size="lg" className="text-lg px-8 h-14 font-bold shadow-xl shadow-primary/20 group uppercase" asChild>
@@ -64,8 +64,8 @@ function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Unified Control in One Dashboard</h2>
-              <p className="text-lg text-muted-foreground font-medium leading-relaxed">Connect your sales, tasks, and referrals into a single interface. Say goodbye to fragmented tools and customize your workflow in minutes — and you're ready to scale!</p>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">Everything You Earn, in One Place</h2>
+              <p className="text-lg text-muted-foreground font-medium leading-relaxed">Track your task progress, manage referral bonuses, and watch your points grow in real-time. Our intuitive dashboard makes earning simple and transparent.</p>
               <Button className="font-bold rounded-xl h-12 px-8" asChild><Link to="/dashboard">Explore Dashboard →</Link></Button>
             </div>
             <div className="bg-[#F8F9FB] p-6 rounded-[2.5rem] border border-border/50 shadow-2xl shadow-primary/5 rotate-2 hover:rotate-0 transition-all duration-500">
@@ -81,9 +81,9 @@ function LandingPage() {
       <section className="py-24 bg-[#F8F9FB]">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Limitless Growth and Scale</h2>
-            <p className="text-lg text-muted-foreground font-medium">Built on enterprise-grade infrastructure, Earn Pal effortlessly handles your traffic spikes, high transaction volumes, and thousands of concurrent users as your business scales.</p>
-            <Button size="lg" className="rounded-xl font-bold h-14 px-10" asChild><Link to="/refer">Explore Referral Architecture →</Link></Button>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Earn More with Your Network</h2>
+            <p className="text-lg text-muted-foreground font-medium">Our advanced referral system allows you to build a passive income stream. Earn a percentage of everything your friends earn, for life.</p>
+            <Button size="lg" className="rounded-xl font-bold h-14 px-10" asChild><Link to="/refer">View Referral Rewards →</Link></Button>
           </div>
         </div>
       </section>
