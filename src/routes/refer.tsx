@@ -19,7 +19,8 @@ export const Route = createFileRoute("/refer")({
       { property: "og:title", content: "Referral Program | Earn Pal" },
       { property: "og:description", content: "Share your unique link and watch your points balance grow." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 50 points for every signup.` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ location }) => {

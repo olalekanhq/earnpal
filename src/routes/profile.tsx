@@ -21,7 +21,8 @@ export const Route = createFileRoute("/profile")({
       { property: "og:title", content: "My Profile | Earn Pal" },
       { property: "og:description", content: "View your badges, points balance, and account history." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=My Profile&description=Manage your account and identity.` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ location }) => {

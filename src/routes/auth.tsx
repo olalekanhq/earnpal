@@ -20,7 +20,8 @@ export const Route = createFileRoute("/auth")({
       { property: "og:title", content: "Secure Access | Earn Pal" },
       { property: "og:description", content: "Join the Earn Pal community and turn your time into rewards." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Secure Access&description=Sign in to start earning.` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   validateSearch: (search) => z.object({

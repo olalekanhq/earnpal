@@ -16,7 +16,8 @@ export const Route = createFileRoute("/earn")({
       { property: "og:title", content: "Earn Points | Earn Pal" },
       { property: "og:description", content: "Unlock new ways to earn points every day." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Earn Points&description=Complete tasks and level up.` },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ location }) => {
