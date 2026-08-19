@@ -27,7 +27,8 @@ import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
 import { cn } from "@/lib/utils";
-import { ListTodo } from "lucide-react";
+import { AuditLogManager } from "./admin/AuditLogManager";
+import { ListTodo, History } from "lucide-react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
@@ -160,6 +161,13 @@ export function AdminPanel() {
               <Clock className="h-4 w-4 mr-2" />
               Redemptions
             </TabsTrigger>
+            <TabsTrigger 
+              value="audit" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <History className="h-4 w-4 mr-2" />
+              Audit Log
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -177,6 +185,10 @@ export function AdminPanel() {
         
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <RedemptionsManager />
+        </TabsContent>
+        
+        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <AuditLogManager />
         </TabsContent>
       </Tabs>
     </div>
