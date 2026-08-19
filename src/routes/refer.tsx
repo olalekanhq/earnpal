@@ -239,7 +239,7 @@ function ReferralPage() {
                       </Avatar>
                       <div>
                         <div className="font-bold">{user.full_name || "Anonymous User"}</div>
-                        <div className="text-xs text-muted-foreground font-medium">{user.points_balance?.toLocaleString()} points</div>
+                        <div className="text-xs text-muted-foreground font-medium">{(user.points_balance || 0).toLocaleString()} points</div>
                       </div>
                     </div>
                     {idx < 3 && (
