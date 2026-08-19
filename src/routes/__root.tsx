@@ -23,19 +23,31 @@ import { supabase } from "@/integrations/supabase/client";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+      <div className="flex flex-col items-center text-center max-w-md">
+        <div className="bg-primary/10 p-6 rounded-3xl mb-8 shadow-xl shadow-primary/5 ring-1 ring-primary/20">
+          <Coins className="h-16 w-16 text-primary animate-pulse" strokeWidth={2.5} />
+        </div>
+        
+        <h1 className="text-8xl font-black text-primary tracking-tighter mb-2">404</h1>
+        <h2 className="text-2xl font-black uppercase tracking-tight text-foreground mb-4">
+          Lost in the vault?
+        </h2>
+        <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
+          The page you're looking for doesn't exist or has been moved to another section of the platform.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+
+        <Link
+          to="/"
+          className="group relative inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-8 py-4 text-sm font-black uppercase tracking-widest text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/25"
+        >
+          Back to Dashboard
+          <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 transition-opacity group-hover:opacity-100" />
+        </Link>
+        
+        <div className="mt-12 flex items-center gap-2 font-black text-xs text-muted-foreground/40 uppercase tracking-[0.2em]">
+          <span>Earn Pal</span>
+          <span className="h-1 w-1 rounded-full bg-muted-foreground/20" />
+          <span>Security Protocol</span>
         </div>
       </div>
     </div>
