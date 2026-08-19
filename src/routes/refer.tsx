@@ -65,13 +65,14 @@ function ReferralPage() {
   const progress = ((referralCount || 0) / nextMilestone) * 100;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto px-4 py-8">
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Refer & Earn</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Invite your friends to PAID POINT and earn 50 points for each person who signs up and completes their first task.
-        </p>
-      </div>
+    <div className="min-h-screen bg-accent/5 pb-12">
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        <div className="text-center space-y-2 mb-8">
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Refer & Earn</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
+            Invite your friends to <span className="text-primary font-bold">Paid Point</span> and earn <span className="text-foreground font-bold">50 points</span> for each person who signs up.
+          </p>
+        </div>
 
       <Tabs defaultValue="dashboard" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto mb-8">
