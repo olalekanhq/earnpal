@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navigation } from "@/components/Navigation";
 import { Toaster } from "@/components/ui/sonner";
+import { Onboarding } from "@/components/Onboarding";
 
 function NotFoundComponent() {
   return (
@@ -124,6 +125,7 @@ function RootComponent() {
       <Navigation />
       <Outlet />
       <Toaster />
+      <Onboarding />
     </QueryClientProvider>
   );
 }

@@ -51,9 +51,9 @@ export function Onboarding() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{steps[step - 1].title}</DialogTitle>
+          <DialogTitle>{steps[step - 1]?.title || "Welcome"}</DialogTitle>
           <DialogDescription className="pt-4 text-base">
-            {steps[step - 1].description}
+            {steps[step - 1]?.description || ""}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-6">
