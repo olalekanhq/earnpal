@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as RedeemRouteImport } from './routes/redeem'
+import { Route as ReferRouteImport } from './routes/refer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const RedeemRoute = RedeemRouteImport.update({
   path: '/redeem',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReferRoute = ReferRouteImport.update({
+  id: '/refer',
+  path: '/refer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
+  '/refer': typeof ReferRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
+  '/refer': typeof ReferRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/redeem': typeof RedeemRoute
+  '/refer': typeof ReferRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/earn' | '/redeem'
+  fullPaths: '/' | '/auth' | '/earn' | '/redeem' | '/refer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/earn' | '/redeem'
-  id: '__root__' | '/' | '/auth' | '/earn' | '/redeem'
+  to: '/' | '/auth' | '/earn' | '/redeem' | '/refer'
+  id: '__root__' | '/' | '/auth' | '/earn' | '/redeem' | '/refer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   EarnRoute: typeof EarnRoute
   RedeemRoute: typeof RedeemRoute
+  ReferRoute: typeof ReferRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RedeemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/refer': {
+      id: '/refer'
+      path: '/refer'
+      fullPath: '/refer'
+      preLoaderRoute: typeof ReferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   EarnRoute: EarnRoute,
   RedeemRoute: RedeemRoute,
+  ReferRoute: ReferRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
