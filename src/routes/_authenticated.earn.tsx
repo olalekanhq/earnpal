@@ -34,12 +34,12 @@ function EarnPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const { data: tasksData } = await supabase.from("tasks").select("*").eq("is_active", true);
-      const { data: submissions } = await supabase.from("task_submissions").select("task_id, status").eq("user_id", user.id);
+      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
+      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
       
-      const submissionsMap = new Map(submissions?.map(s => [s.task_id, s.status]));
+      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
       
-      return tasksData?.map(task => ({
+      return (tasksData as any)?.map((task: any) => ({
         ...task,
         status: submissionsMap.get(task.id) || null
       })) || [];
@@ -115,25 +115,26 @@ function EarnPage() {
                 className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
                 disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id}
                 onClick={async () => {
-                  if (task.link_url) {
-                    window.open(task.link_url, '_blank');
+                  const taskAny = task as any;
+                  if (taskAny.link_url) {
+                    window.open(taskAny.link_url, '_blank');
                   }
                   
                   setCompletingTaskId(task.id);
                   const { data: { user } } = await supabase.auth.getUser();
                   if (!user) return;
 
-                  const { data, error } = await supabase.rpc('submit_task', {
+                  const { data, error } = await (supabase.rpc as any)('submit_task', {
                     _user_id: user.id,
                     _task_id: task.id
                   });
 
                   if (error) {
                     toast.error(error.message);
-                  } else if (data && !data.success) {
-                    toast.error(data.message);
+                  } else if (data && !(data as any).success) {
+                    toast.error((data as any).message);
                   } else {
-                    toast.success(data.message || "Task submitted!");
+                    toast.success((data as any)?.message || "Task submitted!");
                     refetchTasks();
                   }
                   setCompletingTaskId(null);

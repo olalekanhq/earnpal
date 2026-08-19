@@ -36,7 +36,7 @@ export function TasksManager() {
     queryKey: ["admin-tasks"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tasks")
+        .from("tasks" as any)
         .select("*")
         .order("created_at", { ascending: false });
       
@@ -49,13 +49,13 @@ export function TasksManager() {
     mutationFn: async (data: any) => {
       if (editingTask) {
         const { error } = await supabase
-          .from("tasks")
+          .from("tasks" as any)
           .update(data)
           .eq("id", editingTask.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from("tasks")
+          .from("tasks" as any)
           .insert(data);
         if (error) throw error;
       }
@@ -75,7 +75,7 @@ export function TasksManager() {
   const deleteTaskMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from("tasks")
+        .from("tasks" as any)
         .delete()
         .eq("id", id);
       if (error) throw error;
