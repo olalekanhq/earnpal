@@ -29,8 +29,8 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
-  const [countryCode, setCountryCode] = useState("+234");
-  const [phoneBody, setPhoneBody] = useState("");
+  const [countryCode, setCountryCode] = useState<string>("+234");
+  const [phoneBody, setPhoneBody] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
