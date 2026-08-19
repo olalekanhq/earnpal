@@ -55,7 +55,7 @@ function ReferralPage() {
       const { data } = await supabase
         .from("profiles")
         .select("id, full_name, username, email, created_at, avatar_url")
-        .eq("referred_by", user.id)
+        .eq("referral_code_used" as any, profile?.username)
         .order('created_at', { ascending: false });
       return data || [];
     },

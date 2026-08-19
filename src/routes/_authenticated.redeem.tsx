@@ -1,13 +1,23 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Gift, Coins, ShoppingBag, CreditCard, Ticket, ArrowRight, Wallet, History } from "lucide-react";
+import { Gift, Coins, ShoppingBag, CreditCard, Ticket, ArrowRight, Wallet, History, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/redeem")({
   head: () => ({
@@ -26,6 +36,9 @@ export const Route = createFileRoute("/_authenticated/redeem")({
 
 function RedeemPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedReward, setSelectedReward] = useState<any>(null);
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: rewards, isLoading } = useQuery({
     queryKey: ["rewards"],
@@ -56,8 +69,51 @@ function RedeemPage() {
     ? rewards 
     : rewards?.filter((r: any) => r.category === activeCategory);
 
+  const handleRedeem = async () => {
+    if (!selectedReward || !profile) return;
+    
+    setIsRedeeming(true);
+    try {
+      // 1. Create redemption record
+      const { error: redemptionError } = await supabase
+        .from("redemptions")
+        .insert({
+          user_id: profile.id,
+          reward_id: selectedReward.id,
+          status: 'pending'
+        });
+
+      if (redemptionError) throw redemptionError;
+
+      // 2. Create points transaction (deduction)
+      const { error: transactionError } = await supabase
+        .from("points_transactions")
+        .insert({
+          user_id: profile.id,
+          amount: -selectedReward.cost_points,
+          type: 'redemption',
+          description: `Redeemed ${selectedReward.title}`
+        });
+
+      if (transactionError) throw transactionError;
+
+      toast.success("Redemption request submitted! Points have been deducted.");
+      setSelectedReward(null);
+      
+      // Invalidate queries to update balance and history
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["redemptions"] });
+    } catch (error: any) {
+      console.error("Redemption error:", error);
+      toast.error(error.message || "Failed to redeem reward. Please try again.");
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
+
   return (
-    <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
+    <>
+      <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight text-foreground">Redeem Rewards</h1>
@@ -135,6 +191,7 @@ function RedeemPage() {
                 className="w-full rounded-xl font-bold h-11 transition-all"
                 disabled={(profile?.points_balance || 0) < reward.cost_points}
                 variant={(profile?.points_balance || 0) < reward.cost_points ? "outline" : "default"}
+                onClick={() => setSelectedReward(reward)}
               >
                 {(profile?.points_balance || 0) < reward.cost_points ? 'Need more points' : 'Redeem Now'}
               </Button>
@@ -164,5 +221,54 @@ function RedeemPage() {
         ))}
       </div>
     </div>
+
+      <Dialog open={!!selectedReward} onOpenChange={(open) => !open && setSelectedReward(null)}>
+        <DialogContent className="sm:max-w-[425px] rounded-[2rem]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black">Confirm Redemption</DialogTitle>
+            <DialogDescription className="font-medium">
+              You are about to redeem <span className="text-foreground font-bold">{selectedReward?.title}</span> for <span className="text-primary font-bold">{selectedReward?.cost_points.toLocaleString()} PTS</span>.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-6 flex flex-col items-center justify-center space-y-4">
+            <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary">
+              <Gift className="h-10 w-10" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">New Balance</p>
+              <p className="text-3xl font-black">
+                {((profile?.points_balance || 0) - (selectedReward?.cost_points || 0)).toLocaleString()} <span className="text-xs text-primary">PTS</span>
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-3">
+            <Button 
+              variant="outline" 
+              className="w-full rounded-xl font-bold h-12" 
+              onClick={() => setSelectedReward(null)}
+              disabled={isRedeeming}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="w-full rounded-xl font-bold h-12 shadow-md shadow-primary/20" 
+              onClick={handleRedeem}
+              disabled={isRedeeming}
+            >
+              {isRedeeming ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Confirm Redemption'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
