@@ -326,9 +326,9 @@ function AuthPage() {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-lg shadow-primary/10" disabled={resetLoading}>
+              <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-md shadow-primary/10" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {resetSent ? "RESEND LINK" : "SEND RESET LINK"}
+                {resetSent ? "Resend Link" : "Send Reset Link"}
               </Button>
               <Button 
                 type="button" 
