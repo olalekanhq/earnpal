@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export const Route = createFileRoute("/earn")({
+export const Route = createFileRoute("/_authenticated/earn")({
   head: () => ({
     title: "Earn Points | Earn Pal",
     meta: [

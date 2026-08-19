@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     title: "My Dashboard | Earn Pal — Reward Your Time",
     meta: [

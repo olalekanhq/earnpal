@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ImageCropper } from "@/components/ImageCropper";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     title: "My Profile | Earn Pal",
     meta: [

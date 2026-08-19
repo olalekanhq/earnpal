@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
   beforeLoad: async ({ location }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {

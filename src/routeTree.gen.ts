@@ -10,17 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as EarnRouteImport } from './routes/earn'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as RedeemRouteImport } from './routes/redeem'
-import { Route as ReferRouteImport } from './routes/refer'
-import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated.dashboard'
+import { Route as AuthenticatedEarnRouteImport } from './routes/_authenticated.earn'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated.profile'
+import { Route as AuthenticatedRedeemRouteImport } from './routes/_authenticated.redeem'
+import { Route as AuthenticatedReferRouteImport } from './routes/_authenticated.refer'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ApiPublicOgRouteImport } from './routes/api/public/og'
 import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
@@ -31,24 +32,13 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EarnRoute = EarnRouteImport.update({
-  id: '/earn',
-  path: '/earn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LandingRoute = LandingRouteImport.update({
@@ -61,30 +51,45 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RedeemRoute = RedeemRouteImport.update({
-  id: '/redeem',
-  path: '/redeem',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReferRoute = ReferRouteImport.update({
-  id: '/refer',
-  path: '/refer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedEarnRoute = AuthenticatedEarnRouteImport.update({
+  id: '/earn',
+  path: '/earn',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedRedeemRoute = AuthenticatedRedeemRouteImport.update({
+  id: '/redeem',
+  path: '/redeem',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReferRoute = AuthenticatedReferRouteImport.update({
+  id: '/refer',
+  path: '/refer',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
@@ -109,17 +114,17 @@ const ApiPublicSitemapRoute = ApiPublicSitemapRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
-  '/dashboard': typeof DashboardRoute
-  '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/redeem': typeof RedeemRoute
-  '/refer': typeof ReferRoute
-  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/earn': typeof AuthenticatedEarnRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/redeem': typeof AuthenticatedRedeemRoute
+  '/refer': typeof AuthenticatedReferRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -127,17 +132,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/auth': typeof AuthRouteWithChildren
-  '/dashboard': typeof DashboardRoute
-  '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/redeem': typeof RedeemRoute
-  '/refer': typeof ReferRoute
-  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/earn': typeof AuthenticatedEarnRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/redeem': typeof AuthenticatedRedeemRoute
+  '/refer': typeof AuthenticatedReferRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -146,17 +151,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
-  '/dashboard': typeof DashboardRoute
-  '/earn': typeof EarnRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/redeem': typeof RedeemRoute
-  '/refer': typeof ReferRoute
-  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/earn': typeof AuthenticatedEarnRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/redeem': typeof AuthenticatedRedeemRoute
+  '/_authenticated/refer': typeof AuthenticatedReferRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -166,17 +172,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/auth'
-    | '/dashboard'
-    | '/earn'
     | '/landing'
     | '/privacy'
+    | '/terms'
+    | '/admin'
+    | '/dashboard'
+    | '/earn'
     | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
-    | '/terms'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -184,17 +190,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/auth'
-    | '/dashboard'
-    | '/earn'
     | '/landing'
     | '/privacy'
+    | '/terms'
+    | '/admin'
+    | '/dashboard'
+    | '/earn'
     | '/profile'
     | '/redeem'
     | '/refer'
     | '/settings'
-    | '/terms'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -202,17 +208,18 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/admin'
+    | '/_authenticated'
     | '/auth'
-    | '/dashboard'
-    | '/earn'
     | '/landing'
     | '/privacy'
-    | '/profile'
-    | '/redeem'
-    | '/refer'
-    | '/settings'
     | '/terms'
+    | '/_authenticated/admin'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/earn'
+    | '/_authenticated/profile'
+    | '/_authenticated/redeem'
+    | '/_authenticated/refer'
+    | '/_authenticated/settings'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -221,16 +228,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  DashboardRoute: typeof DashboardRoute
-  EarnRoute: typeof EarnRoute
   LandingRoute: typeof LandingRoute
   PrivacyRoute: typeof PrivacyRoute
-  ProfileRoute: typeof ProfileRoute
-  RedeemRoute: typeof RedeemRoute
-  ReferRoute: typeof ReferRoute
-  SettingsRoute: typeof SettingsRoute
   TermsRoute: typeof TermsRoute
   ApiPublicOgRoute: typeof ApiPublicOgRoute
   ApiPublicRobotsRoute: typeof ApiPublicRobotsRoute
@@ -246,11 +247,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -258,20 +259,6 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/earn': {
-      id: '/earn'
-      path: '/earn'
-      fullPath: '/earn'
-      preLoaderRoute: typeof EarnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/landing': {
@@ -288,40 +275,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/redeem': {
-      id: '/redeem'
-      path: '/redeem'
-      fullPath: '/redeem'
-      preLoaderRoute: typeof RedeemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/refer': {
-      id: '/refer'
-      path: '/refer'
-      fullPath: '/refer'
-      preLoaderRoute: typeof ReferRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/terms': {
       id: '/terms'
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/earn': {
+      id: '/_authenticated/earn'
+      path: '/earn'
+      fullPath: '/earn'
+      preLoaderRoute: typeof AuthenticatedEarnRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/redeem': {
+      id: '/_authenticated/redeem'
+      path: '/redeem'
+      fullPath: '/redeem'
+      preLoaderRoute: typeof AuthenticatedRedeemRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/refer': {
+      id: '/_authenticated/refer'
+      path: '/refer'
+      fullPath: '/refer'
+      preLoaderRoute: typeof AuthenticatedReferRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/auth/callback': {
       id: '/auth/callback'
@@ -354,6 +362,30 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedEarnRoute: typeof AuthenticatedEarnRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedRedeemRoute: typeof AuthenticatedRedeemRoute
+  AuthenticatedReferRoute: typeof AuthenticatedReferRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedEarnRoute: AuthenticatedEarnRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedRedeemRoute: AuthenticatedRedeemRoute,
+  AuthenticatedReferRoute: AuthenticatedReferRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 interface AuthRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
 }
@@ -366,16 +398,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  DashboardRoute: DashboardRoute,
-  EarnRoute: EarnRoute,
   LandingRoute: LandingRoute,
   PrivacyRoute: PrivacyRoute,
-  ProfileRoute: ProfileRoute,
-  RedeemRoute: RedeemRoute,
-  ReferRoute: ReferRoute,
-  SettingsRoute: SettingsRoute,
   TermsRoute: TermsRoute,
   ApiPublicOgRoute: ApiPublicOgRoute,
   ApiPublicRobotsRoute: ApiPublicRobotsRoute,

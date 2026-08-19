@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export const Route = createFileRoute("/refer")({
+export const Route = createFileRoute("/_authenticated/refer")({
   head: () => ({
     title: "Refer Friends | Earn Pal",
     meta: [
