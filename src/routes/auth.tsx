@@ -409,7 +409,7 @@ function AuthPage() {
             </form>
           ) : (
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full flex flex-col h-full overflow-hidden">
-              <div className="hidden px-1 flex-shrink-0">
+              <div className="px-1 flex-shrink-0">
                 <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
                   <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
                   <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
