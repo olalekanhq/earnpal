@@ -379,7 +379,7 @@ function ProfilePage() {
                     <p className="text-sm font-semibold truncate max-w-[150px]">{profile?.email || 'N/A'}</p>
                   </div>
                 </Card>
-                <Card className="border-none shadow-sm bg-white p-4 flex items-center gap-4">
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
                   <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
                     <User className="h-5 w-5" />
                   </div>
