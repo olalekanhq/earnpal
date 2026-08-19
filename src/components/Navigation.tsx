@@ -214,7 +214,7 @@ export function Navigation() {
       {/* Desktop Top Header (for desktop view only) */}
       <header className="hidden md:flex fixed top-0 right-0 z-30 h-16 items-center justify-end px-8 bg-background/50 backdrop-blur-sm pointer-events-none">
         <div className="flex items-center gap-4 pointer-events-auto">
-          <div className="flex items-center gap-3 bg-white border shadow-sm px-4 py-1.5 rounded-full">
+          <div className="flex items-center gap-3 bg-white border border-border/50 shadow-sm px-4 py-1.5 rounded-full">
             <Coins className="h-4 w-4 text-primary" strokeWidth={2} />
             <span className="text-sm font-bold text-foreground">
               {profile?.points_balance?.toLocaleString() || 0}
