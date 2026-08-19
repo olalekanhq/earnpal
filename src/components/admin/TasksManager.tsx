@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star } from "lucide-react";
 
 export function TasksManager() {
   const queryClient = useQueryClient();
@@ -29,7 +29,8 @@ export function TasksManager() {
     category: "social",
     is_active: true,
     link_url: "",
-    verification_required: false
+    verification_required: false,
+    is_featured: false
   });
 
   const { data: tasks, isLoading } = useQuery({
@@ -97,7 +98,8 @@ export function TasksManager() {
       category: "social",
       is_active: true,
       link_url: "",
-      verification_required: false
+      verification_required: false,
+      is_featured: false
     });
   };
 
@@ -110,7 +112,8 @@ export function TasksManager() {
       category: task.category || "social",
       is_active: task.is_active,
       link_url: task.link_url || "",
-      verification_required: task.verification_required || false
+      verification_required: task.verification_required || false,
+      is_featured: task.is_featured || false
     });
     setIsDialogOpen(true);
   };
@@ -214,6 +217,15 @@ export function TasksManager() {
                   {formData.verification_required ? <ShieldCheck className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
                   {formData.verification_required ? "Verification Required" : "Instant Reward"}
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={cn("rounded-lg px-3 font-bold", formData.is_featured ? "text-amber-600 bg-amber-50" : "text-muted-foreground")}
+                  onClick={() => setFormData({...formData, is_featured: !formData.is_featured})}
+                >
+                  {formData.is_featured ? <Star className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                  {formData.is_featured ? "Featured Task" : "Standard Task"}
+                </Button>
               </div>
             </div>
             <DialogFooter>
@@ -259,7 +271,15 @@ export function TasksManager() {
               tasks?.map((task: any) => (
                 <TableRow key={task.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
-                    <div className="font-bold">{task.title}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="font-bold">{task.title}</div>
+                      {task.is_featured && (
+                        <Badge className="bg-amber-100 text-amber-600 hover:bg-amber-100 border-none font-black text-[9px] h-4 px-1.5 flex items-center gap-0.5">
+                          <Star className="h-2.5 w-2.5 fill-current" />
+                          FEATURED
+                        </Badge>
+                      )}
+                    </div>
                     <div className="text-xs text-muted-foreground line-clamp-1">{task.description}</div>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">

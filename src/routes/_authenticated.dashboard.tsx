@@ -1,10 +1,11 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -56,6 +57,27 @@ function Dashboard() {
         .eq("referred_by", user.id);
       return count || 0;
     },
+  });
+
+  const { data: featuredTasks } = useQuery({
+    queryKey: ["featured-tasks"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      
+      const { data: tasks, error } = await supabase
+        .from("tasks")
+        .select(`
+          *,
+          task_submissions(status)
+        `)
+        .eq("is_active", true)
+        .eq("is_featured", true)
+        .limit(2);
+      
+      if (error) throw error;
+      return tasks;
+    }
   });
 
   const claimDailyStreak = useMutation({
@@ -165,6 +187,84 @@ function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {featuredTasks && featuredTasks.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-xl font-black tracking-tight text-foreground flex items-center gap-2">
+              <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+              Featured Tasks
+            </h2>
+          </div>
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+            {featuredTasks.map((task: any) => {
+              const submission = task.task_submissions?.[0];
+              const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
+              
+              return (
+                <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="bg-primary/5 p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                        <Zap className="h-5 w-5" />
+                      </div>
+                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
+                        +{task.points} PTS
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-2">
+                    <div className="space-y-1 mb-6">
+                      <CardTitle className="text-lg font-black tracking-tight">{task.title}</CardTitle>
+                      <CardDescription className="text-xs font-medium line-clamp-2">{task.description}</CardDescription>
+                    </div>
+                    <Button 
+                      className={cn(
+                        "w-full rounded-xl font-bold h-11 transition-all",
+                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
+                      )}
+                      onClick={async () => {
+                        if (isCompleted) return;
+                        
+                        const taskAny = task as any;
+                        if (taskAny.link_url) {
+                          window.open(taskAny.link_url, '_blank');
+                        }
+                        
+                        // Navigate to earn page to complete task or show feedback
+                        // Since we want the user to carry it out, we'll open the link and then they can verify on the earn page
+                        // Or we could implement the verification logic here too.
+                        // Let's keep it simple: open link and toast instruction.
+                        toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
+                      }}
+                      disabled={isCompleted && submission?.status === 'verified'}
+                    >
+                      {isCompleted ? (
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4" />
+                          {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
+                        </div>
+                      ) : (
+                        <>
+                          Start Task
+                          <ChevronRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                  {task.is_featured && !isCompleted && (
+                    <div className="absolute top-0 right-0">
+                      <div className="bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-tighter">
+                        High Priority
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Recent Activity */}
