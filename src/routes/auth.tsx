@@ -70,7 +70,20 @@ function AuthPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const options: any = { 
+        email, 
+        password,
+      };
+      
+      if (referralCode) {
+        options.options = {
+          data: {
+            referred_by: referralCode
+          }
+        };
+      }
+
+      const { error } = await supabase.auth.signUp(options);
       if (error) throw error;
       toast.success("Check your email for the confirmation link!");
     } catch (error: any) {
