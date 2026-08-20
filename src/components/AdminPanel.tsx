@@ -28,7 +28,7 @@ import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
-import { AuditLogs } from "./admin/AuditLogs";
+
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
 import { PlatformSettings } from "./admin/PlatformSettings";
@@ -195,7 +195,7 @@ export function AdminPanel() {
               { value: "tasks", icon: ListTodo, label: "Tasks" },
               { value: "rewards", icon: ShoppingBag, label: "Rewards" },
               { value: "redemptions", icon: Clock, label: "Redemptions" },
-              { value: "audit", icon: ShieldCheck, label: "Audit" },
+              
               { value: "analytics", icon: PieChart, label: "Analytics" },
               { value: "referrals", icon: Users2, label: "Referrals" },
               { value: "settings", icon: Settings, label: "Settings" }
@@ -235,9 +235,6 @@ export function AdminPanel() {
           <RedemptionsManager />
         </TabsContent>
 
-        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <AuditLogs />
-        </TabsContent>
 
         <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <AnalyticsView />
