@@ -148,6 +148,7 @@ export type Database = {
           referred_by: string | null
           updated_at: string
           username: string | null
+          welcome_banner_dismissed: boolean | null
         }
         Insert: {
           avatar_url?: string | null
@@ -165,6 +166,7 @@ export type Database = {
           referred_by?: string | null
           updated_at?: string
           username?: string | null
+          welcome_banner_dismissed?: boolean | null
         }
         Update: {
           avatar_url?: string | null
@@ -182,6 +184,7 @@ export type Database = {
           referred_by?: string | null
           updated_at?: string
           username?: string | null
+          welcome_banner_dismissed?: boolean | null
         }
         Relationships: []
       }

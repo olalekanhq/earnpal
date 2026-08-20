@@ -35,13 +35,9 @@ export function WelcomeBonusModal() {
         .eq("id", user.id)
         .single();
 
-      if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus) {
-        // Check if the modal was already dismissed in this session
-        const isDismissed = sessionStorage.getItem("welcome_bonus_dismissed");
-        if (!isDismissed) {
-          setProfile(profileData);
-          setIsOpen(true);
-        }
+      if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
+        setProfile(profileData);
+        setIsOpen(true);
       }
     } catch (error) {
       console.error("Error checking welcome bonus eligibility:", error);
@@ -92,9 +88,22 @@ export function WelcomeBonusModal() {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setIsOpen(false);
-    sessionStorage.setItem("welcome_bonus_dismissed", "true");
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from("profiles")
+          .update({ welcome_banner_dismissed: true } as any)
+          .eq("id", user.id);
+        
+        // Update local query cache
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+      }
+    } catch (error) {
+      console.error("Error dismissing welcome banner:", error);
+    }
   };
 
   if (!isOpen) return null;
