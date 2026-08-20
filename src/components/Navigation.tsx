@@ -44,6 +44,41 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
+// Mobile Menu Overlay Component
+const MobileMenuOverlay = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => void, children: React.ReactNode }) => (
+  <div 
+    className={cn(
+      "md:hidden fixed inset-0 z-[60] flex transition-all duration-500 ease-in-out",
+      isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+    )}
+  >
+    <div 
+      className={cn(
+        "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500 ease-in-out",
+        isOpen ? "opacity-100" : "opacity-0"
+      )} 
+      onClick={onClose} 
+    />
+    <div 
+      className={cn(
+        "relative w-72 h-full bg-card shadow-2xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex flex-col",
+        isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+      )}
+    >
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="absolute right-2 top-2"
+        onClick={onClose}
+        aria-label="Close menu"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+      {children}
+    </div>
+  </div>
+);
+
 export function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
