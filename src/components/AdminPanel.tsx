@@ -116,6 +116,21 @@ export function AdminPanel() {
     },
   });
 
+  const [activeTab, setActiveTab] = useState("users");
+
+  const tabs = [
+    { value: "users", icon: Users, label: "Users" },
+    { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
+    { value: "tasks", icon: ListTodo, label: "Tasks" },
+    { value: "rewards", icon: ShoppingBag, label: "Rewards" },
+    { value: "redemptions", icon: Clock, label: "Redemptions" },
+    { value: "analytics", icon: PieChart, label: "Analytics" },
+    { value: "referrals", icon: Users2, label: "Referrals" },
+    { value: "settings", icon: Settings, label: "Settings" }
+  ];
+
+  const activeTabData = tabs.find(t => t.value === activeTab) || tabs[0];
+
   const statCards = [
     {
       title: "Total Users",
