@@ -210,7 +210,9 @@ function AuthPage() {
           data: {
             username,
             full_name: fullName,
-            referral_code_used: referralCode || null
+            referral_code_used: referralCode || null,
+            fingerprint: (window as any)._ep_fingerprint || null,
+            ip_address: 'client_side_placeholder' // IP is usually handled by Supabase Auth metadata or server-side detection
           }
         }
       };
