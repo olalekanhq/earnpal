@@ -120,8 +120,9 @@ function ProfilePage() {
         .from('avatars')
         .getPublicUrl(filePath);
 
-
+      console.log("Generated avatar URL:", data.publicUrl);
       await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
+
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
     } finally {

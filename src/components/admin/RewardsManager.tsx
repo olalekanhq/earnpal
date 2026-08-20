@@ -138,8 +138,9 @@ export function RewardsManager() {
         .from('rewards')
         .getPublicUrl(filePath);
 
-
+      console.log("Generated reward image URL:", publicUrl);
       setFormData(prev => ({ ...prev, image_url: publicUrl }));
+
       toast.success("Image uploaded successfully");
     } catch (error: any) {
       toast.error("Error uploading image: " + error.message);
