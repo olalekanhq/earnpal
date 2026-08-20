@@ -140,7 +140,7 @@ export function AdminPanel() {
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
-    { value: "settings", icon: Settings, label: "Settings", color: undefined }
+    { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
   ];
 
   const activeTabData = tabs.find(t => t.value === activeTab)!;
