@@ -252,7 +252,9 @@ function RootComponent() {
         </div>
         <Toaster />
         <Onboarding />
+        <VideoAdInterstitial />
       </ThemeProvider>
+
     </QueryClientProvider>
   );
 }
