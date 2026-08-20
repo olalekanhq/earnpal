@@ -168,7 +168,6 @@ export function Navigation() {
     );
   }
 
-  );
 
   // Mobile Menu Overlay Component
   const MobileMenuOverlay = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => void, children: React.ReactNode }) => (
