@@ -16,10 +16,9 @@ export function RedemptionsManager() {
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
 
-  const { data: redemptions, isLoading, error: queryError } = useQuery({
+  const { data: redemptions, isLoading } = useQuery({
     queryKey: ["admin-redemptions"],
     queryFn: async () => {
-      console.log("Fetching admin redemptions...");
       const { data, error } = await supabase
         .from("redemptions")
         .select(`
@@ -29,11 +28,7 @@ export function RedemptionsManager() {
         `)
         .order("created_at", { ascending: false });
       
-      if (error) {
-        console.error("Error fetching redemptions:", error);
-        throw error;
-      }
-      console.log("Fetched redemptions:", data);
+      if (error) throw error;
       return data;
     }
   });
@@ -83,10 +78,6 @@ export function RedemptionsManager() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-red-500 text-white p-2">
-        Debug: {isLoading ? "Loading..." : `Loaded ${filteredRedemptions?.length || 0} redemptions`}
-        {queryError && ` Error: ${JSON.stringify(queryError)}`}
-      </div>
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
