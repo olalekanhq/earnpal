@@ -1,8 +1,14 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminPanel } from "@/components/AdminPanel";
+import { z } from "zod";
+
+const adminSearchSchema = z.object({
+  tab: z.string().optional(),
+});
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  validateSearch: (search) => adminSearchSchema.parse(search),
   beforeLoad: async ({ location }) => {
     const { data: { user } } = await supabase.auth.getUser();
 
