@@ -42,7 +42,7 @@ import { FraudManager } from "./admin/FraudManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
@@ -116,7 +116,16 @@ export function AdminPanel() {
     },
   });
 
-  const [activeTab, setActiveTab] = useState("users");
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("earnpal_admin_last_tab") || "users";
+    }
+    return "users";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("earnpal_admin_last_tab", activeTab);
+  }, [activeTab]);
 
   const tabs = [
     { value: "users", icon: Users, label: "Users", color: undefined },
