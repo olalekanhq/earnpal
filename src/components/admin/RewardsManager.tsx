@@ -180,22 +180,29 @@ export function RewardsManager() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reward Image</label>
-                <div className="flex items-center gap-4">
-                  {formData.image_url ? (
-                    <div className="relative h-20 w-20 rounded-xl overflow-hidden border border-border">
-                      <img src={formData.image_url} alt="Reward" className="h-full w-full object-cover" />
-                      <button 
-                        onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
-                        className="absolute top-1 right-1 bg-background/80 p-1 rounded-full text-destructive hover:bg-background"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="h-20 w-20 rounded-xl bg-accent/50 border border-dashed border-border flex items-center justify-center text-muted-foreground">
+                <div className="flex items-center gap-4 w-full">
+                  <div className="relative h-20 w-20 rounded-xl overflow-hidden border border-border bg-accent/50 flex items-center justify-center text-muted-foreground flex-shrink-0">
+                    {formData.image_url ? (
+                      <>
+                        <img 
+                          src={formData.image_url} 
+                          alt="Reward Preview" 
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=Error';
+                          }}
+                        />
+                        <button 
+                          onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                          className="absolute top-1 right-1 bg-background/80 p-1 rounded-full text-destructive hover:bg-background shadow-sm"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </>
+                    ) : (
                       <ImageIcon className="h-6 w-6" />
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <div className="flex-1">
                     <div className="space-y-2">
                       <Input 

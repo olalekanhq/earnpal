@@ -252,24 +252,41 @@ function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="avatar-url" className="text-sm font-semibold">Avatar Image URL</Label>
-                    <div className="flex gap-2">
-                      <Input 
-                        id="avatar-url" 
-                        value={avatarUrl} 
-                        onChange={(e) => setAvatarUrl(e.target.value)} 
-                        className="rounded-xl h-11 flex-1" 
-                        placeholder="https://example.com/photo.jpg" 
-                      />
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        className="rounded-xl h-11"
-                        onClick={() => document.getElementById('avatar-upload')?.click()}
-                      >
-                        <Camera className="h-4 w-4" />
-                      </Button>
+                    <div className="flex gap-4 items-start">
+                      <div className="flex-1 space-y-2">
+                        <div className="flex gap-2">
+                          <Input 
+                            id="avatar-url" 
+                            value={avatarUrl} 
+                            onChange={(e) => setAvatarUrl(e.target.value)} 
+                            className="rounded-xl h-11 flex-1" 
+                            placeholder="https://example.com/photo.jpg" 
+                          />
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            className="rounded-xl h-11"
+                            onClick={() => document.getElementById('avatar-upload')?.click()}
+                          >
+                            <Camera className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground ml-1">Paste a link or click the camera icon to upload.</p>
+                      </div>
+                      
+                      {avatarUrl && (
+                        <div className="h-11 w-11 rounded-xl border border-border overflow-hidden bg-accent flex-shrink-0">
+                          <img 
+                            src={avatarUrl} 
+                            alt="Preview" 
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=Error';
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground ml-1">Paste a link or click the camera icon to upload.</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone-number" className="text-sm font-semibold">Phone Number</Label>
