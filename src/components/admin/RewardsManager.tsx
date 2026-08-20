@@ -27,6 +27,7 @@ export function RewardsManager() {
     description: "",
     cost_points: 0,
     stock_count: 0,
+    category: "Gift Cards",
     is_active: true,
     image_url: ""
   });
@@ -95,6 +96,7 @@ export function RewardsManager() {
       description: "",
       cost_points: 0,
       stock_count: 0,
+      category: "Gift Cards",
       is_active: true,
       image_url: ""
     });
@@ -107,6 +109,7 @@ export function RewardsManager() {
       description: reward.description || "",
       cost_points: reward.cost_points,
       stock_count: reward.stock_count || 0,
+      category: reward.category || "Gift Cards",
       is_active: reward.is_active,
       image_url: reward.image_url || ""
     });
@@ -239,6 +242,19 @@ export function RewardsManager() {
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Category</label>
+                <select 
+                  className="w-full h-12 rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                >
+                  <option value="Gift Cards">Gift Cards</option>
+                  <option value="Vouchers">Vouchers</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
             </div>
             <DialogFooter>
               <Button 
@@ -266,6 +282,7 @@ export function RewardsManager() {
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Reward</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Category</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Cost</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Stock</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
@@ -299,6 +316,10 @@ export function RewardsManager() {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider">
+                      {reward.category || "Uncategorized"}
+                    </Badge>
                   <TableCell className="px-6 py-4 text-center">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
                       {reward.cost_points} pts
