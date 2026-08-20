@@ -105,91 +105,11 @@ function ReferralPage() {
         </div>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-12">
-        {/* Left Column: Stats & Link */}
-        <div className="md:col-span-8 space-y-6">
-          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-            <Card className="border-none shadow-sm bg-card p-4">
-              <div className="flex flex-col h-full justify-between gap-2">
-                <div className="p-2 bg-blue-50 w-fit rounded-lg text-blue-600">
-                  <MousePointerClick className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Link Clicks</p>
-                  <p className="text-2xl font-black">{profile?.referral_clicks || 0}</p>
-                </div>
-              </div>
-            </Card>
-            <Card className="border-none shadow-sm bg-card p-4">
-              <div className="flex flex-col h-full justify-between gap-2">
-                <div className="p-2 bg-primary/10 w-fit rounded-lg text-primary">
-                  <Users className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Total Referrals</p>
-                  <p className="text-2xl font-black">{referralCount}</p>
-                </div>
-              </div>
-            </Card>
-            <Card className="border-none shadow-sm bg-card p-4">
-              <div className="flex flex-col h-full justify-between gap-2">
-                <div className="p-2 bg-green-50 w-fit rounded-lg text-green-600">
-                  <Gift className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Points Earned</p>
-                  <p className="text-2xl font-black">{referralCount * 75}</p>
-                </div>
-              </div>
-            </Card>
-            <Card className="border-none shadow-sm bg-card p-4">
-              <div className="flex flex-col h-full justify-between gap-2">
-                <div className="p-2 bg-orange-50 w-fit rounded-lg text-orange-600">
-                  <TrendingUp className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Conv. Rate</p>
-                  <p className="text-2xl font-black">{profile?.referral_clicks ? Math.round((referralCount / profile.referral_clicks) * 100) : 0}%</p>
-                </div>
-              </div>
-            </Card>
-          </div>
+      <ReferralStatsDashboard />
 
-          <Card className="border-none shadow-sm bg-primary text-primary-foreground p-6 md:p-8 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
-            <div className="relative z-10 space-y-6">
-              <div className="space-y-2">
-                <h2 className="text-2xl font-black">Your Referral Link</h2>
-                <p className="text-primary-foreground/80 font-medium">Copy your link and share it on social media to earn rewards.</p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <Input 
-                    readOnly 
-                    value={referralLink} 
-                    className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl pr-12 focus-visible:ring-white/30"
-                  />
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={copyToClipboard}
-                    className="absolute right-1 top-1 text-white hover:bg-white/10 h-10 w-10"
-                  >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  </Button>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="icon" className="h-12 w-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
-                    <Twitter className="h-5 w-5" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="h-12 w-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
-                    <MessageSquare className="h-5 w-5" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card>
+      <div className="grid gap-6 md:grid-cols-12">
+        {/* Signups & Leaderboard */}
+        <div className="md:col-span-8 space-y-6">
 
           <Tabs defaultValue="signups" className="w-full">
             <TabsList className="bg-card/50 border border-border/50 p-1 rounded-xl h-11 w-full max-w-[300px]">
