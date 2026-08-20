@@ -31,7 +31,8 @@ export function TasksManager() {
     link_url: "",
     verification_required: false,
     is_featured: false,
-    video_ad_count: 0
+    video_ad_count: 0,
+    vast_tag_url: ""
   });
 
   const { data: tasks, isLoading } = useQuery({
@@ -101,7 +102,8 @@ export function TasksManager() {
       link_url: "",
       verification_required: false,
       is_featured: false,
-      video_ad_count: 0
+      video_ad_count: 0,
+      vast_tag_url: ""
     });
   };
 
@@ -116,7 +118,8 @@ export function TasksManager() {
       link_url: task.link_url || "",
       verification_required: task.verification_required || false,
       is_featured: task.is_featured || false,
-      video_ad_count: task.video_ad_count || 0
+      video_ad_count: task.video_ad_count || 0,
+      vast_tag_url: task.vast_tag_url || ""
     });
     setIsDialogOpen(true);
   };
@@ -204,6 +207,18 @@ export function TasksManager() {
                     className="rounded-xl h-12"
                   />
                   <p className="text-[10px] text-muted-foreground italic ml-1">Total points will be awarded after user watches all ads.</p>
+                </div>
+              )}
+              {formData.category === 'Videos' && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">VAST Tag URL (Optional)</label>
+                  <Input 
+                    value={formData.vast_tag_url} 
+                    onChange={(e) => setFormData({...formData, vast_tag_url: e.target.value})}
+                    placeholder="e.g. https://example.com/vast.xml"
+                    className="rounded-xl h-12"
+                  />
+                  <p className="text-[10px] text-muted-foreground italic ml-1">Leave empty to use standard video watch behavior.</p>
                 </div>
               )}
               <div className="space-y-2">
