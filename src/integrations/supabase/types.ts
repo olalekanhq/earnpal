@@ -236,7 +236,7 @@ export interface Database {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: ["admin", "moderator", "user"]
     }
   }
 }
