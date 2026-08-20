@@ -5,6 +5,7 @@ import { History, Coins, Loader2, Gift, TrendingUp, ArrowRight } from "lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { showTransactionDetails } from "@/utils/transaction-details";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/transactions")({
@@ -57,21 +58,7 @@ function TransactionsPage() {
                 <div 
                   key={tx.id} 
                   className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
-                  onClick={() => {
-                    toast.info(
-                      <div className="space-y-2">
-                        <p className="font-bold text-sm">Transaction Details</p>
-                        <div className="text-xs space-y-1 font-medium">
-                          <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Description:</span> {tx.description}</p>
-                          <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Amount:</span> {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
-                          <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Type:</span> {tx.type}</p>
-                          <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Date:</span> {new Date(tx.created_at).toLocaleString()}</p>
-                          <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">ID:</span> {tx.id}</p>
-                        </div>
-                      </div>,
-                      { duration: 6000 }
-                    );
-                  }}
+                  onClick={() => showTransactionDetails(tx)}
                 >
                   <div className="space-y-1">
                     <p className="font-bold text-sm text-foreground leading-none group-hover:text-primary transition-colors">{tx.description}</p>

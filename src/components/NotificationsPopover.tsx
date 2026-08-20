@@ -11,9 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
+import { showTransactionDetails } from "@/utils/transaction-details";
 
 export function NotificationsPopover() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
@@ -40,6 +43,34 @@ export function NotificationsPopover() {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
+
+  const handleNotificationClick = async (notification: any) => {
+    // Mark as read if not already read
+    if (!notification.is_read) {
+      markAsRead.mutate(notification.id);
+    }
+
+    // If it has a transaction_id, fetch and show details
+    if (notification.transaction_id) {
+      const { data: tx, error } = await supabase
+        .from("points_transactions")
+        .select("*")
+        .eq("id", notification.transaction_id)
+        .single();
+      
+      if (error) {
+        console.error("Error fetching transaction:", error);
+        // Fallback: navigate to transactions page
+        navigate({ to: "/transactions" });
+      } else if (tx) {
+        showTransactionDetails(tx);
+      }
+    } 
+    // Otherwise, if it's a points or reward related notification, navigate to history
+    else if (notification.type === 'points' || notification.type === 'reward') {
+      navigate({ to: "/transactions" });
+    }
+  };
 
   const unreadCount = notifications?.filter((n) => !n.is_read).length || 0;
 
@@ -89,7 +120,7 @@ export function NotificationsPopover() {
                 <div 
                   key={notification.id} 
                   className={`p-4 transition-colors hover:bg-muted/50 cursor-pointer ${!notification.is_read ? 'bg-primary/5' : ''}`}
-                  onClick={() => !notification.is_read && markAsRead.mutate(notification.id)}
+                  onClick={() => handleNotificationClick(notification)}
                 >
                   <p className="text-sm font-medium">{notification.title}</p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>

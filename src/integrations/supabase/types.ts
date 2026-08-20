@@ -108,6 +108,7 @@ export type Database = {
           is_read: boolean
           message: string
           title: string
+          transaction_id: string | null
           type: string
           user_id: string
         }
@@ -117,6 +118,7 @@ export type Database = {
           is_read?: boolean
           message: string
           title: string
+          transaction_id?: string | null
           type: string
           user_id: string
         }
@@ -126,10 +128,19 @@ export type Database = {
           is_read?: boolean
           message?: string
           title?: string
+          transaction_id?: string | null
           type?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "points_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       points_transactions: {
         Row: {
