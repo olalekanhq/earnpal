@@ -480,28 +480,16 @@ export type Database = {
         }
         Returns: undefined
       }
-      check_referral_code:
-        | {
-            Args: { _code: string }
-            Returns: {
-              is_valid: boolean
-              username: string
-            }[]
-          }
-        | {
-            Args: { _code: string; _requesting_user_id?: string }
-            Returns: {
-              error_message: string
-              is_valid: boolean
-              username: string
-            }[]
-          }
+      check_referral_code: {
+        Args: { _code: string; _requesting_user_id?: string }
+        Returns: {
+          error_message: string
+          is_valid: boolean
+          username: string
+        }[]
+      }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       claim_welcome_bonus: { Args: { _user_id: string }; Returns: Json }
-      get_user_email_by_username: {
-        Args: { _username: string }
-        Returns: string
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -514,6 +502,7 @@ export type Database = {
         Returns: undefined
       }
       lookup_login_email: { Args: { _username: string }; Returns: string }
+      redeem_reward: { Args: { _reward_id: string }; Returns: Json }
       remove_role: {
         Args: {
           role_to_remove: Database["public"]["Enums"]["app_role"]

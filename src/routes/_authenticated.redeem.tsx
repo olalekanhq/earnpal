@@ -74,28 +74,19 @@ function RedeemPage() {
     
     setIsRedeeming(true);
     try {
-      // 1. Create redemption record
-      const { error: redemptionError } = await supabase
-        .from("redemptions")
-        .insert({
-          user_id: profile.id,
-          reward_id: selectedReward.id,
-          status: 'pending'
-        });
+      // Server-side validated + atomic: checks availability, stock, balance and debits points
+      const { data, error } = await supabase.rpc("redeem_reward", {
+        _reward_id: selectedReward.id,
+      });
 
-      if (redemptionError) throw redemptionError;
+      if (error) throw error;
 
-      // 2. Create points transaction (deduction)
-      const { error: transactionError } = await supabase
-        .from("points_transactions")
-        .insert({
-          user_id: profile.id,
-          amount: -selectedReward.cost_points,
-          type: 'redemption',
-          description: `Redeemed ${selectedReward.title}`
-        });
+      const result = data as { success: boolean; message: string } | null;
 
-      if (transactionError) throw transactionError;
+      if (!result?.success) {
+        toast.error(result?.message || "Failed to redeem reward. Please try again.");
+        return;
+      }
 
       toast.success("Redemption request submitted! Points have been deducted.");
       setSelectedReward(null);
@@ -103,9 +94,10 @@ function RedeemPage() {
       // Invalidate queries to update balance and history
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["redemptions"] });
+      queryClient.invalidateQueries({ queryKey: ["rewards"] });
     } catch (error: any) {
       console.error("Redemption error:", error);
-      toast.error(error.message || "Failed to redeem reward. Please try again.");
+      toast.error("Failed to redeem reward. Please try again.");
     } finally {
       setIsRedeeming(false);
     }
