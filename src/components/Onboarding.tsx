@@ -27,8 +27,14 @@ export function Onboarding() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       
+      const sessionFlag = sessionStorage.getItem(`onboarding_shown_${user.id}`);
+      if (sessionFlag === "true") return;
+
       const hasSeen = typeof window !== 'undefined' ? localStorage.getItem(`onboarding_seen_${user.id}`) : null;
-      if (!hasSeen) setIsOpen(true);
+      if (!hasSeen) {
+        setIsOpen(true);
+        sessionStorage.setItem(`onboarding_shown_${user.id}`, "true");
+      }
     };
     checkOnboarding();
   }, [location.pathname]);
@@ -57,23 +63,29 @@ export function Onboarding() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="rounded-[2rem] border-none shadow-2xl p-8">
-        <DialogHeader className="space-y-4">
-          <DialogTitle className="text-2xl font-black tracking-tight">{steps[step - 1]?.title || "Welcome"}</DialogTitle>
-          <DialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-lg rounded-[1.5rem] md:rounded-[2.5rem] border-none shadow-2xl p-6 md:p-10 mx-auto bg-card max-h-[90dvh] overflow-y-auto">
+        <DialogHeader className="space-y-3 md:space-y-6 text-center">
+          <DialogTitle className="text-xl md:text-3xl font-black tracking-tight text-foreground uppercase">
+            {steps[step - 1]?.title || "Welcome"}
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground font-medium text-sm md:text-xl leading-relaxed">
             {steps[step - 1]?.description || ""}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-6 md:mt-10 flex flex-row items-center justify-center gap-3">
           {step > 1 && (
-            <Button variant="ghost" onClick={() => setStep(step - 1)} className="font-bold rounded-xl">
+            <Button variant="ghost" onClick={() => setStep(step - 1)} className="font-black uppercase tracking-widest text-xs rounded-xl h-10 md:h-12 px-6">
               Back
             </Button>
           )}
           {step < steps.length ? (
-            <Button onClick={() => setStep(step + 1)} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Next</Button>
+            <Button onClick={() => setStep(step + 1)} className="font-black uppercase tracking-widest text-xs rounded-xl h-10 md:h-12 px-8 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              Next
+            </Button>
           ) : (
-            <Button onClick={finish} className="font-bold rounded-xl px-8 shadow-md shadow-primary/10">Get Started</Button>
+            <Button onClick={finish} className="font-black uppercase tracking-widest text-xs rounded-xl h-10 md:h-12 px-8 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              Get Started
+            </Button>
           )}
         </DialogFooter>
       </DialogContent>
