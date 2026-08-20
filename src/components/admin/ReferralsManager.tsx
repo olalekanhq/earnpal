@@ -67,7 +67,7 @@ export function ReferralsManager() {
         .select(`
           *,
           referrer:profiles!referrals_referrer_id_fkey(id, username, full_name, avatar_url, email, points_balance, referral_code),
-          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at)
+          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at, twitter_handle, telegram_handle, has_claimed_welcome_bonus)
         `)
         .order("created_at", { ascending: false });
 
