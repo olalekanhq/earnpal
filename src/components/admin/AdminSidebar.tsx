@@ -23,7 +23,6 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ className }: AdminSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const location = useLocation();
   const search = useSearch({ from: "/_authenticated/admin" });
 
   const menuItems = [
@@ -100,14 +99,13 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
 
       <nav className="flex-1 space-y-1.5 p-4 overflow-y-auto custom-scrollbar">
         {menuItems.map((item) => {
-          const currentTab = (search as any).tab;
-          const isActive = currentTab === item.tab;
+          const isActive = search.tab === item.tab;
 
           return (
             <Link
               key={item.title}
-              to={item.href}
-              search={item.tab ? { tab: item.tab } : {}}
+              to="/admin"
+              search={{ tab: item.tab }}
               className={cn(
                 "flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 group",
                 isActive 
