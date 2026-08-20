@@ -69,6 +69,7 @@ export function RedemptionsManager() {
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Cost</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Date</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Status</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
