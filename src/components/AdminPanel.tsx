@@ -44,7 +44,11 @@ import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-
 import { subDays, startOfDay } from "date-fns";
 import { useState, useEffect } from "react";
 
+import { useAuth } from "@/hooks/use-auth";
+import { Lock } from "lucide-react";
+
 export function AdminPanel() {
+  const { isAdmin } = useAuth();
   const { data: stats, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
