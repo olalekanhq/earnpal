@@ -1,25 +1,19 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, History, TrendingUp, Gift, Play } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, Clock, ShieldCheck, Loader2, Play } from "lucide-react";
 import VastAdModal from "@/components/VastAdModal";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/earn")({
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      tab: (search['tab'] as string || 'tasks') as 'tasks' | 'history',
-    };
-  },
   head: () => ({
-    title: "Earn Points | Earn Pal",
     meta: [
+      { title: "Earn Points | Earn Pal" },
       { name: "description", content: "Complete tasks, watch ads, and participate in surveys to earn points on Earn Pal." },
       { property: "og:title", content: "Earn Points | Earn Pal" },
       { property: "og:description", content: "Unlock new ways to earn points every day." },
@@ -33,18 +27,10 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const queryClient = useQueryClient();
-  const search = Route.useSearch();
-  const [activeTab, setActiveTab] = useState(search['tab'] === 'history' ? 'history' : 'tasks');
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (search['tab'] === 'history') {
-      setActiveTab('history');
-    }
-  }, [search['tab']]);
 
   const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
@@ -67,36 +53,6 @@ function EarnPage() {
     },
   });
 
-  const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("points_transactions")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      return data || [];
-    },
-    enabled: activeTab === 'history',
-  });
-
-  const { data: redemptions, isLoading: isRedemptionsLoading } = useQuery({
-    queryKey: ["redemptions"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("redemptions")
-        .select("*, rewards(title, image_url)")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      return data || [];
-    },
-    enabled: activeTab === 'history',
-  });
-
   const categories = [
     { name: "All", icon: Star },
     { name: "Social", icon: MessageSquare },
@@ -113,367 +69,247 @@ function EarnPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight text-foreground">
-            {activeTab === 'tasks' ? 'Earn Points' : 'Activity History'}
+            Earn Points
           </h1>
           <p className="text-muted-foreground font-medium">
-            {activeTab === 'tasks' 
-              ? 'Complete simple tasks to earn points and level up.' 
-              : 'Track your points, tasks, and reward redemptions.'}
+            Complete simple tasks to earn points and level up.
           </p>
         </div>
       </header>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-card/50 border border-border/50 p-1 rounded-2xl h-14 w-full max-w-md">
-          <TabsTrigger value="tasks" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
-            <Zap className="h-4 w-4 mr-2" />
-            Available Tasks
-          </TabsTrigger>
-          <TabsTrigger value="history" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
-            <History className="h-4 w-4 mr-2" />
-            Your History
-          </TabsTrigger>
-        </TabsList>
+      <div className="space-y-8">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+          {categories.map((cat) => (
+            <Button 
+              key={cat.name} 
+              variant={activeCategory === cat.name ? 'default' : 'outline'} 
+              className={cn(
+                "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
+                activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
+              )}
+              onClick={() => setActiveCategory(cat.name)}
+            >
+              <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
+              {cat.name}
+            </Button>
+          ))}
+        </div>
 
-        <TabsContent value="tasks" className="space-y-8 mt-0 outline-none">
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-            {categories.map((cat) => (
-              <Button 
-                key={cat.name} 
-                variant={activeCategory === cat.name ? 'default' : 'outline'} 
-                className={cn(
-                  "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-                  activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
+            <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
+              <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
+              <CardHeader className="pb-4">
+                <div className="flex justify-between items-start mb-3">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
+                    {task.category}
+                  </Badge>
+                  <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
+                    <Coins className="h-3 w-3 text-green-600" />
+                    <span className="text-green-600 font-bold text-xs">{task.points}</span>
+                  </div>
+                </div>
+                <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
+                <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
+                {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <span>Progress</span>
+                      <span>{task.watch_count || 0} / {task.video_ad_count} Ads</span>
+                    </div>
+                    <div className="w-full bg-primary/10 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-primary h-full transition-all duration-500" 
+                        style={{ width: `${Math.min(100, ((task.watch_count || 0) / task.video_ad_count) * 100)}%` }}
+                      />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground italic font-medium">Earn {task.points} points after {task.video_ad_count} watches.</p>
+                  </div>
                 )}
-                onClick={() => setActiveCategory(cat.name)}
-              >
-                <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
-                {cat.name}
-              </Button>
-            ))}
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
-              <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
-                <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
-                <CardHeader className="pb-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
-                      {task.category}
-                    </Badge>
-                    <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
-                      <Coins className="h-3 w-3 text-green-600" />
-                      <span className="text-green-600 font-bold text-xs">{task.points}</span>
-                    </div>
+              </CardHeader>
+              <CardContent className="mt-auto pt-0 pb-6 px-6">
+                <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="h-3 w-3" />
+                    <span>~5 mins</span>
                   </div>
-                  <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
-                  <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
-                  {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
-                    <div className="mt-3 space-y-2">
-                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        <span>Progress</span>
-                        <span>{task.watch_count || 0} / {task.video_ad_count} Ads</span>
-                      </div>
-                      <div className="w-full bg-primary/10 h-1.5 rounded-full overflow-hidden">
-                        <div 
-                          className="bg-primary h-full transition-all duration-500" 
-                          style={{ width: `${Math.min(100, ((task.watch_count || 0) / task.video_ad_count) * 100)}%` }}
-                        />
-                      </div>
-                      <p className="text-[10px] text-muted-foreground italic font-medium">Earn {task.points} points after {task.video_ad_count} watches.</p>
-                    </div>
-                  )}
-                </CardHeader>
-                <CardContent className="mt-auto pt-0 pb-6 px-6">
-                  <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="h-3 w-3" />
-                      <span>~5 mins</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="h-3 w-3" />
-                      <span>Verified</span>
-                    </div>
+                  <div className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-3 w-3" />
+                    <span>Verified</span>
                   </div>
-                  <Button 
-                    className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
-                    disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
-                    onClick={async () => {
-                      const { data: { user } } = await supabase.auth.getUser();
-                      if (!user) return;
+                </div>
+                <Button 
+                  className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                  disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                  onClick={async () => {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) return;
 
-                      // Special handling for video tasks
-                      if (task.category === 'Videos' && task.video_ad_count > 0) {
-                        if (task.vast_tag_url) {
-                          setActiveVastTask(task);
-                          return;
-                        }
-
-                        setCompletingTaskId(task.id);
-                        
-                        const { data, error } = await (supabase.rpc as any)('record_video_watch', {
-                          _user_id: user.id,
-                          _task_id: task.id
-                        });
-
-                        if (error) {
-                          toast.error(error.message);
-                        } else if (data && !(data as any).success) {
-                          toast.error((data as any).message);
-                        } else {
-                          const res = data as any;
-                          if (res.completed) {
-                            toast.success(res.message);
-                            queryClient.invalidateQueries({ queryKey: ["profile"] });
-                          } else {
-                            toast.success(res.message);
-                          }
-                          refetchTasks();
-                        }
-                        setCompletingTaskId(null);
+                    // Special handling for video tasks
+                    if (task.category === 'Videos' && task.video_ad_count > 0) {
+                      if (task.vast_tag_url) {
+                        setActiveVastTask(task);
                         return;
                       }
 
-                      const currentUiState = taskUiStates[task.id] || 'idle';
+                      setCompletingTaskId(task.id);
                       
-                      if (currentUiState === 'idle') {
-                        const taskAny = task as any;
-                        if (taskAny.link_url) {
-                          window.open(taskAny.link_url, '_blank');
-                        }
-                        
-                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
-                        
-                        // Wait for 5 seconds before allowing confirmation
-                        setTimeout(() => {
-                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                        }, 5000);
-                        return;
-                      }
+                      const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                        _user_id: user.id,
+                        _task_id: task.id
+                      });
 
-                      if (currentUiState === 'awaiting_confirmation') {
-                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
-                        setCompletingTaskId(task.id);
-                        
-                        const { data, error } = await (supabase.rpc as any)('submit_task', {
-                          _user_id: user.id,
-                          _task_id: task.id
-                        });
-
-                        if (error) {
-                          toast.error(error.message);
-                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                        } else if (data && !(data as any).success) {
-                          toast.error((data as any).message);
-                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                        } else {
-                          toast.success((data as any)?.message || "Task submitted!");
-                          refetchTasks();
+                      if (error) {
+                        toast.error(error.message);
+                      } else if (data && !(data as any).success) {
+                        toast.error((data as any).message);
+                      } else {
+                        const res = data as any;
+                        if (res.completed) {
+                          toast.success(res.message);
                           queryClient.invalidateQueries({ queryKey: ["profile"] });
-                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
+                        } else {
+                          toast.success(res.message);
                         }
-                        setCompletingTaskId(null);
+                        refetchTasks();
                       }
-                    }}
-                  >
-                    {task.status === 'verified' ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4 mr-2" />
-                        Completed
-                      </>
-                    ) : task.status === 'pending' ? (
-                      <>
-                        <Clock className="h-4 w-4 mr-2" />
-                        Verifying...
-                      </>
-                    ) : (task.category === 'Videos' && task.video_ad_count > 0) ? (
-                      completingTaskId === task.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        `Watch Ad (${task.watch_count || 0}/${task.video_ad_count})`
-                      )
-                    ) : (taskUiStates[task.id] === 'verifying') ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        Verifying...
-                      </>
-                    ) : (taskUiStates[task.id] === 'awaiting_confirmation') ? (
-                      "Confirm Completion"
-                    ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
+                      setCompletingTaskId(null);
+                      return;
+                    }
+
+                    const currentUiState = taskUiStates[task.id] || 'idle';
+                    
+                    if (currentUiState === 'idle') {
+                      const taskAny = task as any;
+                      if (taskAny.link_url) {
+                        window.open(taskAny.link_url, '_blank');
+                      }
+                      
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
+                      
+                      // Wait for 5 seconds before allowing confirmation
+                      setTimeout(() => {
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                      }, 5000);
+                      return;
+                    }
+
+                    if (currentUiState === 'awaiting_confirmation') {
+                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
+                      setCompletingTaskId(task.id);
+                      
+                      const { data, error } = await (supabase.rpc as any)('submit_task', {
+                        _user_id: user.id,
+                        _task_id: task.id
+                      });
+
+                      if (error) {
+                        toast.error(error.message);
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                      } else if (data && !(data as any).success) {
+                        toast.error((data as any).message);
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                      } else {
+                        toast.success((data as any)?.message || "Task submitted!");
+                        refetchTasks();
+                        queryClient.invalidateQueries({ queryKey: ["profile"] });
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
+                      }
+                      setCompletingTaskId(null);
+                    }
+                  }}
+                >
+                  {task.status === 'verified' ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Completed
+                    </>
+                  ) : task.status === 'pending' ? (
+                    <>
+                      <Clock className="h-4 w-4 mr-2" />
+                      Verifying...
+                    </>
+                  ) : (task.category === 'Videos' && task.video_ad_count > 0) ? (
+                    completingTaskId === task.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      "Start Earning"
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
-            )) : !isLoading && (
-              <div className="col-span-full py-20 text-center space-y-4">
-                <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
-                  <Coins className="h-8 w-8" />
-                </div>
-                <div className="space-y-1">
-                  <p className="font-bold text-foreground">No tasks available</p>
-                  <p className="text-sm text-muted-foreground font-medium">Check back later for new earning opportunities.</p>
-                </div>
+                      `Watch Ad (${task.watch_count || 0}/${task.video_ad_count})`
+                    )
+                  ) : (taskUiStates[task.id] === 'verifying') ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Verifying...
+                    </>
+                  ) : (taskUiStates[task.id] === 'awaiting_confirmation') ? (
+                    "Confirm Completion"
+                  ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Start Earning"
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          )) : !isLoading && (
+            <div className="col-span-full py-20 text-center space-y-4">
+              <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
+                <Coins className="h-8 w-8" />
               </div>
-            )}
-            
-            {isLoading && Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i} className="border-none shadow-sm bg-card h-[280px] animate-pulse">
-                <div className="h-1.5 w-full bg-muted/50" />
-                <div className="p-6 space-y-4">
-                  <div className="flex justify-between">
-                    <div className="h-4 w-16 bg-muted rounded" />
-                    <div className="h-4 w-12 bg-muted rounded" />
-                  </div>
-                  <div className="h-6 w-3/4 bg-muted rounded" />
-                  <div className="h-16 w-full bg-muted rounded" />
-                  <div className="h-10 w-full bg-muted rounded mt-auto" />
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          {activeVastTask && (
-            <VastAdModal
-              isOpen={!!activeVastTask}
-              onClose={() => setActiveVastTask(null)}
-              vastTagUrl={activeVastTask.vast_tag_url}
-              taskTitle={activeVastTask.title}
-              onComplete={async () => {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
-
-                const { data, error } = await (supabase.rpc as any)('record_video_watch', {
-                  _user_id: user.id,
-                  _task_id: activeVastTask.id
-                });
-
-                if (error) {
-                  toast.error(error.message);
-                } else {
-                  const res = data as any;
-                  if (res.completed) {
-                    toast.success(res.message);
-                    queryClient.invalidateQueries({ queryKey: ["profile"] });
-                  } else {
-                    toast.success(res.message);
-                  }
-                  refetchTasks();
-                }
-                setActiveVastTask(null);
-              }}
-            />
+              <div className="space-y-1">
+                <p className="font-bold text-foreground">No tasks available</p>
+                <p className="text-sm text-muted-foreground font-medium">Check back later for new earning opportunities.</p>
+              </div>
+            </div>
           )}
-        </TabsContent>
-
-        <TabsContent value="history" className="space-y-8 mt-0 outline-none">
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* Points Transactions */}
-            <Card className="border-none shadow-sm bg-card overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary">
-                    <TrendingUp className="h-5 w-5" />
-                  </div>
-                  <CardTitle className="text-lg font-black uppercase tracking-tight">Points Flow</CardTitle>
+          
+          {isLoading && Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="border-none shadow-sm bg-card h-[280px] animate-pulse">
+              <div className="h-1.5 w-full bg-muted/50" />
+              <div className="p-6 space-y-4">
+                <div className="flex justify-between">
+                  <div className="h-4 w-16 bg-muted rounded" />
+                  <div className="h-4 w-12 bg-muted rounded" />
                 </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                {isTransactionsLoading ? (
-                  <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
-                ) : transactions?.length ? (
-                  <div className="divide-y divide-border/40">
-                    {transactions.map((tx: any) => (
-                      <div 
-                        key={tx.id} 
-                        className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
-                        onClick={() => {
-                          toast.info(
-                            <div className="space-y-2">
-                              <p className="font-bold text-sm">Transaction Details</p>
-                              <div className="text-xs space-y-1 font-medium">
-                                <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Description:</span> {tx.description}</p>
-                                <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Amount:</span> {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
-                                <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Type:</span> {tx.type}</p>
-                                <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Date:</span> {new Date(tx.created_at).toLocaleString()}</p>
-                                <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">ID:</span> {tx.id.split('-')[0]}...</p>
-                              </div>
-                            </div>,
-                            { duration: 5000 }
-                          );
-                        }}
-                      >
-                        <div className="space-y-1">
-                          <p className="font-bold text-sm text-foreground leading-none group-hover:text-primary transition-colors">{tx.description}</p>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(tx.created_at).toLocaleDateString()}</p>
-                        </div>
-                        <div className={cn(
-                          "font-black text-sm px-3 py-1 rounded-lg",
-                          tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"
-                        )}>
-                          {tx.amount > 0 ? `+${tx.amount}` : tx.amount} PTS
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-12 text-center text-muted-foreground">No points activity yet.</div>
-                )}
-              </CardContent>
+                <div className="h-6 w-3/4 bg-muted rounded" />
+                <div className="h-16 w-full bg-muted rounded" />
+                <div className="h-10 w-full bg-muted rounded mt-auto" />
+              </div>
             </Card>
+          ))}
+        </div>
 
-            {/* Redemptions */}
-            <Card className="border-none shadow-sm bg-card overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary">
-                    <Gift className="h-5 w-5" />
-                  </div>
-                  <CardTitle className="text-lg font-black uppercase tracking-tight">Reward Claims</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                {isRedemptionsLoading ? (
-                  <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
-                ) : redemptions?.length ? (
-                  <div className="divide-y divide-border/40">
-                    {redemptions.map((red: any) => (
-                      <div key={red.id} className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-xl bg-accent/50 overflow-hidden flex items-center justify-center">
-                            {red.rewards?.image_url ? (
-                              <img src={red.rewards.image_url} alt="" className="h-full w-full object-cover" />
-                            ) : (
-                              <Gift className="h-5 w-5 text-muted-foreground/30" />
-                            )}
-                          </div>
-                          <div className="space-y-1">
-                            <p className="font-bold text-sm text-foreground leading-none">{red.rewards?.title}</p>
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(red.created_at).toLocaleDateString()}</p>
-                          </div>
-                        </div>
-                        <Badge className={cn(
-                          "font-black uppercase text-[10px] tracking-wider px-2 py-0.5",
-                          red.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
-                          red.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
-                          red.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
-                        )}>
-                          {red.status}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-12 text-center text-muted-foreground">No rewards claimed yet.</div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+        {activeVastTask && (
+          <VastAdModal
+            isOpen={!!activeVastTask}
+            onClose={() => setActiveVastTask(null)}
+            vastTagUrl={activeVastTask.vast_tag_url}
+            taskTitle={activeVastTask.title}
+            onComplete={async () => {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) return;
+
+              const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                _user_id: user.id,
+                _task_id: activeVastTask.id
+              });
+
+              if (error) {
+                toast.error(error.message);
+              } else {
+                const res = data as any;
+                if (res.completed) {
+                  toast.success(res.message);
+                  queryClient.invalidateQueries({ queryKey: ["profile"] });
+                } else {
+                  toast.success(res.message);
+                }
+                refetchTasks();
+              }
+              setActiveVastTask(null);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

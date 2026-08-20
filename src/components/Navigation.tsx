@@ -125,6 +125,7 @@ export function Navigation() {
       items: [
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Earn Points", href: "/earn", icon: Coins },
+        { name: "Transactions", href: "/transactions", icon: History },
         { name: "Redeem", href: "/redeem", icon: Gift },
         { name: "Referral", href: "/refer", icon: Share2 },
       ]
@@ -267,7 +268,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
-                <Link to="/earn" search={{ tab: 'history' }} className="flex items-center w-full">
+                <Link to="/transactions" className="flex items-center w-full">
                   <History className="mr-3 h-4 w-4" />
                   Points History
                 </Link>
@@ -330,6 +331,7 @@ export function Navigation() {
             {location.pathname === "/refer" && "Referral Program"}
             {location.pathname === "/redeem" && "Redeem Rewards"}
             {location.pathname === "/profile" && "Your Profile"}
+            {location.pathname === "/transactions" && "Points History"}
             {location.pathname === "/settings" && "Account Settings"}
             {location.pathname === "/admin" && "Admin Control Panel"}
           </h1>
@@ -378,7 +380,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
-                <Link to="/earn" search={{ tab: 'history' }} className="flex items-center w-full">
+                <Link to="/transactions" className="flex items-center w-full">
                   <History className="mr-3 h-4 w-4" strokeWidth={2.5} />
                   Points History
                 </Link>
