@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Gift, Sparkles, Coins, Loader2 } from "lucide-react";
+import { Gift, Sparkles, Coins, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { useQueryClient } from "@tanstack/react-query";
