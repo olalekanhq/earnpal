@@ -29,6 +29,7 @@ import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
 import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
+import { ReferralsManager } from "./admin/ReferralsManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart } from "lucide-react";
 
