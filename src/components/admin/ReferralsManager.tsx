@@ -261,8 +261,8 @@ export function ReferralsManager() {
                           Pending Socials
                         </Badge>
                         <div className="flex gap-1">
-                          <Badge variant="ghost" className={cn("text-[8px] px-1", event.referee?.twitter_handle ? "text-green-600" : "text-red-400")}>TW</Badge>
-                          <Badge variant="ghost" className={cn("text-[8px] px-1", event.referee?.telegram_handle ? "text-green-600" : "text-red-400")}>TG</Badge>
+                          <Badge variant="outline" className={cn("text-[8px] px-1 border-none", event.referee?.twitter_handle ? "text-green-600 bg-green-50" : "text-red-400 bg-red-50")}>TW</Badge>
+                          <Badge variant="outline" className={cn("text-[8px] px-1 border-none", event.referee?.telegram_handle ? "text-green-600 bg-green-50" : "text-red-400 bg-red-50")}>TG</Badge>
                         </div>
                       </div>
                     )}
