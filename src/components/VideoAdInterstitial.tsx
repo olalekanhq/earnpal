@@ -172,8 +172,12 @@ export function VideoAdInterstitial() {
         triggerAd();
         sessionStorage.setItem('interstitial_triggered', 'true');
       }, 3000); // 3 second delay before showing
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+      };
     }
+    return undefined;
+
   }, [location.pathname, triggerAd]);
 
   if (!isVisible) return null;
