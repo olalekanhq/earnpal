@@ -34,6 +34,10 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [countryCode, setCountryCode] = useState("+234");
   const [phoneBody, setPhoneBody] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [newPassword, setNewPassword] = useState("");
