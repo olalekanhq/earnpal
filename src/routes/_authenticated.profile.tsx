@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe, X } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe, X, History as HistoryIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -423,7 +423,7 @@ function ProfilePage() {
                   <Link to="/earn" search={{ tab: "history" }} className="p-4 bg-accent/30 rounded-2xl border border-border/50 flex items-center justify-between group cursor-pointer hover:bg-accent/50 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="bg-accent p-2 rounded-xl text-foreground shadow-sm group-hover:scale-110 transition-transform">
-                        <History className="h-4 w-4" />
+                        <HistoryIcon className="h-4 w-4" />
                       </div>
                       <div className="text-left">
                         <p className="text-sm font-black text-foreground leading-tight">Transaction History</p>
