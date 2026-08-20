@@ -13,17 +13,19 @@ export const Route = createFileRoute("/_authenticated/admin")({
       });
     }
 
-    const { data: isAdmin } = await supabase.rpc("has_role", {
+    // Double check with has_role RPC
+    const { data: isAdmin, error: adminError } = await supabase.rpc("has_role", {
       _user_id: user.id,
       _role: 'admin'
     });
 
-    const { data: isModerator } = await supabase.rpc("has_role", {
+    const { data: isModerator, error: modError } = await supabase.rpc("has_role", {
       _user_id: user.id,
       _role: 'moderator'
     });
 
-    if (!isAdmin && !isModerator) {
+    if (adminError || modError || (!isAdmin && !isModerator)) {
+      console.error("Access denied to admin panel for user:", user.id);
       throw redirect({ to: "/" });
     }
   },
