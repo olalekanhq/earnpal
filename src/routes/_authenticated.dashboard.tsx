@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
       { property: "og:title", content: "My Dashboard | Earn Pal" },
       { property: "og:description", content: "Check your progress and redeem points for amazing prizes." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Dashboard&description=Track your rewards and streaks.` },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
