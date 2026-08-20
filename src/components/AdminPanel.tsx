@@ -254,35 +254,35 @@ export function AdminPanel() {
         </div>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <UsersManager />
+          {activeTab === 'users' && <UsersManager />}
         </TabsContent>
 
         <TabsContent value="fraud" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <FraudManager />
+          {activeTab === 'fraud' && <FraudManager />}
         </TabsContent>
         
         <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <TasksManager />
+          {activeTab === 'tasks' && <TasksManager />}
         </TabsContent>
         
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RewardsManager />
+          {activeTab === 'rewards' && <RewardsManager />}
         </TabsContent>
         
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RedemptionsManager />
+          {activeTab === 'redemptions' && <RedemptionsManager />}
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <AnalyticsView />
+          {activeTab === 'analytics' && <AnalyticsView />}
         </TabsContent>
 
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <ReferralsManager />
+          {activeTab === 'referrals' && <ReferralsManager />}
         </TabsContent>
 
         <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <PlatformSettings />
+          {activeTab === 'settings' && <PlatformSettings />}
         </TabsContent>
       </Tabs>
     </div>
