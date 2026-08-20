@@ -64,7 +64,7 @@ export function RedemptionsManager() {
         title: status === 'approved' ? "Redemption Approved!" : "Redemption Rejected",
         message: status === 'approved' 
           ? `Your request for "${rewardTitle}" has been approved.` 
-          : `Your request for "${rewardTitle}" was rejected. The points have been returned to your balance.`,
+          : `Your request for "${rewardTitle}" was rejected. ${result.refunded ? 'The points have been returned to your balance.' : ''}`,
         type: "redemption"
       });
 
