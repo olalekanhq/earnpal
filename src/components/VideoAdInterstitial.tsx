@@ -140,7 +140,7 @@ export function VideoAdInterstitial() {
     );
 
     const adsRequest = new window.google.ima.AdsRequest();
-    adsRequest.adTagUrl = customVastUrl || VAST_TAG_URL;
+    adsRequest.adTagUrl = (customVastUrl || VAST_TAG_URL).trim();
     adsRequest.linearAdSlotWidth = window.innerWidth;
     adsRequest.linearAdSlotHeight = window.innerHeight;
     adsRequest.nonLinearAdSlotWidth = window.innerWidth;
