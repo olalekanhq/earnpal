@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminPanel } from "@/components/AdminPanel";
+import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { z } from "zod";
 
 const adminSearchSchema = z.object({
@@ -29,15 +30,26 @@ export const Route = createFileRoute("/_authenticated/admin")({
     }
   },
 
-  component: () => (
-    <div className="min-h-screen bg-accent/5 pb-12">
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
-        <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Admin Panel</h1>
-          <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
-        </div>
-        <AdminPanel />
+  component: () => {
+    const { tab } = Route.useSearch();
+    const navigate = Route.useNavigate();
+
+    return (
+      <div className="flex min-h-screen bg-accent/5">
+        <AdminSidebar />
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+            <div>
+              <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Admin Panel</h1>
+              <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
+            </div>
+            <AdminPanel 
+              activeTab={tab} 
+              onTabChange={(newTab) => navigate({ search: { tab: newTab } })} 
+            />
+          </div>
+        </main>
       </div>
-    </div>
-  ),
+    );
+  },
 });
