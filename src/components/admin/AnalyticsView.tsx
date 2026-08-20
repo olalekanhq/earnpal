@@ -86,7 +86,7 @@ export function AnalyticsView() {
         </CardHeader>
         <CardContent className="px-0 pb-0 h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={analytics?.funnel} layout="vertical" margin={{ left: 40, right: 40 }}>
+            <BarChart data={analytics?.funnel || []} layout="vertical" margin={{ left: 40, right: 40 }}>
               <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis type="number" hide />
               <YAxis 
