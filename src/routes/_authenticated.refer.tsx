@@ -28,7 +28,6 @@ export const Route = createFileRoute("/_authenticated/refer")({
 });
 
 function ReferralPage() {
-  const [copied, setCopied] = useState(false);
   
   const { data: profile } = useQuery({
     queryKey: ["profile"],
