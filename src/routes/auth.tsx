@@ -126,19 +126,17 @@ function AuthPage() {
     setReferralCode(val);
   };
 
+  const debouncedValidate = useDebouncedCallback((code: string) => {
+    validateReferral(code);
+  }, 500);
+
   useEffect(() => {
-    let timeout: any;
     if (referralCode.trim().length >= 3) {
-      timeout = setTimeout(() => {
-        validateReferral(referralCode);
-      }, 500);
+      debouncedValidate(referralCode);
     } else if (referralCode.trim().length === 0) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
     }
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
-  }, [referralCode]);
+  }, [referralCode, debouncedValidate]);
 
 
   const validate = (type: 'login' | 'signup') => {
