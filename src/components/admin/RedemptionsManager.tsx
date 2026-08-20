@@ -152,40 +152,64 @@ export function RedemptionsManager() {
                     </Badge>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-right">
-                    {r.status === 'pending' && (
-                      <div className="flex justify-end gap-2">
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
-                          title="Approve"
-                          onClick={() => updateStatusMutation.mutate({ 
-                            id: r.id, 
-                            status: 'approved', 
-                            userId: r.user_id,
-                            rewardTitle: r.rewards?.title 
-                          })}
-                          disabled={updateStatusMutation.isPending}
+                    <div className="flex justify-end gap-2">
+                      {r.status === 'pending' ? (
+                        <>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                            title="Approve"
+                            onClick={() => updateStatusMutation.mutate({ 
+                              id: r.id, 
+                              status: 'approved', 
+                              userId: r.user_id,
+                              rewardTitle: r.rewards?.title 
+                            })}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/5"
+                            title="Reject"
+                            onClick={() => updateStatusMutation.mutate({ 
+                              id: r.id, 
+                              status: 'rejected', 
+                              userId: r.user_id,
+                              rewardTitle: r.rewards?.title 
+                            })}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/5"
+                          title="Review Details"
+                          onClick={() => {
+                            toast.info(
+                              <div className="space-y-2">
+                                <p className="font-bold text-sm">Redemption Review</p>
+                                <div className="text-xs space-y-1 font-medium">
+                                  <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">User:</span> {r.profiles?.full_name || r.profiles?.username}</p>
+                                  <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Reward:</span> {r.rewards?.title}</p>
+                                  <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Status:</span> {r.status}</p>
+                                  <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Processed:</span> {format(new Date(r.created_at), "MMM d, yyyy HH:mm")}</p>
+                                </div>
+                              </div>
+                            );
+                          }}
                         >
-                          <Check className="h-4 w-4" />
+                          <Search className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/5"
-                          title="Reject"
-                          onClick={() => updateStatusMutation.mutate({ 
-                            id: r.id, 
-                            status: 'rejected', 
-                            userId: r.user_id,
-                            rewardTitle: r.rewards?.title 
-                          })}
-                          disabled={updateStatusMutation.isPending}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
