@@ -83,18 +83,7 @@ function ReferralPage() {
     enabled: !!profile?.id,
   });
 
-  const referralCount = referrals?.length || 0;
   const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/?ref=${profile?.referral_code}` : '';
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(referralLink);
-    setCopied(true);
-    toast.success("Referral link copied!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const nextMilestone = 10;
-  const progress = Math.min((referralCount / nextMilestone) * 100, 100);
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
