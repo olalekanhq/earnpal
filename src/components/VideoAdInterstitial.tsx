@@ -164,23 +164,33 @@ export function VideoAdInterstitial() {
   // Trigger ad logic: For now, we trigger it once on mount of a dashboard or earn page
   // as a demonstration of the interstitial.
   useEffect(() => {
-    // Basic guard
     if (typeof window === 'undefined') return undefined;
     
-    // Check path
-    const path = window.location.pathname;
-    const shouldTrigger = path.includes('dashboard') || path.includes('earn');
-    const hasTriggered = sessionStorage.getItem('interstitial_triggered');
-    
-    if (shouldTrigger && !hasTriggered) {
-      const timer = setTimeout(() => {
-        triggerAd();
-        sessionStorage.setItem('interstitial_triggered', 'true');
-      }, 3000); 
-      return () => clearTimeout(timer);
-    }
-    return undefined;
+    // Debug mount
+    console.log('VideoAdInterstitial: component mounted/updated', location.pathname);
+
+    const checkAndTrigger = () => {
+      const path = location.pathname;
+      const shouldTrigger = ['/dashboard', '/earn'].includes(path);
+      const hasTriggered = sessionStorage.getItem('interstitial_triggered');
+      
+      console.log('VideoAdInterstitial Trace:', { path, shouldTrigger, hasTriggered });
+
+      if (shouldTrigger && !hasTriggered) {
+        console.log('VideoAdInterstitial: Setting timer');
+        const timer = setTimeout(() => {
+          console.log('VideoAdInterstitial: Firing triggerAd');
+          triggerAd();
+          sessionStorage.setItem('interstitial_triggered', 'true');
+        }, 3000); 
+        return () => clearTimeout(timer);
+      }
+      return undefined;
+    };
+
+    return checkAndTrigger();
   }, [location.pathname, triggerAd]);
+
 
 
 
