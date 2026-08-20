@@ -102,20 +102,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: async () => {
-    if (typeof window !== 'undefined') {
-      const { hostname, protocol, pathname, search } = window.location;
-      const primaryDomain = 'earnpal.qd.je';
-      const currentHost = window.location.hostname;
-      
-      // Redirect from Lovable preview URLs and www to primary domain
-      const isLovableUrl = currentHost.includes('lovable.app');
-      const isWww = currentHost === `www.${primaryDomain}`;
-      const isNotHttps = window.location.protocol === 'http:';
-      
-      if ((isLovableUrl || isWww || (currentHost === primaryDomain && isNotHttps)) && !window.location.pathname.startsWith('/dnsstatus')) {
-        window.location.replace(`https://${primaryDomain}${window.location.pathname}${window.location.search}`);
-      }
-    }
+    // Domain redirects disabled - site works independently on all URLs
   },
   head: () => {
     const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.qd.je';
