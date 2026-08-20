@@ -76,6 +76,7 @@ function AuthPage() {
   }, [search.mode, search.ref]);
 
   const validateReferral = async (code: string) => {
+    console.log("VALIDATING REFERRAL:", code);
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
@@ -86,9 +87,13 @@ function AuthPage() {
       const rpcArgs: any = { _code: code.trim() };
       const { data, error: rpcError } = await supabase.rpc('check_referral_code', rpcArgs);
       
-      if (rpcError) throw rpcError;
+      if (rpcError) {
+        console.error("RPC ERROR:", rpcError);
+        throw rpcError;
+      }
       
       const result = Array.isArray(data) ? data[0] : data;
+      console.log("RPC RESULT:", result);
       
       if (result && result.is_valid) {
         setReferralStatus({ 
