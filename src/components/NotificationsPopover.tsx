@@ -120,7 +120,7 @@ export function NotificationsPopover() {
                 <div 
                   key={notification.id} 
                   className={`p-4 transition-colors hover:bg-muted/50 cursor-pointer ${!notification.is_read ? 'bg-primary/5' : ''}`}
-                  onClick={() => !notification.is_read && markAsRead.mutate(notification.id)}
+                  onClick={() => handleNotificationClick(notification)}
                 >
                   <p className="text-sm font-medium">{notification.title}</p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
