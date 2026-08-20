@@ -16,9 +16,10 @@ export function RedemptionsManager() {
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
 
-  const { data: redemptions, isLoading } = useQuery({
+  const { data: redemptions, isLoading, error: queryError } = useQuery({
     queryKey: ["admin-redemptions"],
     queryFn: async () => {
+      console.log("Fetching admin redemptions...");
       const { data, error } = await supabase
         .from("redemptions")
         .select(`
@@ -28,7 +29,11 @@ export function RedemptionsManager() {
         `)
         .order("created_at", { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching redemptions:", error);
+        throw error;
+      }
+      console.log("Fetched redemptions:", data);
       return data;
     }
   });
