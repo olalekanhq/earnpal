@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router"; <span>\u2063</span>
 import { 
   Coins, 
   LayoutDashboard, 

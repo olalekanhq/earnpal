@@ -105,13 +105,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     if (typeof window !== 'undefined') {
       const { hostname, protocol, pathname, search } = window.location;
       const primaryDomain = 'earnpal.qd.je';
+      const currentHost = window.location.hostname;
       
-      // Redirect www to non-www and ensure HTTPS
-      const isWww = hostname === `www.${primaryDomain}`;
-      const isNotHttps = protocol === 'http:';
+      // Redirect from Lovable preview URLs and www to primary domain
+      const isLovableUrl = currentHost.includes('lovable.app');
+      const isWww = currentHost === `www.${primaryDomain}`;
+      const isNotHttps = window.location.protocol === 'http:';
       
-      if (isWww || (hostname === primaryDomain && isNotHttps)) {
-        window.location.replace(`https://${primaryDomain}${pathname}${search}`);
+      if (isLovableUrl || isWww || (currentHost === primaryDomain && isNotHttps)) {
+        window.location.replace(`https://${primaryDomain}${window.location.pathname}${window.location.search}`);
       }
     }
   },
