@@ -204,6 +204,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          rejection_reason: string | null
           reward_id: string
           status: string
           user_id: string
@@ -211,6 +212,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          rejection_reason?: string | null
           reward_id: string
           status?: string
           user_id: string
@@ -218,6 +220,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          rejection_reason?: string | null
           reward_id?: string
           status?: string
           user_id?: string
@@ -529,7 +532,11 @@ export type Database = {
       }
       lookup_login_email: { Args: { _username: string }; Returns: string }
       process_redemption_status_change: {
-        Args: { _new_status: string; _redemption_id: string }
+        Args: {
+          _new_status: string
+          _redemption_id: string
+          _rejection_reason?: string
+        }
         Returns: Json
       }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
