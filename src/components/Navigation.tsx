@@ -268,7 +268,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
-                <Link to="/earn" search={{ tab: 'history' }} className="flex items-center w-full">
+                <Link to="/transactions" className="flex items-center w-full">
                   <History className="mr-3 h-4 w-4" />
                   Points History
                 </Link>
