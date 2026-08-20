@@ -193,7 +193,6 @@ export function TasksManager() {
                     <option value="survey">Survey</option>
                     <option value="offer">Offer</option>
                     <option value="Videos">Videos</option>
-                    <option value="disabled">Disabled (Hidden)</option>
                   </select>
                 </div>
               </div>
