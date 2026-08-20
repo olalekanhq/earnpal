@@ -78,73 +78,53 @@ function AuthPage() {
     }
   }, [search.ref]);
 
-  const validateReferral = useMemo(() => {
-    return async (code: string) => {
-      if (!code || code.trim().length < 3) {
-        setReferralStatus({ loading: false, owner: null, error: false, message: null });
-        return;
-      }
+  const validateReferral = async (code: string) => {
+    if (!code || code.trim().length < 3) {
+      setReferralStatus({ loading: false, owner: null, error: false, message: null });
+      return;
+    }
+    
+    setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
+    try {
+      const { data, error: rpcError } = await supabase.rpc('check_referral_code', { _code: code.trim() });
       
-      setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
-      try {
-        const rpcArgs: any = { _code: code.trim() };
-        const { data, error: rpcError } = await supabase.rpc('check_referral_code', rpcArgs);
-        
-        if (rpcError) throw rpcError;
-        
-        const result = Array.isArray(data) ? data[0] : data;
-        
-        if (result && result.is_valid) {
-          setReferralStatus({ 
-            loading: false, 
-            owner: result.username, 
-            error: false, 
-            message: result.message || `Referrer found: ${result.username}` 
-          });
-        } else {
-          setReferralStatus({ 
-            loading: false, 
-            owner: null, 
-            error: true, 
-            message: result?.message || "This referral code does not exist or is invalid." 
-          });
-        }
-      } catch (err) {
-        console.error("Referral validation error:", err);
+      if (rpcError) throw rpcError;
+      
+      const result = Array.isArray(data) ? data[0] : data;
+      
+      if (result && result.is_valid) {
+        setReferralStatus({ 
+          loading: false, 
+          owner: result.username, 
+          error: false, 
+          message: result.message || `Referrer found: ${result.username}` 
+        });
+      } else {
         setReferralStatus({ 
           loading: false, 
           owner: null, 
           error: true, 
-          message: "Unable to validate referral code. Please try again." 
+          message: result?.message || "This referral code does not exist or is invalid." 
         });
       }
-    };
-  }, []);
+    } catch (err) {
+      console.error("Referral validation error:", err);
+      setReferralStatus({ 
+        loading: false, 
+        owner: null, 
+        error: true, 
+        message: "Unable to validate referral code. Please try again." 
+      });
+    }
+  };
+
+  const debouncedValidate = useDebouncedCallback(validateReferral, 500);
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
+    debouncedValidate(val);
   };
-
-  useEffect(() => {
-    let timeoutId: any;
-    
-    const runValidation = async (code: string) => {
-      await validateReferral(code);
-    };
-
-    if (referralCode.trim().length >= 3) {
-      timeoutId = setTimeout(() => {
-        runValidation(referralCode);
-      }, 500);
-    } else if (referralCode.trim().length === 0) {
-      setReferralStatus({ loading: false, owner: null, error: false, message: null });
-    }
-    
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [referralCode]);
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
