@@ -112,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       const isWww = currentHost === `www.${primaryDomain}`;
       const isNotHttps = window.location.protocol === 'http:';
       
-      if (isLovableUrl || isWww || (currentHost === primaryDomain && isNotHttps)) {
+      if ((isLovableUrl || isWww || (currentHost === primaryDomain && isNotHttps)) && !window.location.pathname.startsWith('/dns-status')) {
         window.location.replace(`https://${primaryDomain}${window.location.pathname}${window.location.search}`);
       }
     }
