@@ -24,7 +24,12 @@ interface AppSetting {
   updated_at: string | null;
 }
 
+import { useAuth } from "@/hooks/use-auth";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 export function PlatformSettings() {
+  const { isAdmin, isLoading: isAuthLoading } = useAuth();
   const queryClient = useQueryClient();
   const [localValues, setLocalValues] = useState<Record<string, any>>({});
 
@@ -69,10 +74,24 @@ export function PlatformSettings() {
     updateMutation.mutate({ key, value: localValues[key] });
   };
 
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return (
       <div className="flex h-[400px] w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-2xl">
+          <AlertCircle className="h-5 w-5" />
+          <AlertTitle className="font-black uppercase tracking-tight ml-2">Access Denied</AlertTitle>
+          <AlertDescription className="font-medium ml-2">
+            You do not have the required permissions to view or edit platform settings. Only administrators can access this section.
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
