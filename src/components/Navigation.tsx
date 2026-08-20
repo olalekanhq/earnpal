@@ -362,7 +362,7 @@ export function Navigation() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-border/40 my-1" />
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
-                <Link to="/profile" className="flex items-center w-full">
+                <Link to="/profile" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
                   <User className="mr-3 h-4 w-4" />
                   Profile
                 </Link>
