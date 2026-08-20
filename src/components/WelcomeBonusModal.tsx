@@ -73,6 +73,12 @@ export function WelcomeBonusModal() {
       });
 
       toast.success("Welcome bonus claimed! +50 points");
+      // Use any cast to bypass type errors until types are regenerated
+      (supabase.from('analytics_events' as any) as any).insert({ 
+        user_id: user.id,
+        event_name: 'welcome_bonus_claimed', 
+        metadata: { amount: 50 } 
+      }).then();
       setIsOpen(false);
       
       // Invalidate queries to update balance
