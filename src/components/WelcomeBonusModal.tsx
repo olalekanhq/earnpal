@@ -18,6 +18,7 @@ export function WelcomeBonusModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const [bonusAmount, setBonusAmount] = useState(50);
   const queryClient = useQueryClient();
 
   useEffect(() => {
