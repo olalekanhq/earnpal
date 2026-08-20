@@ -5,10 +5,17 @@ import { History, Coins, Loader2, Gift, TrendingUp, ArrowRight } from "lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { showTransactionDetails } from "@/utils/transaction-details";
+import { TransactionDetailModal, Transaction } from "@/components/TransactionDetailModal";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+
+const transactionSearchSchema = z.object({
+  transactionId: z.string().optional(),
+});
 
 export const Route = createFileRoute("/_authenticated/transactions")({
+  validateSearch: (search) => transactionSearchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "Transaction History | Earn Pal" },
@@ -19,6 +26,10 @@ export const Route = createFileRoute("/_authenticated/transactions")({
 });
 
 function TransactionsPage() {
+  const { transactionId } = Route.useSearch();
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
     queryKey: ["transactions"],
     queryFn: async () => {
@@ -32,6 +43,36 @@ function TransactionsPage() {
       return data || [];
     },
   });
+
+  useEffect(() => {
+    if (transactionId && transactions) {
+      const tx = transactions.find((t: any) => t.id === transactionId);
+      if (tx) {
+        setSelectedTx(tx);
+        setIsModalOpen(true);
+      } else {
+        // If not in the current list (e.g. pagination or old), fetch it individually
+        const fetchIndividual = async () => {
+          const { data, error } = await supabase
+            .from("points_transactions")
+            .select("*")
+            .eq("id", transactionId)
+            .single();
+          
+          if (data && !error) {
+            setSelectedTx(data);
+            setIsModalOpen(true);
+          }
+        };
+        fetchIndividual();
+      }
+    }
+  }, [transactionId, transactions]);
+
+  const handleTxClick = (tx: Transaction) => {
+    setSelectedTx(tx);
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-4xl mx-auto space-y-8">
@@ -58,7 +99,7 @@ function TransactionsPage() {
                 <div 
                   key={tx.id} 
                   className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
-                  onClick={() => showTransactionDetails(tx)}
+                  onClick={() => handleTxClick(tx)}
                 >
                   <div className="space-y-1">
                     <p className="font-bold text-sm text-foreground leading-none group-hover:text-primary transition-colors">{tx.description}</p>
@@ -78,6 +119,12 @@ function TransactionsPage() {
           )}
         </CardContent>
       </Card>
+
+      <TransactionDetailModal 
+        transaction={selectedTx} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
