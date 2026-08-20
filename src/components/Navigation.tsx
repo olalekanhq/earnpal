@@ -44,6 +44,41 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
+// Mobile Menu Overlay Component
+const MobileMenuOverlay = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => void, children: React.ReactNode }) => (
+  <div 
+    className={cn(
+      "md:hidden fixed inset-0 z-[60] flex transition-all duration-500 ease-in-out",
+      isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+    )}
+  >
+    <div 
+      className={cn(
+        "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500 ease-in-out",
+        isOpen ? "opacity-100" : "opacity-0"
+      )} 
+      onClick={onClose} 
+    />
+    <div 
+      className={cn(
+        "relative w-72 h-full bg-card shadow-2xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex flex-col",
+        isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+      )}
+    >
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="absolute right-2 top-2"
+        onClick={onClose}
+        aria-label="Close menu"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+      {children}
+    </div>
+  </div>
+);
+
 export function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -117,38 +152,13 @@ export function Navigation() {
         </nav>
 
         {/* Landing Page Mobile Overlay Menu */}
-        <div 
-          className={cn(
-            "md:hidden fixed inset-0 z-[60] flex transition-opacity duration-300",
-            isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          )}
-        >
-          <div 
-            className={cn(
-              "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
-              isMobileMenuOpen ? "opacity-100" : "opacity-0"
-            )} 
-            onClick={() => setIsMobileMenuOpen(false)} 
-          />
-          <div 
-            className={cn(
-              "relative w-72 h-full bg-card shadow-2xl transition-transform duration-300 ease-in-out p-6 flex flex-col",
-              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            )}
-          >
-            <div className="flex items-center justify-between mb-8">
+        <MobileMenuOverlay isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+          <div className="p-6 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl text-primary uppercase tracking-tighter">
                 <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
                 <span>Earn Pal</span>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </Button>
             </div>
 
             <nav className="flex flex-col gap-4">
@@ -188,10 +198,11 @@ export function Navigation() {
               </Button>
             </div>
           </div>
-        </div>
+        </MobileMenuOverlay>
       </>
     );
   }
+
 
 
   const handleLogout = async () => {
@@ -368,37 +379,9 @@ export function Navigation() {
       </div>
 
       {/* Mobile Overlay Sidebar (Off-canvas Drawer) */}
-      <div 
-        className={cn(
-          "md:hidden fixed inset-0 z-50 flex transition-opacity duration-300",
-          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-      >
-        <div 
-          className={cn(
-            "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
-            isMobileMenuOpen ? "opacity-100" : "opacity-0"
-          )} 
-          onClick={() => setIsMobileMenuOpen(false)} 
-        />
-        <div 
-          className={cn(
-            "relative w-72 h-full bg-card shadow-2xl transition-transform duration-300 ease-in-out",
-            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          )}
-        >
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="absolute right-2 top-2"
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-          <SidebarContent />
-        </div>
-      </div>
+      <MobileMenuOverlay isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+        <SidebarContent />
+      </MobileMenuOverlay>
 
       {/* Desktop Sidebar (Persistent) */}
       <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-card border-r border-border/50">
