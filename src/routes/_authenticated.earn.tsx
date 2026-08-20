@@ -38,7 +38,7 @@ function EarnPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
+      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true).neq("category", "disabled");
       const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
       const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
