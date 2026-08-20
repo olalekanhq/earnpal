@@ -136,7 +136,7 @@ export function RedemptionsManager() {
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Cost</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Date</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
+              
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -163,95 +163,73 @@ export function RedemptionsManager() {
                     {format(new Date(r.created_at), "MMM d, yyyy")}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
-                    <Badge 
-                      className={cn(
-                        "font-black uppercase text-[10px] tracking-wider px-2 py-0.5",
-                        r.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
-                        r.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
-                        r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
-                      )}
-                    >
-                      {r.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
-                            className="h-8 px-3 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg gap-2"
-                            title="Approve"
-                            disabled={updateStatusMutation.isPending}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="focus:outline-none">
+                          <Badge 
+                            className={cn(
+                              "font-black uppercase text-[10px] tracking-wider px-2 py-0.5 cursor-pointer",
+                              r.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
+                              r.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
+                              r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                            )}
                           >
-                            <Check className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-wider">Approve</span>
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl border-border/50">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="font-black text-xl">Approve Redemption?</AlertDialogTitle>
-                            <AlertDialogDescription className="font-medium text-sm">
-                              Are you sure you want to approve this redemption for <span className="text-primary font-bold">"{r.rewards?.title}"</span>? 
-                              The user will be notified via email and in-app notification.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
-                              className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
-                              onClick={() => updateStatusMutation.mutate({ 
-                                id: r.id, 
-                                status: 'approved', 
-                                userId: r.user_id,
-                                rewardTitle: r.rewards?.title 
-                              })}
-                            >
-                              Confirm Approval
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
-                            className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-lg gap-2"
-                            title="Reject"
-                            disabled={updateStatusMutation.isPending}
-                          >
-                            <X className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-wider">Reject</span>
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl border-border/50">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="font-black text-xl">Reject Redemption?</AlertDialogTitle>
-                            <AlertDialogDescription className="font-medium text-sm">
-                              Are you sure you want to reject this redemption for <span className="font-bold text-foreground">"{r.rewards?.title}"</span>? 
-                              This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
-                              className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-destructive hover:bg-destructive/90"
-                              onClick={() => updateStatusMutation.mutate({ 
-                                id: r.id, 
-                                status: 'rejected', 
-                                userId: r.user_id,
-                                rewardTitle: r.rewards?.title 
-                              })}
-                            >
-                              Confirm Rejection
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
+                            {r.status}
+                          </Badge>
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-2xl border-border/50">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-black text-xl">Update Status</AlertDialogTitle>
+                          <AlertDialogDescription className="font-medium text-sm space-y-4">
+                            <div>Update the status for <span className="text-primary font-bold">"{r.rewards?.title}"</span> by <span className="font-bold">{r.profiles?.full_name || r.profiles?.username}</span>.</div>
+                            <div className="flex flex-col gap-2 pt-2">
+                              <Button 
+                                className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
+                                onClick={() => updateStatusMutation.mutate({ 
+                                  id: r.id, 
+                                  status: 'approved', 
+                                  userId: r.user_id,
+                                  rewardTitle: r.rewards?.title 
+                                })}
+                                disabled={r.status === 'approved' || updateStatusMutation.isPending}
+                              >
+                                <Check className="mr-2 h-4 w-4" /> Approve Redemption
+                              </Button>
+                              <Button 
+                                variant="destructive"
+                                className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest"
+                                onClick={() => updateStatusMutation.mutate({ 
+                                  id: r.id, 
+                                  status: 'rejected', 
+                                  userId: r.user_id,
+                                  rewardTitle: r.rewards?.title 
+                                })}
+                                disabled={r.status === 'rejected' || updateStatusMutation.isPending}
+                              >
+                                <X className="mr-2 h-4 w-4" /> Reject Redemption
+                              </Button>
+                              <Button 
+                                variant="outline"
+                                className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest"
+                                onClick={() => updateStatusMutation.mutate({ 
+                                  id: r.id, 
+                                  status: 'pending', 
+                                  userId: r.user_id,
+                                  rewardTitle: r.rewards?.title 
+                                })}
+                                disabled={r.status === 'pending' || updateStatusMutation.isPending}
+                              >
+                                <Loader2 className="mr-2 h-4 w-4" /> Set to Pending
+                              </Button>
+                            </div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest w-full">Close</AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))
