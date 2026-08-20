@@ -95,7 +95,7 @@ function AuthPage() {
           loading: false, 
           owner: result.username, 
           error: false, 
-          message: `Referrer found: ${result.username}` 
+          message: result.message || `Referrer found: ${result.username}` 
         });
         // Use any cast to bypass type errors until types are regenerated
         (supabase.from('analytics_events' as any) as any).insert({ 
