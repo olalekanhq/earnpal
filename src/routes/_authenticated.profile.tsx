@@ -80,8 +80,25 @@ function ProfilePage() {
     resetForm();
   }, [profile]);
 
+  const validateHandle = (handle: string, type: string) => {
+    if (!handle) return true;
+    const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
+    
+    if (type === 'twitter') return /^[a-zA-Z0-9_]{1,15}$/.test(cleanHandle);
+    if (type === 'telegram') return /^[a-zA-Z0-9_]{5,32}$/.test(cleanHandle);
+    return true;
+  };
+
   const updateProfile = useMutation({
     mutationFn: async (updates: any) => {
+      // Frontend validation
+      if (updates.twitter_handle && !validateHandle(updates.twitter_handle, 'twitter')) {
+        throw new Error("Invalid Twitter handle format");
+      }
+      if (updates.telegram_handle && !validateHandle(updates.telegram_handle, 'telegram')) {
+        throw new Error("Invalid Telegram handle format");
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
       const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
