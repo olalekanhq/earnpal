@@ -119,13 +119,14 @@ function AuthPage() {
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
-    
-    // Use a simple debounce that works with React state
+  };
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
-      validateReferral(val);
+      validateReferral(referralCode);
     }, 500);
     return () => clearTimeout(timeout);
-  };
+  }, [referralCode]);
 
 
   const validate = (type: 'login' | 'signup') => {
