@@ -71,7 +71,7 @@ function LandingPage() {
                 </Link>
               </Button>
               <Button size="lg" variant="ghost" className="text-lg px-8 h-14 font-black uppercase text-foreground/70 hover:text-foreground rounded-[1.25rem]" asChild>
-                <Link to="/earn">Learn more</Link>
+                <Link to="/earn" search={{ tab: 'tasks' }}>Learn more</Link>
               </Button>
             </div>
           </div>
@@ -182,7 +182,7 @@ function LandingPage() {
             </div>
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
               <Link to="/" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Home</Link>
-              <Link to="/earn" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Earn</Link>
+              <Link to="/earn" search={{ tab: 'tasks' }} className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Earn</Link>
               <Link to="/redeem" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Redeem</Link>
               <Link to="/privacy" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Privacy</Link>
               <Link to="/terms" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Terms</Link>

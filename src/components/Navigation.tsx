@@ -86,7 +86,7 @@ export function Navigation() {
             <span>Earn Pal</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/earn" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
+            <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
             <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
             <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
           </div>
@@ -267,7 +267,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
-                <Link to="/earn" className="flex items-center w-full">
+                <Link to="/earn" search={{ tab: 'history' }} className="flex items-center w-full">
                   <History className="mr-3 h-4 w-4" />
                   Points History
                 </Link>
@@ -378,7 +378,7 @@ export function Navigation() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
-                <Link to="/earn" className="flex items-center w-full">
+                <Link to="/earn" search={{ tab: 'history' }} className="flex items-center w-full">
                   <History className="mr-3 h-4 w-4" strokeWidth={2.5} />
                   Points History
                 </Link>
