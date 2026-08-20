@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
-export const Route = createFileRoute('/dns-status')({
+export const Route = createFileRoute('/dnsstatus')({
   component: DnsStatusPage,
 });
 
