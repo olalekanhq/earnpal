@@ -125,12 +125,14 @@ function AuthPage() {
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
-    if (val.trim().length >= 3) {
-      debouncedValidate(val);
-    } else {
+    debouncedValidate(val);
+  };
+
+  useEffect(() => {
+    if (referralCode.trim().length === 0) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
     }
-  };
+  }, [referralCode]);
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
