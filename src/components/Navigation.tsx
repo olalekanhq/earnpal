@@ -331,6 +331,7 @@ export function Navigation() {
             {location.pathname === "/refer" && "Referral Program"}
             {location.pathname === "/redeem" && "Redeem Rewards"}
             {location.pathname === "/profile" && "Your Profile"}
+            {location.pathname === "/transactions" && "Points History"}
             {location.pathname === "/settings" && "Account Settings"}
             {location.pathname === "/admin" && "Admin Control Panel"}
           </h1>
