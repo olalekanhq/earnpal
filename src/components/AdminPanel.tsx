@@ -187,71 +187,31 @@ export function AdminPanel() {
 
       {/* Main Content Area */}
       <Tabs defaultValue="users" className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-1">
-          <TabsList className="bg-muted/50 p-1 rounded-2xl h-auto self-start flex-wrap">
-            <TabsTrigger 
-              value="users" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Users
-            </TabsTrigger>
-            <TabsTrigger 
-              value="fraud" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm text-destructive"
-            >
-              <ShieldAlert className="h-4 w-4 mr-2" />
-              Fraud
-            </TabsTrigger>
-            <TabsTrigger 
-              value="tasks" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <ListTodo className="h-4 w-4 mr-2" />
-              Tasks
-            </TabsTrigger>
-            <TabsTrigger 
-              value="rewards" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <ShoppingBag className="h-4 w-4 mr-2" />
-              Rewards
-            </TabsTrigger>
-            <TabsTrigger 
-              value="redemptions" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Redemptions
-            </TabsTrigger>
-            <TabsTrigger 
-              value="audit" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <ShieldCheck className="h-4 w-4 mr-2" />
-              Audit Logs
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <PieChart className="h-4 w-4 mr-2" />
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger 
-              value="referrals" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Users2 className="h-4 w-4 mr-2" />
-              Referrals
-            </TabsTrigger>
-            <TabsTrigger 
-              value="settings" 
-              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </TabsTrigger>
+        <div className="flex flex-col gap-4 border-b border-border/40 pb-4">
+          <TabsList className="bg-muted/50 p-1.5 rounded-2xl h-auto flex flex-wrap gap-1.5 justify-start md:justify-start">
+            {[
+              { value: "users", icon: Users, label: "Users" },
+              { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
+              { value: "tasks", icon: ListTodo, label: "Tasks" },
+              { value: "rewards", icon: ShoppingBag, label: "Rewards" },
+              { value: "redemptions", icon: Clock, label: "Redemptions" },
+              { value: "audit", icon: ShieldCheck, label: "Audit" },
+              { value: "analytics", icon: PieChart, label: "Analytics" },
+              { value: "referrals", icon: Users2, label: "Referrals" },
+              { value: "settings", icon: Settings, label: "Settings" }
+            ].map((tab) => (
+              <TabsTrigger 
+                key={tab.value}
+                value={tab.value} 
+                className={cn(
+                  "rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm flex items-center min-w-[100px] md:min-w-0 md:px-6 md:py-2.5 md:text-xs",
+                  tab.color
+                )}
+              >
+                <tab.icon className="h-3.5 w-3.5 mr-2 md:h-4 md:w-4" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </div>
 

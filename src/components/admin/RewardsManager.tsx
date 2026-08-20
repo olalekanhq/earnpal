@@ -299,11 +299,11 @@ export function RewardsManager() {
         </Dialog>
       </div>
 
-      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Reward</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[200px]">Reward</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Category</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Cost</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Stock</TableHead>

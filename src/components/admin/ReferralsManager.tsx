@@ -202,12 +202,12 @@ export function ReferralsManager() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Referrer (Inviter)</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Referee (New User)</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[150px]">Referrer (Inviter)</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[150px]">Referee (New User)</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>

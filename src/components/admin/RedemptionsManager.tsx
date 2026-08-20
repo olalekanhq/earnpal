@@ -131,16 +131,15 @@ export function RedemptionsManager() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">User</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Reward</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[150px]">User</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[150px]">Reward</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Cost</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Date</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
-              
             </TableRow>
           </TableHeader>
           <TableBody>
