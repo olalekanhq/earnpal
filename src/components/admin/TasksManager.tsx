@@ -30,7 +30,8 @@ export function TasksManager() {
     is_active: true,
     link_url: "",
     verification_required: false,
-    is_featured: false
+    is_featured: false,
+    video_ad_count: 0
   });
 
   const { data: tasks, isLoading } = useQuery({
@@ -99,7 +100,8 @@ export function TasksManager() {
       is_active: true,
       link_url: "",
       verification_required: false,
-      is_featured: false
+      is_featured: false,
+      video_ad_count: 0
     });
   };
 
@@ -113,7 +115,8 @@ export function TasksManager() {
       is_active: task.is_active,
       link_url: task.link_url || "",
       verification_required: task.verification_required || false,
-      is_featured: task.is_featured || false
+      is_featured: task.is_featured || false,
+      video_ad_count: task.video_ad_count || 0
     });
     setIsDialogOpen(true);
   };
@@ -186,9 +189,23 @@ export function TasksManager() {
                     <option value="daily">Daily</option>
                     <option value="survey">Survey</option>
                     <option value="offer">Offer</option>
+                    <option value="Videos">Videos</option>
                   </select>
                 </div>
               </div>
+              {formData.category === 'Videos' && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Number of Ads to Watch</label>
+                  <Input 
+                    type="number"
+                    value={formData.video_ad_count} 
+                    onChange={(e) => setFormData({...formData, video_ad_count: parseInt(e.target.value) || 0})}
+                    placeholder="e.g. 10"
+                    className="rounded-xl h-12"
+                  />
+                  <p className="text-[10px] text-muted-foreground italic ml-1">Total points will be awarded after user watches all ads.</p>
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Task Link (URL)</label>
                 <Input 
