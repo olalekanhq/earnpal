@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Earn points for simple tasks, refer friends, and redeem for amazing prizes on Earn Pal. Join the most intelligent earning platform today." },
       { property: "og:title", content: "Earn Pal | Reward Your Time" },
       { property: "og:description", content: "Turn your time into real rewards. Join Earn Pal and start earning today." },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://earnpal.qd.je/logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Earn Pal | Reward Your Time" },
