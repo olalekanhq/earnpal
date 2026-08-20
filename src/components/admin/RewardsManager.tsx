@@ -183,7 +183,7 @@ export function RewardsManager() {
                 <div className="flex items-center gap-4">
                   {formData.image_url ? (
                     <div className="relative h-20 w-20 rounded-xl overflow-hidden border border-border">
-                      <img src={`${formData.image_url}${formData.image_url.includes('?') ? '&' : '?'}width=200&height=200&resize=cover&format=webp`} alt="Reward" className="h-full w-full object-cover" />
+                      <img src={formData.image_url} alt="Reward" className="h-full w-full object-cover" />
                       <button 
                         onClick={() => setFormData(prev => ({ ...prev, image_url: "" }))}
                         className="absolute top-1 right-1 bg-background/80 p-1 rounded-full text-destructive hover:bg-background"
@@ -197,14 +197,24 @@ export function RewardsManager() {
                     </div>
                   )}
                   <div className="flex-1">
-                    <Input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={handleImageUpload}
-                      disabled={isUploading}
-                      className="rounded-xl cursor-pointer"
-                    />
-                    <p className="text-[10px] text-muted-foreground mt-1 px-1">Upload a clear image of the reward (optional).</p>
+                    <div className="space-y-2">
+                      <Input 
+                        value={formData.image_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
+                        placeholder="Pate image URL here..."
+                        className="rounded-xl h-10"
+                      />
+                      <div className="flex items-center gap-2">
+                        <Input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={handleImageUpload}
+                          disabled={isUploading}
+                          className="rounded-xl cursor-pointer h-10 text-xs"
+                        />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-1 px-1">Paste a link or upload a clear image.</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -308,7 +318,7 @@ export function RewardsManager() {
                     <div className="flex items-center gap-3">
                       {reward.image_url ? (
                         <div className="h-10 w-10 rounded-lg overflow-hidden border border-border flex-shrink-0">
-                          <img src={`${reward.image_url}${reward.image_url.includes('?') ? '&' : '?'}width=80&height=80&resize=cover&format=webp`} alt={reward.title} className="h-full w-full object-cover" />
+                          <img src={reward.image_url} alt={reward.title} className="h-full w-full object-cover" />
                         </div>
                       ) : (
                         <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center text-muted-foreground flex-shrink-0">
