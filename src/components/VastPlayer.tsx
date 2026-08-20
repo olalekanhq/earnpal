@@ -18,9 +18,10 @@ interface VastPlayerProps {
   vastTagUrl: string;
   onAdComplete: () => void;
   onAdError: (error: any) => void;
+  onAdStarted?: () => void;
 }
 
-const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdError }) => {
+const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdError, onAdStarted }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<any>(null);
 

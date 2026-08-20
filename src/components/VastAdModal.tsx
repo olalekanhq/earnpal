@@ -74,6 +74,7 @@ const VastAdModal: React.FC<VastAdModalProps> = ({
               vastTagUrl={vastTagUrl}
               onAdComplete={handleAdComplete}
               onAdError={handleAdError}
+              onAdStarted={() => setIsAdPlaying(true)}
             />
           )}
           
