@@ -83,10 +83,8 @@ function AuthPage() {
     
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
-      const { data, error: rpcError } = await supabase.rpc('check_referral_code', {
-        _code: code.trim(),
-        _user_id: undefined
-      });
+      const rpcArgs: any = { _code: code.trim() };
+      const { data, error: rpcError } = await supabase.rpc('check_referral_code', rpcArgs);
       
       if (rpcError) throw rpcError;
       
