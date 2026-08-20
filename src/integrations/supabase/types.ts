@@ -28,8 +28,8 @@ export interface Database {
           current_streak: number | null
           longest_streak: number | null
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       points_transactions: {
@@ -41,8 +41,8 @@ export interface Database {
           description: string | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       notifications: {
@@ -55,8 +55,8 @@ export interface Database {
           is_read: boolean | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       rewards: {
@@ -72,8 +72,8 @@ export interface Database {
           is_featured: boolean | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       redemptions: {
@@ -84,8 +84,8 @@ export interface Database {
           status: string
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       tasks: {
@@ -100,8 +100,8 @@ export interface Database {
           link_url: string | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       user_roles: {
@@ -110,8 +110,8 @@ export interface Database {
           user_id: string
           role: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       referrals: {
@@ -122,8 +122,8 @@ export interface Database {
           status: string
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       task_submissions: {
@@ -134,8 +134,8 @@ export interface Database {
           status: string
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       admin_audit_logs: {
@@ -147,8 +147,8 @@ export interface Database {
           details: Json
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
       analytics_events: {
@@ -159,8 +159,8 @@ export interface Database {
           metadata: Json
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
         Relationships: any[]
       }
     }
