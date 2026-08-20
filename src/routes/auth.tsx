@@ -78,7 +78,7 @@ function AuthPage() {
     }
   }, [search.ref]);
 
-  const validateReferral = async (code: string) => {
+  const validateReferral = useCallback(async (code: string) => {
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
@@ -116,7 +116,7 @@ function AuthPage() {
         message: "Unable to validate referral code. Please try again." 
       });
     }
-  };
+  }, []);
 
   const debouncedValidate = useDebouncedCallback((code: string) => {
     validateReferral(code);
