@@ -82,7 +82,16 @@ export function WelcomeBonusModal() {
       queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
       
     } catch (error: any) {
-      toast.error(error.message);
+      if (error.message.includes("complete your social profiles")) {
+        toast.error(error.message, {
+          action: {
+            label: "Go to Profile",
+            onClick: () => window.location.href = "/profile"
+          }
+        });
+      } else {
+        toast.error(error.message);
+      }
     } finally {
       setLoading(false);
     }
