@@ -106,9 +106,12 @@ function Dashboard() {
   const { data: recentTransactions } = useQuery({
     queryKey: ["recentTransactions"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
       const { data } = await supabase
         .from("points_transactions")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(5);
       return data;
