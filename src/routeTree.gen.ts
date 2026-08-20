@@ -22,6 +22,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedRedeemRouteImport } from './routes/_authenticated.redeem'
 import { Route as AuthenticatedReferRouteImport } from './routes/_authenticated.refer'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
+import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated.transactions'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ApiPublicOgRouteImport } from './routes/api/public/og'
 import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
@@ -91,6 +92,12 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTransactionsRoute =
+  AuthenticatedTransactionsRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/redeem': typeof AuthenticatedRedeemRoute
   '/refer': typeof AuthenticatedReferRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -143,6 +151,7 @@ export interface FileRoutesByTo {
   '/redeem': typeof AuthenticatedRedeemRoute
   '/refer': typeof AuthenticatedReferRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -163,6 +172,7 @@ export interface FileRoutesById {
   '/_authenticated/redeem': typeof AuthenticatedRedeemRoute
   '/_authenticated/refer': typeof AuthenticatedReferRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/redeem'
     | '/refer'
     | '/settings'
+    | '/transactions'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/redeem'
     | '/refer'
     | '/settings'
+    | '/transactions'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -220,6 +232,7 @@ export interface FileRouteTypes {
     | '/_authenticated/redeem'
     | '/_authenticated/refer'
     | '/_authenticated/settings'
+    | '/_authenticated/transactions'
     | '/auth/callback'
     | '/api/public/og'
     | '/api/public/robots'
@@ -331,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/transactions': {
+      id: '/_authenticated/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/callback'
@@ -370,6 +390,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedRedeemRoute: typeof AuthenticatedRedeemRoute
   AuthenticatedReferRoute: typeof AuthenticatedReferRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -380,6 +401,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedRedeemRoute: AuthenticatedRedeemRoute,
   AuthenticatedReferRoute: AuthenticatedReferRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

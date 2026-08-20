@@ -9,7 +9,10 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/transactions")({
   head: () => ({
-    title: "Transaction History | Earn Pal",
+    meta: [
+      { title: "Transaction History | Earn Pal" },
+      { name: "description", content: "Detailed view of your point earnings and spending on Earn Pal." }
+    ],
   }),
   component: TransactionsPage,
 });
