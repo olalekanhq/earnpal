@@ -7,6 +7,13 @@ import 'videojs-contrib-ads';
 import 'videojs-ima';
 import 'videojs-ima/dist/videojs.ima.css';
 
+// Extend Video.js type to include IMA plugin
+declare module 'video.js' {
+  interface Player {
+    ima: (options: any) => void;
+  }
+}
+
 interface VastPlayerProps {
   vastTagUrl: string;
   onAdComplete: () => void;
@@ -40,13 +47,13 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
 
     // Initialize IMA plugin
     try {
-      player.ima(options);
+      // The type definition above helps, but we still access via casting to any
+      // if the TS compiler is still unhappy in some environments
+      (player as any).ima(options);
 
-      // On mobile devices, ads must be initialized by a user action.
-      // We can use the 'contentresumed' event as a proxy for the user having interacted.
       const startAds = () => {
-        player.ima.initializeAdDisplayContainer();
-        player.ima.requestAds();
+        (player as any).ima.initializeAdDisplayContainer();
+        (player as any).ima.requestAds();
         player.off('play', startAds);
       };
 
@@ -80,7 +87,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
   }, [vastTagUrl, onAdComplete, onAdError]);
 
   return (
-    <div data-vjs-player>
+    <div data-vjs-player className="w-full">
       <video 
         ref={videoRef} 
         className="video-js vjs-big-play-centered w-full rounded-xl overflow-hidden shadow-2xl" 
