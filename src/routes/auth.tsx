@@ -47,10 +47,11 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [referralCode, setReferralCode] = useState(search.ref || "");
-  const [referralStatus, setReferralStatus] = useState<{ loading: boolean; owner: string | null; error: boolean }>({ 
+  const [referralStatus, setReferralStatus] = useState<{ loading: boolean; owner: string | null; error: boolean; message: string | null }>({ 
     loading: false, 
     owner: null, 
-    error: false 
+    error: false,
+    message: null
   });
   const [showVerification, setShowVerification] = useState(false);
   const [otp, setOtp] = useState("");
@@ -75,11 +76,11 @@ function AuthPage() {
 
   const validateReferral = async (code: string) => {
     if (!code || code.trim().length < 3) {
-      setReferralStatus({ loading: false, owner: null, error: false });
+      setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
     }
     
-    setReferralStatus(prev => ({ ...prev, loading: true, error: false }));
+    setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
       const { data, error } = await supabase.rpc('check_referral_code', { _code: code.trim() });
       
@@ -88,18 +89,33 @@ function AuthPage() {
       const result = Array.isArray(data) ? data[0] : data;
       
       if (result && result.is_valid) {
-        setReferralStatus({ loading: false, owner: result.username, error: false });
+        setReferralStatus({ 
+          loading: false, 
+          owner: result.username, 
+          error: false, 
+          message: `Referrer found: ${result.username}` 
+        });
         // Use any cast to bypass type errors until types are regenerated
         (supabase.from('analytics_events' as any) as any).insert({ 
           event_name: 'referral_code_validated', 
           metadata: { code: code.trim(), referrer: result.username } 
         }).then();
       } else {
-        setReferralStatus({ loading: false, owner: null, error: true });
+        setReferralStatus({ 
+          loading: false, 
+          owner: null, 
+          error: true, 
+          message: "This referral code does not exist or is invalid." 
+        });
       }
     } catch (err) {
       console.error("Referral validation error:", err);
-      setReferralStatus({ loading: false, owner: null, error: true });
+      setReferralStatus({ 
+        loading: false, 
+        owner: null, 
+        error: true, 
+        message: "Unable to validate referral code. Please try again." 
+      });
     }
   };
 
@@ -639,18 +655,20 @@ function AuthPage() {
                         </div>
                       )}
                     </div>
-                    {referralStatus.owner && (
-                      <p className="text-[10px] font-black text-green-600 uppercase tracking-widest mt-1">
-                        ✓ Referrer: {referralStatus.owner.charAt(0).toUpperCase() + referralStatus.owner.slice(1)}
-                      </p>
-                    )}
-                    {referralStatus.error && referralCode && (
-                      <p className="text-[10px] font-black text-destructive uppercase tracking-widest mt-1">
-                        ✕ Invalid referral code
+                    {referralStatus.message && (
+                      <p className={cn(
+                        "text-[10px] font-black uppercase tracking-widest mt-1",
+                        referralStatus.error ? "text-destructive" : "text-green-600"
+                      )}>
+                        {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
                       </p>
                     )}
                   </div>
-                  <Button type="submit" className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
+                    disabled={loading || referralStatus.error}
+                  >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
