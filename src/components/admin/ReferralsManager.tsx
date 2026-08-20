@@ -72,6 +72,7 @@ export function ReferralsManager() {
 
   const adjustPointsMutation = useMutation({
     mutationFn: async ({ userId, amount, type, description }: any) => {
+      // @ts-ignore - The RPC is newly created in the migration and types might not be updated yet
       const { data, error } = await supabase.rpc("admin_adjust_points", {
         _user_id: userId,
         _amount: amount,
@@ -81,8 +82,8 @@ export function ReferralsManager() {
       
       if (error) throw error;
       
-      const result = data as { success: boolean, message: string };
-      if (!result.success) throw new Error(result.message);
+      const result = data as any;
+      if (result && result.success === false) throw new Error(result.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-referrals-users"] });
