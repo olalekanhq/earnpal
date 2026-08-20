@@ -10,8 +10,9 @@ declare global {
   }
 }
 
-const VAST_TAG_URL = 'https://s.magsrv.com/v1/vast.php?idzone=6006924';
-const SDK_URL = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
+const VAST_TAG_URL = import.meta.env['VITE_VAST_AD_TAG_URL'] || 'https://s.magsrv.com/v1/vast.php?idzone=6006924';
+const SDK_URL = import.meta.env['VITE_IMA_SDK_URL'] || 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
+const AD_DELAY_MS = Number(import.meta.env['VITE_VIDEO_AD_DELAY_MS']) || 3000;
 
 export function VideoAdInterstitial() {
   const [isVisible, setIsVisible] = useState(false);
@@ -162,26 +163,21 @@ export function VideoAdInterstitial() {
   }, [isLoaded, initializeIMA, handleClose]);
 
   // Trigger ad logic: For now, we trigger it once on mount of a dashboard or earn page
-  // as a demonstration of the interstitial.
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
+    const path = location.pathname;
+    const shouldTrigger = path.includes('dashboard') || path.includes('earn');
+    const hasTriggered = sessionStorage.getItem('interstitial_triggered');
     
-    const checkAdStatus = () => {
-      const path = window.location.pathname;
-      const shouldTrigger = path.includes('dashboard') || path.includes('earn');
-      const hasTriggered = sessionStorage.getItem('interstitial_triggered');
-      
-      if (shouldTrigger && !hasTriggered) {
-        const timer = setTimeout(() => {
-          triggerAd();
-          sessionStorage.setItem('interstitial_triggered', 'true');
-        }, 3000); 
-        return () => clearTimeout(timer);
-      }
-      return undefined;
-    };
+    if (shouldTrigger && !hasTriggered) {
+      const timer = setTimeout(() => {
+        console.log('VideoAdInterstitial: Triggering ad after delay');
+        triggerAd();
+        sessionStorage.setItem('interstitial_triggered', 'true');
+      }, AD_DELAY_MS); 
 
-    return checkAdStatus();
+      return () => clearTimeout(timer);
+    }
+    return undefined;
   }, [location.pathname, triggerAd]);
 
 
