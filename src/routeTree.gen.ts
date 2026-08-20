@@ -24,6 +24,7 @@ import { Route as AuthenticatedReferRouteImport } from './routes/_authenticated.
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated.transactions'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ApiPublicDnsCheckRouteImport } from './routes/api/public/dns-check'
 import { Route as ApiPublicOgRouteImport } from './routes/api/public/og'
 import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
 import { Route as ApiPublicSitemapRouteImport } from './routes/api/public/sitemap'
@@ -103,6 +104,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const ApiPublicDnsCheckRoute = ApiPublicDnsCheckRouteImport.update({
+  id: '/api/public/dns-check',
+  path: '/api/public/dns-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgRoute = ApiPublicOgRouteImport.update({
   id: '/api/public/og',
   path: '/api/public/og',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -246,6 +258,7 @@ export interface RootRouteChildren {
   LandingRoute: typeof LandingRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ApiPublicDnsCheckRoute: typeof ApiPublicDnsCheckRoute
   ApiPublicOgRoute: typeof ApiPublicOgRoute
   ApiPublicRobotsRoute: typeof ApiPublicRobotsRoute
   ApiPublicSitemapRoute: typeof ApiPublicSitemapRoute
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/api/public/dns-check': {
+      id: '/api/public/dns-check'
+      path: '/api/public/dns-check'
+      fullPath: '/api/public/dns-check'
+      preLoaderRoute: typeof ApiPublicDnsCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/og': {
       id: '/api/public/og'
       path: '/api/public/og'
@@ -425,6 +445,7 @@ const rootRouteChildren: RootRouteChildren = {
   LandingRoute: LandingRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ApiPublicDnsCheckRoute: ApiPublicDnsCheckRoute,
   ApiPublicOgRoute: ApiPublicOgRoute,
   ApiPublicRobotsRoute: ApiPublicRobotsRoute,
   ApiPublicSitemapRoute: ApiPublicSitemapRoute,

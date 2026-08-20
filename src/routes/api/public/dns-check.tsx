@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/api/public/og')({
+export const Route = createFileRoute('/api/public/dns-check')({
   server: {
     handlers: {
       GET: async ({ request }) => {
