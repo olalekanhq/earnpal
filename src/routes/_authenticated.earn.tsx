@@ -12,9 +12,8 @@ import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/earn")({
   validateSearch: (search: Record<string, unknown>) => {
-    const tab = search['tab'] as string;
     return {
-      tab: (tab || 'tasks') as 'tasks' | 'history',
+      tab: (search['tab'] as string || 'tasks') as 'tasks' | 'history',
     };
   },
   head: () => ({
@@ -108,157 +107,265 @@ function EarnPage() {
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight text-foreground">Earn Points</h1>
-          <p className="text-muted-foreground font-medium">Complete simple tasks to earn points and level up.</p>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
+            {activeTab === 'tasks' ? 'Earn Points' : 'Activity History'}
+          </h1>
+          <p className="text-muted-foreground font-medium">
+            {activeTab === 'tasks' 
+              ? 'Complete simple tasks to earn points and level up.' 
+              : 'Track your points, tasks, and reward redemptions.'}
+          </p>
         </div>
       </header>
 
-      <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-        {categories.map((cat) => (
-          <Button 
-            key={cat.name} 
-            variant={activeCategory === cat.name ? 'default' : 'outline'} 
-            className={cn(
-              "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-              activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
-            )}
-            onClick={() => setActiveCategory(cat.name)}
-          >
-            <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
-            {cat.name}
-          </Button>
-        ))}
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="bg-card/50 border border-border/50 p-1 rounded-2xl h-14 w-full max-w-md">
+          <TabsTrigger value="tasks" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
+            <Zap className="h-4 w-4 mr-2" />
+            Available Tasks
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
+            <History className="h-4 w-4 mr-2" />
+            Your History
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
-          <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
-            <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start mb-3">
-                <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
-                  {task.category}
-                </Badge>
-                <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
-                  <Coins className="h-3 w-3 text-green-600" />
-                  <span className="text-green-600 font-bold text-xs">{task.points}</span>
-                </div>
-              </div>
-              <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
-              <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="mt-auto pt-0 pb-6 px-6">
-              <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                <div className="flex items-center gap-1.5">
-                  <Clock className="h-3 w-3" />
-                  <span>~5 mins</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-3 w-3" />
-                  <span>Verified</span>
-                </div>
-              </div>
+        <TabsContent value="tasks" className="space-y-8 mt-0 outline-none">
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+            {categories.map((cat) => (
               <Button 
-                className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
-                disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
-                onClick={async () => {
-                  const currentUiState = taskUiStates[task.id] || 'idle';
-                  
-                  if (currentUiState === 'idle') {
-                    const taskAny = task as any;
-                    if (taskAny.link_url) {
-                      window.open(taskAny.link_url, '_blank');
-                    }
-                    
-                    setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
-                    
-                    // Wait for 5 seconds before allowing confirmation
-                    setTimeout(() => {
-                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                    }, 5000);
-                    return;
-                  }
-
-                  if (currentUiState === 'awaiting_confirmation') {
-                    setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
-                    setCompletingTaskId(task.id);
-                    
-                    const { data: { user } } = await supabase.auth.getUser();
-                    if (!user) return;
-
-                    const { data, error } = await (supabase.rpc as any)('submit_task', {
-                      _user_id: user.id,
-                      _task_id: task.id
-                    });
-
-                    if (error) {
-                      toast.error(error.message);
-                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                    } else if (data && !(data as any).success) {
-                      toast.error((data as any).message);
-                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
-                    } else {
-                      toast.success((data as any)?.message || "Task submitted!");
-                      refetchTasks();
-                      queryClient.invalidateQueries({ queryKey: ["profile"] });
-                      setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
-                    }
-                    setCompletingTaskId(null);
-                  }
-                }}
-              >
-                {task.status === 'verified' ? (
-                  <>
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Completed
-                  </>
-                ) : task.status === 'pending' ? (
-                  <>
-                    <Clock className="h-4 w-4 mr-2" />
-                    Verifying...
-                  </>
-                ) : (taskUiStates[task.id] === 'verifying') ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Verifying...
-                  </>
-                ) : (taskUiStates[task.id] === 'awaiting_confirmation') ? (
-                  "Confirm Completion"
-                ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Start Earning"
+                key={cat.name} 
+                variant={activeCategory === cat.name ? 'default' : 'outline'} 
+                className={cn(
+                  "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
+                  activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
                 )}
+                onClick={() => setActiveCategory(cat.name)}
+              >
+                <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
+                {cat.name}
               </Button>
-            </CardContent>
-          </Card>
-        )) : !isLoading && (
-          <div className="col-span-full py-20 text-center space-y-4">
-            <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
-              <Coins className="h-8 w-8" />
-            </div>
-            <div className="space-y-1">
-              <p className="font-bold text-foreground">No tasks available</p>
-              <p className="text-sm text-muted-foreground font-medium">Check back later for new earning opportunities.</p>
-            </div>
+            ))}
           </div>
-        )}
-        
-        {isLoading && Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="border-none shadow-sm bg-card h-[280px] animate-pulse">
-            <div className="h-1.5 w-full bg-muted/50" />
-            <div className="p-6 space-y-4">
-              <div className="flex justify-between">
-                <div className="h-4 w-16 bg-muted rounded" />
-                <div className="h-4 w-12 bg-muted rounded" />
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
+              <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
+                <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
+                <CardHeader className="pb-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
+                      {task.category}
+                    </Badge>
+                    <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
+                      <Coins className="h-3 w-3 text-green-600" />
+                      <span className="text-green-600 font-bold text-xs">{task.points}</span>
+                    </div>
+                  </div>
+                  <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
+                  <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="mt-auto pt-0 pb-6 px-6">
+                  <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-3 w-3" />
+                      <span>~5 mins</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <ShieldCheck className="h-3 w-3" />
+                      <span>Verified</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                    disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                    onClick={async () => {
+                      const currentUiState = taskUiStates[task.id] || 'idle';
+                      
+                      if (currentUiState === 'idle') {
+                        const taskAny = task as any;
+                        if (taskAny.link_url) {
+                          window.open(taskAny.link_url, '_blank');
+                        }
+                        
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'verifying' }));
+                        
+                        // Wait for 5 seconds before allowing confirmation
+                        setTimeout(() => {
+                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                        }, 5000);
+                        return;
+                      }
+
+                      if (currentUiState === 'awaiting_confirmation') {
+                        setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
+                        setCompletingTaskId(task.id);
+                        
+                        const { data: { user } } = await supabase.auth.getUser();
+                        if (!user) return;
+
+                        const { data, error } = await (supabase.rpc as any)('submit_task', {
+                          _user_id: user.id,
+                          _task_id: task.id
+                        });
+
+                        if (error) {
+                          toast.error(error.message);
+                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                        } else if (data && !(data as any).success) {
+                          toast.error((data as any).message);
+                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'awaiting_confirmation' }));
+                        } else {
+                          toast.success((data as any)?.message || "Task submitted!");
+                          refetchTasks();
+                          queryClient.invalidateQueries({ queryKey: ["profile"] });
+                          setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
+                        }
+                        setCompletingTaskId(null);
+                      }
+                    }}
+                  >
+                    {task.status === 'verified' ? (
+                      <>
+                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                        Completed
+                      </>
+                    ) : task.status === 'pending' ? (
+                      <>
+                        <Clock className="h-4 w-4 mr-2" />
+                        Verifying...
+                      </>
+                    ) : (taskUiStates[task.id] === 'verifying') ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Verifying...
+                      </>
+                    ) : (taskUiStates[task.id] === 'awaiting_confirmation') ? (
+                      "Confirm Completion"
+                    ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Start Earning"
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            )) : !isLoading && (
+              <div className="col-span-full py-20 text-center space-y-4">
+                <div className="bg-card w-16 h-16 rounded-3xl flex items-center justify-center mx-auto shadow-sm text-primary/20">
+                  <Coins className="h-8 w-8" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-bold text-foreground">No tasks available</p>
+                  <p className="text-sm text-muted-foreground font-medium">Check back later for new earning opportunities.</p>
+                </div>
               </div>
-              <div className="h-6 w-3/4 bg-muted rounded" />
-              <div className="h-16 w-full bg-muted rounded" />
-              <div className="h-10 w-full bg-muted rounded mt-auto" />
-            </div>
-          </Card>
-        ))}
-      </div>
+            )}
+            
+            {isLoading && Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className="border-none shadow-sm bg-card h-[280px] animate-pulse">
+                <div className="h-1.5 w-full bg-muted/50" />
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between">
+                    <div className="h-4 w-16 bg-muted rounded" />
+                    <div className="h-4 w-12 bg-muted rounded" />
+                  </div>
+                  <div className="h-6 w-3/4 bg-muted rounded" />
+                  <div className="h-16 w-full bg-muted rounded" />
+                  <div className="h-10 w-full bg-muted rounded mt-auto" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="history" className="space-y-8 mt-0 outline-none">
+          <div className="grid gap-8 lg:grid-cols-2">
+            {/* Points Transactions */}
+            <Card className="border-none shadow-sm bg-card overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary">
+                    <TrendingUp className="h-5 w-5" />
+                  </div>
+                  <CardTitle className="text-lg font-black uppercase tracking-tight">Points Flow</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                {isTransactionsLoading ? (
+                  <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
+                ) : transactions?.length ? (
+                  <div className="divide-y divide-border/40">
+                    {transactions.map((tx: any) => (
+                      <div key={tx.id} className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors">
+                        <div className="space-y-1">
+                          <p className="font-bold text-sm text-foreground leading-none">{tx.description}</p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(tx.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div className={cn(
+                          "font-black text-sm px-3 py-1 rounded-lg",
+                          tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"
+                        )}>
+                          {tx.amount > 0 ? `+${tx.amount}` : tx.amount} PTS
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-12 text-center text-muted-foreground">No points activity yet.</div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Redemptions */}
+            <Card className="border-none shadow-sm bg-card overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-border/50 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary">
+                    <Gift className="h-5 w-5" />
+                  </div>
+                  <CardTitle className="text-lg font-black uppercase tracking-tight">Reward Claims</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                {isRedemptionsLoading ? (
+                  <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
+                ) : redemptions?.length ? (
+                  <div className="divide-y divide-border/40">
+                    {redemptions.map((red: any) => (
+                      <div key={red.id} className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-xl bg-accent/50 overflow-hidden flex items-center justify-center">
+                            {red.rewards?.image_url ? (
+                              <img src={red.rewards.image_url} alt="" className="h-full w-full object-cover" />
+                            ) : (
+                              <Gift className="h-5 w-5 text-muted-foreground/30" />
+                            )}
+                          </div>
+                          <div className="space-y-1">
+                            <p className="font-bold text-sm text-foreground leading-none">{red.rewards?.title}</p>
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(red.created_at).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <Badge className={cn(
+                          "font-black uppercase text-[10px] tracking-wider px-2 py-0.5",
+                          red.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
+                          red.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
+                          red.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                        )}>
+                          {red.status}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-12 text-center text-muted-foreground">No rewards claimed yet.</div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
