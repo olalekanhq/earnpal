@@ -9,9 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/earn")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      tab: (search.tab as string) || 'tasks',
+    };
+  },
   head: () => ({
     title: "Earn Points | Earn Pal",
     meta: [
@@ -28,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const queryClient = useQueryClient();
-  const search = useSearchParams({ from: '/_authenticated/earn' });
+  const search = Route.useSearch();
   const [activeTab, setActiveTab] = useState(search.tab === 'history' ? 'history' : 'tasks');
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);

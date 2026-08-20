@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Gift, Coins, ShoppingBag, CreditCard, Ticket, ArrowRight, Wallet, History, Loader2, ArrowLeft } from "lucide-react";
+import { Gift, Coins, ShoppingBag, CreditCard, Ticket, ArrowRight, Wallet, History as HistoryIcon, Loader2, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -143,7 +143,7 @@ function RedeemPage() {
         </div>
         
         <Link to="/earn" search={{ tab: 'history' }} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-bold text-sm">
-          <History className="h-4 w-4" />
+          <HistoryIcon className="h-4 w-4" />
           Redemption History
         </Link>
       </div>
