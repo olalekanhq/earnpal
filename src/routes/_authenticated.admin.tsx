@@ -31,8 +31,9 @@ export const Route = createFileRoute("/_authenticated/admin")({
   },
 
   component: () => {
-    const { tab } = Route.useSearch();
+    const search = Route.useSearch() as { tab?: string };
     const navigate = Route.useNavigate();
+    const activeTab = search.tab || "users";
 
     return (
       <div className="flex min-h-screen bg-accent/5">
@@ -44,8 +45,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
               <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
             </div>
             <AdminPanel 
-              activeTab={tab} 
-              onTabChange={(newTab) => navigate({ search: { tab: newTab } })} 
+              activeTab={activeTab} 
+              onTabChange={(newTab) => { 
+                navigate({ search: { tab: newTab } }); 
+              }} 
             />
           </div>
         </main>
