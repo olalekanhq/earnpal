@@ -123,8 +123,8 @@ export function WelcomeBonusModal() {
         <div className="relative h-32 bg-primary flex items-center justify-center overflow-hidden">
           <Sparkles className="absolute top-4 left-4 h-6 w-6 text-white/20 animate-pulse" />
           <Sparkles className="absolute bottom-4 right-8 h-4 w-4 text-white/30 animate-bounce" />
-          <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm relative z-10">
-            <Gift className="h-12 w-12 text-white" />
+          <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-sm relative z-10 border border-white/20">
+            <img src="/logo.png" alt="Earn Pal" className="h-12 w-12 object-contain" />
           </div>
           {/* Decorative shapes */}
           <div className="absolute -top-12 -right-12 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
