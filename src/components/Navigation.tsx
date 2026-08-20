@@ -51,7 +51,29 @@ export function Navigation() {
 
   const isAuthPage = location.pathname === "/auth";
   const isLandingPage = location.pathname === "/";
-  
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+      return data;
+    },
+    enabled: !isAuthPage && !isLandingPage,
+  });
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["isAdmin"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return false;
+      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' });
+      return data;
+    },
+    enabled: !isAuthPage && !isLandingPage,
+  });
+
   if (isAuthPage) return null;
 
   // Custom transparent navbar for landing page
@@ -82,25 +104,6 @@ export function Navigation() {
     );
   }
 
-  const { data: profile } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      return data;
-    },
-  });
-
-  const { data: isAdmin } = useQuery({
-    queryKey: ["isAdmin"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
-      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' });
-      return data;
-    },
-  });
 
   const handleLogout = async () => {
     try {
