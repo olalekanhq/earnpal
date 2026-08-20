@@ -85,6 +85,7 @@ function AuthPage() {
       // Pass null for user_id during signup validation as the user doesn't have an ID yet
       const { data, error } = await supabase.rpc('check_referral_code', { 
         _code: code.trim(),
+        _user_id: null
       });
       
       if (error) throw error;
@@ -170,7 +171,7 @@ function AuthPage() {
       
       if (!loginEmail.includes("@")) {
         const { data, error: rpcError } = await supabase.rpc('lookup_login_email', {
-          _username: loginEmail
+          _identifier: loginEmail
         });
 
         if (rpcError || !data) {
@@ -297,7 +298,7 @@ function AuthPage() {
 
       if (!targetEmail.includes("@")) {
         const { data } = await supabase.rpc('lookup_login_email', {
-          _username: targetEmail
+          _identifier: targetEmail
         });
         targetEmail = (data as string | null) ?? "";
       }
