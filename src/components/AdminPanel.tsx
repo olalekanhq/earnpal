@@ -63,9 +63,10 @@ export function AdminPanel() {
         // Current period
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id", { count: "exact", head: true }).lt("created_at", thirtyDaysAgo.toISOString()),
-        supabase.from("points_transactions").select("amount, created_at").gte("created_at", thirtyDaysAgo.toISOString()),
+        // Points Issued - Use a smaller selection
+        supabase.from("points_transactions").select("amount").gte("created_at", thirtyDaysAgo.toISOString()),
         // Previous period
-        supabase.from("points_transactions").select("amount, created_at").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("points_transactions").select("amount").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
         supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo.toISOString()),
         supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
       ]);
