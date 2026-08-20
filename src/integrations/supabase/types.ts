@@ -28,8 +28,42 @@ export type Database = {
           current_streak: number | null
           longest_streak: number | null
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id: string
+          username?: string | null
+          full_name?: string | null
+          avatar_url?: string | null
+          points_balance?: number | null
+          referral_code?: string | null
+          referred_by?: string | null
+          referral_clicks?: number | null
+          has_claimed_welcome_bonus?: boolean | null
+          welcome_banner_dismissed?: boolean | null
+          email?: string | null
+          last_activity_at?: string | null
+          created_at?: string
+          phone_number?: string | null
+          current_streak?: number | null
+          longest_streak?: number | null
+        }
+        Update: {
+          id?: string
+          username?: string | null
+          full_name?: string | null
+          avatar_url?: string | null
+          points_balance?: number | null
+          referral_code?: string | null
+          referred_by?: string | null
+          referral_clicks?: number | null
+          has_claimed_welcome_bonus?: boolean | null
+          welcome_banner_dismissed?: boolean | null
+          email?: string | null
+          last_activity_at?: string | null
+          created_at?: string
+          phone_number?: string | null
+          current_streak?: number | null
+          longest_streak?: number | null
+        }
         Relationships: []
       }
       points_transactions: {
@@ -41,8 +75,22 @@ export type Database = {
           description: string | null
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          user_id: string
+          amount: number
+          type: string
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          amount?: number
+          type?: string
+          description?: string | null
+          created_at?: string
+        }
         Relationships: []
       }
       notifications: {
@@ -55,8 +103,24 @@ export type Database = {
           is_read: boolean | null
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          message: string
+          type: string
+          is_read?: boolean | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          message?: string
+          type?: string
+          is_read?: boolean | null
+          created_at?: string
+        }
         Relationships: []
       }
       rewards: {
@@ -72,8 +136,30 @@ export type Database = {
           is_featured: boolean | null
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          cost_points: number
+          stock_count?: number | null
+          image_url?: string | null
+          category?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          cost_points?: number
+          stock_count?: number | null
+          image_url?: string | null
+          category?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          created_at?: string
+        }
         Relationships: []
       }
       redemptions: {
@@ -84,8 +170,20 @@ export type Database = {
           status: string
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          user_id: string
+          reward_id: string
+          status: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          reward_id?: string
+          status?: string
+          created_at?: string
+        }
         Relationships: []
       }
       tasks: {
@@ -100,8 +198,28 @@ export type Database = {
           link_url: string | null
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          points: number
+          type: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          link_url?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          points?: number
+          type?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          link_url?: string | null
+          created_at?: string
+        }
         Relationships: []
       }
       user_roles: {
@@ -110,8 +228,16 @@ export type Database = {
           user_id: string
           role: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          user_id: string
+          role: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          role?: string
+        }
         Relationships: []
       }
       referrals: {
@@ -122,8 +248,20 @@ export type Database = {
           status: string
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          referrer_id: string
+          referee_id: string
+          status: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          referrer_id?: string
+          referee_id?: string
+          status?: string
+          created_at?: string
+        }
         Relationships: []
       }
       task_submissions: {
@@ -134,8 +272,47 @@ export type Database = {
           status: string
           created_at: string
         }
-        Insert: { [key: string]: any }
-        Update: { [key: string]: any }
+        Insert: {
+          id?: string
+          user_id: string
+          task_id: string
+          status: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          task_id?: string
+          status?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      admin_audit_logs: {
+        Row: {
+          id: string
+          admin_id: string
+          action: string
+          target_id: string | null
+          details: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          admin_id: string
+          action: string
+          target_id?: string | null
+          details?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          admin_id?: string
+          action?: string
+          target_id?: string | null
+          details?: Json
+          created_at?: string
+        }
         Relationships: []
       }
     }
