@@ -215,6 +215,47 @@ export function WelcomeBonusModal() {
             <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
           </div>
 
+          {requiredSocials.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Required Verification</p>
+              <div className="grid grid-cols-1 gap-2">
+                {requiredSocials.map((social) => {
+                  const handleKey = `${social}_handle`;
+                  const isVerified = profile?.[handleKey] && profile[handleKey].length > 0;
+                  return (
+                    <div 
+                      key={social}
+                      className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                        isVerified 
+                          ? "bg-emerald-500/5 border-emerald-500/20" 
+                          : "bg-destructive/5 border-destructive/20"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {isVerified ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        ) : (
+                          <XCircle className="h-4 w-4 text-destructive" />
+                        )}
+                        <span className={`text-xs font-bold capitalize ${isVerified ? "text-emerald-600" : "text-destructive"}`}>
+                          {social} Handle
+                        </span>
+                      </div>
+                      {!isVerified && (
+                        <Link 
+                          to="/profile" 
+                          className="text-[10px] font-black uppercase tracking-tighter text-destructive hover:underline"
+                        >
+                          Add Now
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <DialogFooter className="sm:justify-center pt-1 md:pt-2">
             <Button 
               onClick={handleClaim} 
