@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 export function RedemptionsManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [rejectionReason, setRejectionReason] = useState("");
   const queryClient = useQueryClient();
 
   const { data: redemptions, isLoading } = useQuery({
@@ -45,10 +46,11 @@ export function RedemptionsManager() {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ id, status, userId, rewardTitle }: { id: string; status: string; userId: string; rewardTitle: string }) => {
+    mutationFn: async ({ id, status, userId, rewardTitle, reason }: { id: string; status: string; userId: string; rewardTitle: string; reason?: string }) => {
       const { data, error } = await supabase.rpc('process_redemption_status_change', {
         _redemption_id: id,
-        _new_status: status
+        _new_status: status,
+        _rejection_reason: reason
       });
       
       if (error) throw error;
@@ -64,7 +66,7 @@ export function RedemptionsManager() {
         title: status === 'approved' ? "Redemption Approved!" : "Redemption Rejected",
         message: status === 'approved' 
           ? `Your request for "${rewardTitle}" has been approved.${result.re_deducted ? ' The points were re-deducted from your balance.' : ''}` 
-          : `Your request for "${rewardTitle}" was rejected.${result.refunded ? ' The points have been returned to your balance.' : ''}`,
+          : `Your request for "${rewardTitle}" was rejected.${reason ? ` Reason: ${reason}.` : ''}${result.refunded ? ' The points have been returned to your balance.' : ''}`,
         type: "redemption"
       });
 
@@ -73,6 +75,7 @@ export function RedemptionsManager() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["admin-redemptions"] });
       queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+      setRejectionReason("");
       
       let message = "Redemption status updated";
       if (result.refunded) message += " and points refunded";
