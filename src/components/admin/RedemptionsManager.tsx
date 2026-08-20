@@ -158,7 +158,7 @@ export function RedemptionsManager() {
                           <Button 
                             size="sm" 
                             variant="ghost" 
-                            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                            className="h-8 px-3 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg gap-2"
                             title="Approve"
                             onClick={() => updateStatusMutation.mutate({ 
                               id: r.id, 
@@ -169,11 +169,12 @@ export function RedemptionsManager() {
                             disabled={updateStatusMutation.isPending}
                           >
                             <Check className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-wider">Approve</span>
                           </Button>
                           <Button 
                             size="sm" 
                             variant="ghost" 
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/5"
+                            className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-lg gap-2"
                             title="Reject"
                             onClick={() => updateStatusMutation.mutate({ 
                               id: r.id, 
@@ -184,6 +185,7 @@ export function RedemptionsManager() {
                             disabled={updateStatusMutation.isPending}
                           >
                             <X className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-wider">Reject</span>
                           </Button>
                         </>
                       ) : (
