@@ -15,19 +15,22 @@ export interface Database {
           username: string | null
           full_name: string | null
           avatar_url: string | null
-          points_balance: number
+          points_balance: number | null
           referral_code: string | null
           referred_by: string | null
-          referral_clicks: number
-          has_claimed_welcome_bonus: boolean
-          welcome_banner_dismissed: boolean
+          referral_clicks: number | null
+          has_claimed_welcome_bonus: boolean | null
+          welcome_banner_dismissed: boolean | null
           email: string | null
           last_activity_at: string | null
           created_at: string
           phone_number: string | null
+          current_streak: number | null
+          longest_streak: number | null
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       points_transactions: {
         Row: {
@@ -38,8 +41,9 @@ export interface Database {
           description: string | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -48,11 +52,12 @@ export interface Database {
           title: string
           message: string
           type: string
-          is_read: boolean
+          is_read: boolean | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       rewards: {
         Row: {
@@ -63,12 +68,13 @@ export interface Database {
           stock_count: number | null
           image_url: string | null
           category: string | null
-          is_active: boolean
-          is_featured: boolean
+          is_active: boolean | null
+          is_featured: boolean | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       redemptions: {
         Row: {
@@ -78,8 +84,9 @@ export interface Database {
           status: string
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       tasks: {
         Row: {
@@ -88,13 +95,14 @@ export interface Database {
           description: string | null
           points: number
           type: string
-          is_active: boolean
-          is_featured: boolean
+          is_active: boolean | null
+          is_featured: boolean | null
           link_url: string | null
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -102,8 +110,9 @@ export interface Database {
           user_id: string
           role: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
       referrals: {
         Row: {
@@ -113,12 +122,31 @@ export interface Database {
           status: string
           created_at: string
         }
-        Insert: any
-        Update: any
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
+      }
+      task_submissions: {
+        Row: {
+          id: string
+          user_id: string
+          task_id: string
+          status: string
+          created_at: string
+        }
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: []
       }
     }
     Views: {
-      [key: string]: any
+      leaderboard: {
+        Row: {
+          username: string | null
+          points_balance: number | null
+          rank: number | null
+        }
+      }
     }
     Functions: {
       admin_adjust_points: {
@@ -133,9 +161,53 @@ export interface Database {
       has_role: {
         Args: {
           _user_id: string
-          _role: any
+          _role: string
         }
         Returns: boolean
+      }
+      claim_daily_reward: {
+        Args: {
+          _user_id: string
+        }
+        Returns: Json
+      }
+      claim_welcome_bonus: {
+        Args: {
+          _user_id: string
+        }
+        Returns: Json
+      }
+      submit_task: {
+        Args: {
+          _user_id: string
+          _task_id: string
+        }
+        Returns: Json
+      }
+      redeem_reward: {
+        Args: {
+          _reward_id: string
+        }
+        Returns: Json
+      }
+      check_referral_code: {
+        Args: {
+          _code: string
+          _user_id: string
+        }
+        Returns: Json
+      }
+      lookup_login_email: {
+        Args: {
+          _identifier: string
+        }
+        Returns: Json
+      }
+      increment_referral_clicks: {
+        Args: {
+            target_referral_code: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
