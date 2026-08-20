@@ -75,12 +75,12 @@ function AuthPage() {
   }, [search.mode, search.ref]);
 
   const validateReferral = async (code: string) => {
+    console.log("validateReferral called with:", code);
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
     }
     
-    console.log("Validating referral code:", code);
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
       // Pass only the code if user is not logged in yet (signup mode)
