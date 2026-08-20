@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 export function RedemptionsManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-
   const queryClient = useQueryClient();
 
   const { data: redemptions, isLoading } = useQuery({
@@ -63,10 +62,48 @@ export function RedemptionsManager() {
     }
   });
 
-  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+  const filteredRedemptions = redemptions?.filter((r: any) => {
+    const matchesSearch = 
+      r.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.profiles?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.rewards?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === "all" || r.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="relative w-full md:w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search users or rewards..." 
+            className="pl-10 rounded-xl"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full md:w-[180px] rounded-xl">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="approved">Approved</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
         <Table>
           <TableHeader>
@@ -74,20 +111,20 @@ export function RedemptionsManager() {
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">User</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Reward</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Cost</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Date</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Status</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Date</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {redemptions?.length === 0 ? (
+            {filteredRedemptions?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-12 text-muted-foreground font-medium">
-                  No redemptions found.
+                  No redemptions found matching your criteria.
                 </TableCell>
               </TableRow>
             ) : (
-              redemptions?.map((r: any) => (
+              filteredRedemptions?.map((r: any) => (
                 <TableRow key={r.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                   <TableCell className="px-6 py-4">
                     <div className="font-bold">{r.profiles?.full_name || r.profiles?.username}</div>
@@ -99,10 +136,10 @@ export function RedemptionsManager() {
                       {r.rewards?.cost_points} pts
                     </Badge>
                   </TableCell>
-                  <TableCell className="px-6 py-4 text-xs text-muted-foreground font-medium">
+                  <TableCell className="px-6 py-4 text-xs text-muted-foreground font-medium text-center">
                     {format(new Date(r.created_at), "MMM d, yyyy")}
                   </TableCell>
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-6 py-4 text-center">
                     <Badge 
                       className={cn(
                         "font-black uppercase text-[10px] tracking-wider px-2 py-0.5",
@@ -121,6 +158,7 @@ export function RedemptionsManager() {
                           size="sm" 
                           variant="ghost" 
                           className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          title="Approve"
                           onClick={() => updateStatusMutation.mutate({ 
                             id: r.id, 
                             status: 'approved', 
@@ -135,6 +173,7 @@ export function RedemptionsManager() {
                           size="sm" 
                           variant="ghost" 
                           className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/5"
+                          title="Reject"
                           onClick={() => updateStatusMutation.mutate({ 
                             id: r.id, 
                             status: 'rejected', 
@@ -157,4 +196,3 @@ export function RedemptionsManager() {
     </div>
   );
 }
-
