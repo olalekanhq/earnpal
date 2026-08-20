@@ -31,6 +31,17 @@ export function WelcomeBonusModal() {
       const hasShownThisSession = sessionStorage.getItem("welcome_bonus_shown");
       if (hasShownThisSession) return;
 
+      // Fetch welcome bonus settings
+      const { data: settings } = await (supabase.from("app_settings" as any) as any)
+        .select("*")
+        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee"]);
+      
+      const isEnabled = settings?.find((s: any) => s.key === "welcome_bonus_enabled")?.value === true;
+      const amount = settings?.find((s: any) => s.key === "welcome_bonus_amount_referee")?.value || 50;
+      
+      setBonusAmount(amount);
+      if (!isEnabled) return;
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
