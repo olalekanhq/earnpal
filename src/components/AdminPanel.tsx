@@ -63,9 +63,10 @@ export function AdminPanel() {
         // Current period
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id", { count: "exact", head: true }).lt("created_at", thirtyDaysAgo.toISOString()),
-        supabase.from("points_transactions").select("amount, created_at").gte("created_at", thirtyDaysAgo.toISOString()),
+        // Points Issued - Use a smaller selection
+        supabase.from("points_transactions").select("amount").gte("created_at", thirtyDaysAgo.toISOString()),
         // Previous period
-        supabase.from("points_transactions").select("amount, created_at").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("points_transactions").select("amount").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
         supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo.toISOString()),
         supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
       ]);
@@ -253,35 +254,35 @@ export function AdminPanel() {
         </div>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <UsersManager />
+          {activeTab === 'users' && <UsersManager />}
         </TabsContent>
 
         <TabsContent value="fraud" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <FraudManager />
+          {activeTab === 'fraud' && <FraudManager />}
         </TabsContent>
         
         <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <TasksManager />
+          {activeTab === 'tasks' && <TasksManager />}
         </TabsContent>
         
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RewardsManager />
+          {activeTab === 'rewards' && <RewardsManager />}
         </TabsContent>
         
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <RedemptionsManager />
+          {activeTab === 'redemptions' && <RedemptionsManager />}
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <AnalyticsView />
+          {activeTab === 'analytics' && <AnalyticsView />}
         </TabsContent>
 
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <ReferralsManager />
+          {activeTab === 'referrals' && <ReferralsManager />}
         </TabsContent>
 
         <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          <PlatformSettings />
+          {activeTab === 'settings' && <PlatformSettings />}
         </TabsContent>
       </Tabs>
     </div>

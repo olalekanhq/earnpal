@@ -49,52 +49,54 @@ export function UsersManager() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: ["admin-users"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-users", searchQuery, roleFilter, currentPage],
     queryFn: async () => {
-      const { data: profiles, error: profilesError } = await supabase
+      let query = supabase
         .from("profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*", { count: "exact" });
+      
+      if (searchQuery) {
+        query = query.or(`username.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%,full_name.ilike.%${searchQuery}%`);
+      }
+
+      const from = (currentPage - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data: profiles, count, error: profilesError } = await query
+        .order("created_at", { ascending: false })
+        .range(from, to);
       
       if (profilesError) throw profilesError;
 
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
-        .select("user_id, role");
+        .select("user_id, role")
+        .in("user_id", profiles.map(p => p.id));
       
       if (rolesError) throw rolesError;
 
-      return profiles.map(profile => ({
+      const mappedUsers = profiles.map(profile => ({
         ...profile,
         isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin')
       }));
+      
+      let finalUsers = mappedUsers;
+      if (roleFilter !== "all") {
+        finalUsers = mappedUsers.filter(user => 
+          (roleFilter === "admin" && user.isAdmin) || 
+          (roleFilter === "user" && !user.isAdmin)
+        );
+      }
+
+      return { users: finalUsers, totalCount: count || 0 };
     }
   });
 
-  const filteredUsers = useMemo(() => {
-    if (!users) return [];
-    
-    return users.filter(user => {
-      const matchesSearch = 
-        (user.username?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-        (user.email?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-        (user.full_name?.toLowerCase() || "").includes(searchQuery.toLowerCase());
-      
-      const matchesRole = 
-        roleFilter === "all" || 
-        (roleFilter === "admin" && user.isAdmin) || 
-        (roleFilter === "user" && !user.isAdmin);
-      
-      return matchesSearch && matchesRole;
-    });
-  }, [users, searchQuery, roleFilter]);
-
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const users = data?.users || [];
+  const totalCount = data?.totalCount || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const paginatedUsers = users;
 
   const { data: userDetails, isLoading: isDetailsLoading } = useQuery({
     queryKey: ["user-details", selectedUser?.id],
@@ -168,7 +170,7 @@ export function UsersManager() {
           </div>
           
           <Badge variant="secondary" className="h-11 px-4 rounded-xl border-none bg-primary/5 text-primary font-black uppercase text-[10px] tracking-widest flex items-center shrink-0">
-            {filteredUsers.length} Users
+            {totalCount} Users
           </Badge>
         </div>
       </div>
@@ -245,7 +247,7 @@ export function UsersManager() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} entries
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
           </p>
           <div className="flex items-center gap-2">
             <Button

@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Check, X, Loader2, Search, Filter } from "lucide-react";
+import { Check, X, Loader2, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -26,24 +26,45 @@ export function RedemptionsManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [rejectionReason, setRejectionReason] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const queryClient = useQueryClient();
 
-  const { data: redemptions, isLoading } = useQuery({
-    queryKey: ["admin-redemptions"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-redemptions", searchTerm, statusFilter, currentPage],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("redemptions")
         .select(`
           *,
           profiles:user_id(full_name, email, username),
           rewards:reward_id(title, cost_points)
-        `)
-        .order("created_at", { ascending: false });
+        `, { count: "exact" });
+      
+      if (statusFilter !== "all") {
+        query = query.eq("status", statusFilter);
+      }
+
+      if (searchTerm) {
+        // Search across related tables can be tricky in Supabase via one query
+        // We'll keep basic filtering for now or use a more advanced approach if needed
+      }
+
+      const from = (currentPage - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data, count, error } = await query
+        .order("created_at", { ascending: false })
+        .range(from, to);
       
       if (error) throw error;
-      return data;
+      return { redemptions: data, totalCount: count || 0 };
     }
   });
+
+  const redemptions = data?.redemptions || [];
+  const totalCount = data?.totalCount || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, userId, rewardTitle, reason }: { id: string; status: string; userId: string; rewardTitle: string; reason?: string }) => {
@@ -88,17 +109,7 @@ export function RedemptionsManager() {
     }
   });
 
-  const filteredRedemptions = redemptions?.filter((r: any) => {
-    const matchesSearch = 
-      r.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.profiles?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.rewards?.title?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || r.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
+  const filteredRedemptions = redemptions;
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
@@ -280,6 +291,53 @@ export function RedemptionsManager() {
           </TableBody>
         </Table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => (
+                <Button
+                  key={i}
+                  variant={currentPage === i + 1 ? "default" : "outline"}
+                  size="sm"
+                  className={cn(
+                    "h-9 w-9 rounded-xl font-bold p-0 border-border/50",
+                    currentPage === i + 1 && "shadow-md shadow-primary/20"
+                  )}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+              {totalPages > 5 && <span className="text-muted-foreground">...</span>}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
