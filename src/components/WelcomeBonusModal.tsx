@@ -161,7 +161,7 @@ export function WelcomeBonusModal() {
           <div className="bg-primary/5 rounded-2xl p-4 md:p-6 flex flex-col items-center justify-center border border-primary/10 gap-1 md:gap-2 scale-100 md:scale-105 transition-transform duration-500 hover:scale-110">
             <div className="text-3xl md:text-4xl font-black text-primary tracking-tighter flex items-center gap-2">
               <Coins className="h-6 w-6 md:h-8 md:w-8" />
-              50
+              {bonusAmount}
               <span className="text-xs md:text-sm opacity-60 font-black uppercase tracking-widest ml-1">Points</span>
             </div>
             <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
