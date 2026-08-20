@@ -80,6 +80,7 @@ function AuthPage() {
       return;
     }
     
+    console.log("Validating referral code:", code);
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
       // Pass only the code if user is not logged in yet (signup mode)
