@@ -125,6 +125,7 @@ export function RedemptionsManager() {
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="review_required">Fraud Alert</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -163,6 +164,16 @@ export function RedemptionsManager() {
                         Reason: {r.rejection_reason}
                       </div>
                     )}
+                    {r.is_flagged && (
+                      <div className="flex flex-col gap-1 mt-2">
+                        <Badge variant="destructive" className="w-fit text-[9px] font-black tracking-tighter rounded-md px-1 py-0 h-4">
+                          FRAUD ALERT
+                        </Badge>
+                        <div className="text-[9px] text-muted-foreground font-medium leading-tight max-w-[200px]">
+                          Flags: {(r.fraud_details as any)?.flags?.join(', ')} (Score: {r.fraud_score?.toFixed(1)})
+                        </div>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="px-6 py-4">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
@@ -181,7 +192,8 @@ export function RedemptionsManager() {
                               "font-black uppercase text-[10px] tracking-wider px-2 py-0.5 cursor-pointer",
                               r.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
                               r.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
-                              r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                              r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20",
+                              r.status === 'review_required' && "bg-red-500/10 text-red-600 hover:bg-red-500/20 animate-pulse"
                             )}
                           >
                             {r.status}
