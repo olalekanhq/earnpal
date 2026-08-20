@@ -10,7 +10,8 @@ import {
   Clock,
   Loader2,
   Users2,
-  ShieldAlert
+  ShieldAlert,
+  ChevronDown
 } from "lucide-react";
 import { 
   Card, 
@@ -20,10 +21,15 @@ import {
 } from "@/components/ui/card";
 import { 
   Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
+  TabsContent
 } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
@@ -36,6 +42,7 @@ import { FraudManager } from "./admin/FraudManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
+import { useState } from "react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
@@ -108,6 +115,21 @@ export function AdminPanel() {
       };
     },
   });
+
+  const [activeTab, setActiveTab] = useState("users");
+
+  const tabs = [
+    { value: "users", icon: Users, label: "Users", color: undefined },
+    { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
+    { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
+    { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
+    { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
+    { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
+    { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
+    { value: "settings", icon: Settings, label: "Settings", color: undefined }
+  ];
+
+  const activeTabData = tabs.find(t => t.value === activeTab)!;
 
   const statCards = [
     {
@@ -186,32 +208,39 @@ export function AdminPanel() {
       </div>
 
       {/* Main Content Area */}
-      <Tabs defaultValue="users" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="flex flex-col gap-4 border-b border-border/40 pb-4">
-          <TabsList className="bg-muted/50 p-1.5 rounded-2xl h-auto flex flex-wrap gap-1.5 justify-start md:justify-start">
-            {[
-              { value: "users", icon: Users, label: "Users" },
-              { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
-              { value: "tasks", icon: ListTodo, label: "Tasks" },
-              { value: "rewards", icon: ShoppingBag, label: "Rewards" },
-              { value: "redemptions", icon: Clock, label: "Redemptions" },
-              { value: "analytics", icon: PieChart, label: "Analytics" },
-              { value: "referrals", icon: Users2, label: "Referrals" },
-              { value: "settings", icon: Settings, label: "Settings" }
-            ].map((tab) => (
-              <TabsTrigger 
-                key={tab.value}
-                value={tab.value} 
-                className={cn(
-                  "rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm flex items-center min-w-[100px] md:min-w-0 md:px-6 md:py-2.5 md:text-xs",
-                  tab.color
-                )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="w-full md:w-[240px] justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
               >
-                <tab.icon className="h-3.5 w-3.5 mr-2 md:h-4 md:w-4" />
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+                <div className="flex items-center">
+                  <activeTabData.icon className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
+                  <span className="font-black uppercase text-[10px] tracking-widest">{activeTabData.label}</span>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[240px] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200">
+              {tabs.map((tab) => (
+                <DropdownMenuItem
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={cn(
+                    "rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
+                    activeTab === tab.value 
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                      : "hover:bg-primary/5 text-muted-foreground hover:text-primary"
+                  )}
+                >
+                  <tab.icon className={cn("h-4 w-4 mr-2", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
+                  {tab.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
