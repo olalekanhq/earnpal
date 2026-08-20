@@ -20,6 +20,8 @@ import { Onboarding } from "@/components/Onboarding";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 import { ensureBucketsExist } from "@/utils/storage-init";
+import { VideoAdInterstitial } from "@/components/VideoAdInterstitial";
+
 
 
 function NotFoundComponent() {
@@ -250,7 +252,9 @@ function RootComponent() {
         </div>
         <Toaster />
         <Onboarding />
+        <VideoAdInterstitial />
       </ThemeProvider>
+
     </QueryClientProvider>
   );
 }
