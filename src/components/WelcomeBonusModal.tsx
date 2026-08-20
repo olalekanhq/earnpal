@@ -80,12 +80,14 @@ export function WelcomeBonusModal() {
       // Fetch welcome bonus settings
       const { data: settings } = await (supabase.from("app_settings" as any) as any)
         .select("*")
-        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee"]);
+        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee", "welcome_bonus_required_socials"]);
       
       const isEnabled = settings?.find((s: any) => s.key === "welcome_bonus_enabled")?.value === true;
       const amount = settings?.find((s: any) => s.key === "welcome_bonus_amount_referee")?.value || 50;
+      const required = settings?.find((s: any) => s.key === "welcome_bonus_required_socials")?.value || [];
       
       setBonusAmount(amount);
+      setRequiredSocials(required);
       if (!isEnabled) return;
 
       const { data: { user } } = await supabase.auth.getUser();
