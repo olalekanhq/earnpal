@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; <span>\u2063</span>
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
@@ -94,6 +94,10 @@ export function WelcomeBonusModal() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // Check localStorage for this specific user
+      const hasSeen = localStorage.getItem(`welcome_bonus_dismissed_${user.id}`);
+      if (hasSeen === "true") return;
+
       const { data: profileData } = await supabase
         .from("profiles")
         .select("*")
@@ -141,6 +145,9 @@ export function WelcomeBonusModal() {
         event_name: 'welcome_bonus_claimed', 
         metadata: { amount: bonusAmount } 
       }).then();
+      
+      // Mark as dismissed in localStorage immediately
+      localStorage.setItem(`welcome_bonus_dismissed_${user.id}`, "true");
       setIsOpen(false);
       
       // Invalidate queries to update balance
@@ -168,6 +175,9 @@ export function WelcomeBonusModal() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        // Mark in localStorage first for immediate effect
+        localStorage.setItem(`welcome_bonus_dismissed_${user.id}`, "true");
+        
         await supabase
           .from("profiles")
           .update({ welcome_banner_dismissed: true } as any)
