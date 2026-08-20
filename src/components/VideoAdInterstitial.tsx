@@ -177,6 +177,7 @@ export function VideoAdInterstitial() {
 
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [location.pathname, triggerAd]);
 
 
