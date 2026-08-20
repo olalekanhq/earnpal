@@ -119,6 +119,32 @@ function Dashboard() {
   return (
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
       <WelcomeBonusModal />
+      
+      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
+        <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative">
+          <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-amber-100 p-2 rounded-xl text-amber-600">
+                <Clock className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
+                <p className="text-xs text-amber-700 font-medium">Complete your social handles in profile to claim your 50 points bonus!</p>
+              </div>
+            </div>
+            <Button 
+              size="sm" 
+              className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap"
+              asChild
+            >
+              <Link to="/profile">Complete Profile</Link>
+            </Button>
+          </CardContent>
+          <div className="absolute top-0 right-0 p-1">
+            <Badge variant="outline" className="text-[8px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black">Referee Action Required</Badge>
+          </div>
+        </Card>
+      )}
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
