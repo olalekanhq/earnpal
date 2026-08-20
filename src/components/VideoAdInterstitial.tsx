@@ -56,8 +56,11 @@ export function VideoAdInterstitial() {
       case type.SKIPPED:
         handleClose();
         break;
+      default:
+        break;
     }
   }, [handleClose]);
+
 
   const onAdsManagerLoaded = useCallback((adsManagerLoadedEvent: any) => {
     const adsRenderingSettings = new window.google.ima.AdsRenderingSettings();
