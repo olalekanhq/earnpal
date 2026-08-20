@@ -34,6 +34,10 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [countryCode, setCountryCode] = useState("+234");
   const [phoneBody, setPhoneBody] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -57,6 +61,10 @@ function ProfilePage() {
     if (profile?.full_name) setFullName(profile.full_name);
     if (profile?.username) setUsername(profile.username);
     if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
+    if (profile?.twitter_handle) setTwitter(profile.twitter_handle);
+    if (profile?.facebook_handle) setFacebook(profile.facebook_handle);
+    if (profile?.telegram_handle) setTelegram(profile.telegram_handle);
+    if (profile?.instagram_handle) setInstagram(profile.instagram_handle);
     if (profile?.phone_number) {
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
@@ -314,6 +322,59 @@ function ProfilePage() {
                       />
                     </div>
                   </div>
+                  
+                  <div className="space-y-4 pt-4 border-t border-border/50">
+                    <h3 className="text-sm font-bold flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-primary" />
+                      Social Handles
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="twitter" className="text-xs font-semibold text-muted-foreground uppercase">Twitter / X</Label>
+                        <Input 
+                          id="twitter" 
+                          value={twitter} 
+                          onChange={(e) => setTwitter(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="telegram" className="text-xs font-semibold text-muted-foreground uppercase">Telegram</Label>
+                        <Input 
+                          id="telegram" 
+                          value={telegram} 
+                          onChange={(e) => setTelegram(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="facebook" className="text-xs font-semibold text-muted-foreground uppercase">Facebook</Label>
+                        <Input 
+                          id="facebook" 
+                          value={facebook} 
+                          onChange={(e) => setFacebook(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="profile link or username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="instagram" className="text-xs font-semibold text-muted-foreground uppercase">Instagram</Label>
+                        <Input 
+                          id="instagram" 
+                          value={instagram} 
+                          onChange={(e) => setInstagram(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      * Complete these to be eligible for referral bonuses.
+                    </p>
+                  </div>
+
                   <div className="flex gap-3 mt-2">
                     <Button 
                       variant="outline"
@@ -334,14 +395,22 @@ function ProfilePage() {
                           full_name: fullName, 
                           username: username,
                           avatar_url: avatarUrl,
-                          phone_number: combinedPhone 
+                          phone_number: combinedPhone,
+                          twitter_handle: twitter,
+                          facebook_handle: facebook,
+                          telegram_handle: telegram,
+                          instagram_handle: instagram
                         });
                       }}
                       disabled={updateProfile.isPending || (
                         fullName === profile?.full_name && 
                         username === profile?.username &&
                         avatarUrl === (profile?.avatar_url || "") &&
-                        `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "")
+                        `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "") &&
+                        twitter === (profile?.twitter_handle || "") &&
+                        facebook === (profile?.facebook_handle || "") &&
+                        telegram === (profile?.telegram_handle || "") &&
+                        instagram === (profile?.instagram_handle || "")
                       )}
                     >
                       Save Changes
@@ -455,6 +524,24 @@ function ProfilePage() {
                   </div>
                 </Card>
                 <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
+                  <div className="bg-sky-50 p-3 rounded-xl text-sky-600">
+                    <Share2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Twitter / X</p>
+                    <p className="text-sm font-semibold">{profile?.twitter_handle || 'Not added'}</p>
+                  </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
+                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600">
+                    <Globe className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Telegram</p>
+                    <p className="text-sm font-semibold">{profile?.telegram_handle || 'Not added'}</p>
+                  </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4 md:col-span-2">
                   <div className="bg-green-50 p-3 rounded-xl text-green-600">
                     <Calendar className="h-5 w-5" />
                   </div>

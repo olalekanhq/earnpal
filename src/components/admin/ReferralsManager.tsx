@@ -67,7 +67,7 @@ export function ReferralsManager() {
         .select(`
           *,
           referrer:profiles!referrals_referrer_id_fkey(id, username, full_name, avatar_url, email, points_balance, referral_code),
-          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at)
+          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at, twitter_handle, telegram_handle, has_claimed_welcome_bonus)
         `)
         .order("created_at", { ascending: false });
 
@@ -251,9 +251,21 @@ export function ReferralsManager() {
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-center">
-                    <Badge variant="outline" className="font-black text-green-600 border-green-600/20 bg-green-500/5 uppercase text-[9px] tracking-widest">
-                      Completed
-                    </Badge>
+                    {event.referee?.has_claimed_welcome_bonus ? (
+                      <Badge variant="outline" className="font-black text-green-600 border-green-600/20 bg-green-500/5 uppercase text-[9px] tracking-widest">
+                        Completed
+                      </Badge>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1">
+                        <Badge variant="outline" className="font-black text-amber-600 border-amber-600/20 bg-amber-500/5 uppercase text-[9px] tracking-widest">
+                          Pending Socials
+                        </Badge>
+                        <div className="flex gap-1">
+                          <Badge variant="outline" className={cn("text-[8px] px-1 border-none", event.referee?.twitter_handle ? "text-green-600 bg-green-50" : "text-red-400 bg-red-50")}>TW</Badge>
+                          <Badge variant="outline" className={cn("text-[8px] px-1 border-none", event.referee?.telegram_handle ? "text-green-600 bg-green-50" : "text-red-400 bg-red-50")}>TG</Badge>
+                        </div>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">

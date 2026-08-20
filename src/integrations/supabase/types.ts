@@ -137,15 +137,19 @@ export type Database = {
           created_at: string
           email: string
           email_notifications: boolean | null
+          facebook_handle: string | null
           full_name: string | null
           has_claimed_welcome_bonus: boolean | null
           id: string
+          instagram_handle: string | null
           phone_number: string | null
           points_balance: number
           push_notifications: boolean | null
           referral_clicks: number | null
           referral_code: string | null
           referred_by: string | null
+          telegram_handle: string | null
+          twitter_handle: string | null
           updated_at: string
           username: string | null
           welcome_banner_dismissed: boolean | null
@@ -155,15 +159,19 @@ export type Database = {
           created_at?: string
           email: string
           email_notifications?: boolean | null
+          facebook_handle?: string | null
           full_name?: string | null
           has_claimed_welcome_bonus?: boolean | null
           id: string
+          instagram_handle?: string | null
           phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
           referral_clicks?: number | null
           referral_code?: string | null
           referred_by?: string | null
+          telegram_handle?: string | null
+          twitter_handle?: string | null
           updated_at?: string
           username?: string | null
           welcome_banner_dismissed?: boolean | null
@@ -173,15 +181,19 @@ export type Database = {
           created_at?: string
           email?: string
           email_notifications?: boolean | null
+          facebook_handle?: string | null
           full_name?: string | null
           has_claimed_welcome_bonus?: boolean | null
           id?: string
+          instagram_handle?: string | null
           phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
           referral_clicks?: number | null
           referral_code?: string | null
           referred_by?: string | null
+          telegram_handle?: string | null
+          twitter_handle?: string | null
           updated_at?: string
           username?: string | null
           welcome_banner_dismissed?: boolean | null
