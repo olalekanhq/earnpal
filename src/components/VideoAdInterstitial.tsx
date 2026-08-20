@@ -10,9 +10,9 @@ declare global {
   }
 }
 
-const VAST_TAG_URL = import.meta.env.VITE_VAST_AD_TAG_URL || 'https://s.magsrv.com/v1/vast.php?idzone=6006924';
-const SDK_URL = import.meta.env.VITE_IMA_SDK_URL || 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
-const AD_DELAY_MS = Number(import.meta.env.VITE_VIDEO_AD_DELAY_MS) || 3000;
+const VAST_TAG_URL = import.meta.env['VITE_VAST_AD_TAG_URL'] || 'https://s.magsrv.com/v1/vast.php?idzone=6006924';
+const SDK_URL = import.meta.env['VITE_IMA_SDK_URL'] || 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
+const AD_DELAY_MS = Number(import.meta.env['VITE_VIDEO_AD_DELAY_MS']) || 3000;
 
 export function VideoAdInterstitial() {
   const [isVisible, setIsVisible] = useState(false);
