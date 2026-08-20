@@ -195,7 +195,6 @@ export function AdminPanel() {
               { value: "tasks", icon: ListTodo, label: "Tasks" },
               { value: "rewards", icon: ShoppingBag, label: "Rewards" },
               { value: "redemptions", icon: Clock, label: "Redemptions" },
-              
               { value: "analytics", icon: PieChart, label: "Analytics" },
               { value: "referrals", icon: Users2, label: "Referrals" },
               { value: "settings", icon: Settings, label: "Settings" }
@@ -234,7 +233,6 @@ export function AdminPanel() {
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <RedemptionsManager />
         </TabsContent>
-
 
         <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <AnalyticsView />
