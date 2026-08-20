@@ -3,25 +3,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminPanel } from "@/components/AdminPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async ({ location, context }) => {
-    const session = (context as any).session;
-    
-    if (!session) {
+  beforeLoad: async ({ location }) => {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
       throw redirect({
         to: "/auth",
         search: { redirect: location.pathname },
       });
     }
-    
-    const { data: isAdmin } = await supabase.rpc("has_role", { 
-      _user_id: session.user.id, 
-      _role: 'admin' 
+
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: user.id,
+      _role: 'admin'
     });
-    
+
     if (!isAdmin) {
       throw redirect({ to: "/" });
     }
   },
+
   component: () => (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
