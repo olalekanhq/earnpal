@@ -13,6 +13,7 @@ import { Gift, Sparkles, Coins, Loader2, CheckCircle2, XCircle } from "lucide-re
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 export function WelcomeBonusModal() {
   const [isOpen, setIsOpen] = useState(false);
