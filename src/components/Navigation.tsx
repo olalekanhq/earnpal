@@ -267,12 +267,6 @@ export function Navigation() {
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
-                <Link to="/transactions" className="flex items-center w-full">
-                  <History className="mr-3 h-4 w-4" />
-                  Points History
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm text-destructive focus:text-destructive focus:bg-destructive/5">
                 <button onClick={() => setShowLogoutDialog(true)} className="flex items-center w-full">
                   <LogOut className="mr-3 h-4 w-4" />
@@ -377,12 +371,6 @@ export function Navigation() {
                 <Link to="/profile" className="flex items-center w-full">
                   <User className="mr-3 h-4 w-4" strokeWidth={2.5} />
                   My Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
-                <Link to="/transactions" className="flex items-center w-full">
-                  <History className="mr-3 h-4 w-4" strokeWidth={2.5} />
-                  Points History
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
