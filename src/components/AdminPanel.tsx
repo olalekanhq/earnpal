@@ -8,7 +8,8 @@ import {
   ArrowUpRight, 
   ArrowDownRight,
   Clock,
-  Loader2
+  Loader2,
+  Users2
 } from "lucide-react";
 import { 
   Card, 
