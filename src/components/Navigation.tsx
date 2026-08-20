@@ -14,7 +14,8 @@ import {
   History,
   ChevronRight,
   Moon,
-  Sun
+  Sun,
+  Globe
 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
