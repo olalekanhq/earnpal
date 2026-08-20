@@ -524,6 +524,24 @@ function ProfilePage() {
                   </div>
                 </Card>
                 <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
+                  <div className="bg-sky-50 p-3 rounded-xl text-sky-600">
+                    <Share2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Twitter / X</p>
+                    <p className="text-sm font-semibold">{profile?.twitter_handle || 'Not added'}</p>
+                  </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
+                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600">
+                    <Globe className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Telegram</p>
+                    <p className="text-sm font-semibold">{profile?.telegram_handle || 'Not added'}</p>
+                  </div>
+                </Card>
+                <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4 md:col-span-2">
                   <div className="bg-green-50 p-3 rounded-xl text-green-600">
                     <Calendar className="h-5 w-5" />
                   </div>
