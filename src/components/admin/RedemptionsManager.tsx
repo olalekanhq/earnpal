@@ -192,7 +192,8 @@ export function RedemptionsManager() {
                               "font-black uppercase text-[10px] tracking-wider px-2 py-0.5 cursor-pointer",
                               r.status === 'pending' && "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20",
                               r.status === 'approved' && "bg-green-500/10 text-green-600 hover:bg-green-500/20",
-                              r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                              r.status === 'rejected' && "bg-destructive/10 text-destructive hover:bg-destructive/20",
+                              r.status === 'review_required' && "bg-red-500/10 text-red-600 hover:bg-red-500/20 animate-pulse"
                             )}
                           >
                             {r.status}
