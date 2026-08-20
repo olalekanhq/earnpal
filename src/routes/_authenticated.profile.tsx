@@ -35,6 +35,7 @@ function ProfilePage() {
   const [countryCode, setCountryCode] = useState("+234");
   const [phoneBody, setPhoneBody] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -55,6 +56,7 @@ function ProfilePage() {
   const resetForm = () => {
     if (profile?.full_name) setFullName(profile.full_name);
     if (profile?.username) setUsername(profile.username);
+    if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
     if (profile?.phone_number) {
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
@@ -122,8 +124,9 @@ function ProfilePage() {
 
       console.log("Generated avatar URL:", data.publicUrl);
       // The URL stored in the DB will be the base public URL.
-      // We'll use the server function or direct transformation params when rendering.
-      await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
+      const url = data.publicUrl || "";
+      setAvatarUrl(url);
+      await updateProfile.mutateAsync({ avatar_url: url });
 
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
@@ -178,7 +181,7 @@ function ProfilePage() {
           <CardContent className="relative pt-0 pb-8 px-6 text-center">
             <div className="inline-block relative -mt-12 mb-4 group">
               <Avatar className="h-24 w-24 border-4 border-white shadow-md">
-                <AvatarImage src={profile?.avatar_url ? `${profile.avatar_url}?width=200&height=200&resize=cover&format=webp` : ""} />
+                <AvatarImage src={profile?.avatar_url || ""} />
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
                   {profile?.username?.[0]?.toUpperCase() || "?"}
                 </AvatarFallback>
@@ -248,6 +251,27 @@ function ProfilePage() {
                     <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="rounded-xl h-11" />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="avatar-url" className="text-sm font-semibold">Avatar Image URL</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        id="avatar-url" 
+                        value={avatarUrl} 
+                        onChange={(e) => setAvatarUrl(e.target.value)} 
+                        className="rounded-xl h-11 flex-1" 
+                        placeholder="https://example.com/photo.jpg" 
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="rounded-xl h-11"
+                        onClick={() => document.getElementById('avatar-upload')?.click()}
+                      >
+                        <Camera className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground ml-1">Paste a link or click the camera icon to upload.</p>
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="phone-number" className="text-sm font-semibold">Phone Number</Label>
                     <div className="flex gap-2">
                       <Select value={countryCode} onValueChange={setCountryCode}>
@@ -292,12 +316,14 @@ function ProfilePage() {
                         updateProfile.mutate({ 
                           full_name: fullName, 
                           username: username,
+                          avatar_url: avatarUrl,
                           phone_number: combinedPhone 
                         });
                       }}
                       disabled={updateProfile.isPending || (
                         fullName === profile?.full_name && 
                         username === profile?.username &&
+                        avatarUrl === (profile?.avatar_url || "") &&
                         `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "")
                       )}
                     >
