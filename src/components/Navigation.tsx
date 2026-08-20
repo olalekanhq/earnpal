@@ -109,10 +109,8 @@ export function Navigation() {
     enabled: !isAuthPage && !isLandingPage,
   });
 
-  if (isAuthPage) return null;
-
-  // Custom transparent navbar for landing page
-  if (isLandingPage) {
+  // Custom transparent navbar for landing and auth pages
+  if (isLandingPage || isAuthPage) {
     return (
       <>
         <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg">
