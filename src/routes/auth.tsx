@@ -678,11 +678,11 @@ function AuthPage() {
                        </p>
                      )}
                   </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
-                    disabled={loading || referralStatus.error}
-                  >
+                   <Button 
+                     type="submit" 
+                     className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
+                     disabled={loading}
+                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
