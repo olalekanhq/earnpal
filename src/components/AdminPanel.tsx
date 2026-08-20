@@ -30,8 +30,9 @@ import { TasksManager } from "./admin/TasksManager";
 import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
+import { PlatformSettings } from "./admin/PlatformSettings";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck, PieChart, TrendingDown } from "lucide-react";
+import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 
 export function AdminPanel() {
@@ -239,6 +240,13 @@ export function AdminPanel() {
               <Users2 className="h-4 w-4 mr-2" />
               Referrals
             </TabsTrigger>
+            <TabsTrigger 
+              value="settings" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -268,6 +276,10 @@ export function AdminPanel() {
 
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <ReferralsManager />
+        </TabsContent>
+
+        <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <PlatformSettings />
         </TabsContent>
       </Tabs>
     </div>

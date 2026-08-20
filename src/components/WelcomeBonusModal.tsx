@@ -18,6 +18,7 @@ export function WelcomeBonusModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const [bonusAmount, setBonusAmount] = useState(50);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -29,6 +30,17 @@ export function WelcomeBonusModal() {
       // Check session storage first for immediate one-time display enforcement per session
       const hasShownThisSession = sessionStorage.getItem("welcome_bonus_shown");
       if (hasShownThisSession) return;
+
+      // Fetch welcome bonus settings
+      const { data: settings } = await (supabase.from("app_settings" as any) as any)
+        .select("*")
+        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee"]);
+      
+      const isEnabled = settings?.find((s: any) => s.key === "welcome_bonus_enabled")?.value === true;
+      const amount = settings?.find((s: any) => s.key === "welcome_bonus_amount_referee")?.value || 50;
+      
+      setBonusAmount(amount);
+      if (!isEnabled) return;
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -73,12 +85,12 @@ export function WelcomeBonusModal() {
         colors: ["#7c3aed", "#10b981", "#fbbf24"],
       });
 
-      toast.success("Welcome bonus claimed! +50 points");
+      toast.success(`Welcome bonus claimed! +${bonusAmount} points`);
       // Use any cast to bypass type errors until types are regenerated
       (supabase.from('analytics_events' as any) as any).insert({ 
         user_id: user.id,
         event_name: 'welcome_bonus_claimed', 
-        metadata: { amount: 50 } 
+        metadata: { amount: bonusAmount } 
       }).then();
       setIsOpen(false);
       
@@ -149,7 +161,7 @@ export function WelcomeBonusModal() {
           <div className="bg-primary/5 rounded-2xl p-4 md:p-6 flex flex-col items-center justify-center border border-primary/10 gap-1 md:gap-2 scale-100 md:scale-105 transition-transform duration-500 hover:scale-110">
             <div className="text-3xl md:text-4xl font-black text-primary tracking-tighter flex items-center gap-2">
               <Coins className="h-6 w-6 md:h-8 md:w-8" />
-              50
+              {bonusAmount}
               <span className="text-xs md:text-sm opacity-60 font-black uppercase tracking-widest ml-1">Points</span>
             </div>
             <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
