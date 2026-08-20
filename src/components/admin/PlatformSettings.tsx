@@ -15,6 +15,15 @@ import { toast } from "sonner";
 import { Loader2, Save, Settings2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+// Define local interfaces since types might not be regenerated yet
+interface AppSetting {
+  id: string;
+  key: string;
+  value: any;
+  description: string | null;
+  updated_at: string | null;
+}
+
 export function PlatformSettings() {
   const queryClient = useQueryClient();
   const [localValues, setLocalValues] = useState<Record<string, any>>({});
@@ -22,11 +31,11 @@ export function PlatformSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["appSettings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("app_settings")
+      // Use any cast to bypass type check for new table
+      const { data, error } = await (supabase.from("app_settings" as any) as any)
         .select("*");
       if (error) throw error;
-      return data;
+      return data as AppSetting[];
     }
   });
 
@@ -42,8 +51,7 @@ export function PlatformSettings() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ key, value }: { key: string, value: any }) => {
-      const { error } = await supabase
-        .from("app_settings")
+      const { error } = await (supabase.from("app_settings" as any) as any)
         .update({ value, updated_at: new Date().toISOString() })
         .eq("key", key);
       if (error) throw error;
