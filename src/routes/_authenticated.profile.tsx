@@ -322,6 +322,59 @@ function ProfilePage() {
                       />
                     </div>
                   </div>
+                  
+                  <div className="space-y-4 pt-4 border-t border-border/50">
+                    <h3 className="text-sm font-bold flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-primary" />
+                      Social Handles
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="twitter" className="text-xs font-semibold text-muted-foreground uppercase">Twitter / X</Label>
+                        <Input 
+                          id="twitter" 
+                          value={twitter} 
+                          onChange={(e) => setTwitter(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="telegram" className="text-xs font-semibold text-muted-foreground uppercase">Telegram</Label>
+                        <Input 
+                          id="telegram" 
+                          value={telegram} 
+                          onChange={(e) => setTelegram(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="facebook" className="text-xs font-semibold text-muted-foreground uppercase">Facebook</Label>
+                        <Input 
+                          id="facebook" 
+                          value={facebook} 
+                          onChange={(e) => setFacebook(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="profile link or username" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="instagram" className="text-xs font-semibold text-muted-foreground uppercase">Instagram</Label>
+                        <Input 
+                          id="instagram" 
+                          value={instagram} 
+                          onChange={(e) => setInstagram(e.target.value)} 
+                          className="rounded-xl h-11" 
+                          placeholder="@username" 
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      * Complete these to be eligible for referral bonuses.
+                    </p>
+                  </div>
+
                   <div className="flex gap-3 mt-2">
                     <Button 
                       variant="outline"
