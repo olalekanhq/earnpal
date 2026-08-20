@@ -26,6 +26,10 @@ export function WelcomeBonusModal() {
 
   const checkEligibility = async () => {
     try {
+      // Check session storage first for immediate one-time display enforcement per session
+      const hasShownThisSession = sessionStorage.getItem("welcome_bonus_shown");
+      if (hasShownThisSession) return;
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -38,6 +42,7 @@ export function WelcomeBonusModal() {
       if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
         setProfile(profileData);
         setIsOpen(true);
+        sessionStorage.setItem("welcome_bonus_shown", "true");
       }
     } catch (error) {
       console.error("Error checking welcome bonus eligibility:", error);
