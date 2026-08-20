@@ -207,6 +207,7 @@ export type Database = {
           rejection_reason: string | null
           reward_id: string
           status: string
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -215,6 +216,7 @@ export type Database = {
           rejection_reason?: string | null
           reward_id: string
           status?: string
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -223,6 +225,7 @@ export type Database = {
           rejection_reason?: string | null
           reward_id?: string
           status?: string
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: [
