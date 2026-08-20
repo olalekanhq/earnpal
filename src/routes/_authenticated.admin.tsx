@@ -18,7 +18,12 @@ export const Route = createFileRoute("/_authenticated/admin")({
       _role: 'admin'
     });
 
-    if (!isAdmin) {
+    const { data: isModerator } = await supabase.rpc("has_role", {
+      _user_id: user.id,
+      _role: 'moderator'
+    });
+
+    if (!isAdmin && !isModerator) {
       throw redirect({ to: "/" });
     }
   },
