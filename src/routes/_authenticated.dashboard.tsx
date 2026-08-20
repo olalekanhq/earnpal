@@ -351,7 +351,7 @@ function Dashboard() {
         <div className="lg:col-span-8 space-y-6">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-xl font-black tracking-tight text-foreground">Recent Activity</h2>
-            <Link to="/earn" search={{ tab: 'history' }} className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
+            <Link to="/transactions" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
           </div>
           <Card className="border-none shadow-sm bg-card">
             <CardContent className="p-0">
