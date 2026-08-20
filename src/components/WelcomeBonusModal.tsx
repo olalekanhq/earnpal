@@ -73,6 +73,10 @@ export function WelcomeBonusModal() {
       });
 
       toast.success("Welcome bonus claimed! +50 points");
+      supabase.from('analytics_events').insert({ 
+        event_name: 'welcome_bonus_claimed', 
+        metadata: { user_id: user.id, amount: 50 } 
+      }).then();
       setIsOpen(false);
       
       // Invalidate queries to update balance
