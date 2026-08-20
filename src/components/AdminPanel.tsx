@@ -9,7 +9,8 @@ import {
   ArrowDownRight,
   Clock,
   Loader2,
-  Users2
+  Users2,
+  ShieldAlert
 } from "lucide-react";
 import { 
   Card, 
@@ -31,6 +32,7 @@ import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
 import { PlatformSettings } from "./admin/PlatformSettings";
+import { FraudManager } from "./admin/FraudManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
@@ -90,14 +92,10 @@ export function AdminPanel() {
       // For users, it's cumulative growth vs previous cumulative. 
       // But let's check new users in current 30 days vs previous 30 days for actual trend.
       const newUsersCurrent = (usersRes.count || 0) - (usersPrevRes.count || 0);
-      // We need a way to get users count 60 days ago for a true comparison of new user velocity
-      // For now, let's use the current total vs previous total for simple growth indicator
       
       return {
         totalUsers,
-        totalPoints: pointsIssued, // This is current 30 days issued points in this context? 
-        // Wait, the original code used pointsRes.data for ALL points. 
-        // Let's adjust to be consistent with overall stats + specific trends.
+        totalPoints: pointsIssued, 
         pointsSpent,
         totalRedemptions,
         redemptionRate: usersRes.count ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2) : 0,
@@ -190,13 +188,20 @@ export function AdminPanel() {
       {/* Main Content Area */}
       <Tabs defaultValue="users" className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-1">
-          <TabsList className="bg-muted/50 p-1 rounded-2xl h-auto self-start">
+          <TabsList className="bg-muted/50 p-1 rounded-2xl h-auto self-start flex-wrap">
             <TabsTrigger 
               value="users" 
               className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
             >
               <Users className="h-4 w-4 mr-2" />
               Users
+            </TabsTrigger>
+            <TabsTrigger 
+              value="fraud" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm text-destructive"
+            >
+              <ShieldAlert className="h-4 w-4 mr-2" />
+              Fraud
             </TabsTrigger>
             <TabsTrigger 
               value="tasks" 
@@ -252,6 +257,10 @@ export function AdminPanel() {
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <UsersManager />
+        </TabsContent>
+
+        <TabsContent value="fraud" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <FraudManager />
         </TabsContent>
         
         <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
