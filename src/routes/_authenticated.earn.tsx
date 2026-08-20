@@ -161,9 +161,11 @@ function EarnPage() {
                               });
 
                               if (error) {
+                                console.error('Error recording watch:', error);
                                 toast.error(error.message);
                               } else {
                                 const res = data as any;
+                                console.log('Watch recorded:', res);
                                 if (res.completed) {
                                   toast.success(res.message);
                                   queryClient.invalidateQueries({ queryKey: ["profile"] });
