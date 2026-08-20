@@ -708,8 +708,8 @@ function AuthPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-12">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-12 w-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                    <Coins className="h-7 w-7 text-primary-foreground" />
+                  <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/5 border border-primary/20 backdrop-blur-sm overflow-hidden p-2">
+                    <img src="/logo.png" alt="Earn Pal" className="h-full w-full object-contain" />
                   </div>
                   <h3 className="text-3xl font-black tracking-tight text-white uppercase drop-shadow-sm">Earn Pal</h3>
                 </div>
