@@ -30,8 +30,9 @@ import { TasksManager } from "./admin/TasksManager";
 import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
+import { PlatformSettings } from "./admin/PlatformSettings";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck, PieChart, TrendingDown } from "lucide-react";
+import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 
 export function AdminPanel() {
