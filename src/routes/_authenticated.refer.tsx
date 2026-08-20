@@ -48,17 +48,33 @@ function ReferralPage() {
   });
 
   const { data: referrals } = useQuery({
-    queryKey: ["referrals"],
+    queryKey: ["referrals", profile?.id],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, full_name, username, email, created_at, avatar_url")
-        .eq("referral_code_used" as any, profile?.username)
+      if (!profile?.id) return [];
+      
+      const { data, error } = await supabase
+        .from("referrals")
+        .select(`
+          referee:profiles!referrals_referee_id_fkey (
+            id, 
+            full_name, 
+            username, 
+            email, 
+            created_at, 
+            avatar_url
+          )
+        `)
+        .eq("referrer_id", profile.id)
         .order('created_at', { ascending: false });
-      return data || [];
+      
+      if (error) {
+        console.error("Error fetching referrals:", error);
+        return [];
+      }
+
+      return data?.map(r => r.referee) || [];
     },
+    enabled: !!profile?.id,
   });
 
   const referralCount = referrals?.length || 0;
