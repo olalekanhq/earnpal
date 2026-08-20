@@ -110,13 +110,19 @@ function ProfilePage() {
       const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, blob, {
         contentType: 'image/jpeg'
       });
-      if (uploadError) throw uploadError;
+      
+      if (uploadError) {
+        console.error("Avatar upload error details:", uploadError);
+        throw new Error(`Upload failed: ${uploadError.message}`);
+      }
 
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
 
+      console.log("Generated avatar URL:", data.publicUrl);
       await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
+
     } catch (error: any) {
       toast.error(error.message || "Failed to upload avatar");
     } finally {

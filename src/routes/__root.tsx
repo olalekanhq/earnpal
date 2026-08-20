@@ -19,6 +19,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "@/components/Onboarding";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
+import { ensureBucketsExist } from "@/utils/storage-init";
+
 
 function NotFoundComponent() {
   return (
@@ -211,6 +213,11 @@ function RootComponent() {
 
 
   useEffect(() => {
+    ensureBucketsExist().catch(err => console.error("Bucket init failed:", err));
+  }, []);
+
+  useEffect(() => {
+
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get('ref');

@@ -129,13 +129,18 @@ export function RewardsManager() {
         .from('rewards')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error("Reward upload error details:", uploadError);
+        throw new Error(`Upload failed: ${uploadError.message}`);
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('rewards')
         .getPublicUrl(filePath);
 
+      console.log("Generated reward image URL:", publicUrl);
       setFormData(prev => ({ ...prev, image_url: publicUrl }));
+
       toast.success("Image uploaded successfully");
     } catch (error: any) {
       toast.error("Error uploading image: " + error.message);
