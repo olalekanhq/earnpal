@@ -117,6 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:image", content: `${url}/api/public/og?title=Earn Pal&description=Reward Your Time` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: "@Lovable" },
+        { name: "6a97888e-site-verification", content: "2a365eac71037194b13cbbf9bee6c208" },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
