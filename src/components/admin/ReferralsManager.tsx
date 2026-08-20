@@ -18,9 +18,14 @@ import {
   RefreshCw, 
   Plus, 
   Minus,
-  AlertCircle
+  AlertCircle,
+  Search,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Filter
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { 
   Dialog, 
@@ -32,6 +37,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { format, subDays, startOfDay, endOfDay } from "date-fns";
+import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function ReferralsManager() {
   const queryClient = useQueryClient();
@@ -39,36 +53,59 @@ export function ReferralsManager() {
   const [adjustAmount, setAdjustAmount] = useState<string>("0");
   const [adjustType, setAdjustType] = useState<"earn" | "redemption">("earn");
   const [adjustDescription, setAdjustDescription] = useState<string>("Referral points adjustment");
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [timeFilter, setTimeFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: ["admin-referrals-users"],
+  const { data: referralData, isLoading } = useQuery({
+    queryKey: ["admin-referral-events", timeFilter],
     queryFn: async () => {
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-
-      const { data: referrals, error: refError } = await supabase
+      let query = supabase
         .from("referrals")
-        .select("referrer_id");
-      
-      if (refError) throw refError;
+        .select(`
+          *,
+          referrer:profiles!referrals_referrer_id_fkey(id, username, full_name, avatar_url, email, points_balance, referral_code),
+          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at)
+        `)
+        .order("created_at", { ascending: false });
 
-      const refCounts = (referrals || []).reduce((acc: any, curr: any) => {
-        if (curr.referrer_id) {
-          acc[curr.referrer_id] = (acc[curr.referrer_id] || 0) + 1;
-        }
-        return acc;
-      }, {});
+      if (timeFilter !== "all") {
+        const days = parseInt(timeFilter);
+        const startDate = subDays(new Date(), days).toISOString();
+        query = query.gte("created_at", startDate);
+      }
 
-      return profiles.map(profile => ({
-        ...profile,
-        referralCount: refCounts[profile.id] || 0
-      }));
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
     }
   });
+
+  const filteredEvents = useMemo(() => {
+    if (!referralData) return [];
+    
+    return referralData.filter((event: any) => {
+      const search = searchQuery.toLowerCase();
+      const referrerMatch = 
+        (event.referrer?.username?.toLowerCase() || "").includes(search) ||
+        (event.referrer?.email?.toLowerCase() || "").includes(search) ||
+        (event.referrer?.full_name?.toLowerCase() || "").includes(search);
+      
+      const refereeMatch = 
+        (event.referee?.username?.toLowerCase() || "").includes(search) ||
+        (event.referee?.email?.toLowerCase() || "").includes(search);
+
+      return referrerMatch || refereeMatch;
+    });
+  }, [referralData, searchQuery]);
+
+  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const adjustPointsMutation = useMutation({
     mutationFn: async ({ userId, amount, type, description }: any) => {
@@ -121,11 +158,47 @@ export function ReferralsManager() {
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center px-1">
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-1">
         <div>
-          <h3 className="text-xl font-black uppercase tracking-tight">Referral Management</h3>
-          <p className="text-sm text-muted-foreground font-medium">Adjust points and resend validation alerts.</p>
+          <h3 className="text-xl font-black uppercase tracking-tight">Referral Events</h3>
+          <p className="text-sm text-muted-foreground font-medium">Review invites and adjust rewards.</p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search users..." 
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="pl-9 rounded-xl border-border/50 h-10 font-medium"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-3 py-1.5 w-full sm:w-auto">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Select 
+              value={timeFilter} 
+              onValueChange={(val) => {
+                setTimeFilter(val);
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="border-none bg-transparent h-7 w-[110px] focus:ring-0 font-bold text-xs uppercase tracking-widest">
+                <SelectValue placeholder="All Time" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border/50">
+                <SelectItem value="all" className="text-xs font-bold uppercase tracking-widest">All Time</SelectItem>
+                <SelectItem value="1" className="text-xs font-bold uppercase tracking-widest">Last 24h</SelectItem>
+                <SelectItem value="7" className="text-xs font-bold uppercase tracking-widest">Last 7 Days</SelectItem>
+                <SelectItem value="30" className="text-xs font-bold uppercase tracking-widest">Last 30 Days</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -133,69 +206,112 @@ export function ReferralsManager() {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">User</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Referrals</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Referral Code</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Referrer (Inviter)</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Referee (New User)</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Status</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user) => (
-              <TableRow key={user.id} className="border-border/40 hover:bg-accent/5 transition-colors">
-                <TableCell className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8 border border-border shadow-sm">
-                      <AvatarImage src={user.avatar_url || ""} />
-                      <AvatarFallback className="bg-primary/5 text-primary text-[10px]">
-                        <User className="h-3 w-3" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-bold flex items-center gap-2">
-                        {user.username ? (user.username.charAt(0).toUpperCase() + user.username.slice(1)) : "User"}
-                      </div>
-                      <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-                        {user.points_balance?.toLocaleString()} PTS
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <Badge variant="outline" className="font-black text-primary border-primary/20 bg-primary/5">
-                    {user.referralCount} <span className="ml-1 text-[8px] uppercase">refs</span>
-                  </Badge>
-                </TableCell>
-                <TableCell className="px-6 py-4 text-center">
-                  <code className="text-[10px] font-black bg-muted px-2 py-1 rounded-md uppercase tracking-wider">
-                    {user.referral_code || "None"}
-                  </code>
-                </TableCell>
-                <TableCell className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-                      title="Adjust Points"
-                      onClick={() => setSelectedUser(user)}
-                    >
-                      <Settings2 className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-muted-foreground hover:text-blue-500 hover:bg-blue-50 transition-colors"
-                      title="Resend Validation Notification"
-                      onClick={() => resendNotificationMutation.mutate(user.id)}
-                    >
-                      <RefreshCw className="h-4 w-4" />
-                    </Button>
-                  </div>
+            {paginatedEvents.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-medium">
+                  No referral events found.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              paginatedEvents.map((event: any) => (
+                <TableRow key={`${event.referrer_id}-${event.referee_id}`} className="border-border/40 hover:bg-accent/5 transition-colors">
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8 border border-border shadow-sm">
+                        <AvatarImage src={event.referrer?.avatar_url || ""} />
+                        <AvatarFallback className="bg-primary/5 text-primary text-[10px]">
+                          <User className="h-3 w-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-bold flex items-center gap-2 text-sm">
+                          {event.referrer?.username || "Unknown"}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                          {event.referrer?.referral_code || "No Code"}
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="space-y-0.5">
+                      <div className="font-bold text-sm">
+                        {event.referee?.username || event.referee?.email?.split('@')[0] || "New User"}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground font-medium">
+                        Joined {format(new Date(event.created_at || event.referee?.created_at), "MMM d, yyyy")}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center">
+                    <Badge variant="outline" className="font-black text-green-600 border-green-600/20 bg-green-500/5 uppercase text-[9px] tracking-widest">
+                      Completed
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                        title="Adjust Referrer Points"
+                        onClick={() => setSelectedUser(event.referrer)}
+                      >
+                        <Settings2 className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-muted-foreground hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                        title="Resend Reward Notification"
+                        onClick={() => resendNotificationMutation.mutate(event.referrer_id)}
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
+        
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-border/40">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl h-8 px-3 font-bold border-border/50 text-[10px]"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+              >
+                <ChevronLeft className="h-3 w-3 mr-1" />
+                PREV
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl h-8 px-3 font-bold border-border/50 text-[10px]"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+              >
+                NEXT
+                <ChevronRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
