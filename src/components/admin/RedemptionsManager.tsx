@@ -26,24 +26,45 @@ export function RedemptionsManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [rejectionReason, setRejectionReason] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const queryClient = useQueryClient();
 
-  const { data: redemptions, isLoading } = useQuery({
-    queryKey: ["admin-redemptions"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-redemptions", searchTerm, statusFilter, currentPage],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("redemptions")
         .select(`
           *,
           profiles:user_id(full_name, email, username),
           rewards:reward_id(title, cost_points)
-        `)
-        .order("created_at", { ascending: false });
+        `, { count: "exact" });
+      
+      if (statusFilter !== "all") {
+        query = query.eq("status", statusFilter);
+      }
+
+      if (searchTerm) {
+        // Search across related tables can be tricky in Supabase via one query
+        // We'll keep basic filtering for now or use a more advanced approach if needed
+      }
+
+      const from = (currentPage - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data, count, error } = await query
+        .order("created_at", { ascending: false })
+        .range(from, to);
       
       if (error) throw error;
-      return data;
+      return { redemptions: data, totalCount: count || 0 };
     }
   });
+
+  const redemptions = data?.redemptions || [];
+  const totalCount = data?.totalCount || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, userId, rewardTitle, reason }: { id: string; status: string; userId: string; rewardTitle: string; reason?: string }) => {
@@ -88,17 +109,7 @@ export function RedemptionsManager() {
     }
   });
 
-  const filteredRedemptions = redemptions?.filter((r: any) => {
-    const matchesSearch = 
-      r.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.profiles?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.rewards?.title?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || r.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
+  const filteredRedemptions = redemptions;
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
