@@ -395,7 +395,7 @@ function AuthPage() {
             <CardHeader className="space-y-1 text-center pb-4 p-0 flex-shrink-0">
               <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
                 <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
-                  <Coins className="h-7 w-7" />
+                  <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
                   <span>EARN PAL</span>
                 </div>
               </div>

@@ -27,7 +27,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center text-center max-w-md">
         <div className="bg-primary/10 p-6 rounded-3xl mb-8 shadow-xl shadow-primary/5 ring-1 ring-primary/20">
-          <Coins className="h-16 w-16 text-primary animate-pulse" strokeWidth={2.5} />
+          <img src="/logo.png" alt="Earn Pal" className="h-16 w-16 object-contain animate-pulse" />
         </div>
         
         <h1 className="text-8xl font-black text-primary tracking-tighter mb-2">404</h1>
@@ -67,7 +67,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center animate-pulse">
         <div className="bg-primary/10 p-4 rounded-3xl mb-4 shadow-xl shadow-primary/10">
-          <Coins className="h-12 w-12 text-primary" strokeWidth={2.5} />
+          <img src="/logo.png" alt="Earn Pal" className="h-12 w-12 object-contain" />
         </div>
         <div className="flex items-center gap-2 font-black text-2xl text-primary tracking-tighter uppercase">
           <span>Earn Pal</span>

@@ -82,7 +82,7 @@ export function Navigation() {
       <nav className="fixed top-0 z-50 w-full bg-card/80 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
-            <Coins className="h-7 w-7" />
+            <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
             <span>Earn Pal</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
@@ -235,7 +235,7 @@ export function Navigation() {
             <Menu className="h-6 w-6 text-foreground" />
           </Button>
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter text-primary">
-            <Coins className="h-5 w-5" strokeWidth={2.5} />
+            <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
             <span className="leading-tight">Earn Pal</span>
           </Link>
         </div>

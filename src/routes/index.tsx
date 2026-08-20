@@ -177,7 +177,7 @@ function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2 font-black text-2xl text-primary">
-              <Coins className="h-6 w-6" />
+              <img src="/logo.png" alt="Earn Pal" className="h-7 w-7 object-contain" />
               <span className="tracking-tighter">EARN PAL</span>
             </div>
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
