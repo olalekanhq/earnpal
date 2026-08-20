@@ -379,14 +379,12 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] md:h-screen w-full items-center justify-center bg-background p-4 relative overflow-hidden">
+    <div className="flex min-h-[100dvh] md:h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative overflow-hidden">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
       
-      <div className="absolute top-6 right-6 z-20">
-        <ThemeToggle />
-      </div>
+      {/* Theme toggle is now in the global Navigation component header */}
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10">
         {/* Auth Card Side */}
