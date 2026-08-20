@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import VastPlayer from "./VastPlayer";
 import { Loader2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 interface VastAdModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const VastAdModal: React.FC<VastAdModalProps> = ({
 
   const handleAdComplete = () => {
     setIsAdPlaying(false);
+    toast.success("Ad completed! Crediting points...");
     onComplete();
   };
 
@@ -72,6 +74,7 @@ const VastAdModal: React.FC<VastAdModalProps> = ({
               vastTagUrl={vastTagUrl}
               onAdComplete={handleAdComplete}
               onAdError={handleAdError}
+              onAdStarted={() => setIsAdPlaying(true)}
             />
           )}
           

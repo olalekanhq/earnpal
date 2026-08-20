@@ -18,9 +18,10 @@ interface VastPlayerProps {
   vastTagUrl: string;
   onAdComplete: () => void;
   onAdError: (error: any) => void;
+  onAdStarted?: () => void;
 }
 
-const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdError }) => {
+const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdError, onAdStarted }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<any>(null);
 
@@ -62,6 +63,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
       // IMA events
       player.on('ads-ad-started', () => {
         console.log('Ad started');
+        onAdStarted?.();
       });
 
       player.on('ads-alladscompleted', () => {
@@ -84,7 +86,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
         playerRef.current.dispose();
       }
     };
-  }, [vastTagUrl, onAdComplete, onAdError]);
+  }, [vastTagUrl, onAdComplete, onAdError, onAdStarted]);
 
   return (
     <div data-vjs-player className="w-full">
