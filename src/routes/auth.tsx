@@ -78,7 +78,7 @@ function AuthPage() {
     }
   }, [search.ref]);
 
-  const validateReferral = useCallback(async (code: string) => {
+  const validateReferral = async (code: string) => {
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
@@ -116,23 +116,18 @@ function AuthPage() {
         message: "Unable to validate referral code. Please try again." 
       });
     }
-  }, []);
-
-  const debouncedValidate = useDebouncedCallback((code: string) => {
-    validateReferral(code);
-  }, 500);
+  };
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
-    debouncedValidate(val);
+    
+    // Simple inline debounce
+    if ((window as any).refTimeout) clearTimeout((window as any).refTimeout);
+    (window as any).refTimeout = setTimeout(() => {
+      validateReferral(val);
+    }, 500);
   };
-
-  useEffect(() => {
-    if (referralCode.trim().length === 0) {
-      setReferralStatus({ loading: false, owner: null, error: false, message: null });
-    }
-  }, [referralCode]);
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
