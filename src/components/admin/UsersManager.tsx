@@ -173,12 +173,12 @@ export function UsersManager() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
+      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">User</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Contact</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[150px]">User</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 min-w-[200px]">Contact</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Balance</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Joined</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
