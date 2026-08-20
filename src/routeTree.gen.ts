@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DnsstatusRouteImport } from './routes/dnsstatus'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -24,6 +25,7 @@ import { Route as AuthenticatedReferRouteImport } from './routes/_authenticated.
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated.transactions'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ApiPublicDnsCheckRouteImport } from './routes/api/public/dns-check'
 import { Route as ApiPublicOgRouteImport } from './routes/api/public/og'
 import { Route as ApiPublicRobotsRouteImport } from './routes/api/public/robots'
 import { Route as ApiPublicSitemapRouteImport } from './routes/api/public/sitemap'
@@ -40,6 +42,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DnsstatusRoute = DnsstatusRouteImport.update({
+  id: '/dnsstatus',
+  path: '/dnsstatus',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LandingRoute = LandingRouteImport.update({
@@ -103,6 +110,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const ApiPublicDnsCheckRoute = ApiPublicDnsCheckRouteImport.update({
+  id: '/api/public/dns-check',
+  path: '/api/public/dns-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgRoute = ApiPublicOgRouteImport.update({
   id: '/api/public/og',
   path: '/api/public/og',
@@ -122,6 +134,7 @@ const ApiPublicSitemapRoute = ApiPublicSitemapRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dnsstatus': typeof DnsstatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -134,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -141,6 +155,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dnsstatus': typeof DnsstatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -153,6 +168,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -162,6 +178,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/dnsstatus': typeof DnsstatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -174,6 +191,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/api/public/dns-check': typeof ApiPublicDnsCheckRoute
   '/api/public/og': typeof ApiPublicOgRoute
   '/api/public/robots': typeof ApiPublicRobotsRoute
   '/api/public/sitemap': typeof ApiPublicSitemapRoute
@@ -183,6 +201,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/dnsstatus'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -195,6 +214,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -202,6 +222,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/dnsstatus'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -214,6 +235,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -222,6 +244,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/dnsstatus'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -234,6 +257,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/transactions'
     | '/auth/callback'
+    | '/api/public/dns-check'
     | '/api/public/og'
     | '/api/public/robots'
     | '/api/public/sitemap'
@@ -243,9 +267,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  DnsstatusRoute: typeof DnsstatusRoute
   LandingRoute: typeof LandingRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ApiPublicDnsCheckRoute: typeof ApiPublicDnsCheckRoute
   ApiPublicOgRoute: typeof ApiPublicOgRoute
   ApiPublicRobotsRoute: typeof ApiPublicRobotsRoute
   ApiPublicSitemapRoute: typeof ApiPublicSitemapRoute
@@ -272,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dnsstatus': {
+      id: '/dnsstatus'
+      path: '/dnsstatus'
+      fullPath: '/dnsstatus'
+      preLoaderRoute: typeof DnsstatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/landing': {
@@ -358,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/api/public/dns-check': {
+      id: '/api/public/dns-check'
+      path: '/api/public/dns-check'
+      fullPath: '/api/public/dns-check'
+      preLoaderRoute: typeof ApiPublicDnsCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/og': {
       id: '/api/public/og'
       path: '/api/public/og'
@@ -422,9 +462,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  DnsstatusRoute: DnsstatusRoute,
   LandingRoute: LandingRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ApiPublicDnsCheckRoute: ApiPublicDnsCheckRoute,
   ApiPublicOgRoute: ApiPublicOgRoute,
   ApiPublicRobotsRoute: ApiPublicRobotsRoute,
   ApiPublicSitemapRoute: ApiPublicSitemapRoute,
