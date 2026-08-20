@@ -5,8 +5,14 @@ export const Route = createFileRoute('/api/public/og')({
     handlers: {
       GET: async ({ request }) => {
         const { searchParams } = new URL(request.url);
-        const title = searchParams.get('title') || 'Earn Pal';
-        const description = searchParams.get('description') || 'Reward Your Time';
+        const escapeXml = (value: string, maxLength: number) =>
+          value
+            .slice(0, maxLength)
+            .replace(/[<>&"']/g, (c) =>
+              c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c === '"' ? '&quot;' : '&apos;'
+            );
+        const title = escapeXml(searchParams.get('title') || 'Earn Pal', 60);
+        const description = escapeXml(searchParams.get('description') || 'Reward Your Time', 120);
 
         // We'll generate a high-quality SVG that serves as a dynamic OpenGraph image.
         // This is safe for Workers as it doesn't use native binaries.
