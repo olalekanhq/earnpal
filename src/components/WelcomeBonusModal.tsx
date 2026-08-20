@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; <span>\u2063</span>
 import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
@@ -185,36 +185,37 @@ export function WelcomeBonusModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-md rounded-[2rem] border-none shadow-2xl p-0 overflow-hidden bg-card mx-auto">
-        <div className="relative h-24 md:h-32 bg-primary flex items-center justify-center overflow-hidden">
-          <Sparkles className="absolute top-4 left-4 h-6 w-6 text-white/20 animate-pulse" />
-          <Sparkles className="absolute bottom-4 right-8 h-4 w-4 text-white/30 animate-bounce" />
-          <div className="bg-white/20 p-3 md:p-4 rounded-3xl backdrop-blur-sm relative z-10 border border-white/20">
-            <img src="/logo.png" alt="Earn Pal" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+      <DialogContent className="w-[calc(100%-1.5rem)] sm:max-w-md rounded-[1.5rem] md:rounded-[2rem] border-none shadow-2xl p-0 overflow-hidden bg-card mx-auto max-h-[90dvh] flex flex-col">
+        <div className="relative h-20 md:h-32 bg-primary flex items-center justify-center overflow-hidden shrink-0">
+          <Sparkles className="absolute top-3 left-3 h-4 w-4 md:h-6 md:w-6 text-white/20 animate-pulse" />
+          <Sparkles className="absolute bottom-3 right-6 h-3 w-3 md:h-4 md:w-4 text-white/30 animate-bounce" />
+          <div className="bg-white/20 p-2 md:p-4 rounded-2xl md:rounded-3xl backdrop-blur-sm relative z-10 border border-white/20">
+            <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 md:h-12 md:w-12 object-contain" />
           </div>
           {/* Decorative shapes */}
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-          <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-black/10 rounded-full blur-xl" />
+          <div className="absolute -top-10 -right-10 w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full blur-xl md:blur-2xl" />
+          <div className="absolute -bottom-6 -left-6 w-16 h-16 md:w-24 md:h-24 bg-black/10 rounded-full blur-lg md:blur-xl" />
         </div>
 
-        <div className="p-6 md:p-8 text-center space-y-4 md:space-y-6">
-          <DialogHeader>
-            <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-foreground uppercase">
+        <div className="p-5 md:p-8 text-center space-y-4 md:space-y-6 overflow-y-auto flex-1 custom-scrollbar">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-lg md:text-2xl font-black tracking-tight text-foreground uppercase">
               Welcome Bonus!
             </DialogTitle>
-            <DialogDescription className="text-sm md:text-base font-medium text-muted-foreground pt-1 md:pt-2">
+            <DialogDescription className="text-xs md:text-base font-medium text-muted-foreground pt-0.5 md:pt-2">
               Thanks for joining Earn Pal via referral! You've unlocked a special welcome gift.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="bg-primary/5 rounded-2xl p-4 md:p-6 flex flex-col items-center justify-center border border-primary/10 gap-1 md:gap-2 scale-100 md:scale-105 transition-transform duration-500 hover:scale-110">
-            <div className="text-3xl md:text-4xl font-black text-primary tracking-tighter flex items-center gap-2">
-              <Coins className="h-6 w-6 md:h-8 md:w-8" />
+          <div className="bg-primary/5 rounded-2xl p-3 md:p-6 flex flex-col items-center justify-center border border-primary/10 gap-0.5 md:gap-2 transition-transform duration-500 hover:scale-105">
+            <div className="text-2xl md:text-4xl font-black text-primary tracking-tighter flex items-center gap-1.5 md:gap-2">
+              <Coins className="h-5 w-5 md:h-8 md:w-8" />
               {bonusAmount}
-              <span className="text-xs md:text-sm opacity-60 font-black uppercase tracking-widest ml-1">Points</span>
+              <span className="text-[10px] md:text-sm opacity-60 font-black uppercase tracking-widest ml-0.5 md:ml-1">Points</span>
             </div>
-            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
+            <p className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
           </div>
+
 
           {requiredSocials.length > 0 && (
             <div className="space-y-3 pt-2">
@@ -257,15 +258,15 @@ export function WelcomeBonusModal() {
             </div>
           )}
 
-          <DialogFooter className="sm:justify-center pt-1 md:pt-2">
+          <DialogFooter className="sm:justify-center pt-0.5 md:pt-2">
             <Button 
               onClick={handleClaim} 
               disabled={loading}
-              className="w-full h-12 md:h-14 rounded-2xl text-base md:text-lg font-black uppercase tracking-tight shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="w-full h-11 md:h-14 rounded-xl md:rounded-2xl text-sm md:text-lg font-black uppercase tracking-tight shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 md:h-5 md:w-5 animate-spin" />
                   Claiming...
                 </>
               ) : (
@@ -276,12 +277,13 @@ export function WelcomeBonusModal() {
           
           <button 
             onClick={handleClose}
-            className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors pb-2"
           >
             Claim later
           </button>
         </div>
       </DialogContent>
     </Dialog>
+
   );
 }
