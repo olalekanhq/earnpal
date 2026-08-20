@@ -63,7 +63,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
       // IMA events
       player.on('ads-ad-started', () => {
         console.log('Ad started');
-        setIsAdPlaying?.(true);
+        onAdStarted?.();
       });
 
       player.on('ads-alladscompleted', () => {
@@ -86,7 +86,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
         playerRef.current.dispose();
       }
     };
-  }, [vastTagUrl, onAdComplete, onAdError]);
+  }, [vastTagUrl, onAdComplete, onAdError, onAdStarted]);
 
   return (
     <div data-vjs-player className="w-full">
