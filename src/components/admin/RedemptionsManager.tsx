@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Check, X, Loader2, Search, Filter } from "lucide-react";
+import { Check, X, Loader2, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -291,6 +291,53 @@ export function RedemptionsManager() {
           </TableBody>
         </Table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => (
+                <Button
+                  key={i}
+                  variant={currentPage === i + 1 ? "default" : "outline"}
+                  size="sm"
+                  className={cn(
+                    "h-9 w-9 rounded-xl font-bold p-0 border-border/50",
+                    currentPage === i + 1 && "shadow-md shadow-primary/20"
+                  )}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+              {totalPages > 5 && <span className="text-muted-foreground">...</span>}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
