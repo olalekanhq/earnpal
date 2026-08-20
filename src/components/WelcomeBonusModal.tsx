@@ -9,16 +9,18 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Gift, Sparkles, Coins, Loader2 } from "lucide-react";
+import { Gift, Sparkles, Coins, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 export function WelcomeBonusModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [bonusAmount, setBonusAmount] = useState(50);
+  const [requiredSocials, setRequiredSocials] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -79,12 +81,14 @@ export function WelcomeBonusModal() {
       // Fetch welcome bonus settings
       const { data: settings } = await (supabase.from("app_settings" as any) as any)
         .select("*")
-        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee"]);
+        .in("key", ["welcome_bonus_enabled", "welcome_bonus_amount_referee", "welcome_bonus_required_socials"]);
       
       const isEnabled = settings?.find((s: any) => s.key === "welcome_bonus_enabled")?.value === true;
       const amount = settings?.find((s: any) => s.key === "welcome_bonus_amount_referee")?.value || 50;
+      const required = settings?.find((s: any) => s.key === "welcome_bonus_required_socials")?.value || [];
       
       setBonusAmount(amount);
+      setRequiredSocials(required);
       if (!isEnabled) return;
 
       const { data: { user } } = await supabase.auth.getUser();
@@ -211,6 +215,47 @@ export function WelcomeBonusModal() {
             </div>
             <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Ready to claim</p>
           </div>
+
+          {requiredSocials.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Required Verification</p>
+              <div className="grid grid-cols-1 gap-2">
+                {requiredSocials.map((social) => {
+                  const handleKey = `${social}_handle`;
+                  const isVerified = profile?.[handleKey] && profile[handleKey].length > 0;
+                  return (
+                    <div 
+                      key={social}
+                      className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                        isVerified 
+                          ? "bg-emerald-500/5 border-emerald-500/20" 
+                          : "bg-destructive/5 border-destructive/20"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {isVerified ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        ) : (
+                          <XCircle className="h-4 w-4 text-destructive" />
+                        )}
+                        <span className={`text-xs font-bold capitalize ${isVerified ? "text-emerald-600" : "text-destructive"}`}>
+                          {social} Handle
+                        </span>
+                      </div>
+                      {!isVerified && (
+                        <Link 
+                          to="/profile" 
+                          className="text-[10px] font-black uppercase tracking-tighter text-destructive hover:underline"
+                        >
+                          Add Now
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <DialogFooter className="sm:justify-center pt-1 md:pt-2">
             <Button 
