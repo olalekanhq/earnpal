@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type Database = {
+export interface Database {
   public: {
     Tables: {
       profiles: {
@@ -30,7 +30,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       points_transactions: {
         Row: {
@@ -43,7 +43,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       notifications: {
         Row: {
@@ -57,7 +57,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       rewards: {
         Row: {
@@ -74,7 +74,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       redemptions: {
         Row: {
@@ -86,7 +86,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       tasks: {
         Row: {
@@ -102,7 +102,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       user_roles: {
         Row: {
@@ -112,7 +112,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       referrals: {
         Row: {
@@ -124,7 +124,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       task_submissions: {
         Row: {
@@ -136,7 +136,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       admin_audit_logs: {
         Row: {
@@ -149,7 +149,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
       analytics_events: {
         Row: {
@@ -161,7 +161,7 @@ export type Database = {
         }
         Insert: any
         Update: any
-        Relationships: []
+        Relationships: any[]
       }
     }
     Views: {
