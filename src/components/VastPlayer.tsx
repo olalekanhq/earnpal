@@ -62,6 +62,7 @@ const VastPlayer: React.FC<VastPlayerProps> = ({ vastTagUrl, onAdComplete, onAdE
       // IMA events
       player.on('ads-ad-started', () => {
         console.log('Ad started');
+        setIsAdPlaying?.(true);
       });
 
       player.on('ads-alladscompleted', () => {
