@@ -229,7 +229,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border-b border-border/40 shadow-sm">
+      <div className="md:hidden fixed top-2 left-2 right-2 z-40 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-lg rounded-2xl">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5" aria-label="Open menu">
             <Menu className="h-6 w-6 text-foreground" />
