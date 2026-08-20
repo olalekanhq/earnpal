@@ -89,10 +89,9 @@ function AuthPage() {
       
       if (result && result.is_valid) {
         setReferralStatus({ loading: false, owner: result.username, error: false });
-        supabase.from('user_activity_logs').insert({ 
-          type: 'referral_validated',
-          title: 'Referral Code Validated',
-          description: `Validated code from ${result.username}`,
+        // Use any cast to bypass type errors until types are regenerated
+        (supabase.from('analytics_events' as any) as any).insert({ 
+          event_name: 'referral_code_validated', 
           metadata: { code: code.trim(), referrer: result.username } 
         }).then();
       } else {
@@ -227,10 +226,9 @@ function AuthPage() {
       if (error) throw error;
       
       toast.success("Account verified successfully!");
-      supabase.from('user_activity_logs').insert({ 
-        type: 'signup_complete',
-        title: 'Signup Completed',
-        description: `User ${username} finished registration`,
+      // Use any cast to bypass type errors until types are regenerated
+      (supabase.from('analytics_events' as any) as any).insert({ 
+        event_name: 'signup_complete', 
         metadata: { email, username } 
       }).then();
       navigate({ to: "/dashboard" });
