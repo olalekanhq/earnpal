@@ -126,9 +126,8 @@ function AuthPage() {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
     
-    // Simple debounce for manual entry
-    const timeout = setTimeout(() => validateReferral(val), 500);
-    return () => clearTimeout(timeout);
+    // Perform immediate validation as the debounce logic was flawed
+    validateReferral(val);
   };
 
 
