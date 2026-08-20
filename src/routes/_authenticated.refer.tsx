@@ -48,17 +48,38 @@ function ReferralPage() {
   });
 
   const { data: referrals } = useQuery({
-    queryKey: ["referrals"],
+    queryKey: ["referrals", profile?.id],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
+      if (!profile?.id) return [];
+      
+      const { data: referralsData, error: referralsError } = await supabase
+        .from("referrals")
+        .select("referee_id")
+        .eq("referrer_id", profile.id)
+        .order('created_at', { ascending: false });
+      
+      if (referralsError) {
+        console.error("Error fetching referrals:", referralsError);
+        return [];
+      }
+
+      if (!referralsData || referralsData.length === 0) return [];
+
+      const refereeIds = referralsData.map(r => r.referee_id);
+      
+      const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
         .select("id, full_name, username, email, created_at, avatar_url")
-        .eq("referral_code_used" as any, profile?.username)
-        .order('created_at', { ascending: false });
-      return data || [];
+        .in("id", refereeIds);
+
+      if (profilesError) {
+        console.error("Error fetching referred profiles:", profilesError);
+        return [];
+      }
+
+      return profilesData || [];
     },
+    enabled: !!profile?.id,
   });
 
   const referralCount = referrals?.length || 0;
