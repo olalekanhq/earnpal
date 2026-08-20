@@ -125,6 +125,7 @@ export function RedemptionsManager() {
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="review_required">Fraud Alert</SelectItem>
             </SelectContent>
           </Select>
         </div>
