@@ -12,8 +12,9 @@ import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/earn")({
   validateSearch: (search: Record<string, unknown>) => {
+    const tab = search['tab'] as string;
     return {
-      tab: ((search.tab as string) || 'tasks') as 'tasks' | 'history',
+      tab: (tab || 'tasks') as 'tasks' | 'history',
     };
   },
   head: () => ({
@@ -33,16 +34,16 @@ export const Route = createFileRoute("/_authenticated/earn")({
 function EarnPage() {
   const queryClient = useQueryClient();
   const search = Route.useSearch();
-  const [activeTab, setActiveTab] = useState(search.tab === 'history' ? 'history' : 'tasks');
+  const [activeTab, setActiveTab] = useState(search['tab'] === 'history' ? 'history' : 'tasks');
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
 
   useEffect(() => {
-    if (search.tab === 'history') {
+    if (search['tab'] === 'history') {
       setActiveTab('history');
     }
-  }, [search.tab]);
+  }, [search['tab']]);
 
   const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
