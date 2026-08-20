@@ -23,8 +23,8 @@ export function RedemptionsManager() {
         .from("redemptions")
         .select(`
           *,
-          profiles(full_name, email, username),
-          rewards(title, cost_points)
+          profiles:user_id(full_name, email, username),
+          rewards:reward_id(title, cost_points)
         `)
         .order("created_at", { ascending: false });
       
