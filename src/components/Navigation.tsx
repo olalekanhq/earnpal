@@ -117,39 +117,48 @@ export function Navigation() {
         <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20">
           <div className="container mx-auto px-4 flex h-20 items-center justify-between">
             <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="md:hidden hover:bg-primary/5" 
-                onClick={() => setIsMobileMenuOpen(true)}
-                aria-label="Open menu"
-              >
-                <Menu className="h-6 w-6 text-foreground" />
-              </Button>
+              {!isAuthPage && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="md:hidden hover:bg-primary/5" 
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-6 w-6 text-foreground" />
+                </Button>
+              )}
               <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
                 <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
                 <span className="hidden xs:inline">Earn Pal</span>
               </Link>
             </div>
             
-            <div className="hidden md:flex items-center gap-8">
-              <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
-              <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
-              <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
-              <Link to="/dnsstatus" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Domain Status</Link>
-            </div>
+            {!isAuthPage && (
+              <div className="hidden md:flex items-center gap-8">
+                <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
+                <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
+                <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
+                <Link to="/dnsstatus" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Domain Status</Link>
+              </div>
+            )}
             
             <div className="flex items-center gap-4">
-              <Button variant="ghost" className="font-black uppercase hidden sm:flex" asChild>
-                <Link to="/auth">Log in</Link>
-              </Button>
-              <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
-                <Link to="/auth">Get Started</Link>
-              </Button>
+              {!isAuthPage && (
+                <>
+                  <Button variant="ghost" className="font-black uppercase hidden sm:flex" asChild>
+                    <Link to="/auth">Log in</Link>
+                  </Button>
+                  <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
+                    <Link to="/auth">Get Started</Link>
+                  </Button>
+                </>
+              )}
               <ThemeToggle />
             </div>
           </div>
         </nav>
+
 
         {/* Landing Page Mobile Overlay Menu */}
         <MobileMenuOverlay isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
