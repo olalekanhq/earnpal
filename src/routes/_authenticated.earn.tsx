@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 export const Route = createFileRoute("/_authenticated/earn")({
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      tab: (search.tab as string) || 'tasks',
+      tab: ((search.tab as string) || 'tasks') as 'tasks' | 'history',
     };
   },
   head: () => ({
