@@ -17,35 +17,35 @@ export function AnalyticsView() {
   const { data: analytics, isLoading } = useQuery({
     queryKey: ["funnelAnalytics"],
     queryFn: async () => {
-      const { data: events, error } = await (supabase.from("analytics_events" as any) as any)
-        .select("*")
-        .order("created_at", { ascending: true });
+      // Use aggregate counts directly instead of fetching all records
+      const [referralRes, signupRes, bonusRes] = await Promise.all([
+        supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "referral_code_validated"),
+        supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "signup_complete"),
+        supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "welcome_bonus_claimed"),
+      ]);
 
-      if (error) throw error;
-
-      // Calculate funnel metrics
       const funnel = [
         { 
           name: "Referral Validated", 
-          count: events.filter((e: any) => e.event_name === "referral_code_validated").length,
+          count: referralRes.count || 0,
           icon: TrendingUp,
           color: "#8b5cf6" 
         },
         { 
           name: "Signup Complete", 
-          count: events.filter((e: any) => e.event_name === "signup_complete").length,
+          count: signupRes.count || 0,
           icon: UserPlus,
           color: "#10b981" 
         },
         { 
           name: "Welcome Bonus Claimed", 
-          count: events.filter((e: any) => e.event_name === "welcome_bonus_claimed").length,
+          count: bonusRes.count || 0,
           icon: Gift,
           color: "#f59e0b" 
         }
       ];
 
-      return { funnel, totalEvents: events.length };
+      return { funnel, totalEvents: (referralRes.count || 0) + (signupRes.count || 0) + (bonusRes.count || 0) };
     }
   });
 
