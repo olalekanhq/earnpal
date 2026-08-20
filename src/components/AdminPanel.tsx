@@ -187,7 +187,7 @@ export function AdminPanel({ activeTab, onTabChange }: { activeTab: string | und
       </div>
 
       {/* Main Content Area */}
-      <Tabs value={activeTab || "users"} onValueChange={onTabChange} className="space-y-6">
+      <Tabs value={activeTab || "users"} onValueChange={onTabChange || (() => {})} className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-1">
           <TabsList className="bg-muted/50 p-1 rounded-2xl h-auto self-start">
             <TabsTrigger 
