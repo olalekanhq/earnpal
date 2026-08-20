@@ -125,6 +125,7 @@ export function Navigation() {
       items: [
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Earn Points", href: "/earn", icon: Coins },
+        { name: "Transactions", href: "/transactions", icon: History },
         { name: "Redeem", href: "/redeem", icon: Gift },
         { name: "Referral", href: "/refer", icon: Share2 },
       ]
