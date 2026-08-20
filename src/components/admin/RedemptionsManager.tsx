@@ -164,163 +164,81 @@ export function RedemptionsManager() {
                   </TableCell>
                   <TableCell className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      {r.status === 'pending' ? (
-                        <>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-8 px-3 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg gap-2"
-                                title="Approve"
-                                disabled={updateStatusMutation.isPending}
-                              >
-                                <Check className="h-4 w-4" />
-                                <span className="text-[10px] font-black uppercase tracking-wider">Approve</span>
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl border-border/50">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="font-black text-xl">Approve Redemption?</AlertDialogTitle>
-                                <AlertDialogDescription className="font-medium text-sm">
-                                  Are you sure you want to approve this redemption for <span className="text-primary font-bold">"{r.rewards?.title}"</span>? 
-                                  The user will be notified via email and in-app notification.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
-                                  onClick={() => updateStatusMutation.mutate({ 
-                                    id: r.id, 
-                                    status: 'approved', 
-                                    userId: r.user_id,
-                                    rewardTitle: r.rewards?.title 
-                                  })}
-                                >
-                                  Confirm Approval
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 px-3 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg gap-2"
+                            title="Approve"
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            <Check className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-wider">Approve</span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="rounded-2xl border-border/50">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="font-black text-xl">Approve Redemption?</AlertDialogTitle>
+                            <AlertDialogDescription className="font-medium text-sm">
+                              Are you sure you want to approve this redemption for <span className="text-primary font-bold">"{r.rewards?.title}"</span>? 
+                              The user will be notified via email and in-app notification.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                              className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
+                              onClick={() => updateStatusMutation.mutate({ 
+                                id: r.id, 
+                                status: 'approved', 
+                                userId: r.user_id,
+                                rewardTitle: r.rewards?.title 
+                              })}
+                            >
+                              Confirm Approval
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
 
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-lg gap-2"
-                                title="Reject"
-                                disabled={updateStatusMutation.isPending}
-                              >
-                                <X className="h-4 w-4" />
-                                <span className="text-[10px] font-black uppercase tracking-wider">Reject</span>
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl border-border/50">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="font-black text-xl">Reject Redemption?</AlertDialogTitle>
-                                <AlertDialogDescription className="font-medium text-sm">
-                                  Are you sure you want to reject this redemption for <span className="font-bold text-foreground">"{r.rewards?.title}"</span>? 
-                                  This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-destructive hover:bg-destructive/90"
-                                  onClick={() => updateStatusMutation.mutate({ 
-                                    id: r.id, 
-                                    status: 'rejected', 
-                                    userId: r.user_id,
-                                    rewardTitle: r.rewards?.title 
-                                  })}
-                                >
-                                  Confirm Rejection
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </>
-                      ) : (
-                        <div className="flex gap-2">
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-8 px-3 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg gap-2"
-                                title="Approve"
-                                disabled={updateStatusMutation.isPending}
-                              >
-                                <Check className="h-4 w-4" />
-                                <span className="text-[10px] font-black uppercase tracking-wider">Approve</span>
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl border-border/50">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="font-black text-xl">Approve Redemption?</AlertDialogTitle>
-                                <AlertDialogDescription className="font-medium text-sm">
-                                  Are you sure you want to approve this redemption for <span className="text-primary font-bold">"{r.rewards?.title}"</span>? 
-                                  The user will be notified via email and in-app notification.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
-                                  onClick={() => updateStatusMutation.mutate({ 
-                                    id: r.id, 
-                                    status: 'approved', 
-                                    userId: r.user_id,
-                                    rewardTitle: r.rewards?.title 
-                                  })}
-                                >
-                                  Confirm Approval
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-lg gap-2"
-                                title="Reject"
-                                disabled={updateStatusMutation.isPending}
-                              >
-                                <X className="h-4 w-4" />
-                                <span className="text-[10px] font-black uppercase tracking-wider">Reject</span>
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl border-border/50">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="font-black text-xl">Reject Redemption?</AlertDialogTitle>
-                                <AlertDialogDescription className="font-medium text-sm">
-                                  Are you sure you want to reject this redemption for <span className="font-bold text-foreground">"{r.rewards?.title}"</span>? 
-                                  This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-destructive hover:bg-destructive/90"
-                                  onClick={() => updateStatusMutation.mutate({ 
-                                    id: r.id, 
-                                    status: 'rejected', 
-                                    userId: r.user_id,
-                                    rewardTitle: r.rewards?.title 
-                                  })}
-                                >
-                                  Confirm Rejection
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      )}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/5 rounded-lg gap-2"
+                            title="Reject"
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            <X className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-wider">Reject</span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="rounded-2xl border-border/50">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="font-black text-xl">Reject Redemption?</AlertDialogTitle>
+                            <AlertDialogDescription className="font-medium text-sm">
+                              Are you sure you want to reject this redemption for <span className="font-bold text-foreground">"{r.rewards?.title}"</span>? 
+                              This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                              className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-destructive hover:bg-destructive/90"
+                              onClick={() => updateStatusMutation.mutate({ 
+                                id: r.id, 
+                                status: 'rejected', 
+                                userId: r.user_id,
+                                rewardTitle: r.rewards?.title 
+                              })}
+                            >
+                              Confirm Rejection
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
