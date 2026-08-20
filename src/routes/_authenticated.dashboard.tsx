@@ -1,10 +1,11 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, Clock, ChevronRight, Award, Zap, Star, CheckCircle2 } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, TrendingDown, Clock, ChevronRight, Award, Zap, Star, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { subDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -114,6 +115,50 @@ function Dashboard() {
     },
   });
 
+  const { data: balanceTrend } = useQuery({
+    queryKey: ["balanceTrend"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { percentage: 0, isPositive: true };
+
+      const now = new Date();
+      const sevenDaysAgo = subDays(startOfDay(now), 7);
+      const fourteenDaysAgo = subDays(startOfDay(now), 14);
+
+      // Current week earnings
+      const { data: currentWeekData } = await supabase
+        .from("points_transactions")
+        .select("amount")
+        .eq("user_id", user.id)
+        .eq("type", "earn")
+        .gte("created_at", sevenDaysAgo.toISOString());
+
+      // Previous week earnings
+      const { data: previousWeekData } = await supabase
+        .from("points_transactions")
+        .select("amount")
+        .eq("user_id", user.id)
+        .eq("type", "earn")
+        .gte("created_at", fourteenDaysAgo.toISOString())
+        .lt("created_at", sevenDaysAgo.toISOString());
+
+      const currentTotal = currentWeekData?.reduce((acc, tx) => acc + tx.amount, 0) || 0;
+      const previousTotal = previousWeekData?.reduce((acc, tx) => acc + tx.amount, 0) || 0;
+
+      if (previousTotal === 0) {
+        return { percentage: currentTotal > 0 ? 100 : 0, isPositive: true };
+      }
+
+      const diff = currentTotal - previousTotal;
+      const percentage = Math.round((Math.abs(diff) / previousTotal) * 100);
+      
+      return {
+        percentage,
+        isPositive: diff >= 0
+      };
+    },
+  });
+
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
 
   return (
@@ -166,8 +211,12 @@ function Dashboard() {
                 {profile?.points_balance?.toLocaleString() || 0} <span className="text-xl opacity-60 ml-1">PTS</span>
               </div>
               <p className="text-sm font-medium opacity-80 flex items-center gap-1">
-                <TrendingUp className="h-4 w-4" />
-                +12% from last week
+                {balanceTrend?.isPositive ? (
+                  <TrendingUp className="h-4 w-4 text-white" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 text-white/70" />
+                )}
+                {balanceTrend?.isPositive ? '+' : '-'}{balanceTrend?.percentage || 0}% from last week
               </p>
             </div>
             <div className="flex gap-2">

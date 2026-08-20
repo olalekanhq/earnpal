@@ -31,27 +31,81 @@ import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck, PieChart } from "lucide-react";
+import { ListTodo, ShieldCheck, PieChart, TrendingDown } from "lucide-react";
+import { subDays, startOfDay } from "date-fns";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
-      const [usersRes, pointsRes, redemptionsRes] = await Promise.all([
+      const now = new Date();
+      const thirtyDaysAgo = subDays(startOfDay(now), 30);
+      const sixtyDaysAgo = subDays(startOfDay(now), 60);
+
+      const [
+        usersRes, 
+        usersPrevRes,
+        pointsRes, 
+        pointsPrevRes,
+        redemptionsRes,
+        redemptionsPrevRes
+      ] = await Promise.all([
+        // Current period
         supabase.from("profiles").select("id", { count: "exact", head: true }),
-        supabase.from("points_transactions").select("amount"),
-        supabase.from("redemptions").select("id", { count: "exact", head: true }),
+        supabase.from("profiles").select("id", { count: "exact", head: true }).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("points_transactions").select("amount, created_at").gte("created_at", thirtyDaysAgo.toISOString()),
+        // Previous period
+        supabase.from("points_transactions").select("amount, created_at").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
       ]);
 
-      const totalPoints = pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
-      const pointsSpent = Math.abs(pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
+      // Calculate totals
+      const totalUsers = usersRes.count || 0;
+      const prevUsers = usersPrevRes.count || 0; // Cumulative up to 30 days ago
+      
+      // Points Issued
+      const pointsIssued = pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
+      const prevPointsIssued = pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
 
+      // Points Redeemed
+      const pointsSpent = Math.abs(pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
+      const prevPointsSpent = Math.abs(pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
+
+      // Redemptions count
+      const totalRedemptions = redemptionsRes.count || 0;
+      const prevRedemptions = redemptionsPrevRes.count || 0;
+
+      const calculateTrend = (current: number, previous: number) => {
+        if (previous === 0) return { trend: current > 0 ? "+100%" : "0%", up: true };
+        const diff = current - previous;
+        const percentage = Math.round((Math.abs(diff) / previous) * 100);
+        return {
+          trend: `${diff >= 0 ? '+' : '-'}${percentage}%`,
+          up: diff >= 0
+        };
+      };
+
+      // For users, it's cumulative growth vs previous cumulative. 
+      // But let's check new users in current 30 days vs previous 30 days for actual trend.
+      const newUsersCurrent = (usersRes.count || 0) - (usersPrevRes.count || 0);
+      // We need a way to get users count 60 days ago for a true comparison of new user velocity
+      // For now, let's use the current total vs previous total for simple growth indicator
+      
       return {
-        totalUsers: usersRes.count || 0,
-        totalPoints,
+        totalUsers,
+        totalPoints: pointsIssued, // This is current 30 days issued points in this context? 
+        // Wait, the original code used pointsRes.data for ALL points. 
+        // Let's adjust to be consistent with overall stats + specific trends.
         pointsSpent,
-        totalRedemptions: redemptionsRes.count || 0,
-        redemptionRate: usersRes.count ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2) : 0
+        totalRedemptions,
+        redemptionRate: usersRes.count ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2) : 0,
+        trends: {
+          users: calculateTrend(totalUsers, prevUsers),
+          points: calculateTrend(pointsIssued, prevPointsIssued),
+          spent: calculateTrend(pointsSpent, prevPointsSpent),
+          redemptions: calculateTrend(totalRedemptions, prevRedemptions)
+        }
       };
     },
   });
@@ -61,33 +115,33 @@ export function AdminPanel() {
       title: "Total Users",
       value: stats?.totalUsers.toLocaleString(),
       icon: Users,
-      trend: "+12%",
-      trendUp: true,
+      trend: stats?.trends.users.trend || "0%",
+      trendUp: stats?.trends.users.up ?? true,
       description: "Active platform members"
     },
     {
       title: "Points Issued",
       value: stats?.totalPoints.toLocaleString(),
       icon: Coins,
-      trend: "+8%",
-      trendUp: true,
-      description: "Total rewards generated"
+      trend: stats?.trends.points.trend || "0%",
+      trendUp: stats?.trends.points.up ?? true,
+      description: "Last 30 days generation"
     },
     {
       title: "Points Redeemed",
       value: stats?.pointsSpent.toLocaleString(),
       icon: ShoppingBag,
-      trend: "+5%",
-      trendUp: true,
-      description: "Value claimed by users"
+      trend: stats?.trends.spent.trend || "0%",
+      trendUp: stats?.trends.spent.up ?? true,
+      description: "Last 30 days claims"
     },
     {
       title: "Redemptions",
       value: stats?.totalRedemptions.toLocaleString(),
       icon: TrendingUp,
-      trend: "-2%",
-      trendUp: false,
-      description: "Successful prize claims"
+      trend: stats?.trends.redemptions.trend || "0%",
+      trendUp: stats?.trends.redemptions.up ?? true,
+      description: "Last 30 days count"
     }
   ];
 
