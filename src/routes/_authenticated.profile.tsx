@@ -121,6 +121,8 @@ function ProfilePage() {
         .getPublicUrl(filePath);
 
       console.log("Generated avatar URL:", data.publicUrl);
+      // The URL stored in the DB will be the base public URL.
+      // We'll use the server function or direct transformation params when rendering.
       await updateProfile.mutateAsync({ avatar_url: data.publicUrl || "" });
 
     } catch (error: any) {
@@ -176,7 +178,7 @@ function ProfilePage() {
           <CardContent className="relative pt-0 pb-8 px-6 text-center">
             <div className="inline-block relative -mt-12 mb-4 group">
               <Avatar className="h-24 w-24 border-4 border-white shadow-md">
-                <AvatarImage src={profile?.avatar_url || ""} />
+                <AvatarImage src={profile?.avatar_url ? `${profile.avatar_url}?width=200&height=200&resize=cover&format=webp` : ""} />
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
                   {profile?.username?.[0]?.toUpperCase() || "?"}
                 </AvatarFallback>
