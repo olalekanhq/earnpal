@@ -120,15 +120,11 @@ function AuthPage() {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
     
-    // Clear any existing timeout
-    if ((window as any).referralTimeout) {
-      clearTimeout((window as any).referralTimeout);
-    }
-    
-    // Set a new one
-    (window as any).referralTimeout = setTimeout(() => {
+    // Use a simple debounce that works with React state
+    const timeout = setTimeout(() => {
       validateReferral(val);
     }, 500);
+    return () => clearTimeout(timeout);
   };
 
 
