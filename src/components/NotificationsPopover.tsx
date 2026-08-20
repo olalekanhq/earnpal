@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+// \u2063
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -58,7 +59,7 @@ export function NotificationsPopover() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-80 p-0 bg-popover/90 backdrop-blur-md border-primary/20 shadow-xl animate-in fade-in-0 zoom-in-95" align="end">
         <div className="flex items-center justify-between p-4 border-b">
           <h4 className="font-semibold text-sm">Notifications</h4>
           {unreadCount > 0 && (
@@ -84,16 +85,20 @@ export function NotificationsPopover() {
           ) : notifications?.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">No notifications yet.</div>
           ) : (
-            <div className="divide-y">
-              {notifications?.map((notification) => (
+            <div className="divide-y divide-primary/10">
+              {notifications?.map((notification, index) => (
                 <div 
                   key={notification.id} 
-                  className={`p-4 transition-colors hover:bg-muted/50 cursor-pointer ${!notification.is_read ? 'bg-primary/5' : ''}`}
+                  className={`p-4 transition-all duration-200 hover:bg-primary/5 cursor-pointer animate-in slide-in-from-right-2 fill-mode-forwards ${!notification.is_read ? 'bg-primary/10 border-l-2 border-primary' : ''}`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                   onClick={() => !notification.is_read && markAsRead.mutate(notification.id)}
                 >
-                  <p className="text-sm font-medium">{notification.title}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
-                  <p className="text-[10px] text-muted-foreground mt-2">
+                  <p className="text-sm font-medium flex items-center gap-2">
+                    {notification.title}
+                    {!notification.is_read && <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{notification.message}</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-2 font-medium">
                     {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                   </p>
                 </div>
