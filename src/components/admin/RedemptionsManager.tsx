@@ -145,7 +145,7 @@ export function RedemptionsManager() {
           <TableBody>
             {filteredRedemptions?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-muted-foreground font-medium">
+                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground font-medium">
                   No redemptions found matching your criteria.
                 </TableCell>
               </TableRow>
@@ -156,7 +156,14 @@ export function RedemptionsManager() {
                     <div className="font-bold">{r.profiles?.full_name || r.profiles?.username}</div>
                     <div className="text-xs text-muted-foreground">{r.profiles?.email}</div>
                   </TableCell>
-                  <TableCell className="px-6 py-4 font-medium">{r.rewards?.title}</TableCell>
+                  <TableCell className="px-6 py-4 font-medium">
+                    <div>{r.rewards?.title}</div>
+                    {r.rejection_reason && (
+                      <div className="text-[10px] text-destructive font-bold uppercase tracking-tighter mt-1">
+                        Reason: {r.rejection_reason}
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="px-6 py-4">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
                       {r.rewards?.cost_points} pts
@@ -184,8 +191,19 @@ export function RedemptionsManager() {
                       <AlertDialogContent className="rounded-2xl border-border/50">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="font-black text-xl">Update Status</AlertDialogTitle>
-                          <AlertDialogDescription className="font-medium text-sm space-y-4">
+                          <div className="font-medium text-sm space-y-4 text-muted-foreground">
                             <div>Update the status for <span className="text-primary font-bold">"{r.rewards?.title}"</span> by <span className="font-bold">{r.profiles?.full_name || r.profiles?.username}</span>.</div>
+                            
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Rejection Reason (Required for rejection)</label>
+                              <Input 
+                                placeholder="e.g. Invalid account details, duplicate request..." 
+                                value={rejectionReason}
+                                onChange={(e) => setRejectionReason(e.target.value)}
+                                className="rounded-xl"
+                              />
+                            </div>
+
                             <div className="flex flex-col gap-2 pt-2">
                               <Button 
                                 className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
@@ -202,12 +220,19 @@ export function RedemptionsManager() {
                               <Button 
                                 variant="destructive"
                                 className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest"
-                                onClick={() => updateStatusMutation.mutate({ 
-                                  id: r.id, 
-                                  status: 'rejected', 
-                                  userId: r.user_id,
-                                  rewardTitle: r.rewards?.title 
-                                })}
+                                onClick={() => {
+                                  if (!rejectionReason.trim()) {
+                                    toast.error("Please provide a rejection reason");
+                                    return;
+                                  }
+                                  updateStatusMutation.mutate({ 
+                                    id: r.id, 
+                                    status: 'rejected', 
+                                    userId: r.user_id,
+                                    rewardTitle: r.rewards?.title,
+                                    reason: rejectionReason
+                                  });
+                                }}
                                 disabled={r.status === 'rejected' || updateStatusMutation.isPending}
                               >
                                 <X className="mr-2 h-4 w-4" /> Reject Redemption
@@ -225,8 +250,7 @@ export function RedemptionsManager() {
                               >
                                 <Loader2 className="mr-2 h-4 w-4" /> Set to Pending
                               </Button>
-                            </div>
-                          </AlertDialogDescription>
+                          </div>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] tracking-widest w-full">Close</AlertDialogCancel>
