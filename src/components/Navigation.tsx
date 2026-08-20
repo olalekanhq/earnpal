@@ -117,38 +117,13 @@ export function Navigation() {
         </nav>
 
         {/* Landing Page Mobile Overlay Menu */}
-        <div 
-          className={cn(
-            "md:hidden fixed inset-0 z-[60] flex transition-opacity duration-300",
-            isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          )}
-        >
-          <div 
-            className={cn(
-              "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
-              isMobileMenuOpen ? "opacity-100" : "opacity-0"
-            )} 
-            onClick={() => setIsMobileMenuOpen(false)} 
-          />
-          <div 
-            className={cn(
-              "relative w-72 h-full bg-card shadow-2xl transition-transform duration-300 ease-in-out p-6 flex flex-col",
-              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            )}
-          >
+        <MobileMenuOverlay isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+          <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
               <Link to="/" className="flex items-center gap-2 font-black text-xl text-primary uppercase tracking-tighter">
                 <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
                 <span>Earn Pal</span>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </Button>
             </div>
 
             <nav className="flex flex-col gap-4">
@@ -188,7 +163,7 @@ export function Navigation() {
               </Button>
             </div>
           </div>
-        </div>
+        </MobileMenuOverlay>
       </>
     );
   }
