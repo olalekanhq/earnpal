@@ -52,12 +52,15 @@ function EarnPage() {
 
       const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
       const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
+      const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
       const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
+      const progressMap = new Map((videoProgress as any)?.map((p: any) => [p.task_id, p.watch_count]));
       
       return (tasksData as any)?.map((task: any) => ({
         ...task,
-        status: submissionsMap.get(task.id) || null
+        status: submissionsMap.get(task.id) || null,
+        watch_count: progressMap.get(task.id) || 0
       })) || [];
     },
   });
@@ -164,6 +167,21 @@ function EarnPage() {
                   </div>
                   <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
                   <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
+                  {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
+                    <div className="mt-3 space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        <span>Progress</span>
+                        <span>{task.watch_count || 0} / {task.video_ad_count} Ads</span>
+                      </div>
+                      <div className="w-full bg-primary/10 h-1.5 rounded-full overflow-hidden">
+                        <div 
+                          className="bg-primary h-full transition-all duration-500" 
+                          style={{ width: `${Math.min(100, ((task.watch_count || 0) / task.video_ad_count) * 100)}%` }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground italic font-medium">Earn {task.points} points after {task.video_ad_count} watches.</p>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent className="mt-auto pt-0 pb-6 px-6">
                   <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
@@ -180,6 +198,36 @@ function EarnPage() {
                     className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
                     disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                     onClick={async () => {
+                      const { data: { user } } = await supabase.auth.getUser();
+                      if (!user) return;
+
+                      // Special handling for video tasks
+                      if (task.category === 'Videos' && task.video_ad_count > 0) {
+                        setCompletingTaskId(task.id);
+                        
+                        const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                          _user_id: user.id,
+                          _task_id: task.id
+                        });
+
+                        if (error) {
+                          toast.error(error.message);
+                        } else if (data && !(data as any).success) {
+                          toast.error((data as any).message);
+                        } else {
+                          const res = data as any;
+                          if (res.completed) {
+                            toast.success(res.message);
+                            queryClient.invalidateQueries({ queryKey: ["profile"] });
+                          } else {
+                            toast.success(res.message);
+                          }
+                          refetchTasks();
+                        }
+                        setCompletingTaskId(null);
+                        return;
+                      }
+
                       const currentUiState = taskUiStates[task.id] || 'idle';
                       
                       if (currentUiState === 'idle') {
@@ -201,9 +249,6 @@ function EarnPage() {
                         setTaskUiStates(prev => ({ ...prev, [task.id]: 'submitting' }));
                         setCompletingTaskId(task.id);
                         
-                        const { data: { user } } = await supabase.auth.getUser();
-                        if (!user) return;
-
                         const { data, error } = await (supabase.rpc as any)('submit_task', {
                           _user_id: user.id,
                           _task_id: task.id
@@ -235,6 +280,12 @@ function EarnPage() {
                         <Clock className="h-4 w-4 mr-2" />
                         Verifying...
                       </>
+                    ) : (task.category === 'Videos' && task.video_ad_count > 0) ? (
+                      completingTaskId === task.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        `Watch Ad (${task.watch_count || 0}/${task.video_ad_count})`
+                      )
                     ) : (taskUiStates[task.id] === 'verifying') ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
