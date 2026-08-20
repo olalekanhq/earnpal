@@ -354,7 +354,24 @@ function Dashboard() {
             <CardContent className="p-0">
               <div className="divide-y divide-border/50">
                 {recentTransactions?.length ? recentTransactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors">
+                  <div 
+                    key={tx.id} 
+                    className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors cursor-pointer"
+                    onClick={() => {
+                      toast.info(
+                        <div className="space-y-2">
+                          <p className="font-bold text-sm">Transaction Details</p>
+                          <div className="text-xs space-y-1 font-medium">
+                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Description:</span> {tx.description}</p>
+                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Amount:</span> {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
+                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Type:</span> {tx.type}</p>
+                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Date:</span> {new Date(tx.created_at).toLocaleString()}</p>
+                          </div>
+                        </div>,
+                        { duration: 5000 }
+                      );
+                    }}
+                  >
                     <div className="flex items-center gap-4">
                       <div className={cn(
                         "p-2.5 rounded-xl transition-transform group-hover:scale-110",
@@ -363,7 +380,7 @@ function Dashboard() {
                         {tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
                       </div>
                       <div>
-                        <p className="font-bold text-sm text-foreground">{tx.description}</p>
+                        <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{tx.description}</p>
                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{new Date(tx.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
