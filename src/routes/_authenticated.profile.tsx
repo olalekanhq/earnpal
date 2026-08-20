@@ -419,6 +419,19 @@ function ProfilePage() {
                     </div>
                     <ArrowRight className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100 transition-opacity" />
                   </Link>
+
+                  <Link to="/earn" search={{ tab: "history" }} className="p-4 bg-accent/30 rounded-2xl border border-border/50 flex items-center justify-between group cursor-pointer hover:bg-accent/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-accent p-2 rounded-xl text-foreground shadow-sm group-hover:scale-110 transition-transform">
+                        <History className="h-4 w-4" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-black text-foreground leading-tight">Transaction History</p>
+                        <p className="text-xs text-muted-foreground font-medium">Track your points and claims</p>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
+                  </Link>
                 </div>
               </Card>
 
