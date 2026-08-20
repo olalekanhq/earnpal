@@ -71,6 +71,36 @@ export type Database = {
         }
         Relationships: []
       }
+      fraud_flags: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          severity: string | null
+          status: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          severity?: string | null
+          status?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          severity?: string | null
+          status?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -138,10 +168,12 @@ export type Database = {
           email: string
           email_notifications: boolean | null
           facebook_handle: string | null
+          fingerprint: string | null
           full_name: string | null
           has_claimed_welcome_bonus: boolean | null
           id: string
           instagram_handle: string | null
+          last_ip: string | null
           phone_number: string | null
           points_balance: number
           push_notifications: boolean | null
@@ -160,10 +192,12 @@ export type Database = {
           email: string
           email_notifications?: boolean | null
           facebook_handle?: string | null
+          fingerprint?: string | null
           full_name?: string | null
           has_claimed_welcome_bonus?: boolean | null
           id: string
           instagram_handle?: string | null
+          last_ip?: string | null
           phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
@@ -182,10 +216,12 @@ export type Database = {
           email?: string
           email_notifications?: boolean | null
           facebook_handle?: string | null
+          fingerprint?: string | null
           full_name?: string | null
           has_claimed_welcome_bonus?: boolean | null
           id?: string
           instagram_handle?: string | null
+          last_ip?: string | null
           phone_number?: string | null
           points_balance?: number
           push_notifications?: boolean | null
