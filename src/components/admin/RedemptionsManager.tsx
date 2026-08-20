@@ -207,12 +207,14 @@ export function RedemptionsManager() {
                             <div className="flex flex-col gap-2 pt-2">
                               <Button 
                                 className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest bg-green-600 hover:bg-green-700"
-                                onClick={() => updateStatusMutation.mutate({ 
-                                  id: r.id, 
-                                  status: 'approved', 
-                                  userId: r.user_id,
-                                  rewardTitle: r.rewards?.title 
-                                })}
+                                onClick={() => {
+                                  updateStatusMutation.mutate({ 
+                                    id: r.id, 
+                                    status: 'approved', 
+                                    userId: r.user_id,
+                                    rewardTitle: r.rewards?.title 
+                                  });
+                                }}
                                 disabled={r.status === 'approved' || updateStatusMutation.isPending}
                               >
                                 <Check className="mr-2 h-4 w-4" /> Approve Redemption
@@ -240,12 +242,14 @@ export function RedemptionsManager() {
                               <Button 
                                 variant="outline"
                                 className="w-full justify-start rounded-xl font-bold uppercase text-[10px] tracking-widest"
-                                onClick={() => updateStatusMutation.mutate({ 
-                                  id: r.id, 
-                                  status: 'pending', 
-                                  userId: r.user_id,
-                                  rewardTitle: r.rewards?.title 
-                                })}
+                                onClick={() => {
+                                  updateStatusMutation.mutate({ 
+                                    id: r.id, 
+                                    status: 'pending', 
+                                    userId: r.user_id,
+                                    rewardTitle: r.rewards?.title 
+                                  });
+                                }}
                                 disabled={r.status === 'pending' || updateStatusMutation.isPending}
                               >
                                 <Loader2 className="mr-2 h-4 w-4" /> Set to Pending
