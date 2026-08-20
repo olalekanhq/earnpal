@@ -46,12 +46,17 @@ export function RedemptionsManager() {
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, userId, rewardTitle }: { id: string; status: string; userId: string; rewardTitle: string }) => {
-      const { error } = await supabase
-        .from("redemptions")
-        .update({ status })
-        .eq("id", id);
+      const { data, error } = await supabase.rpc('process_redemption_status_change', {
+        _redemption_id: id,
+        _new_status: status
+      });
       
       if (error) throw error;
+      
+      const result = data as any;
+      if (!result.success) {
+        throw new Error(result.message);
+      }
 
       // Create notification for user
       await supabase.from("notifications").insert({
@@ -59,14 +64,21 @@ export function RedemptionsManager() {
         title: status === 'approved' ? "Redemption Approved!" : "Redemption Rejected",
         message: status === 'approved' 
           ? `Your request for "${rewardTitle}" has been approved.` 
-          : `Your request for "${rewardTitle}" was rejected. Please contact support for details.`,
+          : `Your request for "${rewardTitle}" was rejected. The points have been returned to your balance.`,
         type: "redemption"
       });
+
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["admin-redemptions"] });
       queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-      toast.success("Redemption status updated");
+      
+      let message = "Redemption status updated";
+      if (result.refunded) message += " and points refunded";
+      if (result.re_deducted) message += " and points re-deducted";
+      
+      toast.success(message);
     },
     onError: (error) => {
       toast.error("Failed to update status: " + error.message);

@@ -528,6 +528,10 @@ export type Database = {
         Returns: undefined
       }
       lookup_login_email: { Args: { _username: string }; Returns: string }
+      process_redemption_status_change: {
+        Args: { _new_status: string; _redemption_id: string }
+        Returns: Json
+      }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
       remove_role: {
         Args: {
