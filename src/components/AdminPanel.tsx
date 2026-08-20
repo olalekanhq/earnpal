@@ -10,7 +10,8 @@ import {
   Clock,
   Loader2,
   Users2,
-  ShieldAlert
+  ShieldAlert,
+  ChevronDown
 } from "lucide-react";
 import { 
   Card, 
@@ -20,10 +21,15 @@ import {
 } from "@/components/ui/card";
 import { 
   Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
+  TabsContent
 } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
@@ -36,6 +42,7 @@ import { FraudManager } from "./admin/FraudManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
+import { useState } from "react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
