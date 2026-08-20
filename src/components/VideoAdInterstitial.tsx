@@ -167,7 +167,7 @@ export function VideoAdInterstitial() {
     if (typeof window === 'undefined') return;
     
     const handleCheck = () => {
-      const path = window.location.pathname;
+      const path = location.pathname; // Use location from useLocation()
       const shouldTrigger = ['/dashboard', '/earn'].includes(path);
       const hasTriggered = sessionStorage.getItem('interstitial_triggered');
       
@@ -183,6 +183,7 @@ export function VideoAdInterstitial() {
 
     return handleCheck();
   }, [location.pathname, triggerAd]);
+
 
 
 
