@@ -119,17 +119,17 @@ export function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
 
   const tabs = [
-    { value: "users", icon: Users, label: "Users" },
+    { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
-    { value: "tasks", icon: ListTodo, label: "Tasks" },
-    { value: "rewards", icon: ShoppingBag, label: "Rewards" },
-    { value: "redemptions", icon: Clock, label: "Redemptions" },
-    { value: "analytics", icon: PieChart, label: "Analytics" },
-    { value: "referrals", icon: Users2, label: "Referrals" },
-    { value: "settings", icon: Settings, label: "Settings" }
+    { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
+    { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
+    { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
+    { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
+    { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
+    { value: "settings", icon: Settings, label: "Settings", color: undefined }
   ];
 
-  const activeTabData = tabs.find(t => t.value === activeTab) || tabs[0];
+  const activeTabData = tabs.find(t => t.value === activeTab)!;
 
   const statCards = [
     {
