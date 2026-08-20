@@ -126,13 +126,13 @@ export function RewardsManager() {
       const filePath = `reward-${Math.random()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars') // Using avatars bucket for now as it exists
+        .from('rewards')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
+        .from('rewards')
         .getPublicUrl(filePath);
 
       setFormData(prev => ({ ...prev, image_url: publicUrl }));
