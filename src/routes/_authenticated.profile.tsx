@@ -61,6 +61,10 @@ function ProfilePage() {
     if (profile?.full_name) setFullName(profile.full_name);
     if (profile?.username) setUsername(profile.username);
     if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
+    if (profile?.twitter_handle) setTwitter(profile.twitter_handle);
+    if (profile?.facebook_handle) setFacebook(profile.facebook_handle);
+    if (profile?.telegram_handle) setTelegram(profile.telegram_handle);
+    if (profile?.instagram_handle) setInstagram(profile.instagram_handle);
     if (profile?.phone_number) {
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
