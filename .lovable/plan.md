@@ -1,6 +1,6 @@
 # Plan: Enforce One-Time Welcome Banner
 
-The user wants the welcome bonus banner to show only once per account. Currently, it uses  to track dismissal, which resets when the browser is closed or the page is reloaded in a new session. I will move this tracking to the user's profile in the database.
+The user wants the welcome bonus banner to show only once per account. Currently, it uses `sessionStorage` to track dismissal, which resets when the browser is closed or the page is reloaded in a new session. I will move this tracking to the user's profile in the database.
 
 ## User Review Required
 
