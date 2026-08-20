@@ -70,7 +70,6 @@ function TransactionsPage() {
   }, [transactionId, transactions]);
 
   const handleTxClick = (tx: Transaction) => {
-    console.log("Transaction clicked:", tx.id);
     setSelectedTx(tx);
     setIsModalOpen(true);
   };
