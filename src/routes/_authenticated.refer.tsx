@@ -203,49 +203,8 @@ function ReferralPage() {
           </Tabs>
         </div>
 
-        {/* Right Column: Milestones & Info */}
+        {/* Info Column */}
         <div className="md:col-span-4 space-y-6">
-          <Card className="border-none shadow-sm bg-card p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold">Next Milestone</h3>
-              <div className="bg-orange-50 px-2 py-1 rounded-lg">
-                <span className="text-[10px] font-bold text-orange-600 uppercase">LVL 1</span>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                  <span>Progress</span>
-                  <span>{referralCount} / {nextMilestone} Invites</span>
-                </div>
-                <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-primary transition-all duration-500" 
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="bg-accent/30 rounded-2xl p-4 border border-border/50 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white p-2 rounded-xl shadow-sm text-primary">
-                    <Shield className="h-4 w-4" />
-                  </div>
-                  <p className="text-sm font-bold leading-tight">Super Referrer</p>
-                </div>
-                <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-                  Invite {nextMilestone - referralCount} more friends to unlock the <span className="text-foreground font-bold italic">Super Referrer</span> badge and get a 200 point bonus!
-                </p>
-              </div>
-
-              <Button className="w-full rounded-xl font-bold gap-2" variant="outline">
-                Rewards Details
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </Card>
-
           <Card className="border-none shadow-sm bg-card p-6 space-y-4">
             <h3 className="font-black text-sm uppercase tracking-widest">How it works</h3>
             <div className="space-y-4">
