@@ -142,7 +142,7 @@ function RedeemPage() {
           ))}
         </div>
         
-        <Link to="/earn" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-bold text-sm">
+        <Link to="/earn" search={{ tab: 'history' }} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-bold text-sm">
           <History className="h-4 w-4" />
           Redemption History
         </Link>
