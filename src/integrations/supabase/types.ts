@@ -388,6 +388,7 @@ export type Database = {
           link_url: string | null
           points: number
           title: string
+          vast_tag_url: string | null
           verification_required: boolean | null
           video_ad_count: number | null
         }
@@ -402,6 +403,7 @@ export type Database = {
           link_url?: string | null
           points: number
           title: string
+          vast_tag_url?: string | null
           verification_required?: boolean | null
           video_ad_count?: number | null
         }
@@ -416,6 +418,7 @@ export type Database = {
           link_url?: string | null
           points?: number
           title?: string
+          vast_tag_url?: string | null
           verification_required?: boolean | null
           video_ad_count?: number | null
         }

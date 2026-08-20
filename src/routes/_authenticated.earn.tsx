@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, History, TrendingUp, Gift } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, History, TrendingUp, Gift, Play } from "lucide-react";
+import VastAdModal from "@/components/VastAdModal";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ function EarnPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
+  const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
 
   useEffect(() => {
     if (search['tab'] === 'history') {
@@ -203,6 +205,11 @@ function EarnPage() {
 
                       // Special handling for video tasks
                       if (task.category === 'Videos' && task.video_ad_count > 0) {
+                        if (task.vast_tag_url) {
+                          setActiveVastTask(task);
+                          return;
+                        }
+
                         setCompletingTaskId(task.id);
                         
                         const { data, error } = await (supabase.rpc as any)('record_video_watch', {
@@ -328,6 +335,38 @@ function EarnPage() {
               </Card>
             ))}
           </div>
+
+          {activeVastTask && (
+            <VastAdModal
+              isOpen={!!activeVastTask}
+              onClose={() => setActiveVastTask(null)}
+              vastTagUrl={activeVastTask.vast_tag_url}
+              taskTitle={activeVastTask.title}
+              onComplete={async () => {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                  _user_id: user.id,
+                  _task_id: activeVastTask.id
+                });
+
+                if (error) {
+                  toast.error(error.message);
+                } else {
+                  const res = data as any;
+                  if (res.completed) {
+                    toast.success(res.message);
+                    queryClient.invalidateQueries({ queryKey: ["profile"] });
+                  } else {
+                    toast.success(res.message);
+                  }
+                  refetchTasks();
+                }
+                setActiveVastTask(null);
+              }}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="history" className="space-y-8 mt-0 outline-none">
