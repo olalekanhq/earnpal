@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import VastPlayer from "./VastPlayer";
 import { Loader2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 interface VastAdModalProps {
   isOpen: boolean;
