@@ -79,28 +79,117 @@ export function Navigation() {
   // Custom transparent navbar for landing page
   if (isLandingPage) {
     return (
-      <nav className="fixed top-0 z-50 w-full bg-card/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 flex h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
-            <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
-            <span>Earn Pal</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
-            <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
-            <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
+      <>
+        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg">
+          <div className="container mx-auto px-4 flex h-20 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="md:hidden hover:bg-primary/5" 
+                onClick={() => setIsMobileMenuOpen(true)}
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6 text-foreground" />
+              </Button>
+              <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
+                <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
+                <span className="hidden xs:inline">Earn Pal</span>
+              </Link>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-8">
+              <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
+              <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
+              <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" className="font-black uppercase hidden sm:flex" asChild>
+                <Link to="/auth">Log in</Link>
+              </Button>
+              <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
+                <Link to="/auth">Get Started</Link>
+              </Button>
+              <ThemeToggle />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" className="font-black uppercase hidden sm:flex" asChild>
-              <Link to="/auth">Log in</Link>
-            </Button>
-            <Button className="font-black uppercase shadow-lg shadow-primary/20" asChild>
-              <Link to="/auth">Get Started</Link>
-            </Button>
-            <ThemeToggle />
+        </nav>
+
+        {/* Landing Page Mobile Overlay Menu */}
+        <div 
+          className={cn(
+            "md:hidden fixed inset-0 z-[60] flex transition-opacity duration-300",
+            isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          )}
+        >
+          <div 
+            className={cn(
+              "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
+              isMobileMenuOpen ? "opacity-100" : "opacity-0"
+            )} 
+            onClick={() => setIsMobileMenuOpen(false)} 
+          />
+          <div 
+            className={cn(
+              "relative w-72 h-full bg-card shadow-2xl transition-transform duration-300 ease-in-out p-6 flex flex-col",
+              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            )}
+          >
+            <div className="flex items-center justify-between mb-8">
+              <Link to="/" className="flex items-center gap-2 font-black text-xl text-primary uppercase tracking-tighter">
+                <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
+                <span>Earn Pal</span>
+              </Link>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <nav className="flex flex-col gap-4">
+              <Link 
+                to="/earn" 
+                search={{ tab: 'tasks' }} 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg font-black uppercase text-foreground/70 hover:text-primary transition-colors flex items-center gap-3"
+              >
+                <Coins className="h-5 w-5" />
+                Product
+              </Link>
+              <Link 
+                to="/refer" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg font-black uppercase text-foreground/70 hover:text-primary transition-colors flex items-center gap-3"
+              >
+                <Share2 className="h-5 w-5" />
+                Network
+              </Link>
+              <Link 
+                to="/redeem" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg font-black uppercase text-foreground/70 hover:text-primary transition-colors flex items-center gap-3"
+              >
+                <Gift className="h-5 w-5" />
+                Rewards
+              </Link>
+            </nav>
+
+            <div className="mt-auto space-y-4">
+              <Button variant="outline" className="w-full font-black uppercase h-12 rounded-xl" asChild>
+                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>Log in</Link>
+              </Button>
+              <Button className="w-full font-black uppercase h-12 rounded-xl shadow-lg shadow-primary/20" asChild>
+                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>Get Started</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </nav>
+      </>
     );
   }
 
