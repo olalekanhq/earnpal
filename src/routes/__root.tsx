@@ -101,6 +101,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async () => {
+    if (typeof window !== 'undefined') {
+      const { hostname, protocol, pathname, search } = window.location;
+      const primaryDomain = 'earnpal.qd.je';
+      
+      // Redirect www to non-www and ensure HTTPS
+      const isWww = hostname === `www.${primaryDomain}`;
+      const isNotHttps = protocol === 'http:';
+      
+      if (isWww || (hostname === primaryDomain && isNotHttps)) {
+        window.location.replace(`https://${primaryDomain}${pathname}${search}`);
+      }
+    }
+  },
   head: () => {
     const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.qd.je';
     const canonicalUrl = typeof window !== 'undefined' ? `${url}${window.location.pathname}` : url;
