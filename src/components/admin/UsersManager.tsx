@@ -170,7 +170,7 @@ export function UsersManager() {
           </div>
           
           <Badge variant="secondary" className="h-11 px-4 rounded-xl border-none bg-primary/5 text-primary font-black uppercase text-[10px] tracking-widest flex items-center shrink-0">
-            {filteredUsers.length} Users
+            {totalCount} Users
           </Badge>
         </div>
       </div>
@@ -247,7 +247,7 @@ export function UsersManager() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} entries
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
           </p>
           <div className="flex items-center gap-2">
             <Button
