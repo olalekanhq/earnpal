@@ -8,7 +8,8 @@ import {
   ArrowUpRight, 
   ArrowDownRight,
   Clock,
-  Loader2
+  Loader2,
+  Users2
 } from "lucide-react";
 import { 
   Card, 
@@ -28,6 +29,7 @@ import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
 import { AuditLogs } from "./admin/AuditLogs";
 import { AnalyticsView } from "./admin/AnalyticsView";
+import { ReferralsManager } from "./admin/ReferralsManager";
 import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart } from "lucide-react";
 
@@ -176,6 +178,13 @@ export function AdminPanel() {
               <PieChart className="h-4 w-4 mr-2" />
               Analytics
             </TabsTrigger>
+            <TabsTrigger 
+              value="referrals" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <Users2 className="h-4 w-4 mr-2" />
+              Referrals
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -201,6 +210,10 @@ export function AdminPanel() {
 
         <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <AnalyticsView />
+        </TabsContent>
+
+        <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <ReferralsManager />
         </TabsContent>
       </Tabs>
     </div>
