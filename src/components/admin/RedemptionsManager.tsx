@@ -83,6 +83,10 @@ export function RedemptionsManager() {
 
   return (
     <div className="space-y-6">
+      <div className="bg-red-500 text-white p-2">
+        Debug: {isLoading ? "Loading..." : `Loaded ${filteredRedemptions?.length || 0} redemptions`}
+        {queryError && ` Error: ${JSON.stringify(queryError)}`}
+      </div>
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
