@@ -14,10 +14,14 @@ import {
   Users as UsersIcon,
   Calendar,
   Phone,
-  Hash
+  Hash,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -27,11 +31,23 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function UsersManager() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const { data: users, isLoading } = useQuery({
     queryKey: ["admin-users"],
@@ -55,6 +71,30 @@ export function UsersManager() {
       }));
     }
   });
+
+  const filteredUsers = useMemo(() => {
+    if (!users) return [];
+    
+    return users.filter(user => {
+      const matchesSearch = 
+        (user.username?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (user.email?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (user.full_name?.toLowerCase() || "").includes(searchQuery.toLowerCase());
+      
+      const matchesRole = 
+        roleFilter === "all" || 
+        (roleFilter === "admin" && user.isAdmin) || 
+        (roleFilter === "user" && !user.isAdmin);
+      
+      return matchesSearch && matchesRole;
+    });
+  }, [users, searchQuery, roleFilter]);
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const { data: userDetails, isLoading: isDetailsLoading } = useQuery({
     queryKey: ["user-details", selectedUser?.id],
@@ -91,7 +131,48 @@ export function UsersManager() {
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="relative w-full md:w-96">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, or username..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="pl-10 rounded-xl bg-card border-border/50 h-11 font-medium"
+          />
+        </div>
+        
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-3 py-1.5">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Select 
+              value={roleFilter} 
+              onValueChange={(val) => {
+                setRoleFilter(val);
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="border-none bg-transparent h-8 w-[120px] focus:ring-0 font-bold text-xs uppercase tracking-widest">
+                <SelectValue placeholder="All Roles" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border/50">
+                <SelectItem value="all" className="text-xs font-bold uppercase tracking-widest">All Roles</SelectItem>
+                <SelectItem value="admin" className="text-xs font-bold uppercase tracking-widest">Admins</SelectItem>
+                <SelectItem value="user" className="text-xs font-bold uppercase tracking-widest">Users</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Badge variant="secondary" className="h-11 px-4 rounded-xl border-none bg-primary/5 text-primary font-black uppercase text-[10px] tracking-widest flex items-center shrink-0">
+            {filteredUsers.length} Users
+          </Badge>
+        </div>
+      </div>
+
       <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
         <Table>
           <TableHeader>
@@ -104,7 +185,7 @@ export function UsersManager() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user) => (
+            {paginatedUsers.map((user) => (
               <TableRow key={user.id} className="border-border/40 hover:bg-accent/5 transition-colors">
                 <TableCell className="px-6 py-4">
                   <div className="flex items-center gap-3">
@@ -160,6 +241,52 @@ export function UsersManager() {
           </TableBody>
         </Table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} entries
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <Button
+                  key={i}
+                  variant={currentPage === i + 1 ? "default" : "outline"}
+                  size="sm"
+                  className={cn(
+                    "h-9 w-9 rounded-xl font-bold p-0 border-border/50",
+                    currentPage === i + 1 && "shadow-md shadow-primary/20"
+                  )}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl h-9 px-3 font-bold border-border/50"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border-none shadow-2xl p-0 bg-background sm:rounded-[32px]">
