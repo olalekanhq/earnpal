@@ -14,18 +14,25 @@ function DnsStatusPage() {
   const [status, setStatus] = useState<'loading' | 'pending' | 'propagated' | 'error'>('loading');
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
   const [progress, setProgress] = useState(0);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [refreshInterval, setRefreshInterval] = useState(25); // default 25s
 
   const checkDns = async () => {
     setStatus('loading');
     setProgress(20);
     try {
-      // We'll use the public API we just created (or simulate if route not yet active)
       const res = await fetch('/api/public/dns-check?domain=earnpal.qd.je');
       const data = await res.json();
       
       setProgress(100);
-      setStatus(data.status === 'propagated' ? 'propagated' : 'pending');
+      const newStatus = data.status === 'propagated' ? 'propagated' : 'pending';
+      setStatus(newStatus);
       setLastCheck(new Date());
+      
+      // Stop auto-refresh if propagated
+      if (newStatus === 'propagated') {
+        setAutoRefresh(false);
+      }
     } catch (err) {
       console.error(err);
       setStatus('error');
@@ -34,13 +41,17 @@ function DnsStatusPage() {
 
   useEffect(() => {
     checkDns();
-    const timer = setInterval(() => {
-      if (status === 'pending' || status === 'loading') {
-        checkDns();
-      }
-    }, 30000); // Auto-refresh every 30s if not propagated
-    return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (!autoRefresh || status === 'propagated') return;
+
+    const timer = setInterval(() => {
+      checkDns();
+    }, refreshInterval * 1000);
+    
+    return () => clearInterval(timer);
+  }, [autoRefresh, refreshInterval, status]);
 
   return (
     <div className="container max-w-2xl py-12 px-4 space-y-8 animate-in fade-in duration-700">
@@ -74,27 +85,48 @@ function DnsStatusPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 border border-border/50">
-            {status === 'propagated' ? (
-              <CheckCircle2 className="h-8 w-8 text-green-500" />
-            ) : status === 'loading' ? (
-              <RefreshCcw className="h-8 w-8 text-primary animate-spin" />
-            ) : status === 'error' ? (
-              <AlertCircle className="h-8 w-8 text-destructive" />
-            ) : (
-              <Clock className="h-8 w-8 text-primary animate-pulse" />
-            )}
-            
-            <div className="flex-1">
-              <p className="font-black text-sm uppercase">
-                {status === 'propagated' ? 'Site Reachable' : 'Propagation in Progress'}
-              </p>
-              <p className="text-xs text-muted-foreground font-medium">
-                {status === 'propagated' 
-                  ? 'Your domain is now correctly pointed to the application.' 
-                  : 'We are waiting for DNS servers worldwide to update their records.'}
-              </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 border border-border/50">
+              {status === 'propagated' ? (
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+              ) : status === 'loading' ? (
+                <RefreshCcw className="h-8 w-8 text-primary animate-spin" />
+              ) : status === 'error' ? (
+                <AlertCircle className="h-8 w-8 text-destructive" />
+              ) : (
+                <Clock className="h-8 w-8 text-primary animate-pulse" />
+              )}
+              
+              <div className="flex-1">
+                <p className="font-black text-sm uppercase">
+                  {status === 'propagated' ? 'Site Reachable' : 'Propagation in Progress'}
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {status === 'propagated' 
+                    ? 'Your domain is now correctly pointed to the application.' 
+                    : 'We are waiting for DNS servers worldwide to update their records.'}
+                </p>
+              </div>
             </div>
+
+            {status !== 'propagated' && (
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-black uppercase tracking-widest text-primary">Auto Refresh</p>
+                  <p className="text-[10px] text-muted-foreground font-medium uppercase">Checking every {refreshInterval}s</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant={autoRefresh ? "default" : "outline"} 
+                    size="sm"
+                    className="h-8 rounded-lg font-black text-[10px] uppercase px-3"
+                    onClick={() => setAutoRefresh(!autoRefresh)}
+                  >
+                    {autoRefresh ? 'Enabled' : 'Disabled'}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">
