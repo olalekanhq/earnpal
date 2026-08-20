@@ -154,7 +154,7 @@ export function Navigation() {
         {/* Landing Page Mobile Overlay Menu */}
         <MobileMenuOverlay isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
           <div className="p-6 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl text-primary uppercase tracking-tighter">
                 <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
                 <span>Earn Pal</span>
