@@ -125,14 +125,17 @@ function AuthPage() {
   };
 
   useEffect(() => {
+    let timeout: any;
     if (referralCode.trim().length >= 3) {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         validateReferral(referralCode);
       }, 500);
-      return () => clearTimeout(timeout);
     } else if (referralCode.trim().length === 0) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
     }
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
   }, [referralCode]);
 
   const validate = (type: 'login' | 'signup') => {
