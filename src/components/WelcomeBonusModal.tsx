@@ -85,12 +85,12 @@ export function WelcomeBonusModal() {
         colors: ["#7c3aed", "#10b981", "#fbbf24"],
       });
 
-      toast.success("Welcome bonus claimed! +50 points");
+      toast.success(`Welcome bonus claimed! +${bonusAmount} points`);
       // Use any cast to bypass type errors until types are regenerated
       (supabase.from('analytics_events' as any) as any).insert({ 
         user_id: user.id,
         event_name: 'welcome_bonus_claimed', 
-        metadata: { amount: 50 } 
+        metadata: { amount: bonusAmount } 
       }).then();
       setIsOpen(false);
       
