@@ -389,6 +389,7 @@ export type Database = {
           points: number
           title: string
           verification_required: boolean | null
+          video_ad_count: number | null
         }
         Insert: {
           category?: string | null
@@ -402,6 +403,7 @@ export type Database = {
           points: number
           title: string
           verification_required?: boolean | null
+          video_ad_count?: number | null
         }
         Update: {
           category?: string | null
@@ -415,6 +417,7 @@ export type Database = {
           points?: number
           title?: string
           verification_required?: boolean | null
+          video_ad_count?: number | null
         }
         Relationships: []
       }
@@ -490,6 +493,41 @@ export type Database = {
         }
         Relationships: []
       }
+      video_ad_progress: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_watch_at: string | null
+          task_id: string
+          user_id: string
+          watch_count: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_watch_at?: string | null
+          task_id: string
+          user_id: string
+          watch_count?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_watch_at?: string | null
+          task_id?: string
+          user_id?: string
+          watch_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_ad_progress_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       leaderboard: {
@@ -540,6 +578,10 @@ export type Database = {
           _redemption_id: string
           _rejection_reason?: string
         }
+        Returns: Json
+      }
+      record_video_watch: {
+        Args: { _task_id: string; _user_id: string }
         Returns: Json
       }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
