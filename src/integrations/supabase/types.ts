@@ -27,6 +27,8 @@ export interface Database {
           phone_number: string | null
           current_streak: number | null
           longest_streak: number | null
+          email_notifications: boolean | null
+          push_notifications: boolean | null
         }
         Insert: { [key: string]: any }
         Update: { [key: string]: any }
@@ -163,11 +165,27 @@ export interface Database {
         Update: { [key: string]: any }
         Relationships: any[]
       }
+      user_streaks: {
+        Row: {
+          id: string
+          user_id: string
+          current_streak: number
+          longest_streak: number
+          last_claim_at: string | null
+          created_at: string
+        }
+        Insert: { [key: string]: any }
+        Update: { [key: string]: any }
+        Relationships: any[]
+      }
     }
     Views: {
       leaderboard: {
         Row: {
+          id: string | null
           username: string | null
+          full_name: string | null
+          avatar_url: string | null
           points_balance: number | null
           rank: number | null
         }
@@ -226,8 +244,9 @@ export interface Database {
       lookup_login_email: {
         Args: {
           _identifier: string
+          _username?: string
         }
-        Returns: Json
+        Returns: string
       }
       increment_referral_clicks: {
         Args: {
