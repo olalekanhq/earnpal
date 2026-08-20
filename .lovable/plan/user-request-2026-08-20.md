@@ -1,19 +1,27 @@
 ---
-title: Update Mobile Header Design
-description: Make the mobile sticky header rounded and add spacing from the screen edges.
+title: Implement Mobile Hamburger Menu
+description: Add a functional hamburger menu to the mobile navigation for both landing and authenticated pages.
 ---
 
 ## User Request
-Turn the rounded edge to the sticky header on mobile.
+Implement a hamburger menu on mobile so navigation links are easy to access.
 
 ## Proposed Changes
 
-### Navigation Component
-- Modify the mobile top bar container in `src/components/Navigation.tsx`.
-- Add `top-2`, `left-2`, `right-2`, and `rounded-2xl` classes to the sticky header.
-- Update positioning and width to accommodate the new margins.
+### Navigation Component (`src/components/Navigation.tsx`)
+- The authenticated view already has a hamburger icon (`Menu`) that opens an off-canvas drawer. I will ensure it includes all relevant links for easy access.
+- The landing page view (unauthenticated) currently has a top bar but lacks a mobile menu for the "Product", "Network", and "Rewards" links.
+- I will implement a mobile menu for the landing page using the same `Sheet` pattern or the existing overlay pattern used in the authenticated view.
+
+### Landing Page Mobile Menu
+- Add a `Menu` button to the mobile version of the landing page header.
+- Create a mobile menu overlay for the landing page that displays:
+  - Product (Earn Points)
+  - Network (Referral)
+  - Rewards (Redeem)
+  - Log in / Get Started buttons
 
 ## Technical Details
-- Change `fixed top-0 left-0 right-0` to `fixed top-2 left-2 right-2 w-[calc(100%-1rem)]`.
-- Add `rounded-2xl` to the container.
-- Ensure the header remains functional and accessible.
+- Reuse the `isMobileMenuOpen` state or create a separate one for the landing page if needed.
+- Ensure consistent styling with the new rounded sticky header design.
+- Use `lucide-react` icons for consistency.
