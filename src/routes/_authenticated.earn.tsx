@@ -148,7 +148,34 @@ function EarnPage() {
                     // Special handling for video tasks
                     if (task.category === 'Videos' && task.video_ad_count > 0) {
                       if (task.vast_tag_url) {
-                        setActiveVastTask(task);
+                        const event = new CustomEvent('play-interstitial-ad', {
+                          detail: {
+                            vastUrl: task.vast_tag_url,
+                            onComplete: async () => {
+                              const { data: { user } } = await supabase.auth.getUser();
+                              if (!user) return;
+
+                              const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                                _user_id: user.id,
+                                _task_id: task.id
+                              });
+
+                              if (error) {
+                                toast.error(error.message);
+                              } else {
+                                const res = data as any;
+                                if (res.completed) {
+                                  toast.success(res.message);
+                                  queryClient.invalidateQueries({ queryKey: ["profile"] });
+                                } else {
+                                  toast.success(res.message);
+                                }
+                                refetchTasks();
+                              }
+                            }
+                          }
+                        });
+                        window.dispatchEvent(event);
                         return;
                       }
 
@@ -278,37 +305,6 @@ function EarnPage() {
           ))}
         </div>
 
-        {activeVastTask && (
-          <VastAdModal
-            isOpen={!!activeVastTask}
-            onClose={() => setActiveVastTask(null)}
-            vastTagUrl={activeVastTask.vast_tag_url}
-            taskTitle={activeVastTask.title}
-            onComplete={async () => {
-              const { data: { user } } = await supabase.auth.getUser();
-              if (!user) return;
-
-              const { data, error } = await (supabase.rpc as any)('record_video_watch', {
-                _user_id: user.id,
-                _task_id: activeVastTask.id
-              });
-
-              if (error) {
-                toast.error(error.message);
-              } else {
-                const res = data as any;
-                if (res.completed) {
-                  toast.success(res.message);
-                  queryClient.invalidateQueries({ queryKey: ["profile"] });
-                } else {
-                  toast.success(res.message);
-                }
-                refetchTasks();
-              }
-              setActiveVastTask(null);
-            }}
-          />
-        )}
       </div>
     </div>
   );
