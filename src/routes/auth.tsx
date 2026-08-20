@@ -116,21 +116,19 @@ function AuthPage() {
     }
   };
 
-  const debouncedValidate = useMemo(
-    () => {
-      let timeout: NodeJS.Timeout;
-      return (code: string) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => validateReferral(code), 500);
-      };
-    },
-    []
-  );
-
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
-    debouncedValidate(val);
+    
+    // Clear any existing timeout
+    if ((window as any).referralTimeout) {
+      clearTimeout((window as any).referralTimeout);
+    }
+    
+    // Set a new one
+    (window as any).referralTimeout = setTimeout(() => {
+      validateReferral(val);
+    }, 500);
   };
 
 
