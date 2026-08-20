@@ -1,13 +1,15 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2 } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, History, TrendingUp, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/earn")({
   head: () => ({
@@ -26,9 +28,17 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const queryClient = useQueryClient();
+  const search = useSearchParams({ from: '/_authenticated/earn' });
+  const [activeTab, setActiveTab] = useState(search.tab === 'history' ? 'history' : 'tasks');
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
+
+  useEffect(() => {
+    if (search.tab === 'history') {
+      setActiveTab('history');
+    }
+  }, [search.tab]);
 
   const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
@@ -46,6 +56,36 @@ function EarnPage() {
         status: submissionsMap.get(task.id) || null
       })) || [];
     },
+  });
+
+  const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data } = await supabase
+        .from("points_transactions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      return data || [];
+    },
+    enabled: activeTab === 'history',
+  });
+
+  const { data: redemptions, isLoading: isRedemptionsLoading } = useQuery({
+    queryKey: ["redemptions"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data } = await supabase
+        .from("redemptions")
+        .select("*, rewards(title, image_url)")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      return data || [];
+    },
+    enabled: activeTab === 'history',
   });
 
   const categories = [
