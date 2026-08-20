@@ -320,6 +320,7 @@ export function RewardsManager() {
                     <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider">
                       {reward.category || "Uncategorized"}
                     </Badge>
+                  </TableCell>
                   <TableCell className="px-6 py-4 text-center">
                     <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
                       {reward.cost_points} pts
