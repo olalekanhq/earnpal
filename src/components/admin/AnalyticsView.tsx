@@ -59,7 +59,7 @@ export function AnalyticsView() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
         {analytics?.funnel.map((item) => (
           <Card key={item.name} className="border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden group hover:border-primary/20 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
