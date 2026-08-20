@@ -50,7 +50,7 @@ export function RedemptionsManager() {
       const { data, error } = await supabase.rpc('process_redemption_status_change', {
         _redemption_id: id,
         _new_status: status,
-        _rejection_reason: reason
+        _rejection_reason: reason || ""
       });
       
       if (error) throw error;
