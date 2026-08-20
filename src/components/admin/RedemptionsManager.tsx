@@ -3,11 +3,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Check, X, Loader2, ExternalLink } from "lucide-react";
+import { Check, X, Loader2, Search, Filter } from "lucide-react";
 import { format } from "date-fns";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function RedemptionsManager() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
   const queryClient = useQueryClient();
 
   const { data: redemptions, isLoading } = useQuery({
