@@ -250,6 +250,7 @@ export function RedemptionsManager() {
                               >
                                 <Loader2 className="mr-2 h-4 w-4" /> Set to Pending
                               </Button>
+                            </div>
                           </div>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
