@@ -171,7 +171,7 @@ function AuthPage() {
       
       if (!loginEmail.includes("@")) {
         const { data, error: rpcError } = await supabase.rpc('lookup_login_email', {
-          _username: loginEmail
+          _identifier: loginEmail
         });
 
         if (rpcError || !data) {
