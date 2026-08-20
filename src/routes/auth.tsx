@@ -76,8 +76,6 @@ function AuthPage() {
   }, [search.mode, search.ref]);
 
   const validateReferral = async (code: string) => {
-    console.log("validateReferral triggered for:", code);
-    window.dispatchEvent(new CustomEvent('referral-debug', { detail: code }));
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
@@ -85,9 +83,10 @@ function AuthPage() {
     
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
-      // Pass only the code if user is not logged in yet (signup mode)
-      const rpcArgs: any = { _code: code.trim() };
-      const { data, error: rpcError } = await supabase.rpc('check_referral_code', rpcArgs);
+      const { data, error: rpcError } = await supabase.rpc('check_referral_code', {
+        _code: code.trim(),
+        _user_id: undefined
+      });
       
       if (rpcError) throw rpcError;
       
@@ -100,12 +99,6 @@ function AuthPage() {
           error: false, 
           message: result.message || `Referrer found: ${result.username}` 
         });
-        
-        // Use any cast to bypass type errors until types are regenerated
-        (supabase.from('analytics_events' as any) as any).insert({ 
-          event_name: 'referral_code_validated', 
-          metadata: { code: code.trim(), referrer: result.username } 
-        }).then();
       } else {
         setReferralStatus({ 
           loading: false, 
@@ -125,7 +118,16 @@ function AuthPage() {
     }
   };
 
-  const debouncedValidate = useDebouncedCallback(validateReferral, 500);
+  const debouncedValidate = useMemo(
+    () => {
+      let timeout: NodeJS.Timeout;
+      return (code: string) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => validateReferral(code), 500);
+      };
+    },
+    []
+  );
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
