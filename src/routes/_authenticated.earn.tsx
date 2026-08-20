@@ -1,25 +1,19 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, History, TrendingUp, Gift, Play } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, ArrowRight, Clock, ShieldCheck, Loader2, Play } from "lucide-react";
 import VastAdModal from "@/components/VastAdModal";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/earn")({
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      tab: (search['tab'] as string || 'tasks') as 'tasks' | 'history',
-    };
-  },
   head: () => ({
-    title: "Earn Points | Earn Pal",
     meta: [
+      { title: "Earn Points | Earn Pal" },
       { name: "description", content: "Complete tasks, watch ads, and participate in surveys to earn points on Earn Pal." },
       { property: "og:title", content: "Earn Points | Earn Pal" },
       { property: "og:description", content: "Unlock new ways to earn points every day." },
@@ -33,18 +27,10 @@ export const Route = createFileRoute("/_authenticated/earn")({
 
 function EarnPage() {
   const queryClient = useQueryClient();
-  const search = Route.useSearch();
-  const [activeTab, setActiveTab] = useState(search['tab'] === 'history' ? 'history' : 'tasks');
   const [activeCategory, setActiveCategory] = useState("All");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (search['tab'] === 'history') {
-      setActiveTab('history');
-    }
-  }, [search['tab']]);
 
   const { data: tasks, isLoading, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
@@ -67,36 +53,6 @@ function EarnPage() {
     },
   });
 
-  const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("points_transactions")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      return data || [];
-    },
-    enabled: activeTab === 'history',
-  });
-
-  const { data: redemptions, isLoading: isRedemptionsLoading } = useQuery({
-    queryKey: ["redemptions"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("redemptions")
-        .select("*, rewards(title, image_url)")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      return data || [];
-    },
-    enabled: activeTab === 'history',
-  });
-
   const categories = [
     { name: "All", icon: Star },
     { name: "Social", icon: MessageSquare },
@@ -113,45 +69,31 @@ function EarnPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight text-foreground">
-            {activeTab === 'tasks' ? 'Earn Points' : 'Activity History'}
+            Earn Points
           </h1>
           <p className="text-muted-foreground font-medium">
-            {activeTab === 'tasks' 
-              ? 'Complete simple tasks to earn points and level up.' 
-              : 'Track your points, tasks, and reward redemptions.'}
+            Complete simple tasks to earn points and level up.
           </p>
         </div>
       </header>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="bg-card/50 border border-border/50 p-1 rounded-2xl h-14 w-full max-w-md">
-          <TabsTrigger value="tasks" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
-            <Zap className="h-4 w-4 mr-2" />
-            Available Tasks
-          </TabsTrigger>
-          <TabsTrigger value="history" className="flex-1 rounded-xl font-black uppercase tracking-widest text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm">
-            <History className="h-4 w-4 mr-2" />
-            Your History
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="tasks" className="space-y-8 mt-0 outline-none">
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-            {categories.map((cat) => (
-              <Button 
-                key={cat.name} 
-                variant={activeCategory === cat.name ? 'default' : 'outline'} 
-                className={cn(
-                  "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-                  activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
-                )}
-                onClick={() => setActiveCategory(cat.name)}
-              >
-                <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
-                {cat.name}
-              </Button>
-            ))}
-          </div>
+      <div className="space-y-8">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+          {categories.map((cat) => (
+            <Button 
+              key={cat.name} 
+              variant={activeCategory === cat.name ? 'default' : 'outline'} 
+              className={cn(
+                "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
+                activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
+              )}
+              onClick={() => setActiveCategory(cat.name)}
+            >
+              <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
+              {cat.name}
+            </Button>
+          ))}
+        </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
