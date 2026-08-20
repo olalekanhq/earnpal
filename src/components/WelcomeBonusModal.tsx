@@ -73,9 +73,13 @@ export function WelcomeBonusModal() {
       });
 
       toast.success("Welcome bonus claimed! +50 points");
-      supabase.from('analytics_events').insert({ 
-        event_name: 'welcome_bonus_claimed', 
-        metadata: { user_id: user.id, amount: 50 } 
+      supabase.from('user_activity_logs').insert({ 
+        user_id: user.id,
+        type: 'welcome_bonus_claimed',
+        title: 'Welcome Bonus Claimed',
+        description: 'User claimed the 50 point referral bonus',
+        points_earned: 50,
+        metadata: { amount: 50 } 
       }).then();
       setIsOpen(false);
       
