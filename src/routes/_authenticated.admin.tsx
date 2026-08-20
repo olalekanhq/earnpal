@@ -27,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Administration</h1>
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Admin Panel</h1>
           <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
         </div>
         <AdminPanel />
