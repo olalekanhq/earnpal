@@ -658,14 +658,17 @@ function AuthPage() {
                         </div>
                       )}
                     </div>
-                    {referralStatus.message && (
-                      <p className={cn(
-                        "text-[10px] font-black uppercase tracking-widest mt-1",
-                        referralStatus.error ? "text-destructive" : "text-green-600"
-                      )}>
-                        {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
-                      </p>
-                    )}
+                     {referralStatus.message && (
+                       <p 
+                         id="referral-status-msg"
+                         className={cn(
+                           "text-[10px] font-black uppercase tracking-widest mt-1",
+                           referralStatus.error ? "text-destructive" : "text-green-600"
+                         )}
+                       >
+                         {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
+                       </p>
+                     )}
                   </div>
                   <Button 
                     type="submit" 
