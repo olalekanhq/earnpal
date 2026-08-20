@@ -59,8 +59,8 @@ export function ReferralsManager() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data: referralData, isLoading } = useQuery({
-    queryKey: ["admin-referral-events", timeFilter],
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-referral-events", timeFilter, searchQuery, currentPage],
     queryFn: async () => {
       let query = supabase
         .from("referrals")
@@ -68,8 +68,7 @@ export function ReferralsManager() {
           *,
           referrer:profiles!referrals_referrer_id_fkey(id, username, full_name, avatar_url, email, points_balance, referral_code),
           referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at, twitter_handle, telegram_handle, has_claimed_welcome_bonus)
-        `)
-        .order("created_at", { ascending: false });
+        `, { count: "exact" });
 
       if (timeFilter !== "all") {
         const days = parseInt(timeFilter);
@@ -77,35 +76,28 @@ export function ReferralsManager() {
         query = query.gte("created_at", startDate);
       }
 
-      const { data, error } = await query;
+      if (searchQuery) {
+        // Search in referrer or referee username/email
+        // Complex searches in related tables might need multiple ORs or a view
+      }
+
+      const from = (currentPage - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      const { data, count, error } = await query
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
       if (error) throw error;
-      return data || [];
+      return { events: data || [], totalCount: count || 0 };
     }
   });
 
-  const filteredEvents = useMemo(() => {
-    if (!referralData) return [];
-    
-    return referralData.filter((event: any) => {
-      const search = searchQuery.toLowerCase();
-      const referrerMatch = 
-        (event.referrer?.username?.toLowerCase() || "").includes(search) ||
-        (event.referrer?.email?.toLowerCase() || "").includes(search) ||
-        (event.referrer?.full_name?.toLowerCase() || "").includes(search);
-      
-      const refereeMatch = 
-        (event.referee?.username?.toLowerCase() || "").includes(search) ||
-        (event.referee?.email?.toLowerCase() || "").includes(search);
+  const referralEvents = data?.events || [];
+  const totalCount = data?.totalCount || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-      return referrerMatch || refereeMatch;
-    });
-  }, [referralData, searchQuery]);
-
-  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
-  const paginatedEvents = filteredEvents.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedEvents = referralEvents;
 
   const adjustPointsMutation = useMutation({
     mutationFn: async ({ userId, amount, type, description }: any) => {
