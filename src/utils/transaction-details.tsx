@@ -10,6 +10,7 @@ export interface TransactionDetails {
 }
 
 export const showTransactionDetails = (tx: TransactionDetails) => {
+  console.log("Showing transaction details toast for:", tx.id);
   toast.info(
     <div className="space-y-2">
       <p className="font-bold text-sm text-foreground leading-none">Transaction Details</p>
