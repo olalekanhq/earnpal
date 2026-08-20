@@ -27,8 +27,9 @@ import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
 import { AuditLogs } from "./admin/AuditLogs";
+import { AnalyticsView } from "./admin/AnalyticsView";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck } from "lucide-react";
+import { ListTodo, ShieldCheck, PieChart } from "lucide-react";
 
 export function AdminPanel() {
   const { data: stats, isLoading } = useQuery({
@@ -168,6 +169,13 @@ export function AdminPanel() {
               <ShieldCheck className="h-4 w-4 mr-2" />
               Audit Logs
             </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <PieChart className="h-4 w-4 mr-2" />
+              Analytics
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -189,6 +197,10 @@ export function AdminPanel() {
 
         <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <AuditLogs />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <AnalyticsView />
         </TabsContent>
       </Tabs>
     </div>
