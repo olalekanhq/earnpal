@@ -3,14 +3,39 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Loader2, Mail, ShieldAlert } from "lucide-react";
+import { 
+  User, 
+  Loader2, 
+  Mail, 
+  ShieldAlert, 
+  Eye, 
+  TrendingUp, 
+  Gift, 
+  Users as UsersIcon,
+  Calendar,
+  Phone,
+  Hash
+} from "lucide-react";
 import { format } from "date-fns";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export function UsersManager() {
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
   const { data: users, isLoading } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      // First get profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("*")
@@ -18,19 +43,49 @@ export function UsersManager() {
       
       if (profilesError) throw profilesError;
 
-      // Then get roles for these users
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
         .select("user_id, role");
       
       if (rolesError) throw rolesError;
 
-      // Merge data
       return profiles.map(profile => ({
         ...profile,
         isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin')
       }));
     }
+  });
+
+  const { data: userDetails, isLoading: isDetailsLoading } = useQuery({
+    queryKey: ["user-details", selectedUser?.id],
+    queryFn: async () => {
+      if (!selectedUser) return null;
+
+      const [transactionsRes, referralsRes, redemptionsRes] = await Promise.all([
+        supabase
+          .from("points_transactions")
+          .select("*")
+          .eq("user_id", selectedUser.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("referrals")
+          .select("*, profiles!referrals_referred_id_fkey(username, full_name, email)")
+          .eq("referrer_id", selectedUser.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("redemptions")
+          .select("*, rewards(title, points_cost)")
+          .eq("user_id", selectedUser.id)
+          .order("created_at", { ascending: false })
+      ]);
+
+      return {
+        transactions: transactionsRes.data || [],
+        referrals: referralsRes.data || [],
+        redemptions: redemptionsRes.data || []
+      };
+    },
+    enabled: !!selectedUser && isDetailsOpen
   });
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -45,7 +100,7 @@ export function UsersManager() {
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Contact</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Balance</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Joined</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Role</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -88,24 +143,213 @@ export function UsersManager() {
                   {format(new Date(user.created_at), "MMM d, yyyy")}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
-                  <Badge 
-                    className={cn(
-                      "font-black uppercase text-[10px] tracking-wider px-2 py-0.5",
-                      user.isAdmin ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setIsDetailsOpen(true);
+                    }}
                   >
-                    {user.isAdmin ? "Admin" : "User"}
-                  </Badge>
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border-none shadow-2xl p-0 bg-background sm:rounded-[32px]">
+          {selectedUser && (
+            <div className="relative">
+              <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border-b border-border/50" />
+              
+              <div className="px-6 pb-8">
+                <div className="flex flex-col md:flex-row gap-6 -mt-10 mb-8 items-start">
+                  <Avatar className="h-24 w-24 border-4 border-background shadow-xl rounded-[28px]">
+                    <AvatarImage src={selectedUser.avatar_url || ""} />
+                    <AvatarFallback className="bg-primary/5 text-primary">
+                      <User className="h-10 w-10" />
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className="pt-10 flex-1 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-3xl font-black tracking-tight">
+                        {selectedUser.username ? (selectedUser.username.charAt(0).toUpperCase() + selectedUser.username.slice(1)) : "User Details"}
+                      </h2>
+                      {selectedUser.isAdmin && (
+                        <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] px-2 py-0.5 rounded-lg">
+                          Admin
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-4">
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                        <Mail className="h-4 w-4 text-primary/60" />
+                        {selectedUser.email}
+                      </div>
+                      {selectedUser.phone_number && (
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                          <Phone className="h-4 w-4 text-primary/60" />
+                          {selectedUser.phone_number}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                        <Calendar className="h-4 w-4 text-primary/60" />
+                        Joined {format(new Date(selectedUser.created_at), "MMMM d, yyyy")}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                        <Hash className="h-4 w-4 text-primary/60" />
+                        ID: {selectedUser.id.slice(0, 8)}...
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-10">
+                    <div className="bg-primary/5 border border-primary/10 rounded-2xl px-6 py-4 text-center">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">Current Balance</p>
+                      <p className="text-3xl font-black text-primary">{selectedUser.points_balance?.toLocaleString()}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mt-1">Earn Pal Points</p>
+                    </div>
+                  </div>
+                </div>
+
+                {isDetailsLoading ? (
+                  <div className="flex justify-center py-20">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
+                  </div>
+                ) : (
+                  <div className="grid gap-6 md:grid-cols-3">
+                    {/* Transactions History */}
+                    <Card className="md:col-span-2 border-none shadow-sm bg-card/50 overflow-hidden rounded-2xl">
+                      <CardHeader className="border-b border-border/50 pb-4 flex flex-row items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4 text-primary" />
+                          <CardTitle className="text-sm font-black uppercase tracking-widest">Points History</CardTitle>
+                        </div>
+                        <Badge variant="outline" className="rounded-lg text-[10px] font-bold">
+                          {userDetails?.transactions.length} Records
+                        </Badge>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="max-h-[400px] overflow-y-auto divide-y divide-border/40 scrollbar-thin scrollbar-thumb-primary/10">
+                          {userDetails?.transactions.length ? (
+                            userDetails.transactions.map((tx: any) => (
+                              <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-accent/5 transition-colors">
+                                <div className="space-y-1">
+                                  <p className="font-bold text-sm leading-none">{tx.description}</p>
+                                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                                    {format(new Date(tx.created_at), "MMM d, yyyy · HH:mm")}
+                                  </p>
+                                </div>
+                                <div className={cn(
+                                  "font-black text-sm px-2.5 py-1 rounded-lg",
+                                  tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"
+                                )}>
+                                  {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="p-8 text-center text-muted-foreground text-sm font-medium italic">
+                              No transaction history found.
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <div className="space-y-6">
+                      {/* Referrals */}
+                      <Card className="border-none shadow-sm bg-card/50 overflow-hidden rounded-2xl">
+                        <CardHeader className="border-b border-border/50 pb-4 flex flex-row items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <UsersIcon className="h-4 w-4 text-primary" />
+                            <CardTitle className="text-sm font-black uppercase tracking-widest">Referrals</CardTitle>
+                          </div>
+                          <Badge variant="outline" className="rounded-lg text-[10px] font-bold">
+                            {userDetails?.referrals.length}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                          <div className="max-h-[250px] overflow-y-auto divide-y divide-border/40">
+                            {userDetails?.referrals.length ? (
+                              userDetails.referrals.map((ref: any) => (
+                                <div key={ref.id} className="p-4 hover:bg-accent/5 transition-colors">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="font-bold text-sm truncate max-w-[120px]">
+                                      {ref.profiles?.username || "Referred User"}
+                                    </p>
+                                    <Badge className="bg-green-500/10 text-green-600 border-none font-black text-[9px] uppercase">
+                                      {ref.status}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-[10px] text-muted-foreground font-medium">
+                                    {format(new Date(ref.created_at), "MMM d, yyyy")}
+                                  </p>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="p-8 text-center text-muted-foreground text-xs font-medium">
+                                No referrals yet.
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Redemptions */}
+                      <Card className="border-none shadow-sm bg-card/50 overflow-hidden rounded-2xl">
+                        <CardHeader className="border-b border-border/50 pb-4 flex flex-row items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Gift className="h-4 w-4 text-primary" />
+                            <CardTitle className="text-sm font-black uppercase tracking-widest">Redeemed</CardTitle>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                          <div className="max-h-[250px] overflow-y-auto divide-y divide-border/40">
+                            {userDetails?.redemptions.length ? (
+                              userDetails.redemptions.map((red: any) => (
+                                <div key={red.id} className="p-4 hover:bg-accent/5 transition-colors">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <p className="font-bold text-sm truncate max-w-[120px]">
+                                      {red.rewards?.title}
+                                    </p>
+                                    <p className="text-primary font-black text-[10px]">{red.rewards?.points_cost} PTS</p>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-[10px] text-muted-foreground font-medium">
+                                      {format(new Date(red.created_at), "MMM d, yyyy")}
+                                    </p>
+                                    <span className={cn(
+                                      "text-[9px] font-black uppercase tracking-wider",
+                                      red.status === 'approved' ? "text-green-600" : "text-orange-600"
+                                    )}>
+                                      {red.status}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="p-8 text-center text-muted-foreground text-xs font-medium">
+                                No redemptions.
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
-}
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
 }
