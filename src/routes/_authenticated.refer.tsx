@@ -77,7 +77,7 @@ function ReferralPage() {
     enabled: !!profile?.id,
   });
 
-  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/?ref=${profile?.referral_code}` : '';
+  
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
