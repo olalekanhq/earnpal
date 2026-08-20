@@ -68,7 +68,7 @@ export function WelcomeBonusModal() {
     return () => {
       unsubscribePromise.then(unsubscribe => unsubscribe?.());
     };
-  }, []);
+  }, [isOpen]);
 
   const checkEligibility = async () => {
     try {
