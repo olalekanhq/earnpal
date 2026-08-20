@@ -242,7 +242,7 @@ export function Navigation() {
       items: [
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Earn Points", href: "/earn", icon: Coins },
-        { name: "Transactions", href: "/transactions", icon: History },
+        
         { name: "Redeem", href: "/redeem", icon: Gift },
         { name: "Referral", href: "/refer", icon: Share2 },
       ]
@@ -384,6 +384,12 @@ export function Navigation() {
                   Profile
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                <Link to="/transactions" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                  <History className="mr-3 h-4 w-4" />
+                  Points History
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm text-destructive focus:text-destructive focus:bg-destructive/5">
                 <button onClick={() => setShowLogoutDialog(true)} className="flex items-center w-full">
                   <LogOut className="mr-3 h-4 w-4" />
@@ -466,6 +472,12 @@ export function Navigation() {
                 <Link to="/settings" className="flex items-center w-full">
                   <Settings className="mr-3 h-4 w-4" strokeWidth={2.5} />
                   Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2.5 font-bold text-sm">
+                <Link to="/transactions" className="flex items-center w-full">
+                  <History className="mr-3 h-4 w-4" strokeWidth={2.5} />
+                  Points History
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border/40 my-1 mx-2" />
