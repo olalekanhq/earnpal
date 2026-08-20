@@ -551,10 +551,10 @@ export type Database = {
         Returns: undefined
       }
       check_referral_code: {
-        Args: { _code: string; _requesting_user_id?: string }
+        Args: { _code: string; _user_id?: string }
         Returns: {
-          error_message: string
           is_valid: boolean
+          message: string
           username: string
         }[]
       }

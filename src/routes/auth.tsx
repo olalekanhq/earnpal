@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -13,6 +13,7 @@ import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff,
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -65,14 +66,17 @@ function AuthPage() {
   const [resending, setResending] = useState(false);
 
   useEffect(() => {
-    if (search.mode) {
+    if (search.mode && search.mode !== activeTab) {
       setActiveTab(search.mode);
     }
+  }, [search.mode]);
+
+  useEffect(() => {
     if (search.ref) {
       setReferralCode(search.ref);
       validateReferral(search.ref);
     }
-  }, [search.mode, search.ref]);
+  }, [search.ref]);
 
   const validateReferral = async (code: string) => {
     if (!code || code.trim().length < 3) {
@@ -82,13 +86,9 @@ function AuthPage() {
     
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
-      // Pass null for user_id during signup validation as the user doesn't have an ID yet
-      const { data, error } = await supabase.rpc('check_referral_code', { 
-        _code: code.trim(),
-        _user_id: null
-      });
+      const { data, error: rpcError } = await supabase.rpc('check_referral_code', { _code: code.trim() });
       
-      if (error) throw error;
+      if (rpcError) throw rpcError;
       
       const result = Array.isArray(data) ? data[0] : data;
       
@@ -97,19 +97,14 @@ function AuthPage() {
           loading: false, 
           owner: result.username, 
           error: false, 
-          message: `Referrer found: ${result.username}` 
+          message: result.message || `Referrer found: ${result.username}` 
         });
-        // Use any cast to bypass type errors until types are regenerated
-        (supabase.from('analytics_events' as any) as any).insert({ 
-          event_name: 'referral_code_validated', 
-          metadata: { code: code.trim(), referrer: result.username } 
-        }).then();
       } else {
         setReferralStatus({ 
           loading: false, 
           owner: null, 
           error: true, 
-          message: "This referral code does not exist or is invalid." 
+          message: result?.message || "This referral code does not exist or is invalid." 
         });
       }
     } catch (err) {
@@ -127,11 +122,13 @@ function AuthPage() {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
     
-    // Simple debounce for manual entry
-    const timeout = setTimeout(() => validateReferral(val), 500);
-    return () => clearTimeout(timeout);
+    // Manual debounce using a simple ref-like approach via window for stability in this env
+    const timeoutKey = '_auth_ref_timeout';
+    if ((window as any)[timeoutKey]) clearTimeout((window as any)[timeoutKey]);
+    (window as any)[timeoutKey] = setTimeout(() => {
+      validateReferral(val);
+    }, 500);
   };
-
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
@@ -659,20 +656,23 @@ function AuthPage() {
                         </div>
                       )}
                     </div>
-                    {referralStatus.message && (
-                      <p className={cn(
-                        "text-[10px] font-black uppercase tracking-widest mt-1",
-                        referralStatus.error ? "text-destructive" : "text-green-600"
-                      )}>
-                        {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
-                      </p>
-                    )}
+                     {referralStatus.message && (
+                       <p 
+                         id="referral-status-msg"
+                         className={cn(
+                           "text-[10px] font-black uppercase tracking-widest mt-1",
+                           referralStatus.error ? "text-destructive" : "text-green-600"
+                         )}
+                       >
+                         {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
+                       </p>
+                     )}
                   </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
-                    disabled={loading || referralStatus.error}
-                  >
+                   <Button 
+                     type="submit" 
+                     className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
+                     disabled={loading}
+                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
