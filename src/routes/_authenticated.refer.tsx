@@ -52,27 +52,32 @@ function ReferralPage() {
     queryFn: async () => {
       if (!profile?.id) return [];
       
-      const { data, error } = await supabase
+      const { data: referralsData, error: referralsError } = await supabase
         .from("referrals")
-        .select(`
-          referee:profiles!referrals_referee_id_fkey (
-            id, 
-            full_name, 
-            username, 
-            email, 
-            created_at, 
-            avatar_url
-          )
-        `)
+        .select("referee_id")
         .eq("referrer_id", profile.id)
         .order('created_at', { ascending: false });
       
-      if (error) {
-        console.error("Error fetching referrals:", error);
+      if (referralsError) {
+        console.error("Error fetching referrals:", referralsError);
         return [];
       }
 
-      return data?.map(r => r.referee) || [];
+      if (!referralsData || referralsData.length === 0) return [];
+
+      const refereeIds = referralsData.map(r => r.referee_id);
+      
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name, username, email, created_at, avatar_url")
+        .in("id", refereeIds);
+
+      if (profilesError) {
+        console.error("Error fetching referred profiles:", profilesError);
+        return [];
+      }
+
+      return profilesData || [];
     },
     enabled: !!profile?.id,
   });
