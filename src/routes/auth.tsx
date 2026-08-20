@@ -127,18 +127,18 @@ function AuthPage() {
   };
 
   useEffect(() => {
-    let timeout: any;
+    let timeoutId: any;
     if (referralCode.trim().length >= 3) {
-      timeout = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         validateReferral(referralCode);
       }, 500);
     } else if (referralCode.trim().length === 0) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
     }
     return () => {
-      if (timeout) clearTimeout(timeout);
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [referralCode]);
+  }, [referralCode, validateReferral]);
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
