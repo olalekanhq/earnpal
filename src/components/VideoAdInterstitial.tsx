@@ -18,19 +18,26 @@ export function VideoAdInterstitial() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
+  const [customVastUrl, setCustomVastUrl] = useState<string | null>(null);
+  const [onAdCompleteCallback, setOnAdCompleteCallback] = useState<(() => void) | null>(null);
   
   const adContainerRef = React.useRef<HTMLDivElement>(null);
   const videoElementRef = React.useRef<HTMLVideoElement>(null);
   const adsLoaderRef = React.useRef<any>(null);
   const adsManagerRef = React.useRef<any>(null);
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((completed = false) => {
     if (adsManagerRef.current) {
       adsManagerRef.current.destroy();
     }
     setIsVisible(false);
     setIsLoading(false);
+    setCustomVastUrl(null);
+    
+    if (completed && onAdCompleteCallback) {
+      onAdCompleteCallback();
+      setOnAdCompleteCallback(null);
+    }
     
     // Clean up video element to stop any remaining audio
     if (videoElementRef.current) {
@@ -42,7 +49,7 @@ export function VideoAdInterstitial() {
 
   const onAdError = useCallback((adErrorEvent: any) => {
     console.log('VideoAdInterstitial: Ad error, failing silently.', adErrorEvent.getError());
-    handleClose();
+    handleClose(false);
   }, [handleClose]);
 
   const onAdEvent = useCallback((adEvent: any) => {
@@ -54,8 +61,10 @@ export function VideoAdInterstitial() {
         break;
       case type.ALL_ADS_COMPLETED:
       case type.COMPLETE:
+        handleClose(true);
+        break;
       case type.SKIPPED:
-        handleClose();
+        handleClose(false);
         break;
       default:
         break;
@@ -102,13 +111,13 @@ export function VideoAdInterstitial() {
       adsManagerRef.current.start();
     } catch (adError) {
       console.error('AdsManager error:', adError);
-      handleClose();
+      handleClose(false);
     }
   }, [onAdError, onAdEvent, handleClose]);
 
   const initializeIMA = useCallback(() => {
     if (!window.google || !window.google.ima || !adContainerRef.current || !videoElementRef.current) {
-      handleClose();
+      handleClose(false);
       return;
     }
 
@@ -131,18 +140,20 @@ export function VideoAdInterstitial() {
     );
 
     const adsRequest = new window.google.ima.AdsRequest();
-    adsRequest.adTagUrl = VAST_TAG_URL;
+    adsRequest.adTagUrl = customVastUrl || VAST_TAG_URL;
     adsRequest.linearAdSlotWidth = window.innerWidth;
     adsRequest.linearAdSlotHeight = window.innerHeight;
     adsRequest.nonLinearAdSlotWidth = window.innerWidth;
     adsRequest.nonLinearAdSlotHeight = window.innerHeight;
 
     adsLoaderRef.current.requestAds(adsRequest);
-  }, [onAdError, onAdsManagerLoaded, handleClose]);
+  }, [onAdError, onAdsManagerLoaded, handleClose, customVastUrl]);
 
-  const triggerAd = useCallback(() => {
+  const triggerAd = useCallback((vastUrl?: string, onComplete?: () => void) => {
     setIsVisible(true);
     setIsLoading(true);
+    if (vastUrl) setCustomVastUrl(vastUrl);
+    if (onComplete) setOnAdCompleteCallback(() => onComplete);
 
     if (!isLoaded) {
       const script = document.createElement('script');
@@ -150,11 +161,12 @@ export function VideoAdInterstitial() {
       script.async = true;
       script.onload = () => {
         setIsLoaded(true);
-        initializeIMA();
+        // We need a small timeout to ensure initializeIMA sees the updated states
+        setTimeout(initializeIMA, 50);
       };
       script.onerror = () => {
         console.log('VideoAdInterstitial: Failed to load IMA SDK');
-        handleClose();
+        handleClose(false);
       };
       document.head.appendChild(script);
     } else {
@@ -162,23 +174,16 @@ export function VideoAdInterstitial() {
     }
   }, [isLoaded, initializeIMA, handleClose]);
 
-  // Trigger ad logic: For now, we trigger it once on mount of a dashboard or earn page
+  // Set up global event listener for manual triggering
   useEffect(() => {
-    const path = location.pathname;
-    const shouldTrigger = path.includes('dashboard') || path.includes('earn');
-    const hasTriggered = sessionStorage.getItem('interstitial_triggered');
-    
-    if (shouldTrigger && !hasTriggered) {
-      const timer = setTimeout(() => {
-        console.log('VideoAdInterstitial: Triggering ad after delay');
-        triggerAd();
-        sessionStorage.setItem('interstitial_triggered', 'true');
-      }, AD_DELAY_MS); 
+    const handleTrigger = (event: any) => {
+      const { vastUrl, onComplete } = event.detail || {};
+      triggerAd(vastUrl, onComplete);
+    };
 
-      return () => clearTimeout(timer);
-    }
-    return undefined;
-  }, [location.pathname, triggerAd]);
+    window.addEventListener('play-interstitial-ad', handleTrigger);
+    return () => window.removeEventListener('play-interstitial-ad', handleTrigger);
+  }, [triggerAd]);
 
 
 
@@ -225,7 +230,7 @@ export function VideoAdInterstitial() {
 
         {/* Close button (Emergency) */}
         <button
-          onClick={handleClose}
+          onClick={() => handleClose(false)}
           className="absolute top-6 right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
           aria-label="Close Ad"
         >
