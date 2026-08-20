@@ -143,8 +143,8 @@ export function Navigation() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full py-6 px-4">
       <div className="flex items-center gap-3 px-2 mb-8">
-        <div className="bg-primary p-2 rounded-xl shadow-md shadow-primary/20">
-          <Coins className="h-6 w-6 text-primary-foreground" />
+        <div className="bg-primary/10 p-2 rounded-xl border border-primary/20 shadow-sm">
+          <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
         </div>
         <span className="font-black text-xl tracking-tighter uppercase">Earn Pal</span>
       </div>
