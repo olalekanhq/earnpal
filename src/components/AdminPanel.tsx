@@ -178,6 +178,13 @@ export function AdminPanel() {
               <PieChart className="h-4 w-4 mr-2" />
               Analytics
             </TabsTrigger>
+            <TabsTrigger 
+              value="referrals" 
+              className="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest data-[state=active]:bg-card data-[state=active]:shadow-sm"
+            >
+              <Users2 className="h-4 w-4 mr-2" />
+              Referrals
+            </TabsTrigger>
           </TabsList>
         </div>
 
