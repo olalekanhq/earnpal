@@ -76,6 +76,7 @@ function AuthPage() {
   }, [search.mode, search.ref]);
 
   const validateReferral = async (code: string) => {
+    window.dispatchEvent(new CustomEvent('referral-debug', { detail: code }));
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
