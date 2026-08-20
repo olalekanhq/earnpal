@@ -277,6 +277,10 @@ export function AdminPanel() {
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           <ReferralsManager />
         </TabsContent>
+
+        <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          <PlatformSettings />
+        </TabsContent>
       </Tabs>
     </div>
   );
