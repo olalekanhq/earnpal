@@ -85,7 +85,6 @@ function AuthPage() {
       // Pass null for user_id during signup validation as the user doesn't have an ID yet
       const { data, error } = await supabase.rpc('check_referral_code', { 
         _code: code.trim(),
-        _requesting_user_id: undefined
       });
       
       if (error) throw error;
