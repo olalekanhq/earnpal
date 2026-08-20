@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DnsStatusRouteImport } from './routes/dns-status'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -41,6 +42,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DnsStatusRoute = DnsStatusRouteImport.update({
+  id: '/dns-status',
+  path: '/dns-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LandingRoute = LandingRouteImport.update({
@@ -128,6 +134,7 @@ const ApiPublicSitemapRoute = ApiPublicSitemapRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dns-status': typeof DnsStatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/dns-status': typeof DnsStatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/dns-status': typeof DnsStatusRoute
   '/landing': typeof LandingRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/dns-status'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/dns-status'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/dns-status'
     | '/landing'
     | '/privacy'
     | '/terms'
@@ -255,6 +267,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  DnsStatusRoute: typeof DnsStatusRoute
   LandingRoute: typeof LandingRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dns-status': {
+      id: '/dns-status'
+      path: '/dns-status'
+      fullPath: '/dns-status'
+      preLoaderRoute: typeof DnsStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/landing': {
@@ -442,6 +462,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  DnsStatusRoute: DnsStatusRoute,
   LandingRoute: LandingRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
