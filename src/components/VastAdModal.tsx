@@ -29,6 +29,7 @@ const VastAdModal: React.FC<VastAdModalProps> = ({
 
   const handleAdComplete = () => {
     setIsAdPlaying(false);
+    toast.success("Ad completed! Crediting points...");
     onComplete();
   };
 
