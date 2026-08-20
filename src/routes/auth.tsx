@@ -124,8 +124,16 @@ function AuthPage() {
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
+    
+    // Manual debounce for testing
+    if ((window as any)._refTimeout) clearTimeout((window as any)._refTimeout);
+    (window as any)._refTimeout = setTimeout(() => {
+      validateReferral(val);
+    }, 500);
   };
 
+  // Remove the problematic useEffect that was causing loop issues in some environments
+  /* 
   useEffect(() => {
     let timeoutId: any;
     if (referralCode.trim().length >= 3) {
@@ -139,6 +147,7 @@ function AuthPage() {
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [referralCode, validateReferral]);
+  */
 
   const validate = (type: 'login' | 'signup') => {
     if (type === 'login') {
