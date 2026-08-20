@@ -153,7 +153,7 @@ function RedeemPage() {
             <div className="aspect-[16/9] bg-accent/30 relative overflow-hidden">
               {reward.image_url ? (
                 <img 
-                  src={reward.image_url} 
+                  src={`${reward.image_url}${reward.image_url.includes('?') ? '&' : '?'}width=600&height=337&resize=cover&format=webp`} 
                   alt={reward.title} 
                   className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" 
                 />
