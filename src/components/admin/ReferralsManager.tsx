@@ -290,7 +290,7 @@ export function ReferralsManager() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-border/40">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-              Page {currentPage} of {totalPages}
+              Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
             </p>
             <div className="flex items-center gap-2">
               <Button
