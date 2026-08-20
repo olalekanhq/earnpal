@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { ListTodo, ShieldCheck, PieChart, TrendingDown } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 
-export function AdminPanel({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) {
+export function AdminPanel({ activeTab, onTabChange }: { activeTab: string | undefined; onTabChange: ((value: string) => void) | undefined }) {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
