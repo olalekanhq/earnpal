@@ -164,21 +164,26 @@ export function VideoAdInterstitial() {
   // Trigger ad logic: For now, we trigger it once on mount of a dashboard or earn page
   // as a demonstration of the interstitial.
   useEffect(() => {
+    console.log('VideoAdInterstitial: location changed', location.pathname);
     const shouldTrigger = ['/dashboard', '/earn'].includes(location.pathname);
     const hasTriggered = sessionStorage.getItem('interstitial_triggered');
     
+    console.log('VideoAdInterstitial: shouldTrigger', shouldTrigger, 'hasTriggered', hasTriggered);
+
     if (shouldTrigger && !hasTriggered) {
+      console.log('VideoAdInterstitial: Setting timer for ad trigger');
       const timer = setTimeout(() => {
+        console.log('VideoAdInterstitial: Triggering ad');
         triggerAd();
         sessionStorage.setItem('interstitial_triggered', 'true');
-      }, 3000); // 3 second delay before showing
+      }, 3000); 
       return () => {
         clearTimeout(timer);
       };
     }
     return undefined;
-
   }, [location.pathname, triggerAd]);
+
 
   if (!isVisible) return null;
 
