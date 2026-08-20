@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
+import { showTransactionDetails } from "@/utils/transaction-details";
 
 export function NotificationsPopover() {
   const queryClient = useQueryClient();
