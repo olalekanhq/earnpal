@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -13,6 +13,7 @@ import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff,
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -75,7 +76,6 @@ function AuthPage() {
   }, [search.mode, search.ref]);
 
   const validateReferral = async (code: string) => {
-    console.log("validateReferral called with:", code);
     if (!code || code.trim().length < 3) {
       setReferralStatus({ loading: false, owner: null, error: false, message: null });
       return;
@@ -85,9 +85,9 @@ function AuthPage() {
     try {
       // Pass only the code if user is not logged in yet (signup mode)
       const rpcArgs: any = { _code: code.trim() };
-      const { data, error } = await supabase.rpc('check_referral_code', rpcArgs);
+      const { data, error: rpcError } = await supabase.rpc('check_referral_code', rpcArgs);
       
-      if (error) throw error;
+      if (rpcError) throw rpcError;
       
       const result = Array.isArray(data) ? data[0] : data;
       
@@ -98,6 +98,7 @@ function AuthPage() {
           error: false, 
           message: result.message || `Referrer found: ${result.username}` 
         });
+        
         // Use any cast to bypass type errors until types are regenerated
         (supabase.from('analytics_events' as any) as any).insert({ 
           event_name: 'referral_code_validated', 
@@ -108,7 +109,7 @@ function AuthPage() {
           loading: false, 
           owner: null, 
           error: true, 
-          message: "This referral code does not exist or is invalid." 
+          message: result?.message || "This referral code does not exist or is invalid." 
         });
       }
     } catch (err) {
@@ -122,12 +123,12 @@ function AuthPage() {
     }
   };
 
+  const debouncedValidate = useDebouncedCallback(validateReferral, 500);
+
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
     setReferralCode(val);
-    
-    // Perform immediate validation as the debounce logic was flawed
-    validateReferral(val);
+    debouncedValidate(val);
   };
 
 
