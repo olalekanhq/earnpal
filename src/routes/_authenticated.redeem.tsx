@@ -89,7 +89,7 @@ function RedeemPage() {
         return;
       }
 
-      toast.success("Redemption request submitted! Points have been deducted.");
+      toast.success("Redemption request submitted! Your reward will be sent to your registered email address after confirmation.");
       setSelectedReward(null);
       
       // Invalidate queries to update balance and history
