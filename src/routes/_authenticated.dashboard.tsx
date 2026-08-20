@@ -232,8 +232,8 @@ function Dashboard() {
             </div>
           </CardContent>
           <div className="absolute -top-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 right-12 -translate-y-1/2 opacity-10 pointer-events-none">
-            <Coins className="h-40 w-40 rotate-12" />
+          <div className="absolute top-1/2 right-12 -translate-y-1/2 opacity-10 pointer-events-none scale-150">
+            <img src="/logo.png" alt="" className="h-40 w-40 object-contain rotate-12" />
           </div>
         </Card>
 
