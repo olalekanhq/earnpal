@@ -82,11 +82,9 @@ function AuthPage() {
     
     setReferralStatus(prev => ({ ...prev, loading: true, error: false, message: null }));
     try {
-      // Use explicit parameter names to match the database function
-      const { data, error } = await supabase.rpc('check_referral_code', { 
-        _code: code.trim(),
-        _user_id: undefined // Pass undefined instead of null to fix TS error and let RPC handle default
-      });
+      // Pass only the code if user is not logged in yet (signup mode)
+      const rpcArgs: any = { _code: code.trim() };
+      const { data, error } = await supabase.rpc('check_referral_code', rpcArgs);
       
       if (error) throw error;
       
