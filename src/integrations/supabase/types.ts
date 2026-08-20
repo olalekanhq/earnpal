@@ -171,6 +171,7 @@ export interface Database {
           user_id: string
           current_streak: number
           longest_streak: number
+          last_activity_at: string | null
           last_claim_at: string | null
           created_at: string
         }
@@ -237,9 +238,12 @@ export interface Database {
       check_referral_code: {
         Args: {
           _code: string
-          _user_id: string
+          _user_id: string | null
         }
-        Returns: Json
+        Returns: {
+          is_valid: boolean
+          username: string | null
+        }
       }
       lookup_login_email: {
         Args: {
