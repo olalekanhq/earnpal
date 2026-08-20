@@ -5,6 +5,7 @@ import { History, Coins, Loader2, Gift, TrendingUp, ArrowRight } from "lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { showTransactionDetails } from "@/utils/transaction-details";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/transactions")({
