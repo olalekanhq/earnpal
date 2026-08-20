@@ -50,21 +50,12 @@ export function NotificationsPopover() {
       markAsRead.mutate(notification.id);
     }
 
-    // If it has a transaction_id, fetch and show details
+    // If it has a transaction_id, navigate to it
     if (notification.transaction_id) {
-      const { data: tx, error } = await supabase
-        .from("points_transactions")
-        .select("*")
-        .eq("id", notification.transaction_id)
-        .single();
-      
-      if (error) {
-        console.error("Error fetching transaction:", error);
-        // Fallback: navigate to transactions page
-        navigate({ to: "/transactions" });
-      } else if (tx) {
-        showTransactionDetails(tx);
-      }
+      navigate({ 
+        to: "/transactions",
+        search: { transactionId: notification.transaction_id }
+      });
     } 
     // Otherwise, if it's a points or reward related notification, navigate to history
     else if (notification.type === 'points' || notification.type === 'reward') {
