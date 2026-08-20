@@ -23,6 +23,51 @@ export function WelcomeBonusModal() {
 
   useEffect(() => {
     checkEligibility();
+
+    // Subscribe to profile changes for real-time eligibility updates
+    const subscribeToProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const channel = supabase
+        .channel(`profile-verification-${user.id}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "profiles",
+            filter: `id=eq.${user.id}`,
+          },
+          (payload) => {
+            const newProfile = payload.new as any;
+            setProfile(newProfile);
+            
+            // If the user was ineligible due to missing social handles but now has them,
+            // we should re-check eligibility if the modal wasn't already dismissed
+            if (
+              !newProfile.has_claimed_welcome_bonus && 
+              !newProfile.welcome_banner_dismissed &&
+              newProfile.referred_by
+            ) {
+              // We check if it's already open, if not, checkEligibility will evaluate logic
+              if (!isOpen) {
+                checkEligibility();
+              }
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+
+    const unsubscribePromise = subscribeToProfile();
+    return () => {
+      unsubscribePromise.then(unsubscribe => unsubscribe?.());
+    };
   }, []);
 
   const checkEligibility = async () => {
