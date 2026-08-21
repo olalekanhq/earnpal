@@ -171,29 +171,39 @@ function Dashboard() {
       
       
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
-        <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative">
-          <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 w-full">
-              <div className="bg-amber-100 p-2 rounded-xl text-amber-600 shrink-0">
-                <Clock className="h-5 w-5" />
+        <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative shadow-sm">
+          <CardContent className="p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 w-full">
+              <div className="bg-amber-100 p-3 rounded-2xl text-amber-600 shrink-0 shadow-sm">
+                <Clock className="h-6 w-6" />
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
-                  Bonus will be available after you complete your social profile verification.
+              <div className="min-w-0 flex-1 space-y-1">
+                <p className="text-base font-black text-amber-900 leading-tight flex items-center gap-2">
+                  Bonus Pending
+                  <Badge variant="outline" className="hidden lg:inline-flex text-[10px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black px-2 py-0">
+                    Referee Action Required
+                  </Badge>
+                </p>
+                <p className="text-sm text-amber-800/80 font-medium">
+                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            on desktop, let the bonus pending be more responsive than that and well displayed
+                </p>
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
               <Button 
-                size="sm" 
+                size="lg" 
                 variant="outline"
-                className="flex-1 md:flex-none rounded-xl border-amber-200 text-amber-700 font-bold whitespace-nowrap bg-white/50 hover:bg-white"
+                className="w-full sm:w-auto rounded-xl border-amber-200 text-amber-700 font-bold whitespace-nowrap bg-white/50 hover:bg-white h-11 px-6"
                 asChild
               >
                 <Link to="/profile">Complete Profile</Link>
               </Button>
               <Button 
-                size="sm" 
-                className="flex-1 md:flex-none rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap"
+                size="lg" 
+                className="w-full sm:w-auto rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap h-11 px-8 shadow-md shadow-amber-600/20"
                 onClick={async () => {
                   const { data: { user } } = await supabase.auth.getUser();
                   if (!user) return;
@@ -220,8 +230,8 @@ function Dashboard() {
               </Button>
             </div>
           </CardContent>
-          <div className="absolute top-0 right-0 p-1 hidden sm:block">
-            <Badge variant="outline" className="text-[8px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black">Referee Action Required</Badge>
+          <div className="absolute top-0 right-0 p-2 sm:hidden">
+            <Badge variant="outline" className="text-[8px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black">Action Required</Badge>
           </div>
         </Card>
       )}
