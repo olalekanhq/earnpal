@@ -318,7 +318,53 @@ export function UsersManager() {
                     </div>
                   </div>
                 </div>
-              </div>
+                </div>
+
+                {/* Point Adjustment Section */}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-black uppercase flex items-center gap-2 text-green-600">
+                    <Coins className="h-4 w-4" /> Point Adjustment
+                  </h3>
+                  <div className="space-y-3 bg-green-500/5 p-4 rounded-2xl border border-green-500/20">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button 
+                        variant={pointAction.type === 'credit' ? 'default' : 'outline'} 
+                        className={cn("rounded-xl text-[10px] font-black uppercase", pointAction.type === 'credit' && "bg-green-600 hover:bg-green-700")}
+                        onClick={() => setPointAction(prev => ({ ...prev, type: 'credit' }))}
+                      >
+                        <Plus className="h-3 w-3 mr-1" /> Credit
+                      </Button>
+                      <Button 
+                        variant={pointAction.type === 'debit' ? 'default' : 'outline'} 
+                        className={cn("rounded-xl text-[10px] font-black uppercase", pointAction.type === 'debit' && "bg-destructive hover:bg-destructive/90")}
+                        onClick={() => setPointAction(prev => ({ ...prev, type: 'debit' }))}
+                      >
+                        <Minus className="h-3 w-3 mr-1" /> Debit
+                      </Button>
+                    </div>
+                    <Input 
+                      type="number" 
+                      placeholder="Amount" 
+                      value={pointAction.amount}
+                      onChange={(e) => setPointAction(prev => ({ ...prev, amount: e.target.value }))}
+                      className="rounded-xl border-green-500/20 bg-background h-10"
+                    />
+                    <Input 
+                      placeholder="Reason (e.g., Event reward)" 
+                      value={pointAction.reason}
+                      onChange={(e) => setPointAction(prev => ({ ...prev, reason: e.target.value }))}
+                      className="rounded-xl border-green-500/20 bg-background h-10"
+                    />
+                    <Button 
+                      className="w-full rounded-xl font-black uppercase text-[10px] tracking-widest h-10 shadow-lg shadow-green-500/10"
+                      disabled={isAdjusting}
+                      onClick={handleAdjustPoints}
+                    >
+                      {isAdjusting ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : null}
+                      Confirm Adjustment
+                    </Button>
+                  </div>
+
 
               {/* Activity Lists */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
