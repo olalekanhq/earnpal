@@ -3,14 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  User,
-  Loader2,
-  Mail,
-  ShieldAlert,
-  Eye,
-  TrendingUp,
-  Gift,
+import { 
+  User, 
+  Loader2, 
+  Mail, 
+  ShieldAlert, 
+  Eye, 
+  TrendingUp, 
+  Gift, 
   Users as UsersIcon,
   Calendar,
   Phone,
@@ -61,7 +61,7 @@ export function UsersManager() {
       let query = supabase
         .from("profiles")
         .select("*", { count: "exact" });
-
+      
       if (searchQuery) {
         query = query.or(`username.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%,full_name.ilike.%${searchQuery}%`);
       }
@@ -72,14 +72,14 @@ export function UsersManager() {
       const { data: profiles, count, error: profilesError } = await query
         .order("created_at", { ascending: false })
         .range(from, to);
-
+      
       if (profilesError) throw profilesError;
 
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
         .select("user_id, role")
         .in("user_id", profiles.map(p => p.id));
-
+      
       if (rolesError) throw rolesError;
 
       const mappedUsers = profiles.map(profile => ({
@@ -89,11 +89,11 @@ export function UsersManager() {
         isTaskManager: roles?.some(r => r.user_id === profile.id && r.role === 'task_manager'),
         currentRole: roles?.find(r => r.user_id === profile.id)?.role || 'user'
       }));
-
+      
       let finalUsers = mappedUsers;
       if (roleFilter !== "all") {
-        finalUsers = mappedUsers.filter(user =>
-          (roleFilter === "admin" && user.isAdmin) ||
+        finalUsers = mappedUsers.filter(user => 
+          (roleFilter === "admin" && user.isAdmin) || 
           (roleFilter === "user" && !user.isAdmin)
         );
       }
@@ -176,12 +176,12 @@ export function UsersManager() {
             className="pl-10 rounded-xl bg-card border-border/50 h-11 font-medium"
           />
         </div>
-
+        
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-3 py-1.5">
             <Filter className="h-4 w-4 text-muted-foreground" />
-            <Select
-              value={roleFilter}
+            <Select 
+              value={roleFilter} 
               onValueChange={(val) => {
                 setRoleFilter(val);
                 setCurrentPage(1);
@@ -197,7 +197,7 @@ export function UsersManager() {
               </SelectContent>
             </Select>
           </div>
-
+          
           <Badge variant="secondary" className="h-11 px-4 rounded-xl border-none bg-primary/5 text-primary font-black uppercase text-[10px] tracking-widest flex items-center shrink-0">
             {totalCount} Users
           </Badge>
@@ -326,7 +326,7 @@ export function UsersManager() {
           {selectedUser && (
             <div className="relative">
               <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border-b border-border/50" />
-
+              
               <div className="px-6 pb-8">
                 <div className="flex flex-col md:flex-row gap-6 -mt-10 mb-8 items-start">
                   <Avatar className="h-24 w-24 border-4 border-background shadow-xl rounded-[28px]">
@@ -335,7 +335,7 @@ export function UsersManager() {
                       <User className="h-10 w-10" />
                     </AvatarFallback>
                   </Avatar>
-
+                  
                   <div className="pt-10 flex-1 space-y-2">
                     <div className="flex items-center gap-3">
                       <h2 className="text-3xl font-black tracking-tight">
@@ -386,9 +386,9 @@ export function UsersManager() {
                     </div>
                     <p className="text-xs text-muted-foreground font-medium">Assign a system role to this user to grant administrative permissions.</p>
                   </div>
-
+                  
                   <div className="flex items-center gap-3 w-full md:w-auto">
-                    <Select
+                    <Select 
                       defaultValue={selectedUser.currentRole}
                       onValueChange={(val) => roleMutation.mutate({ userId: selectedUser.id, role: val })}
                       disabled={roleMutation.isPending}
