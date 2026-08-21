@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Table, 
@@ -10,17 +10,26 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Coins, User, Activity } from "lucide-react";
-import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Loader2, Coins, User, Activity, Search, Calendar as CalendarIcon, X } from "lucide-react";
+import { format, startOfDay, endOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import { DateRange } from "react-day-picker";
 
 export function PointsAuditLogs() {
   const queryClient = useQueryClient();
-  const { data: logs, isLoading } = useQuery({
-    queryKey: ["admin-points-audit-logs"],
+  const [searchUserId, setSearchUserId] = useState("");
+  const [searchReason, setSearchReason] = useState("");
+  const [searchTrigger, setSearchTrigger] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
+  const { data: logs, isLoading } = useQuery({
+    queryKey: ["admin-points-audit-logs", searchUserId, searchReason, searchTrigger, dateRange],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("points_audit_logs")
         .select(`
           *,
@@ -28,8 +37,33 @@ export function PointsAuditLogs() {
             username,
             full_name
           )
-        `)
-        .order("created_at", { ascending: false });
+        `);
+
+      if (searchUserId) {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(searchUserId);
+        if (isUuid) {
+          query = query.eq("user_id", searchUserId);
+        } else {
+          query = query.or(`username.ilike.%${searchUserId}%,full_name.ilike.%${searchUserId}%`, { foreignTable: 'profiles' });
+        }
+      }
+
+      if (searchReason) {
+        query = query.ilike("reason", `%${searchReason}%`);
+      }
+
+      if (searchTrigger) {
+        query = query.ilike("trigger_name", `%${searchTrigger}%`);
+      }
+
+      if (dateRange?.from) {
+        query = query.gte("created_at", startOfDay(dateRange.from).toISOString());
+      }
+      if (dateRange?.to) {
+        query = query.lte("created_at", endOfDay(dateRange.to).toISOString());
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
       
       if (error) throw error;
       return data;
@@ -57,16 +91,112 @@ export function PointsAuditLogs() {
     };
   }, [queryClient]);
 
-
-
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
-
 
   return (
     <div className="space-y-4 animate-in fade-in duration-500">
-      <div>
-        <h3 className="text-xl font-black uppercase tracking-tight">Points Audit Logs</h3>
-        <p className="text-sm text-muted-foreground font-medium">Detailed history of every point credit including welcome and referral rewards.</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h3 className="text-xl font-black uppercase tracking-tight">Points Audit Logs</h3>
+          <p className="text-sm text-muted-foreground font-medium">Detailed history of every point credit including welcome and referral rewards.</p>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          {(searchUserId || searchReason || searchTrigger || dateRange) && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => {
+                setSearchUserId("");
+                setSearchReason("");
+                setSearchTrigger("");
+                setDateRange(undefined);
+              }}
+              className="h-9 px-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground"
+            >
+              <X className="mr-1 h-3 w-3" /> Clear Filters
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-card/30 p-4 rounded-2xl border border-border/40 backdrop-blur-sm">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">User / ID</label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="Username or UUID..." 
+              value={searchUserId}
+              onChange={(e) => setSearchUserId(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reason</label>
+          <div className="relative">
+            <Activity className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="e.g. Welcome Bonus..." 
+              value={searchReason}
+              onChange={(e) => setSearchReason(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Trigger Source</label>
+          <div className="relative">
+            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="e.g. handle_new_user..." 
+              value={searchTrigger}
+              onChange={(e) => setSearchTrigger(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Date Range</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-medium h-9 text-xs bg-background/50 border-border/40 hover:bg-background/80 rounded-xl",
+                  !dateRange && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                {dateRange?.from ? (
+                  dateRange.to ? (
+                    <>
+                      {format(dateRange.from, "LLL dd")} - {format(dateRange.to, "LLL dd")}
+                    </>
+                  ) : (
+                    format(dateRange.from, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date range</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={dateRange?.from || new Date()}
+                selected={dateRange}
+                onSelect={(range) => setDateRange(range)}
+                numberOfMonths={1}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
       
       <div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden overflow-x-auto">
