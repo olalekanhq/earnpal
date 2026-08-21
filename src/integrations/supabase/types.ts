@@ -738,6 +738,10 @@ export type Database = {
       }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       claim_welcome_bonus: { Args: { _user_id: string }; Returns: Json }
+      has_completed_social_profile: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
