@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
+            Verify the signup page header rendering across iPhone-sized breakpoints to ensure nothing clips or shifts.
           </span>
 
 
@@ -418,7 +418,7 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            remove the amount of point on the sign up page head.
+                                            Verify the signup page header rendering across iPhone-sized breakpoints to ensure nothing clips or shifts.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
