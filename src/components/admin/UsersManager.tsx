@@ -396,6 +396,8 @@ export function UsersManager() {
                     {roleMutation.isPending && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
                   </div>
                 </div>
+
+                {isDetailsLoading ? (
                   <div className="flex justify-center py-20">
                     <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
                   </div>
