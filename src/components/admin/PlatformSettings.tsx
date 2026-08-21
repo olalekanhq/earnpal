@@ -269,6 +269,23 @@ export function PlatformSettings() {
           </div>
         </CardContent>
       </Card>
+      
+      <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/10 p-2 rounded-xl">
+              <Shield className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-xl font-black uppercase tracking-tight">Role Permissions</CardTitle>
+              <CardDescription className="font-medium">Decide which admin panel tabs are visible to each role</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <PermissionManager />
+        </CardContent>
+      </Card>
     </div>
   );
 }
