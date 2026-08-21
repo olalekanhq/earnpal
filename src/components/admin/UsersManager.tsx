@@ -103,8 +103,9 @@ export function UsersManager() {
   });
 
   const roleMutation = useMutation({
-    mutationFn: async ({ userId, role }: { userId: string, role: string }) => {
-      return assignRoleFn({ data: { userId, role: role as any } });
+    mutationFn: async ({ userId, role }: { userId: string; role: string }) => {
+      const result = await assignRoleFn({ data: { userId, role: role as any } });
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
@@ -112,7 +113,7 @@ export function UsersManager() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update user role");
-    }
+    },
   });
 
   const users = data?.users || [];
