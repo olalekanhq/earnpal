@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            Verify the signup page header rendering across iPhone-sized breakpoints to ensure nothing clips or shifts.
+            the confirmation mail is still sending verify link instead of otp, why
           </span>
 
 
@@ -418,7 +418,7 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Verify the signup page header rendering across iPhone-sized breakpoints to ensure nothing clips or shifts.
+                                            the confirmation mail is still sending verify link instead of otp, why
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
