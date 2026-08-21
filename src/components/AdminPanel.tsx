@@ -56,21 +56,7 @@ export function AdminPanel() {
   const { data: permissions } = useQuery({
     queryKey: ["rolePermissions", role],
     queryFn: async () => {
-      if (role === 'admin') return null;
-      const { data } = await supabase
-        .from("role_permissions")
-        .select("tab_name")
-        .eq("role", role)
-        .eq("is_enabled", true);
-      return data?.map(p => p.tab_name) || [];
-    },
-    enabled: !!role,
-  });
-
-  const { data: permissions } = useQuery({
-    queryKey: ["rolePermissions", role],
-    queryFn: async () => {
-      if (role === 'admin') return null; // Admin has all
+      if (role === "admin") return null;
       const { data } = await supabase
         .from("role_permissions")
         .select("tab_name")
@@ -174,13 +160,6 @@ export function AdminPanel() {
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
   ];
-
-  
-  const filteredTabs = tabs.filter(tab => {
-    if (isAdmin) return true;
-    if (!permissions) return false;
-    return permissions.includes(tab.value);
-  });
 
   
   const filteredTabs = tabs.filter(tab => {
