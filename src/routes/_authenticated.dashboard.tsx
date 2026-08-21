@@ -401,7 +401,7 @@ function Dashboard() {
           <Card className="border-none shadow-sm bg-card">
             <CardContent className="p-0">
               <div className="divide-y divide-border/50">
-                {recentTransactions?.length ? recentTransactions.map((tx) => (
+                {recentTransactions?.length ? recentTransactions.map((tx: any) => (
                   <div 
                     key={tx.id} 
                     className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors cursor-pointer"
