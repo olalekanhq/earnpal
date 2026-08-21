@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -225,7 +226,7 @@ function Dashboard() {
 
 
       {/* Profile Completion Warning Banner */}
-      {(!profile?.has_claimed_welcome_bonus) && (
+      {(!profile?.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess) && (
         <Card className={cn(
           "border-none overflow-hidden relative transition-all duration-300",
           !profile?.twitter_handle || !profile?.telegram_handle 
@@ -592,9 +593,4 @@ function RecentReferrersList() {
       )}
     </div>
   );
-}
-
-// Utility function (duplicated since it's used in components but defined in utils)
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
 }
