@@ -230,10 +230,7 @@ function Dashboard() {
           Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
         </h1>
         <p className="text-muted-foreground">
-          '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                                  
-                                                      
-                                                      Add a compact social profile completion status indicator on the dashboard that shows whether the account is fully verified.
+          Here's what's happening with your rewards today.
         </p>
       </header>
 
