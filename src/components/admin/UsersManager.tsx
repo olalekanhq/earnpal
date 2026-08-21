@@ -391,6 +391,7 @@ export function UsersManager() {
                         <SelectItem value="user" className="font-bold">Standard User</SelectItem>
                         <SelectItem value="moderator" className="font-bold">Moderator</SelectItem>
                         <SelectItem value="admin" className="font-bold text-primary">Administrator</SelectItem>
+                        <SelectItem value="task_manager" className="font-bold">Task Manager</SelectItem>
                       </SelectContent>
                     </Select>
                     {roleMutation.isPending && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
