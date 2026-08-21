@@ -299,6 +299,10 @@ export function WelcomeBonusModal() {
             </Button>
           </DialogFooter>
           
+          <p className="text-[10px] font-bold text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 italic">
+            Note: You cannot claim this bonus until you complete your social profile handles.
+          </p>
+          
           <button 
             onClick={handleClose}
             className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors pb-2"
