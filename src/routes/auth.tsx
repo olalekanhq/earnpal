@@ -418,7 +418,7 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            signing up is showing database error saving new user. can we fix this and it won't bring it again
+                                            remove the amount of point on the sign up page head.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
