@@ -64,7 +64,7 @@ function ReferralPage() {
       
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, full_name, username, email, created_at, avatar_url")
+        .select("id, full_name, username, email, created_at, avatar_url, phone_number, twitter_handle, telegram_handle, facebook_handle, instagram_handle")
         .in("id", refereeIds);
 
       if (profilesError) {
@@ -108,25 +108,44 @@ function ReferralPage() {
                 <CardContent className="p-0">
                   {referrals?.length ? (
                     <div className="divide-y divide-border/50">
-                      {referrals.map((ref) => (
-                        <div key={ref.id} className="flex items-center justify-between p-4 hover:bg-accent/5 transition-colors">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 border">
-                              <AvatarImage src={ref.avatar_url || ""} />
-                              <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
-                                {(ref.full_name?.[0] || ref.username?.[0] || "?").toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="text-sm font-bold text-foreground leading-none">{ref.full_name || ref.username || "New User"}</p>
-                              <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">Joined {new Date(ref.created_at).toLocaleDateString()}</p>
+                      {referrals.map((ref: any) => {
+                        const isComplete = ref.full_name && ref.username && ref.phone_number && (ref.twitter_handle || ref.telegram_handle || ref.facebook_handle || ref.instagram_handle);
+                        
+                        return (
+                          <div key={ref.id} className="flex items-center justify-between p-4 hover:bg-accent/5 transition-colors">
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-9 w-9 border">
+                                <AvatarImage src={ref.avatar_url || ""} />
+                                <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                                  {(ref.full_name?.[0] || ref.username?.[0] || "?").toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <p className="text-sm font-bold text-foreground leading-none">{ref.full_name || ref.username || "New User"}</p>
+                                  {!isComplete && (
+                                    <Badge variant="outline" className="text-[8px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 py-0 h-4">
+                                      Pending Completion
+                                    </Badge>
+                                  )}
+                                </div>
+                                <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">Joined {new Date(ref.created_at).toLocaleDateString()}</p>
+                              </div>
+                            </div>
+                            <div className={cn(
+                              "px-2 py-1 rounded-lg",
+                              isComplete ? "bg-green-50" : "bg-amber-50"
+                            )}>
+                              <span className={cn(
+                                "text-[10px] font-bold uppercase",
+                                isComplete ? "text-green-600" : "text-amber-600"
+                              )}>
+                                {isComplete ? "+75 Pts" : "Pending"}
+                              </span>
                             </div>
                           </div>
-                          <div className="bg-green-50 px-2 py-1 rounded-lg">
-                            <span className="text-[10px] font-bold text-green-600 uppercase">+75 Pts</span>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="p-12 text-center">
