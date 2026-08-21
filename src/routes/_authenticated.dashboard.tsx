@@ -188,7 +188,10 @@ function Dashboard() {
                   '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Verify the dashboard banner is completely cleared and never shows any prompt-like text.
+                                            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.''' Verify the dashboard banner is completely cleared and never shows any prompt-like text.
+
+
+the text above is showing on the bonus pending banner, please remove it
                 </p>
               </div>
             </div>
