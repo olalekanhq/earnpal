@@ -22,13 +22,13 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/redeem")({
   head: () => ({
-    title: "Redeem Rewards | Earn Pal",
+    title: "Redeem Rewards | Marketplace & Gift Cards | Earn Pal",
     meta: [
-      { name: "description", content: "Exchange your earned points for gift cards, vouchers, and premium products." },
-      { property: "og:title", content: "Redeem Points | Earn Pal" },
-      { property: "og:description", content: "Browse our marketplace and pick your favorite rewards." },
+      { name: "description", content: "Exchange your hard-earned Earn Pal points for premium gift cards, vouchers, and exclusive products in our rewards marketplace." },
+      { property: "og:title", content: "Redeem Your Points | Earn Pal Marketplace" },
+      { property: "og:description", content: "Turn your points into real-world rewards. Browse our catalog of gift cards and premium vouchers." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Redeem Rewards&description=Exchange points for gift cards.` },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

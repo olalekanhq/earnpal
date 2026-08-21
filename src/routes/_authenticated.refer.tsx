@@ -11,13 +11,13 @@ import { ReferralStatsDashboard } from "@/components/ReferralStatsDashboard";
 
 export const Route = createFileRoute("/_authenticated/refer")({
   head: () => ({
-    title: "Refer Friends | Earn Pal",
+    title: "Refer Friends | Earn Passive Income | Earn Pal",
     meta: [
-      { name: "description", content: "Invite your friends to Earn Pal and earn bonus points for every verified signup." },
-      { property: "og:title", content: "Referral Program | Earn Pal" },
-      { property: "og:description", content: "Share your unique link and watch your points balance grow." },
+      { name: "description", content: "Invite your friends to Join Earn Pal and build a passive income stream. Earn 75 points for every referral while your friends get a 50-point head start!" },
+      { property: "og:title", content: "Referral Program | Earn Pal Bonuses" },
+      { property: "og:description", content: "Share your unique referral link and earn points for every friend who joins. The fastest way to grow your balance." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Refer Friends&description=Earn 75 points for every referral.` },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
