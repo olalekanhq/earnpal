@@ -124,7 +124,7 @@ export function NotificationsPopover() {
                   onClick={() => handleNotificationClick(notification)}
                 >
                   <p className="text-sm font-medium">
-                    {"'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            remove the text na and restore the normal notification"}
+                    {"'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Load the security issues from the scan results and fix the selected issues."}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-2">
