@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Table, 
@@ -15,8 +16,10 @@ import { cn } from "@/lib/utils";
 
 export function PointsAuditLogs() {
   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const { data: logs, isLoading } = useQuery({
     queryKey: ["admin-points-audit-logs"],
+
     queryFn: async () => {
       const { data, error } = await supabase
         .from("points_audit_logs")
@@ -56,7 +59,29 @@ export function PointsAuditLogs() {
   }, [queryClient]);
 
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("points-audit-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "points_audit_logs",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["admin-points-audit-logs"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+
 
   return (
     <div className="space-y-4 animate-in fade-in duration-500">

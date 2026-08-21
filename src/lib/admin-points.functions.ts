@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const adjustUserPoints = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
@@ -10,13 +9,24 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
     actionType: z.enum(["credit", "debit"])
   }).parse(data))
   .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    if (!context?.request) {
+      throw new Error("Request context missing");
+    }
+
     // Check if the caller is an admin
-    const { data: { user }, error: authError } = await (await import("@/integrations/supabase/client.server")).supabaseAdmin.auth.getUser(
-      context.request.headers.get("Authorization")?.split(" ")[1] || ""
-    );
+    const authHeader = context.request.headers.get("Authorization");
+    const token = authHeader?.split(" ")[1];
+    
+    if (!token) {
+      throw new Error("Unauthorized: Missing token");
+    }
+
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
 
     if (authError || !user) {
-      throw new Error("Unauthorized");
+      throw new Error("Unauthorized: Invalid session");
     }
 
     // Verify admin role
@@ -33,8 +43,8 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
 
     const adjustmentAmount = data.actionType === "credit" ? Math.abs(data.amount) : -Math.abs(data.amount);
 
-    // 1. Update user balance
-    const { error: updateError } = await supabaseAdmin.rpc("handle_points_transaction", {
+    // 1. Update user balance using the RPC
+    const { error: updateError } = await supabaseAdmin.rpc("handle_points_transaction" as any, {
       p_user_id: data.userId,
       p_amount: adjustmentAmount,
       p_description: `Admin adjustment: ${data.reason}`,
@@ -43,22 +53,13 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
 
     if (updateError) throw updateError;
 
-    // 2. Record admin action
-    await supabaseAdmin.from("admin_point_actions").insert({
-      admin_id: user.id,
-      target_user_id: data.userId,
-      amount: adjustmentAmount,
-      action_type: data.actionType,
-      reason: data.reason
-    });
-
-    // 3. Add to points audit log
+    // 2. Add to points audit log
     await supabaseAdmin.from("points_audit_logs").insert({
       user_id: data.userId,
       amount: adjustmentAmount,
       reason: `ADMIN_${data.actionType.toUpperCase()}: ${data.reason}`,
       trigger_name: "admin_manual_action"
-    });
+    } as any);
 
     return { success: true };
   });
