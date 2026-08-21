@@ -185,10 +185,7 @@ function Dashboard() {
                   </Badge>
                 </p>
                 <p className="text-sm text-amber-800/80 font-medium">
-                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            remove the unnecessary extra text you add there and stop adding it in future edit
+                  Bonus will be available after you complete your social profile verification.
                 </p>
               </div>
             </div>
