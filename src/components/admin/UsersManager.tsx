@@ -432,7 +432,7 @@ export function UsersManager() {
                                 <div className="space-y-1">
                                   <p className="font-bold text-sm leading-none">{tx.description}</p>
                                   <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-                                    {format(new Date(tx.created_at), "MMM d, yyyy")} &middot; {format(new Date(tx.created_at), "HH:mm")}
+                                    {format(new Date(tx.created_at), "MMM d, yyyy")} . {format(new Date(tx.created_at), "HH:mm")}
                                   </p>
                                 </div>
                                 <div className={cn(
