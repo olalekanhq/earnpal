@@ -166,6 +166,62 @@ export type Database = {
           },
         ]
       }
+      points_audit_logs: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          reason: string
+          trigger_name: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          reason: string
+          trigger_name: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          reason?: string
+          trigger_name?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "points_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "my_referrals_detailed"
+            referencedColumns: ["referee_id"]
+          },
+          {
+            foreignKeyName: "points_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "points_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_ranks"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       points_transactions: {
         Row: {
           amount: number
