@@ -1,5 +1,12 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 import { supabase } from '@/integrations/supabase/client'
+import { useRealtimeBalance } from '@/hooks/use-realtime-balance'
+
+function AuthenticatedLayout() {
+  useRealtimeBalance()
+  return <Outlet />
+}
+
 
 export const Route = createFileRoute('/_authenticated')({
   // Sessions live in browser storage, so the server can never see them.
@@ -20,5 +27,5 @@ export const Route = createFileRoute('/_authenticated')({
 
     return { user: data.user }
   },
-  component: () => <Outlet />,
+  component: AuthenticatedLayout,
 })
