@@ -22,7 +22,7 @@ import {
   Shield
 } from "lucide-react";
 import { format } from "date-fns";
-import React, { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -154,10 +154,10 @@ export function UsersManager() {
   });
 
   if (isLoading) {
-    return React.createElement(
-      "div",
-      { className: "flex justify-center p-12" },
-      React.createElement("div", { className: "spinner-loading" })
+    return (
+      <div className="flex justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
     );
   }
 
@@ -403,7 +403,7 @@ export function UsersManager() {
                         <SelectItem value="task_manager" className="font-bold">Task Manager</SelectItem>
                       </SelectContent>
                     </Select>
-                    {roleMutation.isPending && <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>}
+                    {roleMutation.isPending && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
                   </div>
                 </div>
 
