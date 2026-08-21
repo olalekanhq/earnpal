@@ -47,8 +47,9 @@ export function ReferralStatsDashboard() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["referrals-stats", profile.id] });
+          queryClient.invalidateQueries({ queryKey: ["referrals", profile.id] });
           queryClient.invalidateQueries({ queryKey: ["profile"] });
-          toast.success("New referral recorded!");
+          toast.success("New referral update!");
         }
       )
       .subscribe();
@@ -120,6 +121,7 @@ export function ReferralStatsDashboard() {
             <div>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Total Referrals</p>
               <p className="text-2xl font-black">{count}</p>
+              <p className="text-[9px] text-muted-foreground font-bold uppercase mt-1">Ready for bonus</p>
             </div>
           </div>
         </Card>

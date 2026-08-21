@@ -86,7 +86,7 @@ function ReferralPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Referral Program</h1>
-          <p className="text-muted-foreground font-medium">Invite friends and earn 75 points for every referral. Your friend gets 50 points!</p>
+          <p className="text-muted-foreground font-medium">Invite friends and earn 75 points for every referral. Your friend gets 50 points immediately!</p>
         </div>
       </header>
 
@@ -127,7 +127,7 @@ function ReferralPage() {
                                   <p className="text-sm font-bold text-foreground leading-none">{ref.full_name || ref.username || "New User"}</p>
                                   {!isComplete && (
                                     <Badge variant="outline" className="text-[8px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 py-0 h-4">
-                                      Pending Completion
+                                      First Task Pending
                                     </Badge>
                                   )}
                                 </div>
@@ -140,9 +140,9 @@ function ReferralPage() {
                             )}>
                               <span className={cn(
                                 "text-[10px] font-bold uppercase",
-                                isComplete ? "text-green-600" : "text-amber-600"
-                              )}>
-                                {isComplete ? "+75 Pts" : "Pending"}
+                                 isComplete ? "text-green-600" : "text-amber-600"
+                               )}>
+                                {isComplete ? "+75 Pts" : "Pending Task"}
                               </span>
                             </div>
                           </div>
@@ -228,7 +228,7 @@ function ReferralPage() {
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-bold text-primary">3</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-medium">You receive 75 points and your friend gets 50 points once their registration is verified.</p>
+                <p className="text-xs text-muted-foreground font-medium">You receive 75 points once your friend completes their first task, and your friend gets 50 points immediately upon registration.</p>
               </div>
             </div>
           </Card>
