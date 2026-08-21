@@ -101,15 +101,29 @@ function TransactionsPage() {
                   className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
                   onClick={() => handleTxClick(tx)}
                 >
-                  <div className="space-y-1">
-                    <p className="font-bold text-sm text-foreground leading-none group-hover:text-primary transition-colors">{tx.description}</p>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(tx.created_at).toLocaleString()}</p>
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "p-2 rounded-lg",
+                      tx.status === 'pending' ? 'bg-amber-100 text-amber-600' : 
+                      tx.amount > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                    )}>
+                      {tx.status === 'pending' ? <Clock className="h-4 w-4" /> : 
+                       tx.amount > 0 ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-bold text-sm text-foreground leading-none group-hover:text-primary transition-colors">
+                        {tx.description}
+                        {tx.status === 'pending' && <span className="ml-2 text-[8px] font-black uppercase text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">Pending</span>}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{new Date(tx.created_at).toLocaleString()}</p>
+                    </div>
                   </div>
                   <div className={cn(
                     "font-black text-sm px-3 py-1 rounded-lg",
+                    tx.status === 'pending' ? "bg-amber-100 text-amber-600" :
                     tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"
                   )}>
-                    {tx.amount > 0 ? `+${tx.amount}` : tx.amount} PTS
+                    {tx.status === 'pending' ? "" : tx.amount > 0 ? "+" : ""}{tx.amount} PTS
                   </div>
                 </div>
               ))}
