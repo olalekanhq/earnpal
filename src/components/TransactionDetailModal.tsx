@@ -32,6 +32,7 @@ export function TransactionDetailModal({
   if (!transaction) return null;
 
   const isPositive = transaction.amount > 0;
+  const isPending = transaction.status === 'pending';
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
