@@ -104,8 +104,7 @@ export function UsersManager() {
 
   const roleMutation = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: string }) => {
-      const result = await assignRoleFn({ data: { userId, role: role as any } });
-      return result;
+      return assignRoleFn({ data: { userId, role: role as any } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
