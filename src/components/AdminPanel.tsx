@@ -258,11 +258,7 @@ export function AdminPanel() {
         </div>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'users' && (
-            <div className="rounded-2xl border border-border/50 bg-card p-12 text-center font-bold text-muted-foreground">
-              Users Manager is temporarily unavailable.
-            </div>
-          )}
+          {activeTab === 'users' && <UsersManager />}
         </TabsContent>
 
         <TabsContent value="fraud" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
