@@ -12,6 +12,17 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/settings")({
+  head: () => ({
+    title: "Account Settings & Preferences | Earn Pal",
+    meta: [
+      { name: "description", content: "Customize your Earn Pal experience. Manage notification preferences, security settings, and account privacy." },
+      { property: "og:title", content: "Settings | Earn Pal" },
+      { property: "og:description", content: "Tailor your earning experience and manage your account security." },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: SettingsPage,
 });
 

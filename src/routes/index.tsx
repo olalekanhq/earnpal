@@ -7,16 +7,16 @@ import { z } from "zod";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    title: "Earn Pal | The Ultimate Rewards Platform",
+    title: "Earn Pal | Reward Your Time with Real Prizes",
     meta: [
-      { name: "description", content: "Earn points for simple tasks, refer friends, and redeem for amazing prizes on Earn Pal. Join the most intelligent earning platform today." },
-      { property: "og:title", content: "Earn Pal | Reward Your Time" },
-      { property: "og:description", content: "Turn your time into real rewards. Join Earn Pal and start earning today." },
-      { property: "og:image", content: "https://earnpal.qd.je/logo.png" },
+      { name: "description", content: "Join Earn Pal, the ultimate rewards community. Earn points by completing simple tasks, referring friends, and watching ads. Redeem your points for premium gift cards and real prizes today!" },
+      { property: "og:title", content: "Earn Pal | Reward Your Time & Earn Real Prizes" },
+      { property: "og:description", content: "Join thousands of users turning digital activity into rewards. Complete tasks, refer friends, and redeem points for premium gifts. Start earning now!" },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Earn Pal | Reward Your Time" },
-      { name: "twitter:description", content: "The ultimate rewards community. Complete tasks, refer friends, and unlock premium rewards." },
+      { name: "twitter:title", content: "Earn Pal | The Most Rewarding Community" },
+      { name: "twitter:description", content: "Turn your spare time into rewards. Earn Pal offers simple tasks and high-value referrals. Join today and start your earning journey!" },
     ],
   }),
   validateSearch: (search) => z.object({

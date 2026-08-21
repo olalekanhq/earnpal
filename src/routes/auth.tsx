@@ -17,13 +17,13 @@ import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
-    title: "Secure Access | Earn Pal",
+    title: "Secure Login & Registration | Earn Pal",
     meta: [
-      { name: "description", content: "Sign in or create your Earn Pal account to start earning rewards today." },
-      { property: "og:title", content: "Secure Access | Earn Pal" },
-      { property: "og:description", content: "Join the Earn Pal community and turn your time into rewards." },
+      { name: "description", content: "Access your Earn Pal account or sign up to start earning rewards. Secure login for the most trusted points-earning community." },
+      { property: "og:title", content: "Join Earn Pal | Secure Access" },
+      { property: "og:description", content: "Sign in to manage your rewards or create a new account and get a 50-point welcome bonus with a referral code!" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=Secure Access&description=Sign in to start earning.` },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
