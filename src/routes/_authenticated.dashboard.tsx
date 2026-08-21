@@ -241,9 +241,9 @@ function Dashboard() {
         </p>
       </header>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Main Balance Card - Inspired by Reference */}
-        <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
+        <Card className="flex-1 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">Total Balance</CardTitle>
           </CardHeader>
@@ -277,7 +277,7 @@ function Dashboard() {
         </Card>
 
         {/* Daily Streak Card */}
-        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
+        <Card className="lg:w-64 border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
