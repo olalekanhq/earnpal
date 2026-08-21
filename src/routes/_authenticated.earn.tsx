@@ -53,6 +53,36 @@ function EarnPage() {
     },
   });
 
+  const { data: socialCheck } = useQuery({
+    queryKey: ["social-verification"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { complete: false, missing: [] as string[] };
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("twitter_handle, telegram_handle, instagram_handle, facebook_handle")
+        .eq("id", user.id)
+        .single();
+
+      const { data: settings } = await (supabase.from("app_settings" as any) as any)
+        .select("value")
+        .eq("key", "welcome_bonus_required_socials")
+        .single();
+
+      const required = (settings?.value as string[]) || [];
+      const missing = required.filter((social: string) => {
+        const val = (profile as any)?.[`${social}_handle`];
+        return !val || !String(val).trim();
+      });
+
+      return { complete: missing.length === 0, missing };
+    },
+  });
+
+  const socialLocked = socialCheck ? !socialCheck.complete : false;
+
+
   const categories = [
     { name: "All", icon: Star },
     { name: "Social", icon: MessageSquare },
@@ -140,7 +170,7 @@ function EarnPage() {
                 </div>
                 <Button 
                   className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
-                  disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                  disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
                     const { data: { user } } = await supabase.auth.getUser();
                     if (!user) return;
