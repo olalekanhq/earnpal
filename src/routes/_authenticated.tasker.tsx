@@ -4,7 +4,7 @@ import { AdminPanel } from "@/components/AdminPanel";
 import { AccessDenied } from "@/components/admin/AccessDenied";
 import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/_authenticated/moderator")({
+export const Route = createFileRoute("/_authenticated/tasker")({
   loader: async ({ location }) => {
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -17,20 +17,21 @@ export const Route = createFileRoute("/_authenticated/moderator")({
     
     return { userId: user.id };
   },
-  component: ModeratorRouteComponent,
+  component: TaskerRouteComponent,
 });
 
-function ModeratorRouteComponent() {
+function TaskerRouteComponent() {
   const { userId } = Route.useLoaderData();
 
   const { data: roles, isLoading } = useQuery({
-    queryKey: ["moderator-role-check", userId],
+    queryKey: ["tasker-role-check", userId],
     queryFn: async () => {
-      const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
+      const [{ data: isAdmin }, { data: isModerator }, { data: isTasker }] = await Promise.all([
         supabase.rpc("has_role", { _user_id: userId, _role: 'admin' as any }),
-        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' as any })
+        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' as any }),
+        supabase.rpc("has_role", { _user_id: userId, _role: 'tasker' as any })
       ]);
-      return { isAdmin, isModerator };
+      return { isAdmin, isModerator, isTasker };
     }
   });
 
@@ -42,7 +43,7 @@ function ModeratorRouteComponent() {
     );
   }
 
-  const isAuthorized = roles?.isAdmin || roles?.isModerator;
+  const isAuthorized = roles?.isAdmin || roles?.isModerator || roles?.isTasker;
 
   if (!isAuthorized) {
     return (
@@ -56,8 +57,8 @@ function ModeratorRouteComponent() {
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Moderator Panel</h1>
-          <p className="text-muted-foreground font-medium">Review tasks, handle redemptions, and monitor platform activity.</p>
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Tasker Panel</h1>
+          <p className="text-muted-foreground font-medium">Manage platform tasks and submissions.</p>
         </div>
         <AdminPanel />
       </div>

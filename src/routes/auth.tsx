@@ -328,8 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            remove the referral rank on the dashboard
-add moderator page for moderators
+            add tasker panel for task manager too and make sure only tab the have access to is showing to them, including moderator, they only see tab they have access to and add to admin panel where i can decide which tab they can use
           </span>
 
 

@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Save, Settings2 } from "lucide-react";
+import { Loader2, Save, Settings2, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
 
 // Define local interfaces since types might not be regenerated yet
@@ -27,6 +28,75 @@ interface AppSetting {
 import { useAuth } from "@/hooks/use-auth";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+
+function PermissionManager() {
+  const queryClient = useQueryClient();
+  const { data: permissions, isLoading } = useQuery({
+    queryKey: ["all-role-permissions"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("role_permissions")
+        .select("*")
+        .order("role");
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async ({ id, is_enabled }: { id: string, is_enabled: boolean }) => {
+      const { error } = await supabase
+        .from("role_permissions")
+        .update({ is_enabled })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] });
+      toast.success("Permission updated");
+    }
+  });
+
+  if (isLoading) return <Loader2 className="h-4 w-4 animate-spin mx-auto" />;
+
+  const roles = ['moderator', 'tasker'];
+  const tabs = ['users', 'fraud', 'tasks', 'rewards', 'redemptions', 'analytics', 'referrals', 'settings'];
+
+  return (
+    <div className="space-y-6">
+      {roles.map(role => (
+        <div key={role} className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Badge className="font-black uppercase tracking-wider">{role}</Badge>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {tabs.map(tab => {
+              const perm = permissions?.find(p => p.role === role && p.tab_name === tab);
+              return (
+                <div key={tab} className="flex items-center justify-between p-3 rounded-xl bg-accent/5 border border-border/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest">{tab}</span>
+                  <Switch 
+                    checked={perm?.is_enabled ?? false}
+                    onCheckedChange={(checked) => {
+                      if (perm) {
+                        toggleMutation.mutate({ id: perm.id, is_enabled: checked });
+                      } else {
+                        // Create if doesn't exist
+                        supabase.from("role_permissions").insert({ role: role as "admin" | "moderator" | "task_manager" | "tasker" | "user", tab_name: tab, is_enabled: checked })
+                          .then(() => queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] }));
+                      }
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function PlatformSettings() {
   const { isAdmin, isLoading: isAuthLoading } = useAuth();
