@@ -108,8 +108,7 @@ export function UsersManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      const msg = "User role updated successfully";
-      toast.success(msg);
+      toast.success("User role updated successfully");
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update user role");
