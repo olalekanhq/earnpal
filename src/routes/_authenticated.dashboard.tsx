@@ -61,15 +61,6 @@ function Dashboard() {
     },
   });
 
-  const { data: userRank } = useQuery({
-    queryKey: ["userRank"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-      const { data } = await supabase.from("user_ranks").select("*").eq("user_id", user.id).single();
-      return data;
-    },
-  });
 
   const { data: featuredTasks } = useQuery({
     queryKey: ["featured-tasks"],
@@ -213,7 +204,7 @@ function Dashboard() {
         </p>
       </header>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {/* Main Balance Card - Inspired by Reference */}
         <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
