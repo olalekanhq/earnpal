@@ -78,6 +78,9 @@ function EarnPage() {
 
       return { complete: missing.length === 0, missing };
     },
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   const socialLocked = socialCheck ? !socialCheck.complete : false;

@@ -106,6 +106,8 @@ function ProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["social-verification"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("Profile updated!");
       setIsEditing(false);
     },
