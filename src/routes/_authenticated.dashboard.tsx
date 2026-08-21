@@ -9,6 +9,7 @@ import { subDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -128,6 +129,26 @@ function Dashboard() {
       if (result?.alreadyClaimed) {
         toast.info("Bonus already claimed.");
       } else {
+        // Trigger celebration effect
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+        const interval: any = setInterval(function() {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          // since particles fall down, start a bit higher than random
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
+
         toast.success("Welcome bonus claimed!");
       }
     },
