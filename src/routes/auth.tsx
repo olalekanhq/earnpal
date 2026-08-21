@@ -422,7 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Implement the Admin Tools dropdown so it ONLY opens on tap/click. Ensure hover effects or accidental scrolls cannot trigger it. Verify click-outside closing works perfectly.
+                                            the users detail opening on admin panel should include all their information on the modal
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 

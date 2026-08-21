@@ -151,21 +151,198 @@ export function UsersManager() {
         </Table>
       </div>
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-4 sm:p-6">
-          <DialogHeader><DialogTitle>User Details: {selectedUser?.username}</DialogTitle></DialogHeader>
+        <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-4 sm:p-8">
+          <DialogHeader>
+            <div className="flex items-center gap-4 mb-4">
+              <Avatar className="h-16 w-16 border-2 border-primary/20">
+                <AvatarImage src={selectedUser?.avatar_url || ""} />
+                <AvatarFallback className="bg-primary/5">
+                  <User className="h-8 w-8 text-primary/40" />
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <DialogTitle className="text-2xl font-black uppercase tracking-tight">
+                  {selectedUser?.username || "User Details"}
+                </DialogTitle>
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Mail className="h-4 w-4" />
+                  <span>{selectedUser?.email}</span>
+                </div>
+              </div>
+            </div>
+          </DialogHeader>
+          
           {selectedUser && (
-            <div className="space-y-6 py-4">
-              <div className="flex items-center justify-between p-4 bg-accent/5 rounded-2xl border">
-                <div><h3 className="font-black uppercase text-sm">Role Management</h3><p className="text-xs text-muted-foreground">Change permissions for this user.</p></div>
-                <Select defaultValue={selectedUser.currentRole} onValueChange={(val) => handleRoleChange(selectedUser.id, val)}>
-                  <SelectTrigger className="w-[180px] rounded-xl"><SelectValue placeholder="Select Role" /></SelectTrigger>
-                  <SelectContent><SelectItem value="user">Standard User</SelectItem><SelectItem value="moderator">Moderator</SelectItem><SelectItem value="admin">Administrator</SelectItem><SelectItem value="task_manager">Task Manager</SelectItem></SelectContent>
-                </Select>
+            <div className="space-y-8 py-4">
+              {/* Account Overview Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="bg-accent/5 border-none shadow-none">
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                        <Gift className="h-5 w-5 text-primary" />
+                      </div>
+                      <span className="text-xs font-black uppercase text-muted-foreground mb-1">Total Points</span>
+                      <span className="text-2xl font-black">{selectedUser.points_balance || 0}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-accent/5 border-none shadow-none">
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                        <UsersIcon className="h-5 w-5 text-primary" />
+                      </div>
+                      <span className="text-xs font-black uppercase text-muted-foreground mb-1">Referrals</span>
+                      <span className="text-2xl font-black">{userDetails?.referrals.length || 0}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-accent/5 border-none shadow-none">
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                        <Calendar className="h-5 w-5 text-primary" />
+                      </div>
+                      <span className="text-xs font-black uppercase text-muted-foreground mb-1">Joined</span>
+                      <span className="text-sm font-bold">{selectedUser.created_at ? format(new Date(selectedUser.created_at), "MMM d, yyyy") : "N/A"}</span>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
-                <Card><CardHeader><CardTitle className="text-xs uppercase font-black">History</CardTitle></CardHeader><CardContent className="h-64 overflow-y-auto">{userDetails?.transactions.map((tx: any) => <div key={tx.id} className="text-xs py-2 border-b last:border-0 flex justify-between"><span>{tx.description}</span><span className="font-black">{tx.amount}</span></div>)}</CardContent></Card>
-                <Card><CardHeader><CardTitle className="text-xs uppercase font-black">Referrals</CardTitle></CardHeader><CardContent className="h-64 overflow-y-auto">{userDetails?.referrals.map((ref: any) => <div key={ref.id} className="text-xs py-2 border-b last:border-0">{ref.profiles?.username} - {ref.status}</div>)}</CardContent></Card>
+
+              {/* Personal Info & Role */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-black uppercase flex items-center gap-2">
+                    <User className="h-4 w-4" /> Personal Information
+                  </h3>
+                  <div className="space-y-3 bg-accent/5 p-4 rounded-2xl border border-border/50">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-muted-foreground">Full Name</span>
+                      <span className="text-sm font-black">{selectedUser.full_name || "N/A"}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-muted-foreground">Username</span>
+                      <span className="text-sm font-black">@{selectedUser.username}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-muted-foreground">User ID</span>
+                      <span className="text-[10px] font-mono opacity-50">{selectedUser.id}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-sm font-black uppercase flex items-center gap-2 text-primary">
+                    <Shield className="h-4 w-4" /> Access Management
+                  </h3>
+                  <div className="space-y-3 bg-primary/5 p-4 rounded-2xl border border-primary/20">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-xs font-bold text-muted-foreground">Current Role</span>
+                      <Select defaultValue={selectedUser.currentRole} onValueChange={(val) => handleRoleChange(selectedUser.id, val)}>
+                        <SelectTrigger className="w-full rounded-xl bg-background border-primary/20 h-10">
+                          <SelectValue placeholder="Select Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="user">Standard User</SelectItem>
+                          <SelectItem value="moderator">Moderator</SelectItem>
+                          <SelectItem value="admin">Administrator</SelectItem>
+                          <SelectItem value="task_manager">Task Manager</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Activity Lists */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="border-border/50 shadow-none">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xs uppercase font-black flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4" /> Recent Transactions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="h-64 overflow-y-auto no-scrollbar">
+                    {isDetailsLoading ? (
+                      <div className="flex justify-center py-8"><div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
+                    ) : userDetails?.transactions.length ? (
+                      <div className="space-y-2">
+                        {userDetails.transactions.map((tx: any) => (
+                          <div key={tx.id} className="text-xs p-3 rounded-xl border border-border/50 flex justify-between items-center bg-accent/5">
+                            <div className="flex flex-col gap-1">
+                              <span className="font-bold">{tx.description}</span>
+                              <span className="text-[10px] opacity-60">{format(new Date(tx.created_at), "MMM d, HH:mm")}</span>
+                            </div>
+                            <span className={cn("font-black text-sm", tx.amount > 0 ? "text-green-600" : "text-destructive")}>
+                              {tx.amount > 0 ? "+" : ""}{tx.amount}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-xs text-muted-foreground">No transactions yet</div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border/50 shadow-none">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xs uppercase font-black flex items-center gap-2">
+                      <UsersIcon className="h-4 w-4" /> Referrals
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="h-64 overflow-y-auto no-scrollbar">
+                    {isDetailsLoading ? (
+                      <div className="flex justify-center py-8"><div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
+                    ) : userDetails?.referrals.length ? (
+                      <div className="space-y-2">
+                        {userDetails.referrals.map((ref: any) => (
+                          <div key={ref.id} className="text-xs p-3 rounded-xl border border-border/50 flex justify-between items-center bg-accent/5">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-6 w-6">
+                                <AvatarFallback className="text-[10px]">{ref.profiles?.username?.[0]}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col gap-0.5">
+                                <span className="font-bold">@{ref.profiles?.username}</span>
+                                <span className="text-[10px] opacity-60">{ref.profiles?.email}</span>
+                              </div>
+                            </div>
+                            <Badge variant={ref.status === 'completed' ? 'secondary' : 'outline'} className="text-[10px] capitalize">
+                              {ref.status}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-xs text-muted-foreground">No referrals yet</div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Redemptions */}
+              {userDetails?.redemptions.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-black uppercase flex items-center gap-2">
+                    <Gift className="h-4 w-4" /> Rewards History
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {userDetails.redemptions.map((red: any) => (
+                      <div key={red.id} className="p-3 rounded-xl border border-border/50 bg-accent/5 text-xs">
+                        <div className="font-bold mb-1">{red.rewards?.title}</div>
+                        <div className="flex justify-between items-center opacity-70">
+                          <span>{red.rewards?.points_cost} pts</span>
+                          <span className="capitalize">{red.status}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
