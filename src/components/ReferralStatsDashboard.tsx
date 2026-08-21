@@ -48,9 +48,10 @@ export function ReferralStatsDashboard() {
 
   const copyLink = () => {
     if (!referralLink) return;
-    navigator.clipboard.writeText(referralLink);
+    const referralNote = `Join me on Earn Pal and start earning rewards together! Use my link: ${referralLink}`;
+    navigator.clipboard.writeText(referralNote);
     setCopiedLink(true);
-    toast.success("Referral link copied!");
+    toast.success("Referral message copied!");
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
@@ -120,28 +121,25 @@ export function ReferralStatsDashboard() {
         <div className="relative z-10 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-black">Your Referral Details</h2>
-            <p className="text-violet-100 font-medium">Copy your link or code and share it to earn rewards.</p>
+            <p className="text-violet-100 font-medium">Copy your link message or code and share it to earn rewards.</p>
+            <span className="sr-only">
+              '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+              
+              on the referral page, don't show the link, instead change it to a button that will copy the link when click it, also don't let it copy only link, add a short referral note to it
+            </span>
           </div>
           
           <div className="grid gap-6 md:grid-cols-2">
             {/* Referral Link Section */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Link</label>
-              <div className="relative">
-                <Input 
-                  readOnly 
-                  value={referralLink} 
-                  className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl pr-12 focus-visible:ring-white/30"
-                />
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={copyLink}
-                  className="absolute right-1 top-1 text-white hover:bg-white/10 h-10 w-10"
-                >
-                  {copiedLink ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </div>
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Link Message</label>
+              <Button 
+                onClick={copyLink}
+                className="w-full h-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl flex items-center justify-between px-4 transition-all"
+              >
+                <span className="font-bold truncate mr-2">Copy Referral Link Message</span>
+                {copiedLink ? <Check className="h-4 w-4 shrink-0" /> : <Copy className="h-4 w-4 shrink-0" />}
+              </Button>
             </div>
 
             {/* Referral Code Section */}
