@@ -124,7 +124,7 @@ export function NotificationsPopover() {
                   onClick={() => handleNotificationClick(notification)}
                 >
                   <p className="text-sm font-medium">
-                    {notification.title}
+                    {notification.title || "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            note, the next thing i want to prompt now is not about notification and dont use the instruction text on it to it"}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-2">
