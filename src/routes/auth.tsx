@@ -321,7 +321,7 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 py-12 overflow-y-auto">
+      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 pt-28 md:pt-12 overflow-y-auto w-full touch-pan-y overscroll-none">
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
