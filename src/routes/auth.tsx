@@ -321,8 +321,10 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
-      <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none">
+      <div className="relative min-h-screen w-full">
+        <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
+        <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none">
+
 
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
@@ -379,8 +381,10 @@ function AuthPage() {
           </CardContent>
         </Card>
       </div>
+      </div>
     );
   }
+
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none">
