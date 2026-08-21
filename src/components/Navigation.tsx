@@ -49,7 +49,7 @@ import { toast } from "sonner";
 const MobileMenuOverlay = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => void, children: React.ReactNode }) => (
   <div 
     className={cn(
-      "md:hidden fixed inset-0 z-[60] flex transition-all duration-500 ease-in-out",
+      "md:hidden fixed inset-0 z-[70] flex transition-all duration-500 ease-in-out",
       isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
     )}
   >
@@ -346,7 +346,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-2 left-2 right-2 z-40 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl">
+      <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5" aria-label="Open menu">
             <Menu className="h-6 w-6 text-foreground" />
