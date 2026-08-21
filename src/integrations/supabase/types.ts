@@ -775,6 +775,7 @@ export type Database = {
         Args: { _task_id: string; _user_id: string }
         Returns: Json
       }
+      sync_points_balance: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator" | "task_manager" | "tasker"
