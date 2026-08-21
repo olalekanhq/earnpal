@@ -110,12 +110,15 @@ export function WelcomeBonusModal() {
         `)
         .eq("id", user.id)
         .single();
-
+      
+      if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
+        setProfile(profileData);
         const referrer = profileData.referrer as any;
         const refName = referrer?.full_name || referrer?.username || null;
         setReferrerName(refName);
         setIsOpen(true);
         sessionStorage.setItem("welcome_bonus_shown", "true");
+      }
     } catch (error) {
       console.error("Error checking welcome bonus eligibility:", error);
     }
