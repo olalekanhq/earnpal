@@ -188,7 +188,7 @@ function Dashboard() {
                   '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            on desktop, let the bonus pending be more responsive than that and well displayed
+                                            remove the unnecessary extra text you add there and stop adding it in future edit
                 </p>
               </div>
             </div>
