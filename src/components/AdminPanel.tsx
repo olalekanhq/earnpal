@@ -204,6 +204,7 @@ export function AdminPanel() {
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
+    { value: "audit", icon: ClipboardList, label: "Audit Logs", color: undefined },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
   ];
 
@@ -340,6 +341,15 @@ export function AdminPanel() {
 
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'referrals' && <ReferralsManager />}
+        </TabsContent>
+
+        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          {activeTab === 'audit' && (
+            <div className="space-y-12">
+              <PointsAuditLogs />
+              <AuditLogs />
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
