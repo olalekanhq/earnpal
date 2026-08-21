@@ -671,6 +671,15 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_stats_summary: {
+        Row: {
+          completed_referrals: number | null
+          points_earned: number | null
+          total_referrals: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       referrals_with_profiles: {
         Row: {
           created_at: string | null
