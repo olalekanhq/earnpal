@@ -8,9 +8,12 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
     reason: z.string().min(1),
     actionType: z.enum(["credit", "debit"])
   }).parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { getWebRequest } = await import("@tanstack/react-start/server");
+    
+    // In TanStack Start v1, request is accessible via context if middleware is used
+    // or by importing getWebRequest from @tanstack/react-start (not /server subpath)
+    const { getWebRequest } = await import("@tanstack/react-start");
     
     const request = getWebRequest();
     if (!request) {
