@@ -188,7 +188,7 @@ function Dashboard() {
                   '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Add automated tests to verify that prompt-like pasted text never appears in dashboard UI copy.
+                                            but the text is still there again
                 </p>
               </div>
             </div>
