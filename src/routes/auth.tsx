@@ -321,7 +321,9 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 pt-28 md:pt-12 overflow-y-auto w-full touch-pan-y overscroll-none">
+      <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
+      <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none">
+
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
@@ -381,17 +383,17 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative pt-28 md:pt-4 no-scrollbar overflow-x-hidden max-w-[100vw] touch-pan-y overscroll-none">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
       
       {/* Theme toggle is now in the global Navigation component header */}
 
-      <div className="w-full max-w-[100vw] grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 overflow-x-hidden">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-2">
         {/* Auth Card Side */}
-        <div className="flex justify-center order-2 lg:order-1 w-full max-w-md">
-          <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col">
+        <div className="flex justify-center order-2 lg:order-1 w-full max-w-md mx-auto">
+          <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col mx-auto">
             <CardHeader className="space-y-1 text-center pb-4 p-0 flex-shrink-0">
               <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
                 <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
@@ -403,9 +405,7 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Adjust the spacing between the header and the auth content specifically for very small screens so elements never clip or shift into the header area.
-
-Verify the auth page layout on a real iPhone screen and confirm there are no issues with the display and it shows and arranged well on mobile screen, and if it doesn't fix, you can try another style for the auth
+                                            check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
