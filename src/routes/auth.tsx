@@ -422,7 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Validate that the Referrals tab fully replaces the removed Analytics tab and that referrals metrics render correctly with no missing filters or totals.
+                                            on mobile, in admin page, opening user info is not fit for mobile, it full the whole screen that it down give space to close it or go back. and also, the drop-down menu too admin tools is still opening on hovering over
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
