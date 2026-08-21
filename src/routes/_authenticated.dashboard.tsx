@@ -197,7 +197,8 @@ function Dashboard() {
 
   return (
     <div className="pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
-      <WelcomeBonusModal />
+
+
       
       
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && (
