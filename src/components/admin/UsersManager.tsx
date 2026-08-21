@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,8 @@ import {
   Search,
   Filter,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Shield
 } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
@@ -40,6 +41,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { assignUserRole } from "@/lib/admin.functions";
+import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
 
 export function UsersManager() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -48,6 +52,8 @@ export function UsersManager() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const queryClient = useQueryClient();
+  const assignRoleFn = useServerFn(assignUserRole);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users", searchQuery, roleFilter, currentPage],
@@ -78,7 +84,9 @@ export function UsersManager() {
 
       const mappedUsers = profiles.map(profile => ({
         ...profile,
-        isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin')
+        isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin'),
+        isModerator: roles?.some(r => r.user_id === profile.id && r.role === 'moderator'),
+        currentRole: roles?.find(r => r.user_id === profile.id)?.role || 'user'
       }));
       
       let finalUsers = mappedUsers;
@@ -90,6 +98,19 @@ export function UsersManager() {
       }
 
       return { users: finalUsers, totalCount: count || 0 };
+    }
+  });
+
+  const roleMutation = useMutation({
+    mutationFn: async ({ userId, role }: { userId: string, role: string }) => {
+      return assignRoleFn({ userId, role: role as any });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("User role updated successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to update user role");
     }
   });
 
@@ -201,6 +222,7 @@ export function UsersManager() {
                       <div className="font-bold flex items-center gap-2">
                         {user.username ? (user.username.charAt(0).toUpperCase() + user.username.slice(1)) : "User"}
                         {user.isAdmin && <ShieldAlert className="h-3 w-3 text-primary" />}
+                        {user.isModerator && !user.isAdmin && <Shield className="h-3 w-3 text-violet-500" />}
                       </div>
                       <div className="text-xs text-muted-foreground">{user.full_name}</div>
                     </div>
@@ -347,7 +369,33 @@ export function UsersManager() {
                   </div>
                 </div>
 
-                {isDetailsLoading ? (
+                <div className="mb-8 p-6 rounded-[28px] border border-border/50 bg-accent/5 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-5 w-5 text-primary" />
+                      <h3 className="font-black uppercase tracking-tight text-sm">Role Management</h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-medium">Assign a system role to this user to grant administrative permissions.</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 w-full md:w-auto">
+                    <Select 
+                      defaultValue={selectedUser.currentRole}
+                      onValueChange={(val) => roleMutation.mutate({ userId: selectedUser.id, role: val })}
+                      disabled={roleMutation.isPending}
+                    >
+                      <SelectTrigger className="w-full md:w-[200px] rounded-xl font-bold bg-background border-border/50 h-11">
+                        <SelectValue placeholder="Select Role" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border/50">
+                        <SelectItem value="user" className="font-bold">Standard User</SelectItem>
+                        <SelectItem value="moderator" className="font-bold">Moderator</SelectItem>
+                        <SelectItem value="admin" className="font-bold text-primary">Administrator</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {roleMutation.isPending && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
+                  </div>
+                </div>
                   <div className="flex justify-center py-20">
                     <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
                   </div>
