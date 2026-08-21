@@ -101,12 +101,20 @@ export function WelcomeBonusModal() {
 
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("*")
+        .select(`
+          *,
+          referrer:referred_by (
+            full_name,
+            username
+          )
+        `)
         .eq("id", user.id)
         .single();
 
       if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
         setProfile(profileData);
+        const refName = (profileData.referrer as any)?.full_name || (profileData.referrer as any)?.username || "a friend";
+        setReferrerName(refName);
         setIsOpen(true);
         sessionStorage.setItem("welcome_bonus_shown", "true");
       }
