@@ -176,24 +176,24 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
-179: 
-180: @layer utilities {
-181:   .no-scrollbar::-webkit-scrollbar {
-182:     display: none;
-183:   }
-184:   .no-scrollbar {
-185:     -ms-overflow-style: none;
-186:     scrollbar-width: none;
-187:   }
-188: }
-189: 
-190: html, body {
-191:   overflow-x: hidden;
-192:   width: 100%;
-193:   position: relative;
-194:   touch-action: pan-y;
-195:   -webkit-overflow-scrolling: touch;
-196: }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
 
 a[href*="lovable.app"],
 iframe[src*="lovable.app"],
