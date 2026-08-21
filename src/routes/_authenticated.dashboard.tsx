@@ -243,7 +243,7 @@ function Dashboard() {
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Main Balance Card - Inspired by Reference */}
-        <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
+        <Card className="flex-1 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">Total Balance</CardTitle>
           </CardHeader>
