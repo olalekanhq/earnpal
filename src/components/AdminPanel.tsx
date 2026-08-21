@@ -250,57 +250,15 @@ export function AdminPanel() {
       {/* Main Content Area */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="flex flex-col gap-4 border-b border-border/40 pb-4">
-          {/* Mobile Dropdown */}
-          <div className="md:hidden">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
-                >
-                  <div className="flex items-center">
-                    {(() => { const Icon = activeTabData?.icon || Users; return <Icon className={cn("h-4 w-4 mr-2", activeTabData?.color || "text-primary")} />; })()}
-                    <span className="font-black uppercase text-[10px] tracking-widest">{(activeTabData?.label || "Panel")}</span>
-                  </div>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start"
-                className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200"
-                onCloseAutoFocus={(e) => e.preventDefault()}
-                onMouseEnter={(e) => e.preventDefault()}
-                onPointerEnter={(e) => e.preventDefault()}
-                onPointerMove={(e) => e.preventDefault()}
-              >
-                {filteredTabs.map((tab) => (
-                  <DropdownMenuItem
-                    key={tab.value}
-                    onClick={() => setActiveTab(tab.value)}
-                    className={cn(
-                      "rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
-                      activeTab === tab.value 
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
-                        : "hover:bg-primary/5 text-muted-foreground hover:text-primary"
-                    )}
-                  >
-                    <tab.icon className={cn("h-4 w-4 mr-2", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
-                    {tab.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {/* Desktop Tabs */}
-          <div className="hidden md:block">
-            <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+          {/* Responsive Tabs Navigation */}
+          <div className="w-full overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+            <TabsList className="h-auto w-max sm:w-full flex justify-start gap-2 bg-transparent p-0 pb-1">
               {filteredTabs.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
                   className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-transparent",
+                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-transparent whitespace-nowrap",
                     "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
                     "data-[state=inactive]:bg-card/50 data-[state=inactive]:backdrop-blur-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-primary/5 data-[state=inactive]:hover:text-primary data-[state=inactive]:border-border/40"
                   )}
