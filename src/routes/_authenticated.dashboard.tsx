@@ -226,7 +226,7 @@ function Dashboard() {
                   <Sparkles className="h-6 w-6" />
                 )}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-3">
                 <h3 className={cn(
                   "font-black text-lg leading-tight",
                   !profile?.twitter_handle || !profile?.telegram_handle ? "text-amber-900" : "text-green-900"
@@ -235,6 +235,24 @@ function Dashboard() {
                     ? "Complete Your Social Profile" 
                     : "Social Profile Completed!"}
                 </h3>
+                
+                {(!profile?.twitter_handle || !profile?.telegram_handle) && (
+                  <div className="flex flex-wrap gap-x-4 gap-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn("h-4 w-4 rounded-full flex items-center justify-center border", profile?.twitter_handle ? "bg-amber-200 border-amber-300 text-amber-700" : "border-amber-300 text-transparent")}>
+                        <CheckCircle2 className="h-3 w-3" />
+                      </div>
+                      <span className={cn("text-[11px] font-bold uppercase tracking-wider", profile?.twitter_handle ? "text-amber-700" : "text-amber-700/50")}>Twitter</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn("h-4 w-4 rounded-full flex items-center justify-center border", profile?.telegram_handle ? "bg-amber-200 border-amber-300 text-amber-700" : "border-amber-300 text-transparent")}>
+                        <CheckCircle2 className="h-3 w-3" />
+                      </div>
+                      <span className={cn("text-[11px] font-bold uppercase tracking-wider", profile?.telegram_handle ? "text-amber-700" : "text-amber-700/50")}>Telegram</span>
+                    </div>
+                  </div>
+                )}
+
                 <p className={cn(
                   "text-sm font-medium",
                   !profile?.twitter_handle || !profile?.telegram_handle ? "text-amber-700/80" : "text-green-700/80"
