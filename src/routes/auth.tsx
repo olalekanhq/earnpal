@@ -387,14 +387,14 @@ function AuthPage() {
 
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
       
       {/* Theme toggle is now in the global Navigation component header */}
 
-      <div className="w-full max-w-full lg:max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-2 box-border">
+      <div className="w-full max-w-full lg:max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-4 box-border overflow-x-hidden">
         {/* Auth Card Side */}
         <div className="flex justify-center order-2 lg:order-1 w-full max-w-md mx-auto">
           <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col mx-auto">
