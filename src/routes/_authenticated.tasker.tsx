@@ -29,7 +29,7 @@ function TaskerRouteComponent() {
       const [{ data: isAdmin }, { data: isModerator }, { data: isTasker }] = await Promise.all([
         supabase.rpc("has_role", { _user_id: userId, _role: 'admin' as any }),
         supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' as any }),
-        supabase.rpc("has_role", { _user_id: userId, _role: 'tasker' })
+        supabase.rpc("has_role", { _user_id: userId, _role: 'tasker' as any })
       ]);
       return { isAdmin, isModerator, isTasker };
     }

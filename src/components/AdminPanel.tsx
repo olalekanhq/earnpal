@@ -281,7 +281,7 @@ export function AdminPanel() {
                   className="w-full justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
                 >
                   <div className="flex items-center">
-                    <(activeTabData?.icon || Users) className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
+                    {(() => { const Icon = activeTabData?.icon || Users; return <Icon className={cn("h-4 w-4 mr-2", activeTabData?.color || "text-primary")} />; })()}
                     <span className="font-black uppercase text-[10px] tracking-widest">{(activeTabData?.label || "Panel")}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
