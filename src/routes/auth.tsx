@@ -381,14 +381,14 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative overflow-y-auto overscroll-none touch-pan-y">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative pt-24 md:pt-4 no-scrollbar overflow-hidden max-w-[100vw]">
       {/* Abstract Background Shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
       
       {/* Theme toggle is now in the global Navigation component header */}
 
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10">
+      <div className="w-full max-w-[100vw] grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 overflow-x-hidden">
         {/* Auth Card Side */}
         <div className="flex justify-center order-2 lg:order-1 w-full max-w-md">
           <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col">
