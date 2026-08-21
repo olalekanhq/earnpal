@@ -18,10 +18,11 @@ export function Onboarding() {
 
   useEffect(() => {
     // Don't show onboarding on auth page
-    if (location.pathname === '/auth') {
+    if (location.pathname === '/auth' || location.pathname.startsWith('/admin')) {
       setIsOpen(false);
       return;
     }
+
 
     const checkOnboarding = async () => {
       const { data: { user } } = await supabase.auth.getUser();
