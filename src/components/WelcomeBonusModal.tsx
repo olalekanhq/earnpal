@@ -111,13 +111,11 @@ export function WelcomeBonusModal() {
         .eq("id", user.id)
         .single();
 
-      if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
-        setProfile(profileData);
-        const refName = (profileData.referrer as any)?.full_name || (profileData.referrer as any)?.username || "a friend";
+        const referrer = profileData.referrer as any;
+        const refName = referrer?.full_name || referrer?.username || null;
         setReferrerName(refName);
         setIsOpen(true);
         sessionStorage.setItem("welcome_bonus_shown", "true");
-      }
     } catch (error) {
       console.error("Error checking welcome bonus eligibility:", error);
     }
@@ -222,7 +220,11 @@ export function WelcomeBonusModal() {
               Welcome Bonus!
             </DialogTitle>
             <DialogDescription className="text-xs md:text-base font-medium text-muted-foreground pt-0.5 md:pt-2">
-              Thanks for joining Earn Pal via {referrerName ? <span className="text-primary font-bold">{referrerName}'s</span> : "a"} referral! You've unlocked a special welcome gift.
+              {referrerName ? (
+                <>Thanks for joining Earn Pal via <span className="text-primary font-bold">{referrerName}'s</span> referral! You've unlocked a special welcome gift.</>
+              ) : (
+                <>Welcome to Earn Pal! You've unlocked a special welcome gift for joining our community.</>
+              )}
             </DialogDescription>
           </DialogHeader>
 
