@@ -231,30 +231,12 @@ function Dashboard() {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap h-11 px-8 shadow-md shadow-amber-600/20"
-                onClick={async () => {
-                  const { data: { user } } = await supabase.auth.getUser();
-                  if (!user) return;
-                  
-                  const { data, error } = await supabase.rpc("claim_welcome_bonus", {
-                    _user_id: user.id,
-                  });
-                  
-                  const result = data as any;
-                  if (error || !result.success) {
-                    toast.error(result?.message || error?.message || "Please complete your social profile first", {
-                      action: {
-                        label: "Go to Profile",
-                        onClick: () => window.location.href = "/profile"
-                      }
-                    });
-                  } else {
-                    toast.success("Welcome bonus claimed!");
-                    queryClient.invalidateQueries({ queryKey: ["profile"] });
-                  }
-                }}
+                disabled={claimWelcomeBonus.isPending}
+                onClick={() => claimWelcomeBonus.mutate()}
               >
-                Claim Bonus
+                {claimWelcomeBonus.isPending ? "Claiming..." : "Claim Bonus"}
               </Button>
+
             </div>
           </CardContent>
           <div className="absolute top-0 right-0 p-2 sm:hidden">
