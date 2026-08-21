@@ -31,15 +31,18 @@ export function ReferralStatsDashboard() {
     },
   });
 
-  const { data: referralsCount } = useQuery({
-    queryKey: ["referrals-count", profile?.id],
+  const { data: referralsStats } = useQuery({
+    queryKey: ["referrals-stats", profile?.id],
     queryFn: async () => {
-      if (!profile?.id) return 0;
-      const { count } = await supabase
-        .from("referrals")
-        .select("*", { count: "exact", head: true })
-        .eq("referrer_id", profile.id);
-      return count || 0;
+      if (!profile?.id) return { total_referrals: 0, points_earned: 0 };
+      const { data, error } = await supabase
+        .from("referral_stats_summary")
+        .select("*")
+        .eq("user_id", profile.id)
+        .maybeSingle();
+      
+      if (error) throw error;
+      return data || { total_referrals: 0, points_earned: 0 };
     },
     enabled: !!profile?.id,
   });
@@ -64,7 +67,8 @@ export function ReferralStatsDashboard() {
   };
 
   const nextMilestone = 10;
-  const count = referralsCount || 0;
+  const count = referralsStats?.total_referrals || 0;
+  const pointsEarned = referralsStats?.points_earned || 0;
   const progress = Math.min((count / nextMilestone) * 100, 100);
 
   return (
@@ -99,7 +103,7 @@ export function ReferralStatsDashboard() {
             </div>
             <div>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Points Earned</p>
-              <p className="text-2xl font-black">{count * 75}</p>
+              <p className="text-2xl font-black">{pointsEarned}</p>
             </div>
           </div>
         </Card>
