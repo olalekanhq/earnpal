@@ -86,7 +86,7 @@ export function ReferralsManager() {
         },
         (payload) => {
           // If a user completes profile, metrics might change
-          if (payload.new.has_claimed_welcome_bonus !== payload.old.has_claimed_welcome_bonus) {
+          if (payload.new['has_claimed_welcome_bonus'] !== payload.old['has_claimed_welcome_bonus']) {
             queryClient.invalidateQueries({ queryKey: ["admin-referral-events"] });
             queryClient.invalidateQueries({ queryKey: ["funnelAnalytics"] });
             queryClient.invalidateQueries({ queryKey: ["adminStats"] });
