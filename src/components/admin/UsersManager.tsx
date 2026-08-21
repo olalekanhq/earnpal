@@ -102,19 +102,15 @@ export function UsersManager() {
     }
   });
 
-  const roleMutation = useMutation({
-    mutationFn: (vars: { userId: string; role: string }) => {
-      const { userId, role } = vars;
-      return assignRoleFn({ data: { userId, role: role as any } });
-    },
-    onSuccess: () => {
+  const handleRoleChange = async (userId: string, role: string) => {
+    try {
+      await assignRoleFn({ data: { userId, role: role as any } });
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success("User role updated successfully");
-    },
-    onError: (e: any) => {
+    } catch (e: any) {
       toast.error(e.message || "Failed to update user role");
-    },
-  });
+    }
+  };
 
   const users = data?.users || [];
   const totalCount = data?.totalCount || 0;
@@ -390,8 +386,7 @@ export function UsersManager() {
                   <div className="flex items-center gap-3 w-full md:w-auto">
                     <Select
                       defaultValue={selectedUser.currentRole}
-                      onValueChange={(val) => roleMutation.mutate({ userId: selectedUser.id, role: val })}
-                      disabled={roleMutation.isPending}
+                      onValueChange={(val) => handleRoleChange(selectedUser.id, val)}
                     >
                       <SelectTrigger className="w-full md:w-[200px] rounded-xl font-bold bg-background border-border/50 h-11">
                         <SelectValue placeholder="Select Role" />
@@ -403,7 +398,7 @@ export function UsersManager() {
                         <SelectItem value="task_manager" className="font-bold">Task Manager</SelectItem>
                       </SelectContent>
                     </Select>
-                    {roleMutation.isPending && <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />}
+                    
                   </div>
                 </div>
 
