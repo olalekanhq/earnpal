@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, TrendingDown, Clock, ChevronRight, Award, Zap, Star, CheckCircle2 } from "lucide-react";
+import { Coins, Gift, Share2, TrendingUp, TrendingDown, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -204,9 +204,75 @@ function Dashboard() {
     <div className="pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
 
 
-      
-      
-      {/* Welcome bonus banner removed */}
+      {/* Profile Completion Warning Banner */}
+      {(!profile?.welcome_bonus_claimed) && (
+        <Card className={cn(
+          "border-none overflow-hidden relative transition-all duration-300",
+          !profile?.twitter_handle || !profile?.telegram_handle 
+            ? "bg-amber-50 border border-amber-200 shadow-amber-100" 
+            : "bg-green-50 border border-green-200 shadow-green-100"
+        )}>
+          <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4 text-center md:text-left">
+              <div className={cn(
+                "p-3 rounded-2xl shadow-sm",
+                !profile?.twitter_handle || !profile?.telegram_handle 
+                  ? "bg-amber-100 text-amber-600" 
+                  : "bg-green-100 text-green-600"
+              )}>
+                {!profile?.twitter_handle || !profile?.telegram_handle ? (
+                  <AlertCircle className="h-6 w-6" />
+                ) : (
+                  <Sparkles className="h-6 w-6" />
+                )}
+              </div>
+              <div className="space-y-1">
+                <h3 className={cn(
+                  "font-black text-lg leading-tight",
+                  !profile?.twitter_handle || !profile?.telegram_handle ? "text-amber-900" : "text-green-900"
+                )}>
+                  {!profile?.twitter_handle || !profile?.telegram_handle 
+                    ? "Complete Your Social Profile" 
+                    : "Social Profile Completed!"}
+                </h3>
+                <p className={cn(
+                  "text-sm font-medium",
+                  !profile?.twitter_handle || !profile?.telegram_handle ? "text-amber-700/80" : "text-green-700/80"
+                )}>
+                  {!profile?.twitter_handle || !profile?.telegram_handle 
+                    ? "Add your social handles to unlock tasks and claim your welcome bonus." 
+                    : "You've successfully verified your socials. You can now claim your reward!"}
+                </p>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-auto">
+              {!profile?.twitter_handle || !profile?.telegram_handle ? (
+                <Button 
+                  className="w-full md:w-auto rounded-xl font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-md shadow-amber-200/50 h-11 px-8"
+                  asChild
+                >
+                  <Link to="/profile">Complete Profile</Link>
+                </Button>
+              ) : (
+                <Button 
+                  className="w-full md:w-auto rounded-xl font-bold bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-200/50 h-11 px-8"
+                  disabled={claimWelcomeBonus.isPending}
+                  onClick={() => claimWelcomeBonus.mutate()}
+                >
+                  {claimWelcomeBonus.isPending ? "Claiming..." : "Claim Bonus"}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+          
+          {/* Decorative background elements */}
+          <div className={cn(
+            "absolute -right-8 -top-8 w-24 h-24 rounded-full blur-3xl opacity-20 pointer-events-none",
+            !profile?.twitter_handle || !profile?.telegram_handle ? "bg-amber-400" : "bg-green-400"
+          )} />
+        </Card>
+      )}
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
