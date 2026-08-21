@@ -14,7 +14,7 @@ export interface Transaction {
   description: string | null;
   amount: number;
   type: string;
-  status?: string;
+  status?: string | null;
   created_at: string;
 }
 
