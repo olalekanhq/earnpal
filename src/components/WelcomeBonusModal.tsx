@@ -300,7 +300,14 @@ export function WelcomeBonusModal() {
           </DialogFooter>
           
           <p className="text-[10px] font-bold text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 italic">
-            Note: You cannot claim this bonus until you complete your social profile handles.
+            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Display my social profile completion status on the dashboard and reflect it in the bonus banner claim availability.
+
+Implement server-side checks so users cannot perform tasks or claim bonuses unless their social profile is fully complete.
+
+Add a clear call-to-action that prompts me to complete my social profile whenever I try to access tasks or claim the welcome bonus.
           </p>
           
           <button 

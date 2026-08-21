@@ -72,7 +72,14 @@ function EarnPage() {
             Earn Points
           </h1>
           <p className="text-muted-foreground font-medium">
-            Complete simple tasks to earn points and level up.
+            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Display my social profile completion status on the dashboard and reflect it in the bonus banner claim availability.
+
+Implement server-side checks so users cannot perform tasks or claim bonuses unless their social profile is fully complete.
+
+Add a clear call-to-action that prompts me to complete my social profile whenever I try to access tasks or claim the welcome bonus.
           </p>
         </div>
       </header>

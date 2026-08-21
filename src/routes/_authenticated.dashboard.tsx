@@ -180,7 +180,14 @@ function Dashboard() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
                 <p className="text-xs text-amber-700 font-medium truncate sm:whitespace-normal">
-                  Complete your social handles in profile to claim your 50 points bonus!
+                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Display my social profile completion status on the dashboard and reflect it in the bonus banner claim availability.
+
+Implement server-side checks so users cannot perform tasks or claim bonuses unless their social profile is fully complete.
+
+Add a clear call-to-action that prompts me to complete my social profile whenever I try to access tasks or claim the welcome bonus.
                 </p>
               </div>
             </div>
