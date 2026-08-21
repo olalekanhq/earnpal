@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 
 export function ReferralStatsDashboard() {
-  const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
   
   const { data: profile } = useQuery({
     queryKey: ["profile"],
@@ -36,12 +37,20 @@ export function ReferralStatsDashboard() {
 
   const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/?ref=${profile?.referral_code || ''}` : '';
 
-  const copyToClipboard = () => {
+  const copyLink = () => {
     if (!referralLink) return;
     navigator.clipboard.writeText(referralLink);
-    setCopied(true);
+    setCopiedLink(true);
     toast.success("Referral link copied!");
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const copyCode = () => {
+    if (!profile?.referral_code) return;
+    navigator.clipboard.writeText(profile.referral_code);
+    setCopiedCode(true);
+    toast.success("Referral code copied!");
+    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   const nextMilestone = 10;
@@ -99,33 +108,61 @@ export function ReferralStatsDashboard() {
 
       <Card className="border-none shadow-sm bg-violet-600 text-white p-6 md:p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 space-y-8">
           <div className="space-y-2">
-            <h2 className="text-2xl font-black">Your Referral Link</h2>
-            <p className="text-violet-100 font-medium">Copy your link and share it on social media to earn rewards.</p>
+            <h2 className="text-2xl font-black">Your Referral Details</h2>
+            <p className="text-violet-100 font-medium">Copy your link or code and share it to earn rewards.</p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Input 
-                readOnly 
-                value={referralLink} 
-                className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl pr-12 focus-visible:ring-white/30"
-              />
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={copyToClipboard}
-                className="absolute right-1 top-1 text-white hover:bg-white/10 h-10 w-10"
-              >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Referral Link Section */}
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Link</label>
+              <div className="relative">
+                <Input 
+                  readOnly 
+                  value={referralLink} 
+                  className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl pr-12 focus-visible:ring-white/30"
+                />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={copyLink}
+                  className="absolute right-1 top-1 text-white hover:bg-white/10 h-10 w-10"
+                >
+                  {copiedLink ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
+
+            {/* Referral Code Section */}
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Code Only</label>
+              <div className="relative">
+                <Input 
+                  readOnly 
+                  value={profile?.referral_code || ""} 
+                  className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl pr-12 focus-visible:ring-white/30 font-mono tracking-wider"
+                />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={copyCode}
+                  className="absolute right-1 top-1 text-white hover:bg-white/10 h-10 w-10"
+                >
+                  {copiedCode ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+            <p className="text-xs font-bold text-violet-200 uppercase tracking-widest">Quick Share:</p>
             <div className="flex gap-2">
-              <Button variant="outline" size="icon" className="h-12 w-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
+              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
                 <Twitter className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="h-12 w-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
+              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
                 <MessageSquare className="h-5 w-5" />
               </Button>
             </div>
