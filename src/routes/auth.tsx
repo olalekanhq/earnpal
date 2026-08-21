@@ -422,7 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            on mobile, in admin page, opening user info is not fit for mobile, it full the whole screen that it down give space to close it or go back. and also, the drop-down menu too admin tools is still opening on hovering over
+                                            Verify that the Admin Tools dropdown only opens on tap/click and never during scroll or hover, including click-outside to close.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
