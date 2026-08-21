@@ -179,12 +179,7 @@ function Dashboard() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
-                <p className="text-xs text-amber-700 font-medium truncate sm:whitespace-normal">
-                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                                          
-                                                              
-                                                              Add a clear social profile checklist that shows exactly which fields are missing and how to complete them.
-                </p>
+                  Bonus will be available after you complete your social profile verification.
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
