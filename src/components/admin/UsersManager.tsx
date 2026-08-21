@@ -151,13 +151,10 @@ export function UsersManager() {
   });
 
   if (isLoading) {
-    return React.createElement(
-      "div",
-      { className: "flex justify-center p-12" },
-      React.createElement("div", {
-        className:
-          "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent",
-      })
+    return (
+      <div className="flex justify-center p-12">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
     );
   }
 
