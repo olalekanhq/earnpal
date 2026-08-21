@@ -51,23 +51,30 @@ export function TransactionDetailModal({
         <div className="p-6 space-y-6">
           {/* Hero Amount Card */}
           <div className={cn(
-            "rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 border shadow-sm",
-            isPositive 
-              ? "bg-green-500/5 border-green-500/10 text-green-600" 
-              : "bg-destructive/5 border-destructive/10 text-destructive"
+            "rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 border shadow-sm relative overflow-hidden",
+            isPending
+              ? "bg-amber-500/5 border-amber-500/10 text-amber-600"
+              : isPositive 
+                ? "bg-green-500/5 border-green-500/10 text-green-600" 
+                : "bg-destructive/5 border-destructive/10 text-destructive"
           )}>
             <div className={cn(
               "p-3 rounded-full mb-1",
-              isPositive ? "bg-green-500/10" : "bg-destructive/10"
+              isPending ? "bg-amber-500/10" : isPositive ? "bg-green-500/10" : "bg-destructive/10"
             )}>
-              {isPositive ? <ArrowUpRight className="h-6 w-6" /> : <ArrowDownRight className="h-6 w-6" />}
+              {isPending ? <Clock className="h-6 w-6" /> : isPositive ? <ArrowUpRight className="h-6 w-6" /> : <ArrowDownRight className="h-6 w-6" />}
             </div>
             <span className="text-4xl font-black tracking-tighter">
-              {isPositive ? "+" : ""}{transaction.amount}
+              {isPending ? "" : isPositive ? "+" : ""}{transaction.amount}
             </span>
             <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">
-              Points Total
+              {isPending ? "Pending Points" : "Points Total"}
             </span>
+            {isPending && (
+              <div className="absolute top-2 right-2">
+                <Badge variant="outline" className="text-[8px] border-amber-500/30 text-amber-600 bg-amber-500/10 uppercase font-black">Pending</Badge>
+              </div>
+            )}
           </div>
 
           {/* Details List */}
