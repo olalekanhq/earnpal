@@ -422,8 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            and also design a modern email template that the style of the site and use it when sending email. 
-why is referral bonus showing negative on the transactions history, make it as pending if the person the refer has not compete profile yet and also on new user too, it should show as pending until they complete profile to show as positive on both user's dashboard
+                                            Validate that the Referrals tab fully replaces the removed Analytics tab and that referrals metrics render correctly with no missing filters or totals.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
