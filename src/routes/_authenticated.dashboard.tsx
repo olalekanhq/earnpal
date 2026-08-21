@@ -9,7 +9,6 @@ import { subDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
