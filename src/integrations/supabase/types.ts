@@ -648,6 +648,14 @@ export type Database = {
       }
     }
     Views: {
+      global_referral_stats: {
+        Row: {
+          completed_referrals: number | null
+          total_referrals: number | null
+          total_referrers: number | null
+        }
+        Relationships: []
+      }
       leaderboard: {
         Row: {
           avatar_url: string | null
