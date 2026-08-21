@@ -32,6 +32,32 @@ export function ReferralStatsDashboard() {
     },
   });
 
+  useEffect(() => {
+    if (!profile?.id) return;
+
+    const channel = supabase
+      .channel("referral-stats-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "referrals",
+          filter: `referrer_id=eq.${profile.id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["referrals-stats", profile.id] });
+          queryClient.invalidateQueries({ queryKey: ["profile"] });
+          toast.success("New referral recorded!");
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [profile?.id, queryClient]);
+
   const { data: referralsStats } = useQuery({
     queryKey: ["referrals-stats", profile?.id],
     queryFn: async () => {
