@@ -162,7 +162,7 @@ export function UsersManager() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={"space-y-6"}>
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
