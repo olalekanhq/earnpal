@@ -20,6 +20,7 @@ export function WelcomeBonusModal() {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [bonusAmount, setBonusAmount] = useState(50);
+  const [referrerName, setReferrerName] = useState<string | null>(null);
   const [requiredSocials, setRequiredSocials] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
@@ -100,12 +101,20 @@ export function WelcomeBonusModal() {
 
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("*")
+        .select(`
+          *,
+          referrer:referred_by (
+            full_name,
+            username
+          )
+        `)
         .eq("id", user.id)
         .single();
 
       if (profileData && profileData.referred_by && !profileData.has_claimed_welcome_bonus && !profileData.welcome_banner_dismissed) {
         setProfile(profileData);
+        const refName = (profileData.referrer as any)?.full_name || (profileData.referrer as any)?.username || "a friend";
+        setReferrerName(refName);
         setIsOpen(true);
         sessionStorage.setItem("welcome_bonus_shown", "true");
       }
@@ -213,7 +222,7 @@ export function WelcomeBonusModal() {
               Welcome Bonus!
             </DialogTitle>
             <DialogDescription className="text-xs md:text-base font-medium text-muted-foreground pt-0.5 md:pt-2">
-              Thanks for joining Earn Pal via referral! You've unlocked a special welcome gift.
+              Thanks for joining Earn Pal via {referrerName ? <span className="text-primary font-bold">{referrerName}'s</span> : "a"} referral! You've unlocked a special welcome gift.
             </DialogDescription>
           </DialogHeader>
 
