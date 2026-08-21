@@ -422,9 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            on mobile, change the admin tools from dropdown to tab and make it responsive on it as well
-
-on referral actions, it is showing new row violates row-level security policy for table "notifications"
+                                            check for any security issues on this site and fix them and it should not affect any functionality of the site. and if any is affected, rectify it and bring it back to work
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
