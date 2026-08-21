@@ -183,9 +183,7 @@ function Dashboard() {
                   '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Add a prominent call-to-action button that takes me directly to complete my social profile whenever I attempt to view tasks or open the welcome bonus.
-
-Display my social profile completion percentage clearly on the dashboard and in the bonus banner, with an explanatory tooltip of what’s missing.
+                                            what is all the text showing inside bonus pending banner and the earn points page
                 </p>
               </div>
             </div>
