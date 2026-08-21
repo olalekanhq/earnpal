@@ -151,7 +151,7 @@ export function UsersManager() {
         </Table>
       </div>
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-4 sm:p-6">
           <DialogHeader><DialogTitle>User Details: {selectedUser?.username}</DialogTitle></DialogHeader>
           {selectedUser && (
             <div className="space-y-6 py-4">

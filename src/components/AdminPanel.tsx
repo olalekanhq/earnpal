@@ -269,6 +269,8 @@ export function AdminPanel() {
                 align="start"
                 className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200"
                 onCloseAutoFocus={(e) => e.preventDefault()}
+                onMouseEnter={(e) => e.preventDefault()}
+                onPointerEnter={(e) => e.preventDefault()}
               >
                 {filteredTabs.map((tab) => (
                   <DropdownMenuItem
