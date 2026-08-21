@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            desktop page is not scrolling
+            on mobile, at admin panel, admin tools drop downs open anyhow even if hand just hover over it scrolling, can it be only open if i press on it, and as admin i still dont see where to choose which to open to which role
           </span>
 
 

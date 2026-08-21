@@ -266,7 +266,11 @@ export function AdminPanel() {
                   <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200">
+              <DropdownMenuContent 
+                align="start"
+                className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200"
+                onCloseAutoFocus={(e) => e.preventDefault()}
+              >
                 {filteredTabs.map((tab) => (
                   <DropdownMenuItem
                     key={tab.value}
