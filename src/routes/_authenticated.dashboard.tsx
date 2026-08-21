@@ -13,11 +13,11 @@ import { WelcomeBonusModal } from "@/components/WelcomeBonusModal";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
-    title: "My Dashboard | Earn Pal — Reward Your Time",
+    title: "Member Dashboard | My Earnings & Progress | Earn Pal",
     meta: [
-      { name: "description", content: "Track your rewards, daily streaks, and points balance on your Earn Pal dashboard." },
-      { property: "og:title", content: "My Dashboard | Earn Pal" },
-      { property: "og:description", content: "Check your progress and redeem points for amazing prizes." },
+      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Earn Pal dashboard. Your hub for all earning activities." },
+      { property: "og:title", content: "Member Dashboard | Earn Pal" },
+      { property: "og:description", content: "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward." },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
