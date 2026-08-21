@@ -23,6 +23,7 @@ import { Route as AuthenticatedModeratorRouteImport } from './routes/_authentica
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated.profile'
 import { Route as AuthenticatedRedeemRouteImport } from './routes/_authenticated.redeem'
 import { Route as AuthenticatedReferRouteImport } from './routes/_authenticated.refer'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
 import { Route as AuthenticatedTaskerRouteImport } from './routes/_authenticated.tasker'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated.transactions'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -100,6 +101,11 @@ const AuthenticatedReferRoute = AuthenticatedReferRouteImport.update({
   path: '/refer',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTaskerRoute = AuthenticatedTaskerRouteImport.update({
   id: '/tasker',
   path: '/tasker',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/redeem': typeof AuthenticatedRedeemRoute
   '/refer': typeof AuthenticatedReferRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/tasker': typeof AuthenticatedTaskerRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/redeem': typeof AuthenticatedRedeemRoute
   '/refer': typeof AuthenticatedReferRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/tasker': typeof AuthenticatedTaskerRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/redeem': typeof AuthenticatedRedeemRoute
   '/_authenticated/refer': typeof AuthenticatedReferRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasker': typeof AuthenticatedTaskerRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/redeem'
     | '/refer'
+    | '/settings'
     | '/tasker'
     | '/transactions'
     | '/auth/callback'
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/redeem'
     | '/refer'
+    | '/settings'
     | '/tasker'
     | '/transactions'
     | '/auth/callback'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/redeem'
     | '/_authenticated/refer'
+    | '/_authenticated/settings'
     | '/_authenticated/tasker'
     | '/_authenticated/transactions'
     | '/auth/callback'
@@ -389,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReferRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/tasker': {
       id: '/_authenticated/tasker'
       path: '/tasker'
@@ -449,6 +468,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRedeemRoute: typeof AuthenticatedRedeemRoute
   AuthenticatedReferRoute: typeof AuthenticatedReferRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTaskerRoute: typeof AuthenticatedTaskerRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
 }
@@ -461,6 +481,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRedeemRoute: AuthenticatedRedeemRoute,
   AuthenticatedReferRoute: AuthenticatedReferRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTaskerRoute: AuthenticatedTaskerRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
 }
