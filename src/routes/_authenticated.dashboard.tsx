@@ -206,50 +206,7 @@ function Dashboard() {
 
       
       
-      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && !claimWelcomeBonus.isPending && (
-        <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative shadow-sm">
-          <CardContent className="p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4 w-full">
-              <div className="bg-amber-100 p-3 rounded-2xl text-amber-600 shrink-0 shadow-sm">
-                <Clock className="h-6 w-6" />
-              </div>
-              <div className="min-w-0 flex-1 space-y-1">
-                <p className="text-base font-black text-amber-900 leading-tight flex items-center gap-2">
-                  Bonus Pending
-                  <Badge variant="outline" className="hidden lg:inline-flex text-[10px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black px-2 py-0">
-                    Referee Action Required
-                  </Badge>
-                </p>
-                <p className="text-sm text-amber-800/80 font-medium">
-                  Bonus will be available after you complete your social profile verification.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full sm:w-auto rounded-xl border-amber-200 text-amber-700 font-bold whitespace-nowrap bg-white/50 hover:bg-white h-11 px-6"
-                asChild
-              >
-                <Link to="/profile">Complete Profile</Link>
-              </Button>
-              <Button 
-                size="lg" 
-                className="w-full sm:w-auto rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap h-11 px-8 shadow-md shadow-amber-600/20"
-                disabled={claimWelcomeBonus.isPending}
-                onClick={() => claimWelcomeBonus.mutate()}
-              >
-                {claimWelcomeBonus.isPending ? "Claiming..." : "Claim Bonus"}
-              </Button>
-
-            </div>
-          </CardContent>
-          <div className="absolute top-0 right-0 p-2 sm:hidden">
-            <Badge variant="outline" className="text-[8px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black">Action Required</Badge>
-          </div>
-        </Card>
-      )}
+      {/* Welcome bonus banner removed */}
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
           Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
