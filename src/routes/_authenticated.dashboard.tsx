@@ -9,7 +9,6 @@ import { subDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { WelcomeBonusModal } from "@/components/WelcomeBonusModal";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -197,7 +196,8 @@ function Dashboard() {
 
   return (
     <div className="pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
-      <WelcomeBonusModal />
+
+
       
       
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && (
