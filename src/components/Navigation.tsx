@@ -114,7 +114,7 @@ export function Navigation() {
   if (isLandingPage || isAuthPage) {
     return (
       <>
-        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20">
+        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 max-w-[calc(100vw-1rem)]">
           <div className="container mx-auto px-4 flex h-20 items-center justify-between">
             <div className="flex items-center gap-2">
               {!isAuthPage && (
