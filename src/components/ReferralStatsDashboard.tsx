@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, MousePointerClick, Gift, TrendingUp, Copy, Check, Twitter, MessageSquare, ExternalLink, ArrowRight, Shield, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { QRCodeCanvas } from "qrcode.react";
@@ -20,6 +20,7 @@ import {
 export function ReferralStatsDashboard() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const queryClient = useQueryClient();
   
   const { data: profile } = useQuery({
     queryKey: ["profile"],
@@ -30,6 +31,32 @@ export function ReferralStatsDashboard() {
       return data;
     },
   });
+
+  useEffect(() => {
+    if (!profile?.id) return;
+
+    const channel = supabase
+      .channel("referral-stats-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "referrals",
+          filter: `referrer_id=eq.${profile.id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["referrals-stats", profile.id] });
+          queryClient.invalidateQueries({ queryKey: ["profile"] });
+          toast.success("New referral recorded!");
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [profile?.id, queryClient]);
 
   const { data: referralsStats } = useQuery({
     queryKey: ["referrals-stats", profile?.id],

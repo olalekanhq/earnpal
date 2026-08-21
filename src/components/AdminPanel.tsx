@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Users, 
@@ -52,6 +52,7 @@ import { Lock } from "lucide-react";
 export function AdminPanel() {
   
   const { role, isAdmin } = useAuth();
+  const queryClient = useQueryClient();
   
   const { data: permissions } = useQuery({
     queryKey: ["rolePermissions", role],
@@ -149,6 +150,50 @@ export function AdminPanel() {
   useEffect(() => {
     localStorage.setItem("earnpal_admin_last_tab", activeTab);
   }, [activeTab]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("admin-stats-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "points_transactions",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "profiles",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "redemptions",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
 
   const tabs = [
     { value: "users", icon: Users, label: "Users", color: undefined },

@@ -26,7 +26,7 @@ import {
   ChevronRight,
   Filter
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import { 
   Dialog, 
@@ -59,6 +59,46 @@ export function ReferralsManager() {
   const [timeFilter, setTimeFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("admin-referrals-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "referrals",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["admin-referral-events"] });
+          queryClient.invalidateQueries({ queryKey: ["funnelAnalytics"] });
+          queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+          toast.success("New referral recorded in system");
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "profiles",
+        },
+        (payload) => {
+          // If a user completes profile, metrics might change
+          if (payload.new['has_claimed_welcome_bonus'] !== payload.old['has_claimed_welcome_bonus']) {
+            queryClient.invalidateQueries({ queryKey: ["admin-referral-events"] });
+            queryClient.invalidateQueries({ queryKey: ["funnelAnalytics"] });
+            queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-referral-events", timeFilter, searchQuery, currentPage],
