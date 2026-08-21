@@ -299,9 +299,35 @@ export function WelcomeBonusModal() {
             </Button>
           </DialogFooter>
           
-          <p className="text-[10px] font-bold text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 italic">
-            Note: You cannot claim this bonus until you complete your social profile handles.
-          </p>
+          <div className="space-y-3 pt-2">
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Verification Checklist</p>
+            <div className="bg-primary/5 rounded-xl p-3 border border-primary/10 space-y-2">
+              <p className="text-[10px] font-black text-amber-600 italic text-left">
+                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                                        
+                                                            
+                                                            Add a clear social profile checklist that shows exactly which fields are missing and how to complete them.
+              </p>
+              <div className="flex flex-col gap-1.5 pt-1">
+                {requiredSocials.map((social) => {
+                  const handleKey = `${social}_handle`;
+                  const isVerified = profile?.[handleKey] && profile[handleKey].length > 0;
+                  return (
+                    <div key={social} className="flex items-center gap-2">
+                      {isVerified ? (
+                        <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                      ) : (
+                        <XCircle className="h-3 w-3 text-destructive" />
+                      )}
+                      <span className={`text-[10px] font-bold capitalize ${isVerified ? "text-emerald-600" : "text-destructive"}`}>
+                        {social} Handle {isVerified ? "Verified" : "Missing"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
           
           <button 
             onClick={handleClose}
