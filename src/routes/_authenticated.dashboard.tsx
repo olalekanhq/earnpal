@@ -594,8 +594,3 @@ function RecentReferrersList() {
     </div>
   );
 }
-
-// Utility function (duplicated since it's used in components but defined in utils)
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
-}
