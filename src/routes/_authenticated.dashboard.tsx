@@ -278,39 +278,6 @@ function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Rank Section */}
-        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Current Rank</CardTitle>
-              <div className="bg-primary/5 p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
-                <Award className="h-4 w-4" />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-2 flex-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="text-3xl font-black tracking-tight flex items-center gap-2">
-                {userRank?.rank_name || 'Novice'}
-                <Badge variant="outline" className="text-[10px] font-black border-primary/20 text-primary uppercase">
-                  LVL {userRank?.rank_level || 1}
-                </Badge>
-              </div>
-              <p className="text-[11px] text-muted-foreground font-medium">
-                {userRank?.rank_level === 5 ? "Maximum rank achieved!" : `Level up with ${50 - (userRank?.referral_count || 0)} more referrals`}
-              </p>
-            </div>
-            <div className="mt-6">
-              <Button 
-                variant="outline"
-                className="w-full rounded-xl font-bold h-12 transition-all border-primary/20 text-primary hover:bg-primary/5"
-                asChild
-              >
-                <Link to="/refer">Refer Friends</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {featuredTasks && featuredTasks.length > 0 && (
