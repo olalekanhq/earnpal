@@ -125,7 +125,9 @@ export function ReferralStatsDashboard() {
             <span className="sr-only">
               '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
               
-              on the referral page, don't show the link, instead change it to a button that will copy the link when click it, also don't let it copy only link, add a short referral note to it
+              Update the copy button so it copies the referral note plus the full referral URL as one combined message, not just the raw link.
+
+              Add a toast notification after the referral button copies the referral note and link to the clipboard.
             </span>
           </div>
           
