@@ -318,7 +318,6 @@ export function UsersManager() {
                     </div>
                   </div>
                 </div>
-                </div>
 
                 {/* Point Adjustment Section */}
                 <div className="space-y-4">
