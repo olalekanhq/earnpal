@@ -200,7 +200,7 @@ function Dashboard() {
       <WelcomeBonusModal />
       
       
-      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
+      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative shadow-sm">
           <CardContent className="p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4 w-full">
