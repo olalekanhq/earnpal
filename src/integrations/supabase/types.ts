@@ -671,6 +671,27 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals_with_profiles: {
+        Row: {
+          created_at: string | null
+          referee_created_at: string | null
+          referee_email: string | null
+          referee_full_name: string | null
+          referee_has_claimed_welcome_bonus: boolean | null
+          referee_id: string | null
+          referee_telegram_handle: string | null
+          referee_twitter_handle: string | null
+          referee_username: string | null
+          referrer_avatar_url: string | null
+          referrer_email: string | null
+          referrer_full_name: string | null
+          referrer_id: string | null
+          referrer_points_balance: number | null
+          referrer_referral_code: string | null
+          referrer_username: string | null
+        }
+        Relationships: []
+      }
       user_ranks: {
         Row: {
           rank_level: number | null

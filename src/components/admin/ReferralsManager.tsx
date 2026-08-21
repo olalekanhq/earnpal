@@ -64,12 +64,8 @@ export function ReferralsManager() {
     queryKey: ["admin-referral-events", timeFilter, searchQuery, currentPage],
     queryFn: async () => {
       let query = supabase
-        .from("referrals")
-        .select(`
-          *,
-          referrer:profiles!referrals_referrer_id_fkey(id, username, full_name, avatar_url, email, points_balance, referral_code),
-          referee:profiles!referrals_referee_id_fkey(id, username, full_name, email, created_at, twitter_handle, telegram_handle, has_claimed_welcome_bonus)
-        `, { count: "exact" });
+        .from("referrals_with_profiles")
+        .select(`*`, { count: "exact" });
 
       if (timeFilter !== "all") {
         const days = parseInt(timeFilter);
@@ -78,8 +74,9 @@ export function ReferralsManager() {
       }
 
       if (searchQuery) {
-        // Search in referrer or referee username/email
-        // Complex searches in related tables might need multiple ORs or a view
+        // Since we are searching across joins, we'll use or() with proper references
+        const search = `%${searchQuery}%`;
+        query = query.or(`referrer_username.ilike.${search},referee_username.ilike.${search}`);
       }
 
       const from = (currentPage - 1) * itemsPerPage;
