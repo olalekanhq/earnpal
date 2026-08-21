@@ -261,7 +261,7 @@ export function Navigation() {
       label: "Account",
       items: [
         { name: "Profile", href: "/profile", icon: User },
-        { name: "Settings", href: "/settings", icon: Settings },
+        { name: "Settings", href: "/settings" as any, icon: Settings },
         ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", icon: Shield }] : []),
         ...(isModerator && !isAdmin ? [{ name: "Moderator Panel", href: "/moderator", icon: Shield }] : []),
         ...(isTasker && !isModerator && !isAdmin ? [{ name: "Tasker Panel", href: "/tasker", icon: Shield }] : []),
