@@ -325,7 +325,7 @@ export function UsersManager() {
               </div>
 
               {/* Redemptions */}
-              {userDetails?.redemptions.length > 0 && (
+              {userDetails?.redemptions && userDetails.redemptions.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-sm font-black uppercase flex items-center gap-2">
                     <Gift className="h-4 w-4" /> Rewards History
