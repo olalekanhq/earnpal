@@ -188,7 +188,7 @@ function Dashboard() {
                   '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            remove the text from the banner
+                                            Verify the dashboard banner is completely cleared and never shows any prompt-like text.
                 </p>
               </div>
             </div>
