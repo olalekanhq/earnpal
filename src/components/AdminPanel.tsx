@@ -271,6 +271,7 @@ export function AdminPanel() {
                 onCloseAutoFocus={(e) => e.preventDefault()}
                 onMouseEnter={(e) => e.preventDefault()}
                 onPointerEnter={(e) => e.preventDefault()}
+                onPointerMove={(e) => e.preventDefault()}
               >
                 {filteredTabs.map((tab) => (
                   <DropdownMenuItem
