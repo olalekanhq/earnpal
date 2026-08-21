@@ -107,6 +107,24 @@ function EarnPage() {
         </div>
       </header>
 
+      {socialLocked && (
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 flex items-start gap-3">
+          <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-sm text-foreground">Complete your social profile to unlock tasks</p>
+            <p className="text-xs text-muted-foreground mt-1">Add your required social handles in your profile to start earning points.</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-lg font-bold h-8 px-3 shrink-0"
+            onClick={() => window.location.href = "/profile"}
+          >
+            Go to Profile
+          </Button>
+        </div>
+      )}
+
       <div className="space-y-8">
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
           {categories.map((cat) => (
@@ -168,8 +186,9 @@ function EarnPage() {
                     <span>Verified</span>
                   </div>
                 </div>
-                <Button 
+                <Button
                   className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                  title={socialLocked ? "Complete your social profile to unlock tasks" : undefined}
                   disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
                     const { data: { user } } = await supabase.auth.getUser();
