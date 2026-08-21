@@ -6,8 +6,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Coins, Calendar, Tag, Hash, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Coins, Calendar, Tag, Hash, ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export interface Transaction {
   id: string;
