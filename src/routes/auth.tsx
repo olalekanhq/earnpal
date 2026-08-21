@@ -321,9 +321,10 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="relative min-h-screen w-full overflow-hidden">
+      <div className="relative min-h-screen w-full overflow-hidden flex flex-col">
         <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
-        <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border">
+        <div className="relative z-10 flex flex-1 w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border">
+
 
 
 
@@ -388,7 +389,7 @@ function AuthPage() {
 
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border overflow-y-auto">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
@@ -546,7 +547,7 @@ function AuthPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2 py-1">
+                  <div className="flex items-center space-x-2 py-1 overflow-visible">
                     <Checkbox 
                       id="rememberMe" 
                       checked={rememberMe} 
