@@ -64,9 +64,108 @@ export function PointsAuditLogs() {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-500">
-      <div>
-        <h3 className="text-xl font-black uppercase tracking-tight">Points Audit Logs</h3>
-        <p className="text-sm text-muted-foreground font-medium">Detailed history of every point credit including welcome and referral rewards.</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h3 className="text-xl font-black uppercase tracking-tight">Points Audit Logs</h3>
+          <p className="text-sm text-muted-foreground font-medium">Detailed history of every point credit including welcome and referral rewards.</p>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          {(searchUserId || searchReason || searchTrigger || dateRange) && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => {
+                setSearchUserId("");
+                setSearchReason("");
+                setSearchTrigger("");
+                setDateRange(undefined);
+              }}
+              className="h-9 px-2 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground"
+            >
+              <X className="mr-1 h-3 w-3" /> Clear Filters
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-card/30 p-4 rounded-2xl border border-border/40 backdrop-blur-sm">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">User / ID</label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="Username or UUID..." 
+              value={searchUserId}
+              onChange={(e) => setSearchUserId(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Reason</label>
+          <div className="relative">
+            <Activity className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="e.g. Welcome Bonus..." 
+              value={searchReason}
+              onChange={(e) => setSearchReason(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Trigger Source</label>
+          <div className="relative">
+            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="e.g. handle_new_user..." 
+              value={searchTrigger}
+              onChange={(e) => setSearchTrigger(e.target.value)}
+              className="pl-9 h-9 text-xs bg-background/50 border-border/40 focus:border-primary/50 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Date Range</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-medium h-9 text-xs bg-background/50 border-border/40 hover:bg-background/80 rounded-xl",
+                  !dateRange && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                {dateRange?.from ? (
+                  dateRange.to ? (
+                    <>
+                      {format(dateRange.from, "LLL dd")} - {format(dateRange.to, "LLL dd")}
+                    </>
+                  ) : (
+                    format(dateRange.from, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date range</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={dateRange?.from}
+                selected={dateRange}
+                onSelect={setDateRange}
+                numberOfMonths={1}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
       
       <div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden overflow-x-auto">
