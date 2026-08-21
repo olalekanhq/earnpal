@@ -120,10 +120,16 @@ function Dashboard() {
       return result;
     },
     onSuccess: async (result: any) => {
-      if (!result?.alreadyClaimed) toast.success("Welcome bonus claimed!");
+      // Invalidate everything to ensure the UI updates and banner disappears
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       await queryClient.refetchQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+      
+      if (result?.alreadyClaimed) {
+        toast.info("Bonus already claimed.");
+      } else {
+        toast.success("Welcome bonus claimed!");
+      }
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to claim bonus", {
@@ -200,7 +206,7 @@ function Dashboard() {
 
       
       
-      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && (
+      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && !claimWelcomeBonus.isPending && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative shadow-sm">
           <CardContent className="p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4 w-full">
