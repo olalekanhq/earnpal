@@ -416,8 +416,9 @@ function AuthPage() {
               </div>
               <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                
-                check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
+                                        
+                                            
+                                            signing up is showing database error saving new user. can we fix this and it won't bring it again
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
