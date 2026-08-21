@@ -269,7 +269,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="earn-pal-theme">
-        <div className="flex min-h-screen bg-background text-foreground relative overflow-hidden w-full max-w-full touch-pan-y overscroll-none">
+        <div className="flex min-h-screen bg-background text-foreground relative w-full max-w-full">
           <Navigation />
           <main className={cn(
             "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
