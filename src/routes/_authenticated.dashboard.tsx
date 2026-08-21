@@ -121,18 +121,11 @@ function Dashboard() {
       return result;
     },
     onSuccess: async (result: any) => {
-      // Invalidate everything to ensure the UI updates and banner disappears
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
-      await queryClient.refetchQueries({ queryKey: ["profile"] });
-      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
-      
-      if (result?.alreadyClaimed) {
-        toast.info("Bonus already claimed.");
-      } else {
-        // Trigger celebration effect
+      // Trigger celebration effect FIRST for maximum impact
+      if (!result?.alreadyClaimed) {
         const duration = 5 * 1000;
         const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
 
         const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
@@ -144,13 +137,19 @@ function Dashboard() {
           }
 
           const particleCount = 50 * (timeLeft / duration);
-          // since particles fall down, start a bit higher than random
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
         }, 250);
 
         toast.success("Welcome bonus claimed!");
+      } else {
+        toast.info("Bonus already claimed.");
       }
+
+      // Invalidate everything to ensure the UI updates and banner disappears
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to claim bonus", {
