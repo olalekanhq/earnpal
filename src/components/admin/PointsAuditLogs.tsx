@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Table, 
@@ -10,17 +10,26 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Coins, User, Activity } from "lucide-react";
-import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Loader2, Coins, User, Activity, Search, Calendar as CalendarIcon, X } from "lucide-react";
+import { format, startOfDay, endOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import { DateRange } from "react-day-picker";
 
 export function PointsAuditLogs() {
   const queryClient = useQueryClient();
-  const { data: logs, isLoading } = useQuery({
-    queryKey: ["admin-points-audit-logs"],
+  const [searchUserId, setSearchUserId] = useState("");
+  const [searchReason, setSearchReason] = useState("");
+  const [searchTrigger, setSearchTrigger] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
+  const { data: logs, isLoading } = useQuery({
+    queryKey: ["admin-points-audit-logs", searchUserId, searchReason, searchTrigger, dateRange],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("points_audit_logs")
         .select(`
           *,
@@ -28,8 +37,33 @@ export function PointsAuditLogs() {
             username,
             full_name
           )
-        `)
-        .order("created_at", { ascending: false });
+        `);
+
+      if (searchUserId) {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(searchUserId);
+        if (isUuid) {
+          query = query.eq("user_id", searchUserId);
+        } else {
+          query = query.or(`username.ilike.%${searchUserId}%,full_name.ilike.%${searchUserId}%`, { foreignTable: 'profiles' });
+        }
+      }
+
+      if (searchReason) {
+        query = query.ilike("reason", `%${searchReason}%`);
+      }
+
+      if (searchTrigger) {
+        query = query.ilike("trigger_name", `%${searchTrigger}%`);
+      }
+
+      if (dateRange?.from) {
+        query = query.gte("created_at", startOfDay(dateRange.from).toISOString());
+      }
+      if (dateRange?.to) {
+        query = query.lte("created_at", endOfDay(dateRange.to).toISOString());
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
       
       if (error) throw error;
       return data;
@@ -57,10 +91,7 @@ export function PointsAuditLogs() {
     };
   }, [queryClient]);
 
-
-
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
-
 
   return (
     <div className="space-y-4 animate-in fade-in duration-500">
