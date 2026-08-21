@@ -124,7 +124,7 @@ export function NotificationsPopover() {
                   onClick={() => handleNotificationClick(notification)}
                 >
                   <p className="text-sm font-medium">
-                    {"'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Fix the issue where points earned are not adding to user's balance (both task and referral points) and ensure the updated point total shows immediately after confirmation."}
+                    {notification.title}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-2">
