@@ -114,36 +114,70 @@ function ReferralPage() {
                         const isComplete = ref.full_name && ref.username && ref.phone_number && (ref.twitter_handle || ref.telegram_handle || ref.facebook_handle || ref.instagram_handle);
                         
                         return (
-                          <div key={ref.id} className="flex items-center justify-between p-4 hover:bg-accent/5 transition-colors">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-9 w-9 border">
-                                <AvatarImage src={ref.avatar_url || ""} />
-                                <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
-                                  {(ref.full_name?.[0] || ref.username?.[0] || "?").toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <p className="text-sm font-bold text-foreground leading-none">{ref.full_name || ref.username || "New User"}</p>
-                                  {!isComplete && (
-                                    <Badge variant="outline" className="text-[8px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 py-0 h-4">
-                                      First Task Pending
-                                    </Badge>
-                                  )}
+                          <div key={ref.id} className="p-4 hover:bg-accent/5 transition-colors">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-9 w-9 border">
+                                  <AvatarImage src={ref.avatar_url || ""} />
+                                  <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                                    {(ref.full_name?.[0] || ref.username?.[0] || "?").toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-sm font-bold text-foreground leading-none">{ref.full_name || ref.username || "New User"}</p>
+                                    {!isComplete && (
+                                      <Badge variant="outline" className="text-[8px] font-black uppercase bg-amber-50 text-amber-600 border-amber-200 py-0 h-4">
+                                        Verification Pending
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">Joined {new Date(ref.created_at).toLocaleDateString()}</p>
                                 </div>
-                                <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">Joined {new Date(ref.created_at).toLocaleDateString()}</p>
+                              </div>
+                              <div className={cn(
+                                "px-2 py-1 rounded-lg",
+                                isComplete ? "bg-green-50" : "bg-amber-50"
+                              )}>
+                                <span className={cn(
+                                  "text-[10px] font-bold uppercase",
+                                   isComplete ? "text-green-600" : "text-amber-600"
+                                 )}>
+                                  {isComplete ? "+75 Pts" : "Pending Task"}
+                                </span>
                               </div>
                             </div>
-                            <div className={cn(
-                              "px-2 py-1 rounded-lg",
-                              isComplete ? "bg-green-50" : "bg-amber-50"
-                            )}>
-                              <span className={cn(
-                                "text-[10px] font-bold uppercase",
-                                 isComplete ? "text-green-600" : "text-amber-600"
-                               )}>
-                                {isComplete ? "+75 Pts" : "Pending Task"}
-                              </span>
+                            
+                            <div className="mt-2 bg-muted/30 rounded-xl p-3 border border-border/50">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status Checklist</span>
+                                <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                                  {isComplete ? "Ready for Bonus" : "In Progress"}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="flex items-center gap-2">
+                                  <div className={cn("w-2 h-2 rounded-full", ref.full_name && ref.username ? "bg-green-500" : "bg-muted")} />
+                                  <span className="text-[9px] font-medium">Basic Profile</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className={cn("w-2 h-2 rounded-full", ref.phone_number ? "bg-green-500" : "bg-muted")} />
+                                  <span className="text-[9px] font-medium">Phone Verified</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className={cn("w-2 h-2 rounded-full", (ref.twitter_handle || ref.telegram_handle) ? "bg-green-500" : "bg-muted")} />
+                                  <span className="text-[9px] font-medium">Social Linked</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className={cn("w-2 h-2 rounded-full", isComplete ? "bg-green-500" : "bg-muted")} />
+                                  <span className="text-[9px] font-medium">First Task Ready</span>
+                                </div>
+                              </div>
+                              {!isComplete && (
+                                <p className="text-[9px] text-muted-foreground italic mt-2 font-medium">
+                                  Bonus granted once user completes profile & first task.
+                                </p>
+                              )}
                             </div>
                           </div>
                         );
