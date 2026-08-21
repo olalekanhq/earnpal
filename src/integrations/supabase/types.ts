@@ -318,8 +318,22 @@ export type Database = {
             foreignKeyName: "redemptions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "my_referrals_detailed"
+            referencedColumns: ["referee_id"]
+          },
+          {
+            foreignKeyName: "redemptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redemptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_ranks"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -611,6 +625,28 @@ export type Database = {
           id: string | null
           points_balance: number | null
           rank: number | null
+          username: string | null
+        }
+        Relationships: []
+      }
+      my_referrals_detailed: {
+        Row: {
+          avatar_url: string | null
+          full_name: string | null
+          joined_at: string | null
+          referee_id: string | null
+          referrer_id: string | null
+          status: string | null
+          username: string | null
+        }
+        Relationships: []
+      }
+      user_ranks: {
+        Row: {
+          rank_level: number | null
+          rank_name: string | null
+          referral_count: number | null
+          user_id: string | null
           username: string | null
         }
         Relationships: []

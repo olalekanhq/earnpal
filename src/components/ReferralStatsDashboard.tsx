@@ -1,12 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, MousePointerClick, Gift, TrendingUp, Copy, Check, Twitter, MessageSquare, ExternalLink, ArrowRight, Shield } from "lucide-react";
+import { Users, MousePointerClick, Gift, TrendingUp, Copy, Check, Twitter, MessageSquare, ExternalLink, ArrowRight, Shield, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
+import { QRCodeCanvas } from "qrcode.react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function ReferralStatsDashboard() {
   const [copiedLink, setCopiedLink] = useState(false);
@@ -159,10 +168,45 @@ export function ReferralStatsDashboard() {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <p className="text-xs font-bold text-violet-200 uppercase tracking-widest">Quick Share:</p>
             <div className="flex gap-2">
-              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl" title="Show QR Code">
+                    <QrCode className="h-5 w-5" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md rounded-3xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-center text-xl font-black">Scan to Join</DialogTitle>
+                    <DialogDescription className="text-center font-medium">
+                      Share this QR code with your friends to refer them instantly.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex flex-col items-center justify-center p-6 space-y-4">
+                    <div className="p-4 bg-white rounded-2xl shadow-sm border border-border/50">
+                      <QRCodeCanvas 
+                        value={referralLink} 
+                        size={200}
+                        level="H"
+                        includeMargin={true}
+                        imageSettings={{
+                          src: "/logo.png",
+                          height: 40,
+                          width: 40,
+                          excavate: true,
+                        }}
+                      />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-black text-primary uppercase tracking-widest">{profile?.referral_code}</p>
+                      <p className="text-xs text-muted-foreground font-medium mt-1">Your Unique Referral Code</p>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl" onClick={() => window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20Earn%20Pal%20and%20start%20earning%20rewards!%20${referralLink}`, '_blank')}>
                 <Twitter className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl">
+              <Button variant="outline" size="icon" className="h-11 w-11 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl" onClick={() => window.open(`https://wa.me/?text=Join%20me%20on%20Earn%20Pal%20and%20start%20earning%20rewards!%20${referralLink}`, '_blank')}>
                 <MessageSquare className="h-5 w-5" />
               </Button>
             </div>

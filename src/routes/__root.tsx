@@ -275,7 +275,7 @@ function RootComponent() {
             "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
             !isLandingPage && "md:ml-72"
           )}>
-            <div className={cn("flex-1 w-full", !isLandingPage && "pt-20")}>
+            <div className={cn("flex-1 w-full", !isLandingPage && "pt-24 md:pt-28 pb-12")}>
               <Outlet />
             </div>
           </main>
