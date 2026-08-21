@@ -319,446 +319,338 @@ function AuthPage() {
   };
 
 
+
+  const shellClass =
+    "relative min-h-screen w-full bg-gradient-to-b from-muted/60 via-background to-muted/40 px-5 py-10 flex flex-col items-center justify-center";
+
+  const Brand = () => (
+    <div className="flex justify-center">
+      <img src="/logo.png" alt="Earn Pal" className="h-12 w-12 object-contain" />
+    </div>
+  );
+
+  const BackLink = () => (
+    <button
+      type="button"
+      onClick={() => navigate({ to: "/" })}
+      className="mb-6 inline-flex items-center gap-2 text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <ArrowLeft className="h-5 w-5" />
+      Back to home
+    </button>
+  );
+
   if (showVerification) {
     return (
-      <div className="relative min-h-screen w-full flex flex-col overflow-x-hidden">
-        <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
-        <div className="relative z-10 flex flex-1 w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border max-w-full">
+      <div className={shellClass}>
+        <div className="w-full max-w-md">
+          <BackLink />
+          <div className="rounded-3xl bg-card p-8 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)]">
+            <Brand />
+            <h1 className="mt-6 text-center text-3xl font-black tracking-tight text-foreground">Verify email</h1>
+            <p className="mt-2 text-center text-base text-muted-foreground">
+              We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
+            </p>
 
-          <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
-            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-            
-            Implement Admin Panel dropdowns so they only open on tap/click and never on hover or accidental scroll gestures.
-
-Improve the Platform Settings role permissions section so it clearly lists each tab and shows exactly which roles can access it.
-
-since analytics is still showing referrals information, theres no need for analytics tab again, just put its content under the referrals tab
-          </span>
-
-
-
-
-
-        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
-          <CardHeader className="space-y-1 text-center">
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 p-4 rounded-full">
-                <Mail className="h-10 w-10 text-primary" />
-              </div>
-            </div>
-            <CardTitle className="text-2xl font-black uppercase">Verify Your Email</CardTitle>
-            <CardDescription>
-              We've sent a 6-digit verification code to <span className="font-bold text-foreground">{email}</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <form onSubmit={handleVerifyOtp} className="mt-7 space-y-5">
               {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
-                  {error}
-                </div>
+                <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="otp">Verification Code</Label>
-                <Input 
-                  id="otp" 
-                  placeholder="000000" 
-                  className="text-center text-2xl tracking-[0.5em] font-black h-14"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  required 
-                />
-              </div>
-              <Button type="submit" className="w-full h-12 font-black uppercase" disabled={isVerifying}>
+              <Input
+                id="otp"
+                inputMode="numeric"
+                placeholder="000000"
+                className="h-14 rounded-2xl text-center text-2xl font-black tracking-[0.5em]"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                required
+              />
+              <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={isVerifying}>
                 {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Verify Account
+                Verify account
               </Button>
-              <div className="flex flex-col gap-2 text-center">
-                <button 
+              <div className="flex flex-col items-center gap-2 text-sm">
+                <button
                   type="button"
-                  className="text-sm font-bold text-primary hover:underline disabled:opacity-50"
+                  className="font-semibold text-primary hover:underline disabled:opacity-50"
                   onClick={handleResendOtp}
                   disabled={resending}
                 >
-                  {resending ? "Resending..." : "Resend Code"}
+                  {resending ? "Resending..." : "Resend code"}
                 </button>
-                <button 
+                <button
                   type="button"
-                  className="text-sm font-bold text-muted-foreground hover:underline"
+                  className="font-medium text-muted-foreground hover:underline"
                   onClick={() => setShowVerification(false)}
                 >
-                  Back to Sign Up
+                  Back to sign up
                 </button>
               </div>
             </form>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
       </div>
     );
   }
 
+  const fieldLabel = "text-base font-semibold text-foreground";
+  const fieldInput = "h-14 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border max-w-full overflow-y-auto">
-      {/* Abstract Background Shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
-      
-      {/* Theme toggle is now in the global Navigation component header */}
+    <div className={shellClass}>
+      <div className="w-full max-w-md">
+        <BackLink />
 
-      <div className="w-full max-w-full lg:max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-4 box-border overflow-x-hidden overflow-y-visible">
-        {/* Auth Card Side */}
-        <div className="flex justify-center order-2 lg:order-1 w-full max-w-md mx-auto">
-          <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col mx-auto">
-            <CardHeader className="space-y-1 text-center pb-4 p-0 flex-shrink-0">
-              <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
-                <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
-                  <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
-                  <span>EARN PAL</span>
-                </div>
-              </div>
-              <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
-                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            Implement real-time updates so referral counts refresh instantly after a referral is recorded for the dashboards.
+        <div className="rounded-3xl bg-card p-7 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] sm:p-8">
+          <Brand />
 
-Add automated tests to verify referral counts match the database source-of-truth view on both user and admin dashboards.
-              </span>
-              <CardTitle className="text-2xl font-black tracking-tight text-foreground">
-                {showReset 
-                  ? "Reset Password" 
-                  : activeTab === "login" 
-                    ? "Welcome back" 
-                    : "Create Account"}
-              </CardTitle>
-              <CardDescription className="text-muted-foreground font-medium">
-                {showReset 
-                  ? "Enter your email to receive a reset link" 
-                  : activeTab === "login"
-                    ? "Access your dashboard to start earning rewards"
-                    : "Join the Earn Pal community and start earning bonus points today"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4 flex-grow p-0">
+          <h1 className="mt-6 text-center text-4xl font-black tracking-tight text-foreground">
+            {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
+          </h1>
+          <p className="mx-auto mt-3 max-w-xs text-center text-base leading-snug text-muted-foreground">
+            {showReset
+              ? "Enter your email or username and we'll send you a reset link."
+              : activeTab === "login"
+                ? "Sign in to track your points and rewards. Browsing needs no account."
+                : "Join Earn Pal and start earning points from simple tasks today."}
+          </p>
+
           {!showReset && (
             <>
-              <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-12 rounded-xl border-border/50 bg-accent/5 hover:bg-accent/10 transition-all">
-                <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="Google" />
+              <Button
+                variant="outline"
+                onClick={handleGoogleLogin}
+                className="mt-7 h-14 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+              >
+                <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
-              <div className="relative">
+
+              <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t border-border/70" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground font-bold">OR</span>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-3 text-sm text-muted-foreground">or email</span>
                 </div>
               </div>
             </>
           )}
-          
+
           {error && (
-            <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
-              {error}
-            </div>
+            <div className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-4">
+            <form onSubmit={handlePasswordReset} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="reset-email">Email or Username</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    className="pl-9"
-                    id="reset-email" 
-                    type="text" 
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    placeholder="email or username" 
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    required 
-                  />
-                </div>
-
+                <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
+                <Input
+                  id="reset-email"
+                  type="text"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  className={fieldInput}
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  required
+                />
               </div>
-              <Button type="submit" className="w-full h-12 rounded-xl font-bold uppercase shadow-md shadow-primary/10" disabled={resetLoading}>
+              <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {resetSent ? "Resend Link" : "Send Reset Link"}
+                {resetSent ? "Resend link" : "Send reset link"}
               </Button>
-              <Button 
-                type="button" 
-                variant="ghost" 
-                className="w-full font-bold rounded-xl text-muted-foreground hover:text-foreground"
+              <button
+                type="button"
+                className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowReset(false);
                   setError("");
                 }}
               >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                BACK TO LOGIN
-              </Button>
+                Back to sign in
+              </button>
             </form>
           ) : (
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full flex flex-col h-full overflow-hidden">
-              <div className="px-1 flex-shrink-0">
-                <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 rounded-xl h-12">
-                  <TabsTrigger value="login" className="font-bold rounded-lg data-[state=active]:shadow-sm">Log in</TabsTrigger>
-                  <TabsTrigger value="signup" className="font-bold rounded-lg data-[state=active]:shadow-sm">Sign up</TabsTrigger>
-                </TabsList>
-              </div>
-              <TabsContent value="login">
-                <form onSubmit={handleEmailLogin} className="space-y-3 pt-4">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
+              <TabsList className="grid h-14 w-full grid-cols-2 rounded-full bg-muted/70 p-1.5">
+                <TabsTrigger
+                  value="login"
+                  className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  Sign in
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  Sign up
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="login" className="mt-6">
+                <form onSubmit={handleEmailLogin} className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="identifier">Email or Username</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9"
-                        id="identifier" 
-                        placeholder="email or username" 
-                        value={identifier}
-                        onChange={(e) => setIdentifier(e.target.value)}
-                        required 
-                      />
-                    </div>
+                    <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
+                    <Input
+                      id="identifier"
+                      className={fieldInput}
+                      autoCapitalize="none"
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <button 
-                        type="button"
-                        className="text-sm font-bold text-primary hover:underline"
-                        onClick={() => {
-                          setShowReset(true);
-                          setResetEmail(identifier.trim());
-                          setError("");
-                        }}
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
+                    <Label htmlFor="password" className={fieldLabel}>Password</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9 pr-10"
-                        id="password" 
-                        type={showPassword ? "text" : "password"} 
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        className={cn(fieldInput, "pr-12")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required 
+                        required
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2 py-1 overflow-visible">
-                    <Checkbox 
-                      id="rememberMe" 
-                      checked={rememberMe} 
-                      onCheckedChange={(checked) => setRememberMe(checked === true)}
-                    />
-                    <Label 
-                      htmlFor="rememberMe" 
-                      className="text-sm font-medium leading-none cursor-pointer text-muted-foreground"
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onCheckedChange={(checked) => setRememberMe(checked === true)}
+                      />
+                      <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-medium text-muted-foreground">
+                        Remember me
+                      </Label>
+                    </div>
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-primary hover:underline"
+                      onClick={() => {
+                        setShowReset(true);
+                        setResetEmail(identifier.trim());
+                        setError("");
+                      }}
                     >
-                      Remember me
-                    </Label>
+                      Forgot password?
+                    </button>
                   </div>
-                   <Button type="submit" className="w-full h-11 md:h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-2" disabled={loading}>
+
+                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
-                  <div className="text-center pt-2">
-                    <p className="text-sm text-muted-foreground">
-                      Don't have an account?{" "}
-                      <button 
-                        type="button" 
-                        onClick={() => setActiveTab("signup")}
-                        className="text-primary font-bold hover:underline"
-                      >
-                        Sign up
-                      </button>
-                    </p>
-                  </div>
                 </form>
               </TabsContent>
-              <TabsContent value="signup" className="flex-grow px-1 pr-2 custom-scrollbar">
-                <form onSubmit={handleEmailSignUp} className="space-y-3 pt-4 pb-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="full-name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9"
-                        id="full-name" 
-                        placeholder="John Doe" 
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required 
-                      />
-                    </div>
+
+              <TabsContent value="signup" className="mt-6">
+                <form onSubmit={handleEmailSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
+                    <Input
+                      id="full-name"
+                      className={fieldInput}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                    />
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="signup-username">Username</Label>
-                    <div className="relative">
-                      <CheckCircle2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9"
-                        id="signup-username" 
-                        placeholder="johndoe123" 
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                        required 
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-username" className={fieldLabel}>Username</Label>
+                    <Input
+                      id="signup-username"
+                      className={fieldInput}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                      required
+                    />
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9"
-                        id="signup-email" 
-                        type="email" 
-                        placeholder="m@example.com" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email" className={fieldLabel}>Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      className={fieldInput}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="signup-password">Password</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password" className={fieldLabel}>Password</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        className="pl-9 pr-10"
-                        id="signup-password" 
-                        type={showSignupPassword ? "text" : "password"} 
+                      <Input
+                        id="signup-password"
+                        type={showSignupPassword ? "text" : "password"}
+                        className={cn(fieldInput, "pr-12")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required 
+                        required
                       />
                       <button
                         type="button"
                         onClick={() => setShowSignupPassword(!showSignupPassword)}
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                        aria-label={showSignupPassword ? "Hide password" : "Show password"}
                       >
-                        {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="referral-code">Referral Code (Optional)</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="referral-code" className={fieldLabel}>Referral code (optional)</Label>
                     <div className="relative">
-                      <Share2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input 
+                      <Input
+                        id="referral-code"
                         className={cn(
-                          "pl-9",
-                          referralStatus.owner && "border-green-500/50 ring-green-500/20",
-                          referralStatus.error && "border-destructive/50 ring-destructive/20"
+                          fieldInput,
+                          "pr-12",
+                          referralStatus.owner && "border-green-500/60",
+                          referralStatus.error && "border-destructive/60",
                         )}
-                        id="referral-code" 
-                        placeholder="e.g. 5a2b3c"
                         value={referralCode}
                         onChange={handleReferralChange}
                       />
                       {referralStatus.loading && (
-                        <div className="absolute right-3 top-3">
-                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                        </div>
+                        <Loader2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
                       )}
                       {referralStatus.owner && (
-                        <div className="absolute right-3 top-3">
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        </div>
+                        <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
                       )}
                     </div>
-                     {referralStatus.message && (
-                       <p 
-                         id="referral-status-msg"
-                         className={cn(
-                           "text-[10px] font-black uppercase tracking-widest mt-1",
-                           referralStatus.error ? "text-destructive" : "text-green-600"
-                         )}
-                       >
-                         {referralStatus.error ? "✕ " : "✓ "}{referralStatus.message}
-                       </p>
-                     )}
+                    {referralStatus.message && (
+                      <p
+                        id="referral-status-msg"
+                        className={cn(
+                          "text-xs font-semibold",
+                          referralStatus.error ? "text-destructive" : "text-green-600",
+                        )}
+                      >
+                        {referralStatus.error ? "✕ " : "✓ "}
+                        {referralStatus.message}
+                      </p>
+                    )}
                   </div>
-                   <Button 
-                     type="submit" 
-                     className="w-full h-12 rounded-xl font-bold shadow-md shadow-primary/10 mt-4" 
-                     disabled={loading}
-                   >
+
+                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
-                  <div className="text-center pt-2">
-                    <p className="text-sm text-muted-foreground">
-                      Already have an account?{" "}
-                      <button 
-                        type="button" 
-                        onClick={() => setActiveTab("login")}
-                        className="text-primary font-bold hover:underline"
-                      >
-                        Log in
-                      </button>
-                    </p>
-                  </div>
                 </form>
               </TabsContent>
             </Tabs>
           )}
-        </CardContent>
-          </Card>
-        </div>
-
-        {/* Mockup Image Side (Desktop Only) */}
-        <div className="hidden lg:flex flex-col justify-center animate-in fade-in slide-in-from-right duration-1000 order-1 lg:order-2">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-violet-600/20 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-            <div className="relative bg-card rounded-[2.5rem] border border-border/50 overflow-hidden shadow-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000" 
-                alt="Earn Pal Dashboard Preview" 
-                className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-12">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/5 border border-primary/20 backdrop-blur-sm overflow-hidden p-2">
-                    <img src="/logo.png" alt="Earn Pal" className="h-full w-full object-contain" />
-                  </div>
-                  <h3 className="text-3xl font-black tracking-tight text-white uppercase drop-shadow-sm">Earn Pal</h3>
-                </div>
-                <p className="text-xl font-bold text-white/90 leading-relaxed max-w-md drop-shadow-md">
-                  Join thousands of users earning daily rewards through simple tasks and referrals.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-12 grid grid-cols-3 gap-6">
-            {[
-              { label: "Daily Tasks", value: "20+ active" },
-              { label: "Total Users", value: "50k+" },
-              { label: "Paid Out", value: "$250k+" }
-            ].map((stat) => (
-              <div key={stat.label} className="p-4 rounded-2xl bg-card/50 border border-border/30 backdrop-blur-sm">
-                <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                <p className="text-lg font-bold text-foreground">{stat.value}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
