@@ -120,8 +120,11 @@ export function Navigation() {
   const isModerator = authInfo?.isModerator || false;
   const isTasker = (authInfo?.isTasker as boolean) || false;
 
-  // Custom transparent navbar for landing and auth pages
-  if (isLandingPage || isAuthPage) {
+  // Auth page renders its own standalone layout with no global header
+  if (isAuthPage) return null;
+
+  // Custom transparent navbar for landing pages
+  if (isLandingPage) {
     return (
       <>
         <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 max-w-[calc(100vw-1rem)]">
