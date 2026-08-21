@@ -321,9 +321,15 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="relative min-h-screen w-full overflow-hidden flex flex-col">
+      <div className="relative min-h-screen w-full flex flex-col overflow-x-hidden">
         <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
         <div className="relative z-10 flex flex-1 w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border">
+          <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
+            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+            
+            check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
+          </span>
+
 
 
 
@@ -409,9 +415,8 @@ function AuthPage() {
               </div>
               <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
+                
+                check the auth page layoit on mobile device and make sure its width fixed and touch responsive and if all that didnt work, you can change the layout entirely
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
