@@ -189,9 +189,9 @@ export function PointsAuditLogs() {
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={dateRange?.from}
+                defaultMonth={dateRange?.from || new Date()}
                 selected={dateRange}
-                onSelect={setDateRange}
+                onSelect={(range) => setDateRange(range)}
                 numberOfMonths={1}
               />
             </PopoverContent>
