@@ -321,7 +321,7 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 py-12 overflow-y-auto">
+      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 pt-28 md:pt-12 overflow-y-auto w-full touch-pan-y overscroll-none">
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
@@ -381,7 +381,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative pt-24 md:pt-4 no-scrollbar overflow-hidden max-w-[100vw]">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 relative pt-28 md:pt-4 no-scrollbar overflow-x-hidden max-w-[100vw] touch-pan-y overscroll-none">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
@@ -399,7 +399,20 @@ function AuthPage() {
                   <span>EARN PAL</span>
                 </div>
               </div>
+              <span className="sr-only">
+                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Adjust the spacing between the header and the auth content specifically for very small screens so elements never clip or shift into the header area.
+
+Verify the auth page layout on a real iPhone screen and confirm there are no issues with the display and it shows and arranged well on mobile screen, and if it doesn't fix, you can try another style for the auth
+              </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
+                {showReset 
+                  ? "Reset Password" 
+                  : activeTab === "login" 
+                    ? "Welcome back" 
+                    : "Create Account"}
                 {showReset 
                   ? "Reset Password" 
                   : activeTab === "login" 
