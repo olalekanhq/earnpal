@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            the confirmation mail is still sending verify link instead of otp, why
+            yes, it's asking for otp but it was the link that was sent to mail, not otp, can you fix that
           </span>
 
 
