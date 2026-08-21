@@ -104,6 +104,36 @@ function Dashboard() {
     }
   });
 
+  const claimWelcomeBonus = useMutation({
+    mutationFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+      const { data, error } = await supabase.rpc("claim_welcome_bonus", { _user_id: user.id });
+      if (error) throw new Error(error.message);
+      const result = data as any;
+      if (!result?.success) {
+        // Already claimed => treat as done so the banner disappears
+        if (typeof result?.message === "string" && result.message.toLowerCase().includes("already claimed")) {
+          return { alreadyClaimed: true } as any;
+        }
+        throw new Error(result?.message || "Please complete your social profile first");
+      }
+      return result;
+    },
+    onSuccess: async (result: any) => {
+      if (!result?.alreadyClaimed) toast.success("Welcome bonus claimed!");
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to claim bonus", {
+        action: { label: "Go to Profile", onClick: () => window.location.href = "/profile" },
+      });
+    },
+  });
+
+
   const { data: recentTransactions } = useQuery({
     queryKey: ["recentTransactions"],
     queryFn: async () => {
@@ -170,7 +200,7 @@ function Dashboard() {
       <WelcomeBonusModal />
       
       
-      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
+      {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative shadow-sm">
           <CardContent className="p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4 w-full">
@@ -201,30 +231,12 @@ function Dashboard() {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap h-11 px-8 shadow-md shadow-amber-600/20"
-                onClick={async () => {
-                  const { data: { user } } = await supabase.auth.getUser();
-                  if (!user) return;
-                  
-                  const { data, error } = await supabase.rpc("claim_welcome_bonus", {
-                    _user_id: user.id,
-                  });
-                  
-                  const result = data as any;
-                  if (error || !result.success) {
-                    toast.error(result?.message || error?.message || "Please complete your social profile first", {
-                      action: {
-                        label: "Go to Profile",
-                        onClick: () => window.location.href = "/profile"
-                      }
-                    });
-                  } else {
-                    toast.success("Welcome bonus claimed!");
-                    queryClient.invalidateQueries({ queryKey: ["profile"] });
-                  }
-                }}
+                disabled={claimWelcomeBonus.isPending}
+                onClick={() => claimWelcomeBonus.mutate()}
               >
-                Claim Bonus
+                {claimWelcomeBonus.isPending ? "Claiming..." : "Claim Bonus"}
               </Button>
+
             </div>
           </CardContent>
           <div className="absolute top-0 right-0 p-2 sm:hidden">
