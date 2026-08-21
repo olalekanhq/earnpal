@@ -5,7 +5,7 @@ import { AccessDenied } from "@/components/admin/AccessDenied";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async ({ location }) => {
+  loader: async ({ location }) => {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -15,9 +15,6 @@ export const Route = createFileRoute("/_authenticated/admin")({
       });
     }
     
-    // We remove the hard redirect here to allow the component to render the warning state
-    // but we can still pre-fetch or check roles if we want.
-    // For now, we'll let the component handle the UI based on actual role check results.
     return { userId: user.id };
   },
 
@@ -26,6 +23,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminRouteComponent() {
   const { userId } = Route.useLoaderData();
+
   
   const { data: roles, isLoading } = useQuery({
     queryKey: ["admin-role-check", userId],
