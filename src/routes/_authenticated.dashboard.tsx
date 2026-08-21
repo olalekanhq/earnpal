@@ -277,7 +277,7 @@ function Dashboard() {
         </Card>
 
         {/* Daily Streak Card */}
-        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
+        <Card className="lg:w-64 border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
