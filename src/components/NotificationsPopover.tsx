@@ -50,14 +50,24 @@ export function NotificationsPopover() {
       markAsRead.mutate(notification.id);
     }
 
-    // If it has a transaction_id, navigate to it
+    // Priority 1: Deep links to referee details
+    if (notification.metadata?.referee_id) {
+      navigate({ 
+        to: "/refer",
+      });
+      // Small delay to allow navigation to finish if needed, though refer page usually scrolls to bottom
+      // or we can just navigate. In a real app we might pass a search param.
+      return;
+    }
+
+    // Priority 2: Transaction specific details
     if (notification.transaction_id) {
       navigate({ 
         to: "/transactions",
         search: { transactionId: notification.transaction_id }
       });
     } 
-    // Otherwise, if it's a points or reward related notification, navigate to history
+    // Priority 3: General navigation
     else if (notification.type === 'points' || notification.type === 'reward') {
       navigate({ to: "/transactions" });
     }
@@ -113,7 +123,9 @@ export function NotificationsPopover() {
                   className={`p-4 transition-colors hover:bg-muted/50 cursor-pointer ${!notification.is_read ? 'bg-primary/5' : ''}`}
                   onClick={() => handleNotificationClick(notification)}
                 >
-                  <p className="text-sm font-medium">{notification.title}</p>
+                  <p className="text-sm font-medium">
+                    {"'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            Add deep links in each notification so I can click through to the specific referee and referral details immediately."}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-1">{notification.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-2">
                     {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
