@@ -168,33 +168,6 @@ function Dashboard() {
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
       <WelcomeBonusModal />
       
-      {/* Referral Stats Summary Section */}
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Card className="border-none shadow-sm bg-card overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">My Referrals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black tracking-tight">{referralCount || 0}</div>
-            <p className="text-[11px] text-muted-foreground font-medium mt-1">Friends invited</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-none shadow-sm bg-card overflow-hidden md:col-span-1 lg:col-span-3">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Recent Referrals</CardTitle>
-          </CardHeader>
-          <CardContent>
-             <div className="flex flex-wrap gap-2">
-               {referralCount === 0 ? (
-                 <p className="text-xs text-muted-foreground italic py-2">No referrals yet. Share your link to start earning!</p>
-               ) : (
-                 <RecentReferrersList />
-               )}
-             </div>
-          </CardContent>
-        </Card>
-      </div>
       
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative">
@@ -434,15 +407,11 @@ function Dashboard() {
 
         {/* Quick Stats & Promo */}
         <div className="lg:col-span-4 space-y-6">
-          <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Quick Stats</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Earn More</h2>
+          <div className="grid grid-cols-1 gap-4">
             <Card className="border-none shadow-sm bg-card p-4 space-y-1 group">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Referrals</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Lifetime Referrals</p>
               <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
-            </Card>
-            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Rank</p>
-              <p className="text-2xl font-black group-hover:text-primary transition-colors">#{Math.floor(Math.random() * 100) + 1}</p>
             </Card>
           </div>
 
