@@ -403,7 +403,7 @@ export function UsersManager() {
                         <SelectItem value="task_manager" className="font-bold">Task Manager</SelectItem>
                       </SelectContent>
                     </Select>
-                    {roleMutation.isPending && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
+                    {roleMutation.isPending && <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />}
                   </div>
                 </div>
 
