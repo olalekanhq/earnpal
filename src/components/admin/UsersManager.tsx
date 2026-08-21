@@ -409,7 +409,7 @@ export function UsersManager() {
 
                 {isDetailsLoading ? (
                   <div className="flex justify-center py-20">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
+                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/40 border-t-transparent" />
                   </div>
                 ) : (
                   <div className="grid gap-6 md:grid-cols-3">
