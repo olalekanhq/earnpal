@@ -156,7 +156,6 @@ export function AdminPanel() {
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
-    { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
   ];
@@ -329,10 +328,6 @@ export function AdminPanel() {
         
         <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'redemptions' && <RedemptionsManager />}
-        </TabsContent>
-
-        <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'analytics' && <AnalyticsView />}
         </TabsContent>
 
         <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">

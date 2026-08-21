@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { AnalyticsView } from "./AnalyticsView";
 import { 
-  Table, 
+  Table,
   TableBody, 
   TableCell, 
   TableHead, 
@@ -150,7 +151,9 @@ export function ReferralsManager() {
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <AnalyticsView />
+      <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-1">
         <div>
           <h3 className="text-xl font-black uppercase tracking-tight">Referral Events</h3>
@@ -404,6 +407,7 @@ export function ReferralsManager() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
