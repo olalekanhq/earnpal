@@ -227,7 +227,7 @@ export function UsersManager() {
                     </Avatar>
                     <div>
                       <div className="font-bold flex items-center gap-2">
-                        {user.username ? (user.username.charAt(0).toUpperCase() + user.username.slice(1)) : "User"}
+                        {user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : "User"}
                         {user.isAdmin && <ShieldAlert className="h-3 w-3 text-primary" />}
                         {user.isModerator && !user.isAdmin && <Shield className="h-3 w-3 text-violet-500" />}
                         {user.isTaskManager && !user.isAdmin && !user.isModerator && <Shield className="h-3 w-3 text-emerald-500" />}
