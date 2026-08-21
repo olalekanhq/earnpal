@@ -794,6 +794,16 @@ export type Database = {
       }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       claim_welcome_bonus: { Args: { _user_id: string }; Returns: Json }
+      handle_admin_points_adjustment: {
+        Args: {
+          p_action_type: string
+          p_admin_id: string
+          p_amount: number
+          p_reason: string
+          p_target_user_id: string
+        }
+        Returns: undefined
+      }
       has_completed_social_profile: {
         Args: { _user_id: string }
         Returns: boolean
