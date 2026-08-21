@@ -21,7 +21,9 @@ import {
 } from "@/components/ui/card";
 import { 
   Tabs, 
-  TabsContent
+  TabsContent,
+  TabsList,
+  TabsTrigger
 } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -224,37 +226,60 @@ export function AdminPanel() {
       {/* Main Content Area */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="flex flex-col gap-4 border-b border-border/40 pb-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="w-full md:w-[240px] justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
-              >
-                <div className="flex items-center">
-                  <activeTabData.icon className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
-                  <span className="font-black uppercase text-[10px] tracking-widest">{activeTabData.label}</span>
-                </div>
-                <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[240px] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200">
+          {/* Mobile Dropdown */}
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
+                >
+                  <div className="flex items-center">
+                    <activeTabData.icon className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
+                    <span className="font-black uppercase text-[10px] tracking-widest">{activeTabData.label}</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200">
+                {tabs.map((tab) => (
+                  <DropdownMenuItem
+                    key={tab.value}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={cn(
+                      "rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
+                      activeTab === tab.value 
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                        : "hover:bg-primary/5 text-muted-foreground hover:text-primary"
+                    )}
+                  >
+                    <tab.icon className={cn("h-4 w-4 mr-2", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
+                    {tab.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Desktop Tabs */}
+          <div className="hidden md:block">
+            <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
               {tabs.map((tab) => (
-                <DropdownMenuItem
+                <TabsTrigger
                   key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
+                  value={tab.value}
                   className={cn(
-                    "rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
-                    activeTab === tab.value 
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
-                      : "hover:bg-primary/5 text-muted-foreground hover:text-primary"
+                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-transparent",
+                    "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
+                    "data-[state=inactive]:bg-card/50 data-[state=inactive]:backdrop-blur-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-primary/5 data-[state=inactive]:hover:text-primary data-[state=inactive]:border-border/40"
                   )}
                 >
-                  <tab.icon className={cn("h-4 w-4 mr-2", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
+                  <tab.icon className={cn("h-4 w-4", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
                   {tab.label}
-                </DropdownMenuItem>
+                </TabsTrigger>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </TabsList>
+          </div>
         </div>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
