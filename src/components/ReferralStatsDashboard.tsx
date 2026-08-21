@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, MousePointerClick, Gift, TrendingUp, Copy, Check, Twitter, MessageSquare, ExternalLink, ArrowRight, Shield, QrCode } from "lucide-react";
