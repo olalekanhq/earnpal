@@ -100,12 +100,18 @@ export function UsersManager() {
     queryKey: ["user-details", selectedUser?.id],
     queryFn: async () => {
       if (!selectedUser) return null;
-      const [txs, refs, reds] = await Promise.all([
+      const [txs, refs, reds, stats] = await Promise.all([
         supabase.from("points_transactions").select("*").eq("user_id", selectedUser.id).order("created_at", { ascending: false }),
-        supabase.from("referrals").select("*, profiles!referrals_referred_id_fkey(username, full_name, email)").eq("referrer_id", selectedUser.id).order("created_at", { ascending: false }),
-        supabase.from("redemptions").select("*, rewards(title, points_cost)").eq("user_id", selectedUser.id).order("created_at", { ascending: false })
+        supabase.from("referrals").select("*, profiles!referrals_referee_id_fkey(username, full_name, email)").eq("referrer_id", selectedUser.id).order("created_at", { ascending: false }),
+        supabase.from("redemptions").select("*, rewards(title, points_cost)").eq("user_id", selectedUser.id).order("created_at", { ascending: false }),
+        supabase.from("referral_stats_summary").select("total_referrals").eq("user_id", selectedUser.id).maybeSingle()
       ]);
-      return { transactions: txs.data || [], referrals: refs.data || [], redemptions: reds.data || [] };
+      return { 
+        transactions: txs.data || [], 
+        referrals: refs.data || [], 
+        redemptions: reds.data || [],
+        referralCount: stats.data?.total_referrals || 0
+      };
     },
     enabled: !!selectedUser && isDetailsOpen
   });
@@ -195,7 +201,7 @@ export function UsersManager() {
                         <UsersIcon className="h-5 w-5 text-primary" />
                       </div>
                       <span className="text-xs font-black uppercase text-muted-foreground mb-1">Referrals</span>
-                      <span className="text-2xl font-black">{userDetails?.referrals.length || 0}</span>
+                      <span className="text-2xl font-black">{userDetails?.referralCount || 0}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -223,7 +229,7 @@ export function UsersManager() {
                   <div className="flex flex-col items-center gap-1">
                     <UsersIcon className="h-5 w-5 text-primary" />
                     <span className="text-[10px] font-black uppercase text-muted-foreground">Refs</span>
-                    <span className="text-sm font-black">{userDetails?.referrals.length || 0}</span>
+                    <span className="text-sm font-black">{userDetails?.referralCount || 0}</span>
                   </div>
                   <div className="w-px h-8 bg-border/50" />
                   <div className="flex flex-col items-center gap-1">

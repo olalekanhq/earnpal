@@ -18,16 +18,19 @@ export function AnalyticsView() {
     queryKey: ["funnelAnalytics"],
     queryFn: async () => {
       // Use aggregate counts directly instead of fetching all records
-      const [referralRes, signupRes, bonusRes] = await Promise.all([
+      const [referralRes, signupRes, bonusRes, globalStatsRes] = await Promise.all([
         supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "referral_code_validated"),
         supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "signup_complete"),
         supabase.from("analytics_events" as any).select("*", { count: "exact", head: true }).eq("event_name", "welcome_bonus_claimed"),
+        supabase.from("global_referral_stats").select("*").maybeSingle(),
       ]);
+
+      const globalStats = globalStatsRes.data || { total_referrals: 0, completed_referrals: 0 };
 
       const funnel = [
         { 
           name: "Referral Validated", 
-          count: referralRes.count || 0,
+          count: globalStats.total_referrals || referralRes.count || 0,
           icon: TrendingUp,
           color: "#8b5cf6" 
         },
@@ -39,7 +42,7 @@ export function AnalyticsView() {
         },
         { 
           name: "Welcome Bonus Claimed", 
-          count: bonusRes.count || 0,
+          count: globalStats.completed_referrals || bonusRes.count || 0,
           icon: Gift,
           color: "#f59e0b" 
         }

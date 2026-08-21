@@ -648,6 +648,14 @@ export type Database = {
       }
     }
     Views: {
+      global_referral_stats: {
+        Row: {
+          completed_referrals: number | null
+          total_referrals: number | null
+          total_referrers: number | null
+        }
+        Relationships: []
+      }
       leaderboard: {
         Row: {
           avatar_url: string | null
@@ -668,6 +676,15 @@ export type Database = {
           referrer_id: string | null
           status: string | null
           username: string | null
+        }
+        Relationships: []
+      }
+      referral_stats_summary: {
+        Row: {
+          completed_referrals: number | null
+          points_earned: number | null
+          total_referrals: number | null
+          user_id: string | null
         }
         Relationships: []
       }
