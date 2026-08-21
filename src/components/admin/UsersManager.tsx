@@ -363,6 +363,8 @@ export function UsersManager() {
                       Confirm Adjustment
                     </Button>
                   </div>
+                </div>
+
 
 
               {/* Activity Lists */}
