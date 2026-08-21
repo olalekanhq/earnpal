@@ -1,6 +1,29 @@
 "use client";
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  User,
+  Loader2,
+  Mail,
+  ShieldAlert,
+  Eye,
+  TrendingUp,
+  Gift,
+  Users as UsersIcon,
+  Calendar,
+  Phone,
+  Hash,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  Shield
+} from "lucide-react";
+import { format } from "date-fns";
 import {
   Dialog,
   DialogContent,
