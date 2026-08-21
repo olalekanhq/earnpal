@@ -190,8 +190,6 @@ export function ReferralStatsDashboard() {
                         includeMargin={true}
                         imageSettings={{
                           src: "/logo.png",
-                          x: undefined,
-                          y: undefined,
                           height: 40,
                           width: 40,
                           excavate: true,
