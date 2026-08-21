@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const adjustUserPoints = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     userId: z.string().uuid(),
     amount: z.number().int(),
@@ -11,24 +13,17 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // In TanStack Start v1, we can get the request from the global fetch context
-    // if the framework exposes it, but since we are having trouble with getWebRequest,
-    // let's try to access it via context or use a different pattern.
+    // requireSupabaseAuth middleware provides userId and supabase (authenticated client) in context
+    const adminId = context.userId;
     
-    // If we can't get the token, we can't verify the admin role in the server function.
-    // However, the database function 'handle_admin_points_adjustment' ALREADY verifies the admin role
-    // using the provided p_admin_id. We just need a way to securely identify the current user.
-    
-    // Attempt to get user from middleware injected context if available
-    const userId = (context as any)?.userId;
-    
-    if (!userId) {
-      throw new Error("Unauthorized: No user session found in context");
+    if (!adminId) {
+      throw new Error("Unauthorized: No user session found");
     }
 
-    // Use the secure RPC for a safe, atomic adjustment
+    // Use the secure RPC for a safe, atomic adjustment.
+    // The RPC verifies that adminId actually has the 'admin' role.
     const { error: rpcError } = await supabaseAdmin.rpc("handle_admin_points_adjustment" as any, {
-      p_admin_id: userId,
+      p_admin_id: adminId,
       p_target_user_id: data.userId,
       p_amount: data.amount,
       p_action_type: data.actionType,
