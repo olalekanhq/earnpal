@@ -176,7 +176,7 @@ export function UsersManager() {
             <div className="space-y-8 py-4">
               {/* Account Overview Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="bg-accent/5 border-none shadow-none">
+                <Card className="bg-accent/5 border-none shadow-none md:block hidden">
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
@@ -188,7 +188,7 @@ export function UsersManager() {
                   </CardContent>
                 </Card>
                 
-                <Card className="bg-accent/5 border-none shadow-none">
+                <Card className="bg-accent/5 border-none shadow-none md:block hidden">
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
@@ -200,7 +200,7 @@ export function UsersManager() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-accent/5 border-none shadow-none">
+                <Card className="bg-accent/5 border-none shadow-none md:block hidden">
                   <CardContent className="pt-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
@@ -211,6 +211,27 @@ export function UsersManager() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Mobile version: Single row for icons */}
+                <div className="md:hidden flex items-center justify-around bg-accent/5 p-4 rounded-2xl border border-border/50">
+                  <div className="flex flex-col items-center gap-1">
+                    <Gift className="h-5 w-5 text-primary" />
+                    <span className="text-[10px] font-black uppercase text-muted-foreground">Points</span>
+                    <span className="text-sm font-black">{selectedUser.points_balance || 0}</span>
+                  </div>
+                  <div className="w-px h-8 bg-border/50" />
+                  <div className="flex flex-col items-center gap-1">
+                    <UsersIcon className="h-5 w-5 text-primary" />
+                    <span className="text-[10px] font-black uppercase text-muted-foreground">Refs</span>
+                    <span className="text-sm font-black">{userDetails?.referrals.length || 0}</span>
+                  </div>
+                  <div className="w-px h-8 bg-border/50" />
+                  <div className="flex flex-col items-center gap-1">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    <span className="text-[10px] font-black uppercase text-muted-foreground">Joined</span>
+                    <span className="text-xs font-bold">{selectedUser.created_at ? format(new Date(selectedUser.created_at), "MMM d, yy") : "N/A"}</span>
+                  </div>
+                </div>
               </div>
 
               {/* Personal Info & Role */}
