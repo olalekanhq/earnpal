@@ -1,6 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminPanel } from "@/components/AdminPanel";
+import { AccessDenied } from "@/components/admin/AccessDenied";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: async ({ location }) => {
@@ -12,25 +14,49 @@ export const Route = createFileRoute("/_authenticated/admin")({
         search: { redirect: location.pathname },
       });
     }
-
-    // Double check with has_role RPC
-    const { data: isAdmin, error: adminError } = await supabase.rpc("has_role", {
-      _user_id: user.id,
-      _role: 'admin'
-    });
-
-    const { data: isModerator, error: modError } = await supabase.rpc("has_role", {
-      _user_id: user.id,
-      _role: 'moderator'
-    });
-
-    if (adminError || modError || (!isAdmin && !isModerator)) {
-      console.error("Access denied to admin panel for user:", user.id);
-      throw redirect({ to: "/" });
-    }
+    
+    // We remove the hard redirect here to allow the component to render the warning state
+    // but we can still pre-fetch or check roles if we want.
+    // For now, we'll let the component handle the UI based on actual role check results.
+    return { userId: user.id };
   },
 
-  component: () => (
+  component: AdminRouteComponent,
+});
+
+function AdminRouteComponent() {
+  const { userId } = Route.useLoaderData();
+  
+  const { data: roles, isLoading } = useQuery({
+    queryKey: ["admin-role-check", userId],
+    queryFn: async () => {
+      const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: userId, _role: 'admin' }),
+        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' })
+      ]);
+      return { isAdmin, isModerator };
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-accent/5">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  const isAuthorized = roles?.isAdmin || roles?.isModerator;
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-accent/5">
+        <AccessDenied />
+      </div>
+    );
+  }
+
+  return (
     <div className="min-h-screen bg-accent/5 pb-12">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         <div>
@@ -40,5 +66,6 @@ export const Route = createFileRoute("/_authenticated/admin")({
         <AdminPanel />
       </div>
     </div>
-  ),
-});
+  );
+}
+
