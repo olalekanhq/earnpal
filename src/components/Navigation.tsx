@@ -99,16 +99,24 @@ export function Navigation() {
     enabled: !isAuthPage && !isLandingPage,
   });
 
-  const { data: isAdmin } = useQuery({
-    queryKey: ["isAdmin"],
+  const { data: authInfo } = useQuery({
+    queryKey: ["authInfo"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
-      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' });
-      return data;
+      if (!user) return { isAdmin: false, isModerator: false };
+      
+      const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'moderator' })
+      ]);
+      
+      return { isAdmin, isModerator };
     },
     enabled: !isAuthPage && !isLandingPage,
   });
+
+  const isAdmin = authInfo?.isAdmin || false;
+  const isModerator = authInfo?.isModerator || false;
 
   // Custom transparent navbar for landing and auth pages
   if (isLandingPage || isAuthPage) {
@@ -253,6 +261,7 @@ export function Navigation() {
         { name: "Profile", href: "/profile", icon: User },
         { name: "Settings", href: "/settings", icon: Settings },
         ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", icon: Shield }] : []),
+        ...(isModerator && !isAdmin ? [{ name: "Moderator Panel", href: "/moderator", icon: Shield }] : []),
       ]
     }
   ];

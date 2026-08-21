@@ -61,15 +61,6 @@ function Dashboard() {
     },
   });
 
-  const { data: userRank } = useQuery({
-    queryKey: ["userRank"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-      const { data } = await supabase.from("user_ranks").select("*").eq("user_id", user.id).single();
-      return data;
-    },
-  });
 
   const { data: featuredTasks } = useQuery({
     queryKey: ["featured-tasks"],
@@ -213,7 +204,7 @@ function Dashboard() {
         </p>
       </header>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {/* Main Balance Card - Inspired by Reference */}
         <Card className="lg:col-span-2 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
           <CardHeader className="pb-2">
@@ -278,39 +269,6 @@ function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Rank Section */}
-        <Card className="border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Current Rank</CardTitle>
-              <div className="bg-primary/5 p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
-                <Award className="h-4 w-4" />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-2 flex-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="text-3xl font-black tracking-tight flex items-center gap-2">
-                {userRank?.rank_name || 'Novice'}
-                <Badge variant="outline" className="text-[10px] font-black border-primary/20 text-primary uppercase">
-                  LVL {userRank?.rank_level || 1}
-                </Badge>
-              </div>
-              <p className="text-[11px] text-muted-foreground font-medium">
-                {userRank?.rank_level === 5 ? "Maximum rank achieved!" : `Level up with ${50 - (userRank?.referral_count || 0)} more referrals`}
-              </p>
-            </div>
-            <div className="mt-6">
-              <Button 
-                variant="outline"
-                className="w-full rounded-xl font-bold h-12 transition-all border-primary/20 text-primary hover:bg-primary/5"
-                asChild
-              >
-                <Link to="/refer">Refer Friends</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {featuredTasks && featuredTasks.length > 0 && (
