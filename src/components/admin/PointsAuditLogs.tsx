@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
 
 export function PointsAuditLogs() {
   const queryClient = useQueryClient();
-  const queryClient = useQueryClient();
   const { data: logs, isLoading } = useQuery({
     queryKey: ["admin-points-audit-logs"],
 

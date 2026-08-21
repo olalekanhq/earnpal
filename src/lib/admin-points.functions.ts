@@ -8,15 +8,16 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
     reason: z.string().min(1),
     actionType: z.enum(["credit", "debit"])
   }).parse(data))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { getWebRequest } = await import("@tanstack/react-start/server");
     
-    if (!context?.request) {
+    const request = getWebRequest();
+    if (!request) {
       throw new Error("Request context missing");
     }
 
-    // Check if the caller is an admin
-    const authHeader = context.request.headers.get("Authorization");
+    const authHeader = request.headers.get("Authorization");
     const token = authHeader?.split(" ")[1];
     
     if (!token) {
@@ -29,37 +30,19 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
       throw new Error("Unauthorized: Invalid session");
     }
 
-    // Verify admin role
-    const { data: roleData } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .single();
-
-    if (!roleData) {
-      throw new Error("Forbidden: Admin access required");
-    }
-
-    const adjustmentAmount = data.actionType === "credit" ? Math.abs(data.amount) : -Math.abs(data.amount);
-
-    // 1. Update user balance using the RPC
-    const { error: updateError } = await supabaseAdmin.rpc("handle_points_transaction" as any, {
-      p_user_id: data.userId,
-      p_amount: adjustmentAmount,
-      p_description: `Admin adjustment: ${data.reason}`,
-      p_transaction_type: "adjustment"
+    // Use the RPC for a safe, atomic adjustment
+    const { error: rpcError } = await supabaseAdmin.rpc("handle_admin_points_adjustment" as any, {
+      p_admin_id: user.id,
+      p_target_user_id: data.userId,
+      p_amount: data.amount,
+      p_action_type: data.actionType,
+      p_reason: data.reason
     });
 
-    if (updateError) throw updateError;
-
-    // 2. Add to points audit log
-    await supabaseAdmin.from("points_audit_logs").insert({
-      user_id: data.userId,
-      amount: adjustmentAmount,
-      reason: `ADMIN_${data.actionType.toUpperCase()}: ${data.reason}`,
-      trigger_name: "admin_manual_action"
-    } as any);
+    if (rpcError) {
+      console.error("Admin adjustment RPC error:", rpcError);
+      throw new Error(rpcError.message || "Failed to adjust points");
+    }
 
     return { success: true };
   });
