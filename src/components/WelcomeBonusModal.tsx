@@ -222,7 +222,7 @@ export function WelcomeBonusModal() {
               Welcome Bonus!
             </DialogTitle>
             <DialogDescription className="text-xs md:text-base font-medium text-muted-foreground pt-0.5 md:pt-2">
-              Thanks for joining Earn Pal via referral! You've unlocked a special welcome gift.
+              Thanks for joining Earn Pal via {referrerName ? <span className="text-primary font-bold">{referrerName}'s</span> : "a"} referral! You've unlocked a special welcome gift.
             </DialogDescription>
           </DialogHeader>
 
