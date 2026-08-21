@@ -400,7 +400,12 @@ function AuthPage() {
                 </div>
               </div>
               <span className="sr-only">
-                {/* Visual Text Edit Placeholder */}
+                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Adjust the spacing between the header and the auth content specifically for very small screens so elements never clip or shift into the header area.
+
+Verify the auth page layout on a real iPhone screen and confirm there are no issues with the display and it shows and arranged well on mobile screen, and if it doesn't fix, you can try another style for the auth
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
