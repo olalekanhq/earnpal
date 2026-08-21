@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            yes, it's asking for otp but it was the link that was sent to mail, not otp, can you fix that
+            Fix my auth backend so email always sends a 6-digit OTP code instead of a confirmation link.
           </span>
 
 
@@ -418,7 +418,7 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            yes, it's asking for otp but it was the link that was sent to mail, not otp, can you fix that
+                                            Fix my auth backend so email always sends a 6-digit OTP code instead of a confirmation link.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
