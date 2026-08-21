@@ -180,10 +180,7 @@ function Dashboard() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
                 <p className="text-xs text-amber-700 font-medium truncate sm:whitespace-normal">
-                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            what is all the text showing inside bonus pending banner and the earn points page
+                  Complete your social handles in profile to claim your 50 points bonus!
                 </p>
               </div>
             </div>

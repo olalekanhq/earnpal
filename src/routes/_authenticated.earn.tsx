@@ -72,10 +72,7 @@ function EarnPage() {
             Earn Points
           </h1>
           <p className="text-muted-foreground font-medium">
-            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            what is all the text showing inside bonus pending banner and the earn points page
+            Complete simple tasks to earn points and level up.
           </p>
         </div>
       </header>

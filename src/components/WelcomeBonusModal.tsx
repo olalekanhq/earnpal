@@ -300,12 +300,7 @@ export function WelcomeBonusModal() {
           </DialogFooter>
           
           <p className="text-[10px] font-bold text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 italic">
-            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            Add a prominent call-to-action button that takes me directly to complete my social profile whenever I attempt to view tasks or open the welcome bonus.
-
-Display my social profile completion percentage clearly on the dashboard and in the bonus banner, with an explanatory tooltip of what’s missing.
+            Note: You cannot claim this bonus until you complete your social profile handles.
           </p>
           
           <button 
