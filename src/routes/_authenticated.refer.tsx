@@ -5,6 +5,8 @@ import { Users, Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { ReferralStatsDashboard } from "@/components/ReferralStatsDashboard";
 
 export const Route = createFileRoute("/_authenticated/refer")({
