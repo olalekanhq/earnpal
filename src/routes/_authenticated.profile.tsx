@@ -15,13 +15,13 @@ import { ImageCropper } from "@/components/ImageCropper";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
-    title: "My Profile | Earn Pal",
+    title: "My Identity & Account Details | Earn Pal",
     meta: [
-      { name: "description", content: "Manage your Earn Pal account, identity, and security settings." },
+      { name: "description", content: "View and manage your Earn Pal public identity, social handles, and personal reward milestones." },
       { property: "og:title", content: "My Profile | Earn Pal" },
-      { property: "og:description", content: "View your badges, points balance, and account history." },
+      { property: "og:description", content: "Check your earning stats, social connections, and profile details." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://earnpal.lovable.app/api/public/og?title=My Profile&description=Manage your account and identity.` },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
