@@ -328,7 +328,7 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            please check all pages, modals, pop ups and everything on this site and verify they are all working properly, easy access and responsive on mobile and also touch sensible
+            desktop page is not scrolling
           </span>
 
 
