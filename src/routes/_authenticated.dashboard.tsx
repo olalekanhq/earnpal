@@ -104,6 +104,36 @@ function Dashboard() {
     }
   });
 
+  const claimWelcomeBonus = useMutation({
+    mutationFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+      const { data, error } = await supabase.rpc("claim_welcome_bonus", { _user_id: user.id });
+      if (error) throw new Error(error.message);
+      const result = data as any;
+      if (!result?.success) {
+        // Already claimed => treat as done so the banner disappears
+        if (typeof result?.message === "string" && result.message.toLowerCase().includes("already claimed")) {
+          return { alreadyClaimed: true } as any;
+        }
+        throw new Error(result?.message || "Please complete your social profile first");
+      }
+      return result;
+    },
+    onSuccess: async (result: any) => {
+      if (!result?.alreadyClaimed) toast.success("Welcome bonus claimed!");
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to claim bonus", {
+        action: { label: "Go to Profile", onClick: () => window.location.href = "/profile" },
+      });
+    },
+  });
+
+
   const { data: recentTransactions } = useQuery({
     queryKey: ["recentTransactions"],
     queryFn: async () => {
