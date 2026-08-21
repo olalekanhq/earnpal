@@ -41,8 +41,10 @@ import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
 import { PlatformSettings } from "./admin/PlatformSettings";
 import { FraudManager } from "./admin/FraudManager";
+import { AuditLogs } from "./admin/AuditLogs";
+import { PointsAuditLogs } from "./admin/PointsAuditLogs";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings } from "lucide-react";
+import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings, ClipboardList } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 import { useState, useEffect } from "react";
 
