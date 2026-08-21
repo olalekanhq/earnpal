@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 export function PointsAuditLogs() {
+  const queryClient = useQueryClient();
   const { data: logs, isLoading } = useQuery({
     queryKey: ["admin-points-audit-logs"],
     queryFn: async () => {
@@ -32,6 +33,28 @@ export function PointsAuditLogs() {
       return data;
     }
   });
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("points-audit-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "points_audit_logs",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["admin-points-audit-logs"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
 
   if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 

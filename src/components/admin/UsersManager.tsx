@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -20,7 +20,9 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
-  Shield
+  Shield,
+  Plus,
+  Minus
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -41,6 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { assignUserRole } from "@/lib/admin.functions";
+import { adjustUserPoints } from "@/lib/admin-points.functions";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 
@@ -50,9 +53,41 @@ export function UsersManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pointAction, setPointAction] = useState<{ amount: string; reason: string; type: 'credit' | 'debit' }>({ amount: "", reason: "", type: "credit" });
+  const [isAdjusting, setIsAdjusting] = useState(false);
   const itemsPerPage = 10;
   const queryClient = useQueryClient();
   const assignRoleFn = useServerFn(assignUserRole);
+  const adjustPointsFn = useServerFn(adjustUserPoints);
+
+  const handleAdjustPoints = async () => {
+    if (!selectedUser || !pointAction.amount || !pointAction.reason) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setIsAdjusting(true);
+    try {
+      await adjustPointsFn({
+        data: {
+          userId: selectedUser.id,
+          amount: parseInt(pointAction.amount),
+          reason: pointAction.reason,
+          actionType: pointAction.type
+        }
+      });
+      toast.success(`Successfully ${pointAction.type}ed points`);
+      setPointAction({ amount: "", reason: "", type: "credit" });
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["user-details", selectedUser.id] });
+      queryClient.invalidateQueries({ queryKey: ["admin-points-audit-logs"] });
+    } catch (err: any) {
+      toast.error(err.message || "Failed to adjust points");
+    } finally {
+      setIsAdjusting(false);
+    }
+  };
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users", searchQuery, roleFilter, currentPage],
