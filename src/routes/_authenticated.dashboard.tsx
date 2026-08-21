@@ -226,7 +226,7 @@ function Dashboard() {
 
 
       {/* Profile Completion Warning Banner */}
-      {(!profile?.has_claimed_welcome_bonus) && (
+      {(!profile?.has_claimed_welcome_bonus && !claimWelcomeBonus.isSuccess) && (
         <Card className={cn(
           "border-none overflow-hidden relative transition-all duration-300",
           !profile?.twitter_handle || !profile?.telegram_handle 
