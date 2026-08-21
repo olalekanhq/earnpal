@@ -328,8 +328,9 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            and also design a modern email template that the style of the site and use it when sending email. 
-why is referral bonus showing negative on the transactions history, make it as pending if the person the refer has not compete profile yet and also on new user too, it should show as pending until they complete profile to show as positive on both user's dashboard
+            Implement a trigger or scheduled job so when a referred user completes their profile, their pending referral bonus automatically flips to positive and updates both dashboards.
+
+Add automated tests to verify that OTP emails use 6-digit codes and that referral transactions stay pending until profile completion.
           </span>
 
 
