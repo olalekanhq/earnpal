@@ -20,6 +20,7 @@ import {
 export function ReferralStatsDashboard() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const queryClient = useQueryClient();
   
   const { data: profile } = useQuery({
     queryKey: ["profile"],
