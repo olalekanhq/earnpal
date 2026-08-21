@@ -303,11 +303,9 @@ export function WelcomeBonusModal() {
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Display my social profile completion status on the dashboard and reflect it in the bonus banner claim availability.
+                                            Add a prominent call-to-action button that takes me directly to complete my social profile whenever I attempt to view tasks or open the welcome bonus.
 
-Implement server-side checks so users cannot perform tasks or claim bonuses unless their social profile is fully complete.
-
-Add a clear call-to-action that prompts me to complete my social profile whenever I try to access tasks or claim the welcome bonus.
+Display my social profile completion percentage clearly on the dashboard and in the bonus banner, with an explanatory tooltip of what’s missing.
           </p>
           
           <button 
