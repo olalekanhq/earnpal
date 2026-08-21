@@ -321,7 +321,7 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-[100dvh] md:h-screen items-center justify-center bg-accent/5 p-4 overflow-hidden">
+      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 py-12">
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
@@ -381,7 +381,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] md:h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative overflow-hidden">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
@@ -390,8 +390,8 @@ function AuthPage() {
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10">
         {/* Auth Card Side */}
-        <div className="flex justify-center order-2 lg:order-1">
-          <Card className="w-full max-w-md shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col max-h-[85dvh]">
+        <div className="flex justify-center order-2 lg:order-1 w-full max-w-md">
+          <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col">
             <CardHeader className="space-y-1 text-center pb-4 p-0 flex-shrink-0">
               <div className="flex justify-center mb-4 md:mb-6 lg:hidden">
                 <div className="flex items-center gap-2 font-black text-2xl md:text-3xl text-primary tracking-tighter">
@@ -414,7 +414,7 @@ function AuthPage() {
                     : "Join the Earn Pal community and start earning 75 bonus points today"}
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 overflow-hidden flex-grow p-0">
+            <CardContent className="grid gap-4 flex-grow p-0">
           {!showReset && (
             <>
               <Button variant="outline" onClick={handleGoogleLogin} className="w-full font-bold h-12 rounded-xl border-border/50 bg-accent/5 hover:bg-accent/10 transition-all">
@@ -564,7 +564,7 @@ function AuthPage() {
                   </div>
                 </form>
               </TabsContent>
-              <TabsContent value="signup" className="flex-grow overflow-y-auto px-1 pr-2 custom-scrollbar">
+              <TabsContent value="signup" className="flex-grow px-1 pr-2 custom-scrollbar">
                 <form onSubmit={handleEmailSignUp} className="space-y-3 pt-4 pb-2">
                   <div className="space-y-1">
                     <Label htmlFor="full-name">Full Name</Label>
