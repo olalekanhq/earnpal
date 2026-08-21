@@ -185,7 +185,10 @@ function Dashboard() {
                   </Badge>
                 </p>
                 <p className="text-sm text-amber-800/80 font-medium">
-                  Bonus will be available after you complete your social profile verification.
+                  '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            Implement a safety rule so pasted instruction text never gets added to UI copy, and future edits ignore prompt-like lines.
                 </p>
               </div>
             </div>
