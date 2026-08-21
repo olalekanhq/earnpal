@@ -145,7 +145,37 @@ function EarnPage() {
                     const { data: { user } } = await supabase.auth.getUser();
                     if (!user) return;
 
+                    // Fetch profile to check social completion
+                    const { data: profile } = await supabase
+                      .from("profiles")
+                      .select("twitter_handle, telegram_handle, instagram_handle, facebook_handle")
+                      .eq("id", user.id)
+                      .single();
+
+                    // Fetch required socials from app_settings
+                    const { data: settings } = await (supabase.from("app_settings" as any) as any)
+                      .select("value")
+                      .eq("key", "welcome_bonus_required_socials")
+                      .single();
+                    
+                    const required = (settings?.value as string[]) || [];
+                    const missing = required.filter(social => {
+                      const handleKey = `${social}_handle`;
+                      return !(profile as any)?.[handleKey];
+                    });
+
+                    if (missing.length > 0) {
+                      toast.error(`Please complete your ${missing.join(", ")} handles in your profile before performing tasks.`, {
+                        action: {
+                          label: "Go to Profile",
+                          onClick: () => window.location.href = "/profile"
+                        }
+                      });
+                      return;
+                    }
+
                     // Special handling for video tasks
+
                     if (task.category === 'Videos' && task.video_ad_count > 0) {
                       if (task.vast_tag_url) {
                         const event = new CustomEvent('play-interstitial-ad', {

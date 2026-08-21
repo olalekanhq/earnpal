@@ -173,24 +173,56 @@ function Dashboard() {
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative">
           <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-amber-100 p-2 rounded-xl text-amber-600">
+            <div className="flex items-center gap-3 w-full">
+              <div className="bg-amber-100 p-2 rounded-xl text-amber-600 shrink-0">
                 <Clock className="h-5 w-5" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-amber-900 leading-tight">Bonus Pending</p>
-                <p className="text-xs text-amber-700 font-medium">Complete your social handles in profile to claim your 50 points bonus!</p>
+                <p className="text-xs text-amber-700 font-medium truncate sm:whitespace-normal">
+                  Complete your social handles in profile to claim your 50 points bonus!
+                </p>
               </div>
             </div>
-            <Button 
-              size="sm" 
-              className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap"
-              asChild
-            >
-              <Link to="/profile">Complete Profile</Link>
-            </Button>
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="flex-1 md:flex-none rounded-xl border-amber-200 text-amber-700 font-bold whitespace-nowrap bg-white/50 hover:bg-white"
+                asChild
+              >
+                <Link to="/profile">Complete Profile</Link>
+              </Button>
+              <Button 
+                size="sm" 
+                className="flex-1 md:flex-none rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold whitespace-nowrap"
+                onClick={async () => {
+                  const { data: { user } } = await supabase.auth.getUser();
+                  if (!user) return;
+                  
+                  const { data, error } = await supabase.rpc("claim_welcome_bonus", {
+                    _user_id: user.id,
+                  });
+                  
+                  const result = data as any;
+                  if (error || !result.success) {
+                    toast.error(result?.message || error?.message || "Please complete your social profile first", {
+                      action: {
+                        label: "Go to Profile",
+                        onClick: () => window.location.href = "/profile"
+                      }
+                    });
+                  } else {
+                    toast.success("Welcome bonus claimed!");
+                    queryClient.invalidateQueries({ queryKey: ["profile"] });
+                  }
+                }}
+              >
+                Claim Bonus
+              </Button>
+            </div>
           </CardContent>
-          <div className="absolute top-0 right-0 p-1">
+          <div className="absolute top-0 right-0 p-1 hidden sm:block">
             <Badge variant="outline" className="text-[8px] border-amber-300 text-amber-700 bg-amber-100/50 uppercase font-black">Referee Action Required</Badge>
           </div>
         </Card>
