@@ -72,7 +72,10 @@ function EarnPage() {
             Earn Points
           </h1>
           <p className="text-muted-foreground font-medium">
-            Complete simple tasks to earn points and level up.
+            '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                                    
+                                                        
+                                                        Add a clear social profile checklist that shows exactly which fields are missing and how to complete them.
           </p>
         </div>
       </header>
