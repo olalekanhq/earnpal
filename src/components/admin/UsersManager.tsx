@@ -103,6 +103,7 @@ export function UsersManager() {
     }
   });
 
+
   const handleRoleChange = async (uid: string, r: string) => {
     try {
       await assignRoleFn({ data: { userId: uid, role: r as any } });
@@ -113,7 +114,6 @@ export function UsersManager() {
     }
   };
   
-  // Test comment to shift lines
 
   const users = data?.users || [];
   const totalCount = data?.totalCount || 0;
