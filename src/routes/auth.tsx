@@ -321,7 +321,7 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-accent/5 p-4 py-12 overflow-y-auto">
         <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary my-auto">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
@@ -381,7 +381,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4 pt-24 md:pt-4 relative overflow-y-auto">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
