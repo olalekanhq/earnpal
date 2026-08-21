@@ -118,7 +118,7 @@ export function Navigation() {
 
   const isAdmin = authInfo?.isAdmin || false;
   const isModerator = authInfo?.isModerator || false;
-  const isTasker = authInfo?.isTasker || false;
+  const isTasker = (authInfo?.isTasker as boolean) || false;
 
   // Custom transparent navbar for landing and auth pages
   if (isLandingPage || isAuthPage) {

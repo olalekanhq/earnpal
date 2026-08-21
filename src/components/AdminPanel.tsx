@@ -50,7 +50,23 @@ import { useAuth } from "@/hooks/use-auth";
 import { Lock } from "lucide-react";
 
 export function AdminPanel() {
+  
   const { role, isAdmin } = useAuth();
+  
+  const { data: permissions } = useQuery({
+    queryKey: ["rolePermissions", role],
+    queryFn: async () => {
+      if (role === 'admin') return null;
+      const { data } = await supabase
+        .from("role_permissions")
+        .select("tab_name")
+        .eq("role", role)
+        .eq("is_enabled", true);
+      return data?.map(p => p.tab_name) || [];
+    },
+    enabled: !!role,
+  });
+
   const { data: permissions } = useQuery({
     queryKey: ["rolePermissions", role],
     queryFn: async () => {
@@ -166,7 +182,15 @@ export function AdminPanel() {
     return permissions.includes(tab.value);
   });
 
-  const activeTabData = filteredTabs.find(t => t.value === activeTab) || filteredTabs[0];
+  
+  const filteredTabs = tabs.filter(tab => {
+    if (isAdmin) return true;
+    if (!permissions) return false;
+    return permissions.includes(tab.value);
+  });
+
+  const activeTabData = filteredTabs.find(t => t.value === activeTab) || filteredTabs[0] || tabs[0];
+
 
 
   const statCards = [
@@ -257,8 +281,8 @@ export function AdminPanel() {
                   className="w-full justify-between border-border/40 bg-card/50 backdrop-blur-sm rounded-2xl h-12 px-4 group hover:border-primary/20 transition-all duration-300"
                 >
                   <div className="flex items-center">
-                    <activeTabData.icon className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
-                    <span className="font-black uppercase text-[10px] tracking-widest">{activeTabData.label}</span>
+                    <(activeTabData?.icon || Users) className={cn("h-4 w-4 mr-2", activeTabData.color || "text-primary")} />
+                    <span className="font-black uppercase text-[10px] tracking-widest">{(activeTabData?.label || "Panel")}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </Button>

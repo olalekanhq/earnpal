@@ -27,8 +27,8 @@ function ModeratorRouteComponent() {
     queryKey: ["moderator-role-check", userId],
     queryFn: async () => {
       const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
-        supabase.rpc("has_role", { _user_id: userId, _role: 'admin' }),
-        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' })
+        supabase.rpc("has_role", { _user_id: userId, _role: 'admin' as any }),
+        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' as any })
       ]);
       return { isAdmin, isModerator };
     }
