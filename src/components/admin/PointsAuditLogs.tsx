@@ -252,7 +252,7 @@ export function PointsAuditLogs() {
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
               className="h-8 px-2 min-w-[80px] font-black uppercase text-[10px] tracking-widest"
-            ) : (
+            >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Previous
             </Button>
