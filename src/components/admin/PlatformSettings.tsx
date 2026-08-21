@@ -83,7 +83,7 @@ function PermissionManager() {
                         toggleMutation.mutate({ id: perm.id, is_enabled: checked });
                       } else {
                         // Create if doesn't exist
-                        supabase.from("role_permissions").insert({ role: role as any, tab_name: tab, is_enabled: checked })
+                        supabase.from("role_permissions").insert({ role: role as "admin" | "moderator" | "task_manager" | "tasker" | "user", tab_name: tab, is_enabled: checked })
                           .then(() => queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] }));
                       }
                     }}
