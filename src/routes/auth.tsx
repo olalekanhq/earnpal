@@ -323,7 +323,8 @@ function AuthPage() {
     return (
       <div className="relative min-h-screen w-full flex flex-col overflow-x-hidden">
         <div className="fixed inset-0 z-0 bg-accent/5 pointer-events-none" />
-        <div className="relative z-10 flex flex-1 w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border">
+        <div className="relative z-10 flex flex-1 w-full items-center justify-center p-4 pt-24 md:pt-12 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-none box-border max-w-full">
+
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
@@ -395,14 +396,14 @@ function AuthPage() {
 
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border overflow-y-auto">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background p-0 pt-24 md:pt-8 no-scrollbar overflow-x-hidden touch-pan-y overscroll-none box-border max-w-full overflow-y-auto">
       {/* Abstract Background Shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
       
       {/* Theme toggle is now in the global Navigation component header */}
 
-      <div className="w-full max-w-full lg:max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-4 box-border overflow-x-hidden">
+      <div className="w-full max-w-full lg:max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-items-center relative z-10 px-4 box-border overflow-x-hidden overflow-y-visible">
         {/* Auth Card Side */}
         <div className="flex justify-center order-2 lg:order-1 w-full max-w-md mx-auto">
           <Card className="w-full shadow-2xl shadow-primary/5 border-none bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] flex flex-col mx-auto">
