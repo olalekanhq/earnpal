@@ -103,7 +103,7 @@ export function UsersManager() {
   });
 
   const roleMutation = useMutation({
-    mutationFn: async (vars: { userId: string; role: string }) => {
+    mutationFn: (vars: { userId: string; role: string }) => {
       const { userId, role } = vars;
       return assignRoleFn({ data: { userId, role: role as any } });
     },
