@@ -422,7 +422,9 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Load the security issues from the scan results and fix the selected issues.
+                                            Implement real-time updates so referral counts refresh instantly after a referral is recorded for the dashboards.
+
+Add automated tests to verify referral counts match the database source-of-truth view on both user and admin dashboards.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
