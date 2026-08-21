@@ -22,7 +22,7 @@ import {
   Shield
 } from "lucide-react";
 import { format } from "date-fns";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -153,10 +153,10 @@ export function UsersManager() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center p-12">
-        <div className="spinner-loading"></div>
-      </div>
+    return React.createElement(
+      "div",
+      { className: "flex justify-center p-12" },
+      React.createElement("div", { className: "spinner-loading" })
     );
   }
 
