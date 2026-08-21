@@ -103,20 +103,22 @@ export function Navigation() {
     queryKey: ["authInfo"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return { isAdmin: false, isModerator: false };
+      if (!user) return { isAdmin: false, isModerator: false, isTasker: false };
       
-      const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
+      const [{ data: isAdmin }, { data: isModerator }, { data: isTasker }] = await Promise.all([
         supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' }),
-        supabase.rpc("has_role", { _user_id: user.id, _role: 'moderator' })
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'moderator' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'tasker' })
       ]);
       
-      return { isAdmin, isModerator };
+      return { isAdmin, isModerator, isTasker };
     },
     enabled: !isAuthPage && !isLandingPage,
   });
 
   const isAdmin = authInfo?.isAdmin || false;
   const isModerator = authInfo?.isModerator || false;
+  const isTasker = authInfo?.isTasker || false;
 
   // Custom transparent navbar for landing and auth pages
   if (isLandingPage || isAuthPage) {
@@ -262,6 +264,7 @@ export function Navigation() {
         { name: "Settings", href: "/settings", icon: Settings },
         ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", icon: Shield }] : []),
         ...(isModerator && !isAdmin ? [{ name: "Moderator Panel", href: "/moderator", icon: Shield }] : []),
+        ...(isTasker && !isModerator && !isAdmin ? [{ name: "Tasker Panel", href: "/tasker", icon: Shield }] : []),
       ]
     }
   ];
