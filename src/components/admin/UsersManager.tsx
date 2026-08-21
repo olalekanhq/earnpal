@@ -103,13 +103,13 @@ export function UsersManager() {
     }
   });
 
-  const handleRoleChange = async (userId: string, role: string) => {
+  const handleRoleChange = async (uid: string, r: string) => {
     try {
-      await assignRoleFn({ data: { userId, role: role as any } });
+      await assignRoleFn({ data: { userId: uid, role: r as any } });
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success("User role updated successfully");
-    } catch (e: any) {
-      toast.error(e.message || "Failed to update user role");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update user role");
     }
   };
 
