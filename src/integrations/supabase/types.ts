@@ -173,6 +173,7 @@ export type Database = {
           description: string | null
           id: string
           source_id: string | null
+          status: string | null
           type: string
           user_id: string
         }
@@ -182,6 +183,7 @@ export type Database = {
           description?: string | null
           id?: string
           source_id?: string | null
+          status?: string | null
           type: string
           user_id: string
         }
@@ -191,6 +193,7 @@ export type Database = {
           description?: string | null
           id?: string
           source_id?: string | null
+          status?: string | null
           type?: string
           user_id?: string
         }
@@ -681,6 +684,7 @@ export type Database = {
         Args: { target_referral_code: string }
         Returns: undefined
       }
+      is_profile_complete: { Args: { p_profile_id: string }; Returns: boolean }
       lookup_login_email: { Args: { _username: string }; Returns: string }
       process_redemption_status_change: {
         Args: {

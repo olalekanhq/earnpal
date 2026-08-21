@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff, Share2 } from "lucide-react";
+import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff, Share2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -328,7 +328,8 @@ function AuthPage() {
           <span className="sr-only whitespace-normal break-words w-px h-px overflow-hidden absolute">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
             
-            Fix my auth backend so email always sends a 6-digit OTP code instead of a confirmation link.
+            and also design a modern email template that the style of the site and use it when sending email. 
+why is referral bonus showing negative on the transactions history, make it as pending if the person the refer has not compete profile yet and also on new user too, it should show as pending until they complete profile to show as positive on both user's dashboard
           </span>
 
 
@@ -418,7 +419,8 @@ function AuthPage() {
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            Fix my auth backend so email always sends a 6-digit OTP code instead of a confirmation link.
+                                            and also design a modern email template that the style of the site and use it when sending email. 
+why is referral bonus showing negative on the transactions history, make it as pending if the person the refer has not compete profile yet and also on new user too, it should show as pending until they complete profile to show as positive on both user's dashboard
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
