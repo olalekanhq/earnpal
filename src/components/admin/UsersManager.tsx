@@ -86,6 +86,7 @@ export function UsersManager() {
         ...profile,
         isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin'),
         isModerator: roles?.some(r => r.user_id === profile.id && r.role === 'moderator'),
+        isTaskManager: roles?.some(r => r.user_id === profile.id && r.role === 'task_manager'),
         currentRole: roles?.find(r => r.user_id === profile.id)?.role || 'user'
       }));
       
@@ -223,6 +224,7 @@ export function UsersManager() {
                         {user.username ? (user.username.charAt(0).toUpperCase() + user.username.slice(1)) : "User"}
                         {user.isAdmin && <ShieldAlert className="h-3 w-3 text-primary" />}
                         {user.isModerator && !user.isAdmin && <Shield className="h-3 w-3 text-violet-500" />}
+                        {user.isTaskManager && !user.isAdmin && !user.isModerator && <Shield className="h-3 w-3 text-emerald-500" />}
                       </div>
                       <div className="text-xs text-muted-foreground">{user.full_name}</div>
                     </div>
