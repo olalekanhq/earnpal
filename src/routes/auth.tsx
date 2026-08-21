@@ -422,7 +422,7 @@ since analytics is still showing referrals information, theres no need for analy
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
                                             
-                                            check for any security issues on this site and fix them and it should not affect any functionality of the site. and if any is affected, rectify it and bring it back to work
+                                            Load the security issues from the scan results and fix the selected issues.
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 {showReset 
