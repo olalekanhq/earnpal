@@ -105,59 +105,15 @@ function Dashboard() {
     }
   });
 
-  const claimWelcomeBonus = useMutation({
-    mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-      const { data, error } = await supabase.rpc("claim_welcome_bonus", { _user_id: user.id });
-      if (error) throw new Error(error.message);
-      const result = data as any;
-      if (!result?.success) {
-        // Already claimed => treat as done so the banner disappears
-        if (typeof result?.message === "string" && result.message.toLowerCase().includes("already claimed")) {
-          return { alreadyClaimed: true } as any;
-        }
-        throw new Error(result?.message || "Please complete your social profile first");
-      }
-      return result;
-    },
-    onSuccess: async (result: any) => {
-      // Trigger celebration effect FIRST for maximum impact
-      if (!result?.alreadyClaimed) {
-        const duration = 5 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+  // Welcome bonus claim logic removed as it is now automatic on registration
+  const claimWelcomeBonus = {
+    isPending: false,
+    isSuccess: false,
+    mutate: () => {
+      toast.info("Your welcome bonus is automatically credited upon registration!");
+    }
+  };
 
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-        const interval: any = setInterval(function() {
-          const timeLeft = animationEnd - Date.now();
-
-          if (timeLeft <= 0) {
-            return clearInterval(interval);
-          }
-
-          const particleCount = 50 * (timeLeft / duration);
-          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-        }, 250);
-
-        toast.success("Welcome bonus claimed!");
-      } else {
-        toast.info("Bonus already claimed.");
-      }
-
-      // Invalidate everything to ensure the UI updates and banner disappears
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
-      await queryClient.refetchQueries({ queryKey: ["profile"] });
-      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to claim bonus", {
-        action: { label: "Go to Profile", onClick: () => window.location.href = "/profile" },
-      });
-    },
-  });
 
 
   const { data: recentTransactions } = useQuery({
