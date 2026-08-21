@@ -50,7 +50,21 @@ import { useAuth } from "@/hooks/use-auth";
 import { Lock } from "lucide-react";
 
 export function AdminPanel() {
-  const { isAdmin } = useAuth();
+  const { role, isAdmin } = useAuth();
+  const { data: permissions } = useQuery({
+    queryKey: ["rolePermissions", role],
+    queryFn: async () => {
+      if (role === 'admin') return null; // Admin has all
+      const { data } = await supabase
+        .from("role_permissions")
+        .select("tab_name")
+        .eq("role", role)
+        .eq("is_enabled", true);
+      return data?.map(p => p.tab_name) || [];
+    },
+    enabled: !!role,
+  });
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
@@ -145,7 +159,15 @@ export function AdminPanel() {
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
   ];
 
-  const activeTabData = tabs.find(t => t.value === activeTab)!;
+  
+  const filteredTabs = tabs.filter(tab => {
+    if (isAdmin) return true;
+    if (!permissions) return false;
+    return permissions.includes(tab.value);
+  });
+
+  const activeTabData = filteredTabs.find(t => t.value === activeTab) || filteredTabs[0];
+
 
   const statCards = [
     {
@@ -242,7 +264,7 @@ export function AdminPanel() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[calc(100vw-2rem)] bg-card/95 backdrop-blur-md border-border/40 rounded-2xl p-1.5 animate-in fade-in zoom-in-95 duration-200">
-                {tabs.map((tab) => (
+                {filteredTabs.map((tab) => (
                   <DropdownMenuItem
                     key={tab.value}
                     onClick={() => setActiveTab(tab.value)}
@@ -264,7 +286,7 @@ export function AdminPanel() {
           {/* Desktop Tabs */}
           <div className="hidden md:block">
             <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-              {tabs.map((tab) => (
+              {filteredTabs.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
