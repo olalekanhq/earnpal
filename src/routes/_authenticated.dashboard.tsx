@@ -168,6 +168,34 @@ function Dashboard() {
     <div className="pt-6 pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
       <WelcomeBonusModal />
       
+      {/* Referral Stats Summary Section */}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <Card className="border-none shadow-sm bg-card overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">My Referrals</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black tracking-tight">{referralCount || 0}</div>
+            <p className="text-[11px] text-muted-foreground font-medium mt-1">Friends invited</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-none shadow-sm bg-card overflow-hidden md:col-span-1 lg:col-span-3">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Recent Referrals</CardTitle>
+          </CardHeader>
+          <CardContent>
+             <div className="flex flex-wrap gap-2">
+               {referralCount === 0 ? (
+                 <p className="text-xs text-muted-foreground italic py-2">No referrals yet. Share your link to start earning!</p>
+               ) : (
+                 <RecentReferrersList />
+               )}
+             </div>
+          </CardContent>
+        </Card>
+      </div>
+      
       {profile && profile.referred_by && !profile.has_claimed_welcome_bonus && (
         <Card className="border-none bg-amber-50 border border-amber-200 overflow-hidden relative">
           <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -435,6 +463,40 @@ function Dashboard() {
           </Card>
         </div>
       </div>
+    </div>
+  );
+}
+
+function RecentReferrersList() {
+  const { data: referredUsers } = useQuery({
+    queryKey: ["recentReferralsList"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, username")
+        .eq("referred_by", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      return data || [];
+    },
+  });
+
+  if (!referredUsers || referredUsers.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2 py-1">
+      {referredUsers.map((ref: any, i: number) => (
+        <Badge key={i} variant="secondary" className="rounded-lg font-bold px-3 py-1 bg-primary/5 text-primary border-primary/10">
+          {ref.full_name || ref.username}
+        </Badge>
+      ))}
+      {(referredUsers.length >= 5) && (
+        <Link to="/refer" className="text-[10px] font-black uppercase text-primary hover:underline flex items-center ml-2">
+          View All
+        </Link>
+      )}
     </div>
   );
 }
