@@ -170,7 +170,7 @@ function EarnPage() {
                 </div>
                 <Button 
                   className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
-                  disabled={task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                  disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
                     const { data: { user } } = await supabase.auth.getUser();
                     if (!user) return;
