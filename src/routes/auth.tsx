@@ -403,12 +403,11 @@ function AuthPage() {
                 {/* Visual Text Edit Placeholder */}
               </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
-                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-                                        
-                                            
-                                            Adjust the spacing between the header and the auth content specifically for very small screens so elements never clip or shift into the header area.
-
-Verify the auth page layout on a real iPhone screen and confirm there are no issues with the display and it shows and arranged well on mobile screen, and if it doesn't fix, you can try another style for the auth
+                {showReset 
+                  ? "Reset Password" 
+                  : activeTab === "login" 
+                    ? "Welcome back" 
+                    : "Create Account"}
                 {showReset 
                   ? "Reset Password" 
                   : activeTab === "login" 
