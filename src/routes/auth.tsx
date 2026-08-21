@@ -399,6 +399,9 @@ function AuthPage() {
                   <span>EARN PAL</span>
                 </div>
               </div>
+              <span className="sr-only">
+                {/* Visual Text Edit Placeholder */}
+              </span>
               <CardTitle className="text-2xl font-black tracking-tight text-foreground">
                 '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
                                         
