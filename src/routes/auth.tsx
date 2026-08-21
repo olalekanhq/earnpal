@@ -432,7 +432,7 @@ function AuthPage() {
                   ? "Enter your email to receive a reset link" 
                   : activeTab === "login"
                     ? "Access your dashboard to start earning rewards"
-                    : "Join the Earn Pal community and start earning 75 bonus points today"}
+                    : "Join the Earn Pal community and start earning bonus points today"}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 flex-grow p-0">
