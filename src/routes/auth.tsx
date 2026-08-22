@@ -400,8 +400,8 @@ function AuthPage() {
   const fieldInput = "auth-input h-14 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
-    <div className={shellClass}>
-      <div className="w-full max-w-md">
+    <div className={cn(shellClass, "px-6 sm:px-6")}>
+      <div className="w-full max-w-[92%] sm:max-w-md">
         <BackLink />
 
         <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-9">
