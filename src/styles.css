@@ -180,11 +180,13 @@ html, body {
 }
 
 html {
-  overflow-y: auto;
+  overflow: hidden;
+  height: 100%;
 }
 
 body {
-  overflow-y: visible !important;
+  overflow-y: auto !important;
+  height: 100%;
   min-height: 100vh;
 }
 
