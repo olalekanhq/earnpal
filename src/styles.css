@@ -246,18 +246,24 @@ html, body {
   }
 }
 
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.7);
+    opacity: 1;
+  }
+}
+
+.animate-neon-pulse::after {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
 a[href*="lovable.app"],
-iframe[src*="lovable.app"],
-a[href*="lovable.dev"],
-iframe[src*="lovable.dev"],
-div[style*="Edit with Lovable"],
-.lovable-badge,
-[class*="lovable"],
-[id*="lovable"] {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  position: absolute !important;
+...
   z-index: -9999 !important;
 }
