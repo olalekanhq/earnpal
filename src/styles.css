@@ -180,12 +180,12 @@ html, body {
 }
 
 html {
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   height: auto !important;
 }
 
 body {
-  overflow-y: visible !important;
+  overflow-y: clip !important;
   height: auto !important;
   min-height: 100vh !important;
 }
