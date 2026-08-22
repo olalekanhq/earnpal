@@ -270,10 +270,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="earn-pal-theme">
-        <div className="flex min-h-screen bg-background text-foreground relative w-full max-w-full">
+        <div className="flex min-h-screen bg-background text-foreground relative w-full max-w-full flex-col">
           <Navigation />
           <main className={cn(
-            "flex-1 transition-all duration-300 min-h-screen w-full flex flex-col",
+            "flex-1 transition-all duration-300 w-full flex flex-col",
             !isLandingPage && "md:ml-72"
           )}>
             <div className={cn("flex-1 w-full", !isLandingPage && "pt-24 md:pt-28 pb-12")}>
