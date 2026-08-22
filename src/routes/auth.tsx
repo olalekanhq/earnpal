@@ -491,8 +491,8 @@ function AuthPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="login" className="mt-6">
-                <form onSubmit={handleEmailLogin} className="space-y-4">
+              <TabsContent value="login" className="mt-4">
+                <form onSubmit={handleEmailLogin} className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                     <Input
@@ -550,15 +550,15 @@ function AuthPage() {
                     </button>
                   </div>
 
-                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
                 </form>
               </TabsContent>
 
-              <TabsContent value="signup" className="mt-6">
-                <form onSubmit={handleEmailSignUp} className="space-y-4">
+              <TabsContent value="signup" className="mt-4">
+                <form onSubmit={handleEmailSignUp} className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                     <Input
@@ -646,7 +646,7 @@ function AuthPage() {
                     )}
                   </div>
 
-                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
