@@ -173,10 +173,19 @@
 }
 
 html, body {
-  overflow-x: hidden;
   width: 100%;
   position: relative;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-y: auto;
+}
+
+body {
+  overflow-y: visible;
+  min-height: 100vh;
 }
 
 .auth-shell {
