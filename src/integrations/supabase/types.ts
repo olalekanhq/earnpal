@@ -705,6 +705,44 @@ export type Database = {
           },
         ]
       }
+      video_watch_sessions: {
+        Row: {
+          consumed: boolean
+          created_at: string
+          expires_at: string
+          id: string
+          min_watch_seconds: number
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          consumed?: boolean
+          created_at?: string
+          expires_at?: string
+          id?: string
+          min_watch_seconds?: number
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          consumed?: boolean
+          created_at?: string
+          expires_at?: string
+          id?: string
+          min_watch_seconds?: number
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_watch_sessions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       global_referral_stats: {
@@ -800,7 +838,6 @@ export type Database = {
       handle_admin_points_adjustment: {
         Args: {
           p_action_type: string
-          p_admin_id: string
           p_amount: number
           p_reason: string
           p_target_user_id: string
@@ -833,7 +870,7 @@ export type Database = {
         Returns: Json
       }
       record_video_watch: {
-        Args: { _task_id: string; _user_id: string }
+        Args: { _session_id: string; _task_id: string; _user_id: string }
         Returns: Json
       }
       redeem_reward: { Args: { _reward_id: string }; Returns: Json }
@@ -843,6 +880,10 @@ export type Database = {
           target_user_id: string
         }
         Returns: undefined
+      }
+      start_video_watch_session: {
+        Args: { _task_id: string; _user_id: string }
+        Returns: Json
       }
       submit_task: {
         Args: { _task_id: string; _user_id: string }

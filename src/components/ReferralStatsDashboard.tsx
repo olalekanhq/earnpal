@@ -155,13 +155,6 @@ export function ReferralStatsDashboard() {
           <div className="space-y-2">
             <h2 className="text-2xl font-black">Your Referral Details</h2>
             <p className="text-violet-100 font-medium">Copy your link message or code and share it to earn rewards.</p>
-            <span className="sr-only">
-              '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
-              
-              Update the copy button so it copies the referral note plus the full referral URL as one combined message, not just the raw link.
-
-              Add a toast notification after the referral button copies the referral note and link to the clipboard.
-            </span>
           </div>
           
           <div className="grid gap-6 md:grid-cols-2">
