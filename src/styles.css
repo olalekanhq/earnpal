@@ -176,15 +176,15 @@ html, body {
   width: 100%;
   position: relative;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
-/* Ensure only one scrollbar on the page */
 html {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 body {
-  overflow-y: auto;
+  overflow-y: visible;
   min-height: 100vh;
 }
 
