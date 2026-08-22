@@ -11,19 +11,10 @@ export const adjustUserPoints = createServerFn({ method: "POST" })
     actionType: z.enum(["credit", "debit"])
   }).parse(data))
   .handler(async ({ data, context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    
-    // requireSupabaseAuth middleware provides userId and supabase (authenticated client) in context
-    const adminId = context.userId;
-    
-    if (!adminId) {
-      throw new Error("Unauthorized: No user session found");
-    }
-
-    // Use the secure RPC for a safe, atomic adjustment.
-    // The RPC verifies that adminId actually has the 'admin' role.
-    const { error: rpcError } = await supabaseAdmin.rpc("handle_admin_points_adjustment" as any, {
-      p_admin_id: adminId,
+    // Call the RPC with the caller's own authenticated client. The database
+    // function derives the admin identity from auth.uid() and rejects
+    // non-admins, so no caller-supplied admin ID is ever trusted.
+    const { error: rpcError } = await (context.supabase.rpc as any)("handle_admin_points_adjustment", {
       p_target_user_id: data.userId,
       p_amount: data.amount,
       p_action_type: data.actionType,

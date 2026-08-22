@@ -233,36 +233,54 @@ function EarnPage() {
                     }
 
                     // Special handling for video tasks
-
                     if (task.category === 'Videos' && task.video_ad_count > 0) {
+                      // Start a server-issued watch session before any ad plays
+                      const { data: sessionData, error: sessionError } = await (supabase.rpc as any)('start_video_watch_session', {
+                        _user_id: user.id,
+                        _task_id: task.id
+                      });
+
+                      if (sessionError) {
+                        toast.error(sessionError.message);
+                        return;
+                      }
+                      if (!(sessionData as any)?.success) {
+                        toast.error((sessionData as any)?.message || 'Unable to start ad session.');
+                        return;
+                      }
+
+                      const sessionId = (sessionData as any).session_id as string;
+                      const minWatchSeconds = ((sessionData as any).min_watch_seconds as number) ?? 10;
+
+                      const recordWatch = async () => {
+                        const { data, error } = await (supabase.rpc as any)('record_video_watch', {
+                          _user_id: user.id,
+                          _task_id: task.id,
+                          _session_id: sessionId
+                        });
+
+                        if (error) {
+                          console.error('Error recording watch:', error);
+                          toast.error(error.message);
+                        } else if (data && !(data as any).success) {
+                          toast.error((data as any).message);
+                        } else {
+                          const res = data as any;
+                          if (res.completed) {
+                            toast.success(res.message);
+                            queryClient.invalidateQueries({ queryKey: ["profile"] });
+                          } else {
+                            toast.success(res.message);
+                          }
+                          refetchTasks();
+                        }
+                      };
+
                       if (task.vast_tag_url) {
                         const event = new CustomEvent('play-interstitial-ad', {
                           detail: {
                             vastUrl: task.vast_tag_url,
-                            onComplete: async () => {
-                              const { data: { user } } = await supabase.auth.getUser();
-                              if (!user) return;
-
-                              const { data, error } = await (supabase.rpc as any)('record_video_watch', {
-                                _user_id: user.id,
-                                _task_id: task.id
-                              });
-
-                              if (error) {
-                                console.error('Error recording watch:', error);
-                                toast.error(error.message);
-                              } else {
-                                const res = data as any;
-                                console.log('Watch recorded:', res);
-                                if (res.completed) {
-                                  toast.success(res.message);
-                                  queryClient.invalidateQueries({ queryKey: ["profile"] });
-                                } else {
-                                  toast.success(res.message);
-                                }
-                                refetchTasks();
-                              }
-                            }
+                            onComplete: recordWatch
                           }
                         });
                         window.dispatchEvent(event);
@@ -270,26 +288,9 @@ function EarnPage() {
                       }
 
                       setCompletingTaskId(task.id);
-                      
-                      const { data, error } = await (supabase.rpc as any)('record_video_watch', {
-                        _user_id: user.id,
-                        _task_id: task.id
-                      });
-
-                      if (error) {
-                        toast.error(error.message);
-                      } else if (data && !(data as any).success) {
-                        toast.error((data as any).message);
-                      } else {
-                        const res = data as any;
-                        if (res.completed) {
-                          toast.success(res.message);
-                          queryClient.invalidateQueries({ queryKey: ["profile"] });
-                        } else {
-                          toast.success(res.message);
-                        }
-                        refetchTasks();
-                      }
+                      toast.info(`Ad playing… please keep this tab open for ${minWatchSeconds} seconds.`);
+                      await new Promise(resolve => setTimeout(resolve, minWatchSeconds * 1000));
+                      await recordWatch();
                       setCompletingTaskId(null);
                       return;
                     }

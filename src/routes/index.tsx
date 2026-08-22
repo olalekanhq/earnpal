@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" } } };
+const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" as const } } };
 const features = [
   { title: "Marketplace Hub", icon: Globe, desc: "A centralized location for available tasks, categorized by difficulty and reward." },
   { title: "Smart Referrals", icon: Users, desc: "Automated tracking and payout for every user you bring to the platform." },
