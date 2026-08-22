@@ -321,11 +321,14 @@ function AuthPage() {
 
 
   const shellClass =
-    "relative min-h-screen w-full bg-gradient-to-b from-muted/60 via-background to-muted/40 px-5 py-10 flex flex-col items-center justify-center";
+    "auth-shell relative min-h-screen w-full px-4 py-6 sm:px-6 sm:py-10 flex flex-col items-center justify-center";
 
   const Brand = () => (
-    <div className="flex justify-center">
-      <img src="/logo.png" alt="Earn Pal" className="h-12 w-12 object-contain" />
+    <div className="flex items-center justify-center gap-3">
+      <div className="auth-mark flex size-12 items-center justify-center rounded-2xl">
+        <img src="/logo.png" alt="Earn Pal" className="size-8 object-contain" />
+      </div>
+      <span className="text-lg font-bold tracking-tight text-foreground">Earn Pal</span>
     </div>
   );
 
@@ -345,7 +348,7 @@ function AuthPage() {
       <div className={shellClass}>
         <div className="w-full max-w-md">
           <BackLink />
-          <div className="rounded-3xl bg-card p-8 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)]">
+          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-9">
             <Brand />
             <h1 className="mt-6 text-center text-3xl font-black tracking-tight text-foreground">Verify email</h1>
             <p className="mt-2 text-center text-base text-muted-foreground">
@@ -394,14 +397,14 @@ function AuthPage() {
   }
 
   const fieldLabel = "text-base font-semibold text-foreground";
-  const fieldInput = "h-14 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
+  const fieldInput = "auth-input h-14 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
     <div className={shellClass}>
       <div className="w-full max-w-md">
         <BackLink />
 
-        <div className="rounded-3xl bg-card p-7 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] sm:p-8">
+        <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-9">
           <Brand />
 
           <h1 className="mt-6 text-center text-4xl font-black tracking-tight text-foreground">

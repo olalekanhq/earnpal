@@ -179,6 +179,64 @@ html, body {
   scroll-behavior: smooth;
 }
 
+.auth-shell {
+  background: var(--color-background);
+  isolation: isolate;
+}
+
+.auth-shell::before,
+.auth-shell::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(2px);
+  opacity: .55;
+}
+
+.auth-shell::before {
+  width: 22rem;
+  height: 22rem;
+  top: -10rem;
+  left: -9rem;
+  background: color-mix(in oklch, var(--color-primary) 18%, transparent);
+}
+
+.auth-shell::after {
+  width: 18rem;
+  height: 18rem;
+  right: -8rem;
+  bottom: -7rem;
+  background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
+}
+
+.auth-card {
+  position: relative;
+  border: 1px solid color-mix(in oklch, var(--color-border) 75%, transparent);
+  background: color-mix(in oklch, var(--color-card) 92%, transparent);
+  backdrop-filter: blur(18px);
+  animation: auth-card-in .55s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.auth-mark {
+  background: var(--color-secondary);
+  box-shadow: 0 12px 30px color-mix(in oklch, var(--color-primary) 18%, transparent);
+}
+
+.auth-input {
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.auth-input:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--color-ring) 14%, transparent);
+}
+
+@keyframes auth-card-in {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
