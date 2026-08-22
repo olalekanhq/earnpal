@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Coins, ArrowRight, ShieldCheck, Zap, Users, Gift, CheckCircle2, Layout, BarChart3, Rocket, Globe, Sparkles, TrendingUp, CircleDollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { z } from "zod";
 
 export const Route = createFileRoute("/")({
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const reveal: Variants = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" } } };
+const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" as const } } };
 const features = [
   { title: "Marketplace Hub", icon: Globe, desc: "A centralized location for available tasks, categorized by difficulty and reward." },
   { title: "Smart Referrals", icon: Users, desc: "Automated tracking and payout for every user you bring to the platform." },
