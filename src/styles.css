@@ -196,6 +196,7 @@ body {
 }
 
 .auth-shell {
+  flex: 1;
   background: var(--color-background);
   isolation: isolate;
 }
