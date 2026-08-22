@@ -127,7 +127,7 @@ export function Navigation() {
   if (isLandingPage) {
     return (
       <>
-        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 max-w-[calc(100vw-1rem)]">
+        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 max-w-[calc(100vw-1rem)] md:after:hidden after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1]">
           <div className="container mx-auto px-4 flex h-20 items-center justify-between">
             <div className="flex items-center gap-2">
               {!isAuthPage && (
@@ -361,7 +361,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl">
+      <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1]">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="hover:bg-primary/5" aria-label="Open menu">
             <Menu className="h-6 w-6 text-foreground" />
