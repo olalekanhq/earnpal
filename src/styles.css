@@ -184,7 +184,7 @@ html {
 }
 
 body {
-  overflow-y: visible;
+  overflow-y: visible !important;
   min-height: 100vh;
 }
 
