@@ -348,14 +348,14 @@ function AuthPage() {
       <div className={shellClass}>
         <div className="w-full max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:px-8 sm:py-7">
+          <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
             <Brand />
-            <h1 className="mt-4 text-center text-3xl font-black tracking-tight text-foreground">Verify email</h1>
-            <p className="mt-2 text-center text-base text-muted-foreground">
+            <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
+            <p className="mt-1.5 text-center text-base text-muted-foreground">
               We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
             </p>
 
-            <form onSubmit={handleVerifyOtp} className="mt-5 space-y-4">
+            <form onSubmit={handleVerifyOtp} className="mt-4 space-y-3">
               {error && (
                 <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
               )}
@@ -363,12 +363,12 @@ function AuthPage() {
                 id="otp"
                 inputMode="numeric"
                 placeholder="000000"
-                className="h-14 rounded-2xl text-center text-2xl font-black tracking-[0.5em]"
+                className="h-12 rounded-2xl text-center text-xl font-black tracking-[0.5em]"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 required
               />
-              <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={isVerifying}>
+              <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={isVerifying}>
                 {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Verify account
               </Button>
@@ -397,20 +397,20 @@ function AuthPage() {
   }
 
   const fieldLabel = "text-base font-semibold text-foreground";
-  const fieldInput = "auth-input h-14 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
+  const fieldInput = "auth-input h-12 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
     <div className={cn(shellClass, "px-6 sm:px-6")}>
       <div className="w-full max-w-[92%] sm:max-w-md">
         <BackLink />
 
-        <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:px-8 sm:py-7">
+        <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
           <Brand />
 
-          <h1 className="mt-4 text-center text-3xl font-black tracking-tight text-foreground">
+          <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h1>
-          <p className="mx-auto mt-2 max-w-xs text-center text-base leading-snug text-muted-foreground">
+          <p className="mx-auto mt-1.5 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
@@ -423,13 +423,13 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-5 h-14 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-4 h-12 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-4">
+              <div className="relative my-3">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
@@ -445,7 +445,7 @@ function AuthPage() {
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-4">
+            <form onSubmit={handlePasswordReset} className="space-y-3">
               <div className="space-y-2">
                 <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
                 <Input
@@ -459,7 +459,7 @@ function AuthPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
+              <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {resetSent ? "Resend link" : "Send reset link"}
               </Button>
@@ -476,7 +476,7 @@ function AuthPage() {
             </form>
           ) : (
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
-              <TabsList className="grid h-14 w-full grid-cols-2 rounded-full bg-muted/70 p-1.5">
+              <TabsList className="grid h-12 w-full grid-cols-2 rounded-full bg-muted/70 p-1.5">
                 <TabsTrigger
                   value="login"
                   className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
@@ -491,8 +491,8 @@ function AuthPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="login" className="mt-6">
-                <form onSubmit={handleEmailLogin} className="space-y-4">
+              <TabsContent value="login" className="mt-4">
+                <form onSubmit={handleEmailLogin} className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                     <Input
@@ -550,15 +550,15 @@ function AuthPage() {
                     </button>
                   </div>
 
-                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
                 </form>
               </TabsContent>
 
-              <TabsContent value="signup" className="mt-6">
-                <form onSubmit={handleEmailSignUp} className="space-y-4">
+              <TabsContent value="signup" className="mt-4">
+                <form onSubmit={handleEmailSignUp} className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                     <Input
@@ -646,7 +646,7 @@ function AuthPage() {
                     )}
                   </div>
 
-                  <Button type="submit" className="h-14 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
