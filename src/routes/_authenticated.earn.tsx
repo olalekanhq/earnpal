@@ -38,18 +38,24 @@ function EarnPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const { data: tasksData } = await supabase.from("tasks" as any).select("*").eq("is_active", true);
+      const { data: tasksData } = await supabase
+        .from("tasks" as any)
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
       const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
       const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
       const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
       const progressMap = new Map((videoProgress as any)?.map((p: any) => [p.task_id, p.watch_count]));
       
-      return (tasksData as any)?.map((task: any) => ({
-        ...task,
-        status: submissionsMap.get(task.id) || null,
-        watch_count: progressMap.get(task.id) || 0
-      })) || [];
+      return (tasksData as any)
+        ?.map((task: any) => ({
+          ...task,
+          status: submissionsMap.get(task.id) || null,
+          watch_count: progressMap.get(task.id) || 0
+        }))
+        .filter((task: any) => task.status !== "verified") || [];
     },
   });
 
