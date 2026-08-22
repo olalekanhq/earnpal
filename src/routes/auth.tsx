@@ -321,14 +321,13 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-6 sm:px-6 sm:py-10 flex flex-col items-center justify-center";
+    "auth-shell relative min-h-screen w-full px-4 py-4 flex flex-col items-center justify-center overflow-y-auto";
 
   const Brand = () => (
-    <div className="flex items-center justify-center gap-3">
-      <div className="auth-mark flex size-12 items-center justify-center rounded-2xl">
-        <img src="/logo.png" alt="Earn Pal" className="size-8 object-contain" />
+    <div className="flex flex-col items-center justify-center gap-2">
+      <div className="auth-mark flex size-10 items-center justify-center rounded-2xl">
+        <img src="/logo.png" alt="Earn Pal" className="size-6 object-contain" />
       </div>
-      <span className="text-lg font-bold tracking-tight text-foreground">Earn Pal</span>
     </div>
   );
 
@@ -336,9 +335,9 @@ function AuthPage() {
     <button
       type="button"
       onClick={() => navigate({ to: "/" })}
-      className="mb-6 inline-flex items-center gap-2 text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+      className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
     >
-      <ArrowLeft className="h-5 w-5" />
+      <ArrowLeft className="h-4 w-4" />
       Back to home
     </button>
   );
@@ -400,10 +399,8 @@ function AuthPage() {
   const fieldInput = "auth-input h-12 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
-    <div className={cn(shellClass, "px-6 sm:px-6")}>
+    <div className={cn(shellClass, "px-4 sm:px-6")}>
       <div className="w-full max-w-[92%] sm:max-w-md">
-        <BackLink />
-
         <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
           <Brand />
 
@@ -429,19 +426,19 @@ function AuthPage() {
                 Continue with Google
               </Button>
 
-              <div className="relative my-3">
+              <div className="relative my-2">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card px-3 text-sm text-muted-foreground">or email</span>
+                  <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider font-semibold">or email</span>
                 </div>
               </div>
             </>
           )}
 
           {error && (
-            <div className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
+            <div className="mb-3 rounded-xl bg-destructive/10 p-2.5 text-sm font-medium text-destructive">{error}</div>
           )}
 
           {showReset ? (
