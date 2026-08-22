@@ -348,14 +348,14 @@ function AuthPage() {
       <div className={shellClass}>
         <div className="w-full max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-9">
+          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:px-8 sm:py-7">
             <Brand />
-            <h1 className="mt-6 text-center text-3xl font-black tracking-tight text-foreground">Verify email</h1>
+            <h1 className="mt-4 text-center text-3xl font-black tracking-tight text-foreground">Verify email</h1>
             <p className="mt-2 text-center text-base text-muted-foreground">
               We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
             </p>
 
-            <form onSubmit={handleVerifyOtp} className="mt-7 space-y-5">
+            <form onSubmit={handleVerifyOtp} className="mt-5 space-y-4">
               {error && (
                 <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
               )}
@@ -404,13 +404,13 @@ function AuthPage() {
       <div className="w-full max-w-[92%] sm:max-w-md">
         <BackLink />
 
-        <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-9">
+        <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:px-8 sm:py-7">
           <Brand />
 
-          <h1 className="mt-6 text-center text-4xl font-black tracking-tight text-foreground">
+          <h1 className="mt-4 text-center text-3xl font-black tracking-tight text-foreground">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h1>
-          <p className="mx-auto mt-3 max-w-xs text-center text-base leading-snug text-muted-foreground">
+          <p className="mx-auto mt-2 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
@@ -423,13 +423,13 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-7 h-14 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-5 h-14 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-6">
+              <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
@@ -445,7 +445,7 @@ function AuthPage() {
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-5">
+            <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
                 <Input
@@ -492,7 +492,7 @@ function AuthPage() {
               </TabsList>
 
               <TabsContent value="login" className="mt-6">
-                <form onSubmit={handleEmailLogin} className="space-y-5">
+                <form onSubmit={handleEmailLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                     <Input
