@@ -321,7 +321,7 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative w-full px-4 py-2 flex flex-col items-center justify-center";
+    "auth-shell relative min-h-screen w-full px-4 py-2 flex flex-col items-center justify-center overflow-y-auto";
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center gap-2">
