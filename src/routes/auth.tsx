@@ -395,8 +395,8 @@ function AuthPage() {
     );
   }
 
-  const fieldLabel = "text-base font-semibold text-foreground";
-  const fieldInput = "auth-input h-12 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
+  const fieldLabel = "text-sm font-semibold text-foreground";
+  const fieldInput = "auth-input h-11 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
@@ -420,7 +420,7 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-4 h-12 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-4 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
@@ -456,7 +456,7 @@ function AuthPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
+              <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {resetSent ? "Resend link" : "Send reset link"}
               </Button>
@@ -473,7 +473,7 @@ function AuthPage() {
             </form>
           ) : (
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
-              <TabsList className="grid h-12 w-full grid-cols-2 rounded-full bg-muted/70 p-1.5">
+              <TabsList className="grid h-11 w-full grid-cols-2 rounded-full bg-muted/70 p-1">
                 <TabsTrigger
                   value="login"
                   className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
@@ -547,7 +547,7 @@ function AuthPage() {
                     </button>
                   </div>
 
-                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
@@ -643,7 +643,7 @@ function AuthPage() {
                     )}
                   </div>
 
-                  <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
