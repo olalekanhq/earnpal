@@ -180,12 +180,14 @@ html, body {
   overflow: hidden;
 }
 
-html {
-  height: 100%;
+/* Global scroll management */
+html, body {
+  margin: 0;
+  padding: 0;
 }
 
-body {
-  min-height: 100%;
+#root {
+  height: 100%;
 }
 
 .auth-shell {
