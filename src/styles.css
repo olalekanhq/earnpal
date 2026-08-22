@@ -180,14 +180,14 @@ html, body {
 }
 
 html {
-  overflow: hidden !important;
-  height: 100% !important;
+  overflow-y: scroll !important;
+  height: auto !important;
 }
 
 body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: 100% !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: 100vh !important;
 }
 
 .auth-shell {
