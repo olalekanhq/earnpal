@@ -173,10 +173,19 @@
 }
 
 html, body {
-  overflow-x: hidden;
   width: 100%;
   position: relative;
   scroll-behavior: smooth;
+}
+
+/* Ensure only one scrollbar on the page */
+html {
+  overflow-y: scroll;
+}
+
+body {
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 .auth-shell {
