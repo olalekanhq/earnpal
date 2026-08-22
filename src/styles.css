@@ -176,6 +176,16 @@ html, body {
   overflow-x: hidden;
   width: 100%;
   position: relative;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 a[href*="lovable.app"],
