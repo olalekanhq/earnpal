@@ -67,9 +67,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center animate-pulse">
-        <div className="bg-primary/10 p-4 rounded-3xl mb-4 shadow-xl shadow-primary/10">
-          <img src="/logo.png" alt="Noble Gain" className="h-12 w-12 object-contain" />
-        </div>
+        <img src="/logo.png" alt="Noble Gain" className="h-20 w-20 object-contain mb-4" />
         <div className="flex items-center gap-2 font-black text-2xl tracking-tighter uppercase">
           <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
         </div>
