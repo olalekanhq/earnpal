@@ -153,7 +153,7 @@ export function Navigation() {
                 <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
                 <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
                 <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
-                <Link to="/dnsstatus" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Domain Status</Link>
+                
               </div>
             
             <div className="flex items-center gap-4">
@@ -216,14 +216,6 @@ export function Navigation() {
               >
                 <Gift className="h-5 w-5" />
                 Rewards
-              </Link>
-              <Link 
-                to="/dnsstatus" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-black uppercase text-foreground/70 hover:text-primary transition-colors flex items-center gap-3"
-              >
-                <Globe className="h-5 w-5" />
-                Domain Status
               </Link>
             </nav>
 

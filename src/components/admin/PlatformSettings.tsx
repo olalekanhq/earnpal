@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Save, Settings2, Shield, Star } from "lucide-react";
+import { Loader2, Save, Settings2, Shield, Star, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
+import { DomainStatusCard } from "./DomainStatusCard";
 
 // Define local interfaces since types might not be regenerated yet
 interface AppSetting {
@@ -167,8 +168,10 @@ export function PlatformSettings() {
   }
 
   return (
-    <div className="grid gap-6">
-      <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="md:col-span-2 space-y-6">
+        <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 p-2 rounded-xl">
@@ -325,6 +328,11 @@ export function PlatformSettings() {
           <PermissionManager />
         </CardContent>
       </Card>
+      </div>
+
+      <div className="space-y-6">
+        <DomainStatusCard />
+      </div>
     </div>
   );
 }
