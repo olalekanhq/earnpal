@@ -489,201 +489,207 @@ function AuthPage() {
               </button>
             </form>
           ) : (
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mt-2 w-full">
-              <TabsList className="grid h-11 w-full grid-cols-2 rounded-full bg-muted/70 p-1">
-                <TabsTrigger
-                  value="login"
-                  className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                >
-                  Sign in
-                </TabsTrigger>
-                <TabsTrigger
-                  value="signup"
-                  className="rounded-full text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                >
-                  Sign up
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="login" className="mt-4">
-                <form onSubmit={handleEmailLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
-                    <Input
-                      id="identifier"
-                      className={fieldInput}
-                      autoCapitalize="none"
-                      value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className={fieldLabel}>Password</Label>
-                    <div className="relative">
+            <div className="mt-4 w-full">
+              {activeTab === "login" ? (
+                <div className="space-y-4">
+                  <form onSubmit={handleEmailLogin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                       <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        className={cn(fieldInput, "pr-12")}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        id="identifier"
+                        className={fieldInput}
+                        autoCapitalize="none"
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
                         required
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className={fieldLabel}>Password</Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          className={cn(fieldInput, "pr-12")}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="rememberMe"
+                          checked={rememberMe}
+                          onCheckedChange={(checked) => setRememberMe(checked === true)}
+                        />
+                        <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-medium text-muted-foreground">
+                          Remember me
+                        </Label>
+                      </div>
                       <button
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="text-sm font-semibold text-primary hover:underline"
+                        onClick={() => {
+                          setShowReset(true);
+                          setResetEmail(identifier.trim());
+                          setError("");
+                        }}
                       >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        Forgot password?
                       </button>
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="rememberMe"
-                        checked={rememberMe}
-                        onCheckedChange={(checked) => setRememberMe(checked === true)}
-                      />
-                      <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-medium text-muted-foreground">
-                        Remember me
-                      </Label>
+                    <div className="pt-2">
+                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Sign in
+                      </Button>
                     </div>
+                  </form>
+                  <p className="text-center text-sm font-medium text-muted-foreground">
+                    Don't have an account?{" "}
                     <button
                       type="button"
-                      className="text-sm font-semibold text-primary hover:underline"
-                      onClick={() => {
-                        setShowReset(true);
-                        setResetEmail(identifier.trim());
-                        setError("");
-                      }}
+                      className="font-bold text-primary hover:underline"
+                      onClick={() => setActiveTab("signup")}
                     >
-                      Forgot password?
+                      Sign up
                     </button>
-                  </div>
-
-                  <div className="pt-2">
-                    <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
-                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Sign in
-                    </Button>
-                  </div>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="signup" className="mt-4">
-                <form onSubmit={handleEmailSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
-                    <Input
-                      id="full-name"
-                      className={fieldInput}
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-username" className={fieldLabel}>Username</Label>
-                    <Input
-                      id="signup-username"
-                      className={fieldInput}
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className={fieldLabel}>Email</Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      className={fieldInput}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className={fieldLabel}>Password</Label>
-                    <div className="relative">
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <form onSubmit={handleEmailSignUp} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                       <Input
-                        id="signup-password"
-                        type={showSignupPassword ? "text" : "password"}
-                        className={cn(fieldInput, "pr-12")}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        id="full-name"
+                        className={fieldInput}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                         required
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowSignupPassword(!showSignupPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label={showSignupPassword ? "Hide password" : "Show password"}
-                      >
-                        {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                      </button>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="referral-code" className={fieldLabel}>Referral code (optional)</Label>
-                    <div className="relative">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-username" className={fieldLabel}>Username</Label>
                       <Input
-                        id="referral-code"
-                        className={cn(
-                          fieldInput,
-                          "pr-12",
-                          referralStatus.owner && "border-green-500/60",
-                          referralStatus.error && "border-destructive/60",
-                        )}
-                        value={referralCode}
-                        onChange={handleReferralChange}
+                        id="signup-username"
+                        className={fieldInput}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                        required
                       />
-                      {referralStatus.loading && (
-                        <Loader2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
-                      )}
-                      {referralStatus.owner && (
-                        <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email" className={fieldLabel}>Email</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        className={fieldInput}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password" className={fieldLabel}>Password</Label>
+                      <div className="relative">
+                        <Input
+                          id="signup-password"
+                          type={showSignupPassword ? "text" : "password"}
+                          className={cn(fieldInput, "pr-12")}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSignupPassword(!showSignupPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                          aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                        >
+                          {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="referral-code" className={fieldLabel}>Referral code (optional)</Label>
+                      <div className="relative">
+                        <Input
+                          id="referral-code"
+                          className={cn(
+                            fieldInput,
+                            "pr-12",
+                            referralStatus.owner && "border-green-500/60",
+                            referralStatus.error && "border-destructive/60",
+                          )}
+                          value={referralCode}
+                          onChange={handleReferralChange}
+                        />
+                        {referralStatus.loading && (
+                          <Loader2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                        )}
+                        {referralStatus.owner && (
+                          <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
+                        )}
+                      </div>
+                      {referralStatus.message && (
+                        <p
+                          id="referral-status-msg"
+                          className={cn(
+                            "text-xs font-semibold",
+                            referralStatus.error ? "text-destructive" : "text-green-600",
+                          )}
+                        >
+                          {referralStatus.error ? "✕ " : "✓ "}
+                          {referralStatus.message}
+                        </p>
                       )}
                     </div>
-                    {referralStatus.message && (
-                      <p
-                        id="referral-status-msg"
-                        className={cn(
-                          "text-xs font-semibold",
-                          referralStatus.error ? "text-destructive" : "text-green-600",
-                        )}
-                      >
-                        {referralStatus.error ? "✕ " : "✓ "}
-                        {referralStatus.message}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="flex items-start gap-2 pt-1">
-                    <Checkbox
-                      id="terms"
-                      checked={agreedToTerms}
-                      onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
-                      required
-                    />
-                    <Label htmlFor="terms" className="cursor-pointer text-xs font-medium leading-tight text-muted-foreground">
-                      I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>
-                    </Label>
-                  </div>
-                  
-                  <div className="pt-2">
-
-                    <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
-                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Create account
-                    </Button>
-                  </div>
-                </form>
-              </TabsContent>
-            </Tabs>
+                    <div className="flex items-start gap-2 pt-1">
+                      <Checkbox
+                        id="terms"
+                        checked={agreedToTerms}
+                        onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                        required
+                      />
+                      <Label htmlFor="terms" className="cursor-pointer text-xs font-medium leading-tight text-muted-foreground">
+                        I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>
+                      </Label>
+                    </div>
+                    
+                    <div className="pt-2">
+                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Create account
+                      </Button>
+                    </div>
+                  </form>
+                  <p className="text-center text-sm font-medium text-muted-foreground">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      className="font-bold text-primary hover:underline"
+                      onClick={() => setActiveTab("login")}
+                    >
+                      Sign in
+                    </button>
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
