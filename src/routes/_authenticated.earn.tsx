@@ -166,21 +166,21 @@ function EarnPage() {
                     <span className="text-green-600 font-bold text-[10px] sm:text-xs">{task.points}</span>
                   </div>
                 </div>
-                <CardTitle className="text-sm sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1">{task.title}</CardTitle>
-                <CardDescription className="text-[10px] sm:text-sm font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
+                <CardTitle className="text-[13px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
+                <CardDescription className="text-[9px] sm:text-sm font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
                 {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
-                  <div className="mt-3 space-y-2">
-                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <div className="mt-2 sm:mt-3 space-y-1 sm:space-y-2">
+                    <div className="flex justify-between text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest text-muted-foreground">
                       <span>Progress</span>
-                      <span>{task.watch_count || 0} / {task.video_ad_count} Ads</span>
+                      <span>{task.watch_count || 0}/{task.video_ad_count}</span>
                     </div>
-                    <div className="w-full bg-primary/10 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-primary/10 h-1 sm:h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-primary h-full transition-all duration-500" 
                         style={{ width: `${Math.min(100, ((task.watch_count || 0) / task.video_ad_count) * 100)}%` }}
                       />
                     </div>
-                    <p className="text-[10px] text-muted-foreground italic font-medium">Earn {task.points} points after {task.video_ad_count} watches.</p>
+                    <p className="text-[8px] sm:text-[10px] text-muted-foreground italic font-medium hidden xs:block">Earn {task.points} pts after {task.video_ad_count} watches.</p>
                   </div>
                 )}
               </CardHeader>

@@ -286,8 +286,8 @@ function Dashboard() {
                   </CardHeader>
                   <CardContent className="p-3 sm:p-6 pt-2">
                     <div className="space-y-1 mb-4 sm:mb-6">
-                      <CardTitle className="text-sm sm:text-lg font-black tracking-tight line-clamp-1">{task.title}</CardTitle>
-                      <CardDescription className="text-[10px] sm:text-xs font-medium line-clamp-1">{task.description}</CardDescription>
+                      <CardTitle className="text-[13px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight">{task.title}</CardTitle>
+                      <CardDescription className="text-[9px] sm:text-xs font-medium line-clamp-1">{task.description}</CardDescription>
                     </div>
                     <Button 
                       className={cn(
