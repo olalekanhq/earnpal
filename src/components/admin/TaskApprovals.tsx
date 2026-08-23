@@ -17,6 +17,7 @@ export function TaskApprovals() {
   const { data: pendingTasks, isLoading } = useQuery({
     queryKey: ["admin-pending-tasks"],
     queryFn: async () => {
+      console.log("Fetching pending tasks...");
       const { data, error } = await supabase
         .from("task_submissions" as any)
         .select(`
@@ -25,13 +26,17 @@ export function TaskApprovals() {
           user_id,
           status,
           created_at,
-          tasks:task_id (title, points, category),
-          profiles:user_id (full_name, username)
+          tasks:task_id (id, title, points, category),
+          profiles:user_id (id, full_name, username)
         `)
         .eq("status", "pending")
         .order("created_at", { ascending: true });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching tasks:", error);
+        throw error;
+      }
+      console.log("Tasks fetched:", data?.length, data);
       return data as any[];
     }
   });
