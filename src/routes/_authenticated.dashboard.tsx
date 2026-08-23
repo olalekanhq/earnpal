@@ -212,25 +212,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {dailyStats && (
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-2xl border border-primary/10 shadow-sm">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">Daily Tasks</span>
-                <span className={cn("text-lg font-black leading-none", dailyLimitReached ? "text-amber-500" : "text-foreground")}>
-                  {dailyStats.daily_count}/10
-                </span>
-              </div>
-              <div className="h-8 w-[1px] bg-primary/10 mx-1" />
-              <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center">
-                <Zap className={cn("h-4 w-4", dailyLimitReached ? "text-amber-500 fill-amber-500" : "text-primary")} />
-              </div>
-            </div>
-            {dailyLimitReached && (
-              <p className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Limit reached for today</p>
-            )}
-          </div>
-        )}
       </header>
 
       <div className="flex flex-col lg:flex-row gap-6">
