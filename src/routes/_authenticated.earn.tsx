@@ -429,6 +429,7 @@ function EarnPage() {
                         toast.success((data as any)?.message || "Task submitted!");
                         refetchTasks();
                         queryClient.invalidateQueries({ queryKey: ["profile"] });
+                        queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
                         setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
                       }
                       setCompletingTaskId(null);
