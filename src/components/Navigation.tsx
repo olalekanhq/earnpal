@@ -362,7 +362,7 @@ export function Navigation() {
       <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1] animate-neon-pulse">
         <div className="flex items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter ml-2">
-            <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
+            <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
             <span className="leading-tight text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
           </Link>
         </div>
