@@ -321,10 +321,10 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-2 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
+    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
 
   const Brand = () => (
-    <div className="flex flex-col items-center justify-center gap-2">
+    <div className="flex flex-col items-center justify-center">
       <div className="auth-mark flex size-10 items-center justify-center rounded-2xl">
         <img src="/logo.png" alt="Earn Pal" className="size-6 object-contain" />
       </div>
@@ -347,14 +347,14 @@ function AuthPage() {
       <div className={cn(shellClass, "px-4 sm:px-6")}>
         <div className="w-full max-w-[92%] sm:max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
+          <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
             <Brand />
-            <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
-            <p className="mt-1.5 text-center text-base text-muted-foreground">
+            <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
+            <p className="mt-1 text-center text-base text-muted-foreground">
               We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
             </p>
 
-            <form onSubmit={handleVerifyOtp} className="mt-4 space-y-3">
+            <form onSubmit={handleVerifyOtp} className="mt-3 space-y-3">
               {error && (
                 <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
               )}
@@ -401,13 +401,13 @@ function AuthPage() {
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
       <div className="w-full max-w-[92%] sm:max-w-md">
-        <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
+        <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
           <Brand />
 
-          <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">
+          <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h1>
-          <p className="mx-auto mt-1.5 max-w-xs text-center text-base leading-snug text-muted-foreground">
+          <p className="mx-auto mt-1 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
@@ -420,13 +420,13 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-4 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-3 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-2">
+              <div className="relative my-1">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
