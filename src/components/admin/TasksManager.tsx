@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, CheckCircle2, Circle, ShieldCheck, Star, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function TasksManager() {
   const queryClient = useQueryClient();
@@ -103,6 +104,7 @@ export function TasksManager() {
       link_url: "",
       verification_required: false,
       is_featured: false,
+      is_repeatable: false,
       video_ad_count: 0,
       vast_tag_url: ""
     });
@@ -119,6 +121,7 @@ export function TasksManager() {
       link_url: task.link_url || "",
       verification_required: task.verification_required || false,
       is_featured: task.is_featured || false,
+      is_repeatable: task.is_repeatable || false,
       video_ad_count: task.video_ad_count || 0,
       vast_tag_url: task.vast_tag_url || ""
     });
@@ -259,6 +262,15 @@ export function TasksManager() {
                   {formData.is_featured ? <Star className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
                   {formData.is_featured ? "Featured Task" : "Standard Task"}
                 </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={cn("rounded-lg px-3 font-bold", formData.is_repeatable ? "text-blue-600 bg-blue-50" : "text-muted-foreground")}
+                  onClick={() => setFormData({...formData, is_repeatable: !formData.is_repeatable})}
+                >
+                  {formData.is_repeatable ? <RefreshCw className="h-4 w-4 mr-2" /> : <Circle className="h-4 w-4 mr-2" />}
+                  {formData.is_repeatable ? "Daily Repeatable" : "One-time Task"}
+                </Button>
               </div>
             </div>
             <DialogFooter>
@@ -310,6 +322,12 @@ export function TasksManager() {
                         <Badge className="bg-amber-100 text-amber-600 hover:bg-amber-100 border-none font-black text-[9px] h-4 px-1.5 flex items-center gap-0.5">
                           <Star className="h-2.5 w-2.5 fill-current" />
                           FEATURED
+                        </Badge>
+                      )}
+                      {task.is_repeatable && (
+                        <Badge className="bg-blue-100 text-blue-600 hover:bg-blue-100 border-none font-black text-[9px] h-4 px-1.5 flex items-center gap-0.5">
+                          <RefreshCw className="h-2.5 w-2.5" />
+                          DAILY
                         </Badge>
                       )}
                     </div>
@@ -367,8 +385,4 @@ export function TasksManager() {
       </div>
     </div>
   );
-}
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
 }
