@@ -472,13 +472,13 @@ function ProfilePage() {
                             size="sm" 
                             className={cn(
                               "h-11 rounded-xl font-bold px-3 transition-all",
-                              verifiedHandles.twitter ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                              verifiedHandles['twitter'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
                             )}
-                            disabled={!twitter || !!getValidationError(twitter, 'twitter') || verifyingHandles.twitter || verifiedHandles.twitter}
+                            disabled={!twitter || !!getValidationError(twitter, 'twitter') || verifyingHandles['twitter'] || verifiedHandles['twitter']}
                             onClick={() => handleManualVerify('twitter', twitter)}
                           >
-                            {verifyingHandles.twitter ? <Loader2 className="h-4 w-4 animate-spin" /> : 
-                             verifiedHandles.twitter ? <Check className="h-4 w-4" /> : "Verify"}
+                            {verifyingHandles['twitter'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['twitter'] ? <Check className="h-4 w-4" /> : "Verify"}
                           </Button>
                         </div>
                         {twitter && (
@@ -521,13 +521,13 @@ function ProfilePage() {
                             size="sm" 
                             className={cn(
                               "h-11 rounded-xl font-bold px-3 transition-all",
-                              verifiedHandles.telegram ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                              verifiedHandles['telegram'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
                             )}
-                            disabled={!telegram || !!getValidationError(telegram, 'telegram') || verifyingHandles.telegram || verifiedHandles.telegram}
+                            disabled={!telegram || !!getValidationError(telegram, 'telegram') || verifyingHandles['telegram'] || verifiedHandles['telegram']}
                             onClick={() => handleManualVerify('telegram', telegram)}
                           >
-                            {verifyingHandles.telegram ? <Loader2 className="h-4 w-4 animate-spin" /> : 
-                             verifiedHandles.telegram ? <Check className="h-4 w-4" /> : "Verify"}
+                            {verifyingHandles['telegram'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['telegram'] ? <Check className="h-4 w-4" /> : "Verify"}
                           </Button>
                         </div>
                         {telegram && (
@@ -570,13 +570,13 @@ function ProfilePage() {
                             size="sm" 
                             className={cn(
                               "h-11 rounded-xl font-bold px-3 transition-all",
-                              verifiedHandles.facebook ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                              verifiedHandles['facebook'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
                             )}
-                            disabled={!facebook || !!getValidationError(facebook, 'facebook') || verifyingHandles.facebook || verifiedHandles.facebook}
+                            disabled={!facebook || !!getValidationError(facebook, 'facebook') || verifyingHandles['facebook'] || verifiedHandles['facebook']}
                             onClick={() => handleManualVerify('facebook', facebook)}
                           >
-                            {verifyingHandles.facebook ? <Loader2 className="h-4 w-4 animate-spin" /> : 
-                             verifiedHandles.facebook ? <Check className="h-4 w-4" /> : "Verify"}
+                            {verifyingHandles['facebook'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['facebook'] ? <Check className="h-4 w-4" /> : "Verify"}
                           </Button>
                         </div>
                         {facebook && (
