@@ -54,7 +54,7 @@ function DnsStatusPage() {
   }, [autoRefresh, refreshInterval, status]);
 
   return (
-    <div className="container max-w-2xl py-12 px-4 space-y-8 animate-in fade-in duration-700">
+    <div className="container max-w-2xl py-24 px-4 space-y-8 animate-in fade-in duration-700">
       <div className="text-center space-y-2">
         <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-primary">
           Domain Status
