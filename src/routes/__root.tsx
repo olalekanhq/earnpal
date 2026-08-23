@@ -190,6 +190,7 @@ function RootComponent() {
   const location = useLocation();
   const router = useRouter();
   const isLandingPage = location.pathname === "/";
+  const isAuthPage = location.pathname === "/auth";
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
