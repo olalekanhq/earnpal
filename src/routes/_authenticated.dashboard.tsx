@@ -305,7 +305,12 @@ function Dashboard() {
                   </CardHeader>
                   <CardContent className="p-5 sm:p-6 pt-2">
                     <div className="space-y-1 mb-4 sm:mb-6">
-                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight">{task.title}</CardTitle>
+                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight flex items-center justify-between">
+                        {task.title}
+                        {(task as any).is_repeatable && (
+                          <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
+                        )}
+                      </CardTitle>
                       <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">{task.description}</CardDescription>
                     </div>
                     <Button 
