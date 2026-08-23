@@ -2,18 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/terms")({
   head: () => {
-    const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.lovable.app';
+    const url = typeof window !== 'undefined' ? window.location.origin : 'https://noblegain.lovable.app';
     const canonicalUrl = `${url}/terms`;
 
     return {
-      title: "Terms of Service | Earn Pal",
+      title: "Terms of Service | Noble Gain",
       meta: [
-        { name: "description", content: "Read the Earn Pal terms of service. Understand our rules, user obligations, and platform policies before you start earning." },
-        { property: "og:title", content: "Terms of Service | Earn Pal" },
-        { property: "og:description", content: "The rules of the road for Earn Pal. Read our terms of service." },
+        { name: "description", content: "Read the Noble Gain terms of service. Understand our rules, user obligations, and platform policies before you start earning." },
+        { property: "og:title", content: "Terms of Service | Noble Gain" },
+        { property: "og:description", content: "The rules of the road for Noble Gain. Read our terms of service." },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: `${url}/api/public/og?title=Terms of Service&description=Rules and policies for Earn Pal.` },
+        { property: "og:image", content: `${url}/api/public/og?title=Terms of Service&description=Rules and policies for Noble Gain.` },
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: canonicalUrl }],
@@ -24,10 +24,10 @@ export const Route = createFileRoute("/terms")({
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Terms of Service",
-            "description": "Earn Pal Terms of Service",
+            "description": "Noble Gain Terms of Service",
             "publisher": {
               "@type": "Organization",
-              "name": "Earn Pal"
+              "name": "Noble Gain"
             }
           })
         }
@@ -48,7 +48,7 @@ function TermsPage() {
           
           <section className="space-y-4">
             <h2 className="text-2xl font-black text-foreground">1. Agreement to Terms</h2>
-            <p>By accessing or using Earn Pal, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.</p>
+            <p>By accessing or using Noble Gain, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.</p>
           </section>
 
           <section className="space-y-4">
@@ -69,7 +69,7 @@ function TermsPage() {
 
           <section className="space-y-4">
             <h2 className="text-2xl font-black text-foreground">4. Intellectual Property</h2>
-            <p>The service and its original content, features, and functionality are and will remain the exclusive property of Earn Pal and its licensors.</p>
+            <p>The service and its original content, features, and functionality are and will remain the exclusive property of Noble Gain and its licensors.</p>
           </section>
 
           <section className="space-y-4">

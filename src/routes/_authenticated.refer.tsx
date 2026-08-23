@@ -11,13 +11,13 @@ import { ReferralStatsDashboard } from "@/components/ReferralStatsDashboard";
 
 export const Route = createFileRoute("/_authenticated/refer")({
   head: () => ({
-    title: "Refer Friends | Earn Passive Income | Earn Pal",
+    title: "Refer Friends | Earn Passive Income | Noble Gain",
     meta: [
-      { name: "description", content: "Invite your friends to Join Earn Pal and build a passive income stream. Earn 75 points for every referral while your friends get a 50-point head start!" },
-      { property: "og:title", content: "Referral Program | Earn Pal Bonuses" },
+      { name: "description", content: "Invite your friends to Join Noble Gain and build a passive income stream. Earn 75 points for every referral while your friends get a 50-point head start!" },
+      { property: "og:title", content: "Referral Program | Noble Gain Bonuses" },
       { property: "og:description", content: "Share your unique referral link and earn points for every friend who joins. The fastest way to grow your balance." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -256,7 +256,7 @@ function ReferralPage() {
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-bold text-primary">2</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-medium">Your friends click the link and sign up for an Earn Pal account.</p>
+                <p className="text-xs text-muted-foreground font-medium">Your friends click the link and sign up for an Noble Gain account.</p>
               </div>
               <div className="flex gap-3">
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">

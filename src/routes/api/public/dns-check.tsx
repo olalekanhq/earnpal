@@ -5,7 +5,7 @@ export const Route = createFileRoute('/api/public/dns-check')({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const domain = url.searchParams.get('domain') || 'earnpal.qd.je';
+        const domain = url.searchParams.get('domain') || 'noblegain.qd.je';
         
         try {
           // In a real Worker environment, we might use a DoH API or similar

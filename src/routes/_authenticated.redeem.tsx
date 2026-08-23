@@ -22,13 +22,13 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/redeem")({
   head: () => ({
-    title: "Redeem Rewards | Marketplace & Gift Cards | Earn Pal",
+    title: "Redeem Rewards | Marketplace & Gift Cards | Noble Gain",
     meta: [
-      { name: "description", content: "Exchange your hard-earned Earn Pal points for premium gift cards, vouchers, and exclusive products in our rewards marketplace." },
-      { property: "og:title", content: "Redeem Your Points | Earn Pal Marketplace" },
+      { name: "description", content: "Exchange your hard-earned Noble Gain points for premium gift cards, vouchers, and exclusive products in our rewards marketplace." },
+      { property: "og:title", content: "Redeem Your Points | Noble Gain Marketplace" },
       { property: "og:description", content: "Turn your points into real-world rewards. Browse our catalog of gift cards and premium vouchers." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

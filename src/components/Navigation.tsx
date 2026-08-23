@@ -142,8 +142,8 @@ export function Navigation() {
                 </Button>
               )}
               <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
-                <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 object-contain" />
-                <span className="hidden xs:inline">Earn Pal</span>
+                <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
+                <span className="hidden xs:inline">Noble Gain</span>
               </Link>
             </div>
             
@@ -178,8 +178,8 @@ export function Navigation() {
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl text-primary uppercase tracking-tighter">
-                <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
-                <span>Earn Pal</span>
+                <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
+                <span>Noble Gain</span>
               </Link>
             </div>
 
@@ -276,9 +276,9 @@ export function Navigation() {
     <div className="flex flex-col h-full py-6 px-4">
       <div className="flex items-center gap-3 px-2 mb-8">
         <div className="bg-primary/10 p-2 rounded-xl border border-primary/20 shadow-sm">
-          <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
+          <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
         </div>
-        <span className="font-black text-xl tracking-tighter uppercase">Earn Pal</span>
+        <span className="font-black text-xl tracking-tighter uppercase">Noble Gain</span>
       </div>
 
       <div className="flex-1 space-y-8">
@@ -344,7 +344,7 @@ export function Navigation() {
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <AlertDialogContent className="rounded-2xl border-border/40 max-w-[400px]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-black text-xl">Sign out of Earn Pal?</AlertDialogTitle>
+            <AlertDialogTitle className="font-black text-xl">Sign out of Noble Gain?</AlertDialogTitle>
             <AlertDialogDescription className="font-medium">
               You'll need to sign back in to access your rewards and track your progress.
             </AlertDialogDescription>
@@ -364,8 +364,8 @@ export function Navigation() {
       <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1] animate-neon-pulse">
         <div className="flex items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter text-primary ml-2">
-            <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
-            <span className="leading-tight">Earn Pal</span>
+            <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
+            <span className="leading-tight">Noble Gain</span>
           </Link>
         </div>
         <div className="flex items-center gap-2">

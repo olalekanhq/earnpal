@@ -219,12 +219,12 @@ export function VideoAdInterstitial() {
         <div className="mt-8 text-center space-y-2 animate-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="bg-primary/20 p-2 rounded-xl">
-              <img src="/logo.png" alt="Earn Pal" className="h-6 w-6 object-contain" />
+              <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
             </div>
-            <span className="text-xl font-black text-white uppercase tracking-tighter">Earn Pal</span>
+            <span className="text-xl font-black text-white uppercase tracking-tighter">Noble Gain</span>
           </div>
           <p className="text-white/60 font-medium max-w-md">
-            Your reward is coming right after this short message. Thank you for supporting Earn Pal!
+            Your reward is coming right after this short message. Thank you for supporting Noble Gain!
           </p>
         </div>
 

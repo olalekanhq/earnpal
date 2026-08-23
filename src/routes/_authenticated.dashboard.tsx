@@ -14,13 +14,13 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
-    title: "Member Dashboard | My Earnings & Progress | Earn Pal",
+    title: "Member Dashboard | My Earnings & Progress | Noble Gain",
     meta: [
-      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Earn Pal dashboard. Your hub for all earning activities." },
-      { property: "og:title", content: "Member Dashboard | Earn Pal" },
+      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Noble Gain dashboard. Your hub for all earning activities." },
+      { property: "og:title", content: "Member Dashboard | Noble Gain" },
       { property: "og:description", content: "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

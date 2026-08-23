@@ -21,7 +21,7 @@ function DnsStatusPage() {
     setStatus('loading');
     setProgress(20);
     try {
-      const res = await fetch('/api/public/dns-check?domain=earnpal.qd.je');
+      const res = await fetch('/api/public/dns-check?domain=noblegain.qd.je');
       const data = await res.json();
       
       setProgress(100);
@@ -60,7 +60,7 @@ function DnsStatusPage() {
           Domain Status
         </h1>
         <p className="text-muted-foreground font-medium">
-          Tracking propagation for earnpal.qd.je
+          Tracking propagation for noblegain.qd.je
         </p>
       </div>
 
@@ -161,7 +161,7 @@ function DnsStatusPage() {
               className="flex-1 rounded-xl font-black uppercase h-12"
               asChild
             >
-              <a href="https://whatsmydns.net/#CNAME/earnpal.qd.je" target="_blank" rel="noopener noreferrer">
+              <a href="https://whatsmydns.net/#CNAME/noblegain.qd.je" target="_blank" rel="noopener noreferrer">
                 <Globe className="mr-2 h-4 w-4" />
                 Global Check
                 <ExternalLink className="ml-2 h-3 w-3" />

@@ -145,13 +145,13 @@ export function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("earnpal_admin_last_tab") || "users";
+      return localStorage.getItem("noblegain_admin_last_tab") || "users";
     }
     return "users";
   });
 
   useEffect(() => {
-    localStorage.setItem("earnpal_admin_last_tab", activeTab);
+    localStorage.setItem("noblegain_admin_last_tab", activeTab);
   }, [activeTab]);
 
   useEffect(() => {

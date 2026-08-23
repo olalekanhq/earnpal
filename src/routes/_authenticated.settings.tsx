@@ -13,13 +13,13 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
-    title: "Account Settings & Preferences | Earn Pal",
+    title: "Account Settings & Preferences | Noble Gain",
     meta: [
-      { name: "description", content: "Customize your Earn Pal experience. Manage notification preferences, security settings, and account privacy." },
-      { property: "og:title", content: "Settings | Earn Pal" },
+      { name: "description", content: "Customize your Noble Gain experience. Manage notification preferences, security settings, and account privacy." },
+      { property: "og:title", content: "Settings | Noble Gain" },
       { property: "og:description", content: "Tailor your earning experience and manage your account security." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

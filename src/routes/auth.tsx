@@ -17,13 +17,13 @@ import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
-    title: "Secure Login & Registration | Earn Pal",
+    title: "Secure Login & Registration | Noble Gain",
     meta: [
-      { name: "description", content: "Access your Earn Pal account or sign up to start earning rewards. Secure login for the most trusted points-earning community." },
-      { property: "og:title", content: "Join Earn Pal | Secure Access" },
+      { name: "description", content: "Access your Noble Gain account or sign up to start earning rewards. Secure login for the most trusted points-earning community." },
+      { property: "og:title", content: "Join Noble Gain | Secure Access" },
       { property: "og:description", content: "Sign in to manage your rewards or create a new account and get a 50-point welcome bonus with a referral code!" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -334,7 +334,7 @@ function AuthPage() {
   const Brand = () => (
     <div className="flex flex-col items-center justify-center">
       <div className="auth-mark flex size-10 items-center justify-center rounded-2xl">
-        <img src="/logo.png" alt="Earn Pal" className="size-6 object-contain" />
+        <img src="/logo.png" alt="Noble Gain" className="size-6 object-contain" />
       </div>
     </div>
   );
@@ -426,7 +426,7 @@ function AuthPage() {
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
                 ? "Sign in to track your points and rewards. Browsing needs no account."
-                : "Join Earn Pal and start earning points from simple tasks today."}
+                : "Join Noble Gain and start earning points from simple tasks today."}
           </p>
 
           {!showReset && (
