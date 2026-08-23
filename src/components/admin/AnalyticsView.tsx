@@ -37,14 +37,14 @@ export function AnalyticsView() {
   const [selectedTaskId, setSelectedTaskId] = useState<string>("all");
 
   const { data: tasks } = useQuery({
-    queryKey: ["admin-tasks-simple"],
+    queryKey: ["admin-tasks-simple-analytics"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tasks" as any)
+        .from("tasks")
         .select("id, title")
         .order("title");
       if (error) throw error;
-      return data as { id: string; title: string }[];
+      return data as unknown as { id: string; title: string }[];
     }
   });
 
