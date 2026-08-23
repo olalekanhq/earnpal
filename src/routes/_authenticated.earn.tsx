@@ -217,7 +217,7 @@ function EarnPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
           {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
             <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
               <div className="h-1 w-full bg-primary/10 group-hover:bg-primary transition-colors" />

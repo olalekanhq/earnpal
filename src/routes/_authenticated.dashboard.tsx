@@ -267,7 +267,7 @@ function Dashboard() {
               Featured Tasks
             </h2>
           </div>
-          <div className="grid gap-3 sm:gap-6 grid-cols-1 md:grid-cols-2">
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
               const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
