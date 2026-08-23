@@ -44,24 +44,44 @@ function EarnPage() {
         .select("*")
         .eq("is_active", true)
         .order("created_at", { ascending: false });
-      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note").eq("user_id", user.id);
+      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note, created_at").eq("user_id", user.id);
       const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
-      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, { status: s.status, admin_note: s.admin_note }]));
+      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, { status: s.status, admin_note: s.admin_note, created_at: s.created_at }]));
       const progressMap = new Map((videoProgress as any)?.map((p: any) => [p.task_id, p.watch_count]));
       
       return (tasksData as any)
         ?.map((task: any) => {
-          const submission = submissionsMap.get(task.id) as { status: string; admin_note: string } | undefined;
+          const submission = submissionsMap.get(task.id) as { status: string; admin_note: string; created_at: string } | undefined;
           return {
             ...task,
             status: submission?.status || null,
             admin_note: submission?.admin_note || null,
+            submission_date: submission?.created_at || null,
             watch_count: progressMap.get(task.id) || 0
           };
         }) || [];
     },
   });
+
+  const { data: dailyStats } = useQuery({
+    queryKey: ["daily-task-stats"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { daily_count: 0 };
+      
+      const { data, error } = await supabase
+        .from("user_daily_task_counts" as any)
+        .select("daily_count")
+        .eq("user_id", user.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') console.error('Error fetching daily stats:', error);
+      return data || { daily_count: 0 };
+    }
+  });
+
+  const dailyLimitReached = (dailyStats?.daily_count || 0) >= 10;
 
   const { data: socialCheck } = useQuery({
     queryKey: ["social-verification"],
