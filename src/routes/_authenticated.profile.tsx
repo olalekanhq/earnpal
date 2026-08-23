@@ -598,29 +598,47 @@ function ProfilePage() {
                       {/* Instagram Handle */}
                       <div className="space-y-2">
                         <Label htmlFor="instagram" className="text-xs font-semibold text-muted-foreground uppercase">Instagram</Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
-                            instagram.com/
-                          </span>
-                          <Input 
-                            id="instagram" 
-                            value={instagram} 
-                            onChange={(e) => setInstagram(cleanHandle(e.target.value, 'instagram'))} 
-                            className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
-                            placeholder="username" 
-                          />
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center flex-1">
+                            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
+                              instagram.com/
+                            </span>
+                            <Input 
+                              id="instagram" 
+                              value={instagram} 
+                              onChange={(e) => {
+                                setInstagram(cleanHandle(e.target.value, 'instagram'));
+                                setVerifiedHandles(prev => ({ ...prev, instagram: false }));
+                              }} 
+                              className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
+                              placeholder="username" 
+                            />
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={cn(
+                              "h-11 rounded-xl font-bold px-3 transition-all",
+                              verifiedHandles['instagram'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                            )}
+                            disabled={!instagram || !!getValidationError(instagram, 'instagram') || verifyingHandles['instagram'] || verifiedHandles['instagram']}
+                            onClick={() => handleManualVerify('instagram', instagram)}
+                          >
+                            {verifyingHandles['instagram'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['instagram'] ? <Check className="h-4 w-4" /> : "Verify"}
+                          </Button>
                         </div>
                         {instagram && (
                           <div className="flex items-center gap-1.5 px-1 animate-in fade-in duration-300">
-                            {validateHandle(instagram, 'instagram') ? (
-                              <>
+                            {getValidationError(instagram, 'instagram') ? (
+                              <span className="text-[10px] text-destructive font-medium">{getValidationError(instagram, 'instagram')}</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
                                 <Check className="h-3 w-3 text-green-500" />
                                 <span className="text-[10px] text-muted-foreground">
                                   Profile: <span className="text-foreground font-medium">instagram.com/{instagram}</span>
                                 </span>
-                              </>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Invalid username</span>
+                              </div>
                             )}
                           </div>
                         )}
