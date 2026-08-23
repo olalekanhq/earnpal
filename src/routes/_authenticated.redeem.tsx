@@ -106,7 +106,7 @@ function RedeemPage() {
 
   return (
     <>
-      <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
+      <div className="space-y-8 w-full">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight text-foreground">Redeem Rewards</h1>

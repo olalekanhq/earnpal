@@ -110,8 +110,8 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12">
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <div className="space-y-8 w-full">
+      <div>
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

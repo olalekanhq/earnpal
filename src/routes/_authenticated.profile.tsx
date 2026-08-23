@@ -195,7 +195,7 @@ function ProfilePage() {
   if (isLoading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
   return (
-    <div className="pb-12 px-4 md:px-8 max-w-4xl mx-auto space-y-8">
+    <div className="space-y-8 w-full">
       <header>
         <h1 className="text-3xl font-black tracking-tight text-foreground">My Profile</h1>
         <p className="text-muted-foreground">Manage your identity and account settings.</p>
