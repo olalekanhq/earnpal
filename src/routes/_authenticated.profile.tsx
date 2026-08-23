@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe, X, History as HistoryIcon } from "lucide-react";
+import { User, Mail, Calendar, Coins, Share2, Award, Shield, Settings as SettingsIcon, Camera, Loader2, Check, Lock, Gift, ArrowRight, Edit3, Eye, EyeOff, Globe, X, History as HistoryIcon, LayoutDashboard } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -191,6 +191,27 @@ function ProfilePage() {
       return count || 0;
     },
   });
+
+  const { data: authInfo } = useQuery({
+    queryKey: ["authInfo"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { isAdmin: false, isModerator: false, isTasker: false };
+      
+      const [{ data: isAdmin }, { data: isModerator }, { data: isTasker }] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'moderator' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'tasker' })
+      ]);
+      
+      return { isAdmin, isModerator, isTasker };
+    },
+  });
+
+  const isAdmin = authInfo?.isAdmin || false;
+  const isModerator = authInfo?.isModerator || false;
+  const isTasker = (authInfo?.isTasker as boolean) || false;
+  const hasSpecialRole = isAdmin || isModerator || isTasker;
 
   if (isLoading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
@@ -522,6 +543,65 @@ function ProfilePage() {
                   </Link>
                 </div>
               </Card>
+
+              {hasSpecialRole && (
+                <Card className="border-none shadow-sm bg-card p-6 border-l-4 border-l-primary animate-in fade-in slide-in-from-left-4 duration-500">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="font-black text-lg text-foreground uppercase tracking-tight">Platform Management</h3>
+                      <p className="text-xs text-muted-foreground font-medium">Administrative tools & panels</p>
+                    </div>
+                    <Shield className="h-6 w-6 text-primary/40" />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    {isAdmin && (
+                      <Link 
+                        to="/admin" 
+                        className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10 hover:bg-primary/10 transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="bg-primary p-2 rounded-xl text-primary-foreground group-hover:rotate-12 transition-transform">
+                            <LayoutDashboard className="h-4 w-4" />
+                          </div>
+                          <span className="text-sm font-black text-foreground">Admin Control Panel</span>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-primary opacity-50 group-hover:translate-x-1 transition-all" />
+                      </Link>
+                    )}
+                    
+                    {isModerator && !isAdmin && (
+                      <Link 
+                        to="/moderator" 
+                        className="flex items-center justify-between p-4 bg-blue-500/5 rounded-2xl border border-blue-500/10 hover:bg-blue-500/10 transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="bg-blue-500 p-2 rounded-xl text-white group-hover:rotate-12 transition-transform">
+                            <Shield className="h-4 w-4" />
+                          </div>
+                          <span className="text-sm font-black text-foreground">Moderator Tools</span>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-blue-500 opacity-50 group-hover:translate-x-1 transition-all" />
+                      </Link>
+                    )}
+                    
+                    {isTasker && !isModerator && !isAdmin && (
+                      <Link 
+                        to="/tasker" 
+                        className="flex items-center justify-between p-4 bg-indigo-500/5 rounded-2xl border border-indigo-500/10 hover:bg-indigo-500/10 transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="bg-indigo-500 p-2 rounded-xl text-white group-hover:rotate-12 transition-transform">
+                            <Shield className="h-4 w-4" />
+                          </div>
+                          <span className="text-sm font-black text-foreground">Tasker Workspace</span>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-indigo-500 opacity-50 group-hover:translate-x-1 transition-all" />
+                      </Link>
+                    )}
+                  </div>
+                </Card>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
