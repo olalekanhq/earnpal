@@ -65,37 +65,37 @@
 :root {
   --radius: 1rem;
   --background: oklch(0.984 0.005 247.858);
-  --foreground: #001f3f; /* Deep Blue from Noble Gain logo */
+  --foreground: #002d26; /* Deep Green from new Noble Gain logo */
   --card: oklch(1 0 0);
-  --card-foreground: #001f3f;
+  --card-foreground: #002d26;
   --popover: oklch(1 0 0);
-  --popover-foreground: #001f3f;
-  --primary: #001f3f; /* Deep Blue from Noble Gain logo */
+  --popover-foreground: #002d26;
+  --primary: #002d26; /* Deep Green from new Noble Gain logo */
   --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: #c5a059; /* Gold from Noble Gain logo */
-  --secondary-foreground: #001f3f;
+  --secondary: #e6c17a; /* Muted Gold from new Noble Gain logo */
+  --secondary-foreground: #002d26;
   --muted: oklch(0.968 0.007 247.896);
   --muted-foreground: oklch(0.7 0.01 247.858);
-  --accent: #c5a05922;
-  --accent-foreground: #001f3f;
+  --accent: #e6c17a22;
+  --accent-foreground: #002d26;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
-  --ring: #001f3f;
-  --chart-1: #001f3f;
-  --chart-2: #c5a059;
+  --ring: #002d26;
+  --chart-1: #002d26;
+  --chart-2: #e6c17a;
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.984 0.005 247.858);
-  --sidebar-foreground: #001f3f;
-  --sidebar-primary: #001f3f;
+  --sidebar-foreground: #002d26;
+  --sidebar-primary: #002d26;
   --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: #c5a05922;
-  --sidebar-accent-foreground: #001f3f;
+  --sidebar-accent: #e6c17a22;
+  --sidebar-accent-foreground: #002d26;
   --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: #001f3f;
+  --sidebar-ring: #002d26;
 }
 
 .dark {
