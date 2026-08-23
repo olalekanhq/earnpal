@@ -404,8 +404,11 @@ function AuthPage() {
       <div className="auth-blob" />
       <div className="auth-blob" style={{ top: '10%', left: '20%', width: '12rem', height: '12rem', animationDelay: '-15s', opacity: 0.4 }} />
       <div className="w-full max-w-[92%] sm:max-w-md">
-
+        <div className="flex justify-start">
+          <BackLink />
+        </div>
         <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
+
           <Brand />
 
           <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">
