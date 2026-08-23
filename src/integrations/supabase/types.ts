@@ -565,6 +565,7 @@ export type Database = {
           id: string
           is_active: boolean
           is_featured: boolean | null
+          is_repeatable: boolean | null
           link_url: string | null
           points: number
           title: string
@@ -580,6 +581,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_featured?: boolean | null
+          is_repeatable?: boolean | null
           link_url?: string | null
           points: number
           title: string
@@ -595,6 +597,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_featured?: boolean | null
+          is_repeatable?: boolean | null
           link_url?: string | null
           points?: number
           title?: string
@@ -809,6 +812,13 @@ export type Database = {
           referrer_points_balance: number | null
           referrer_referral_code: string | null
           referrer_username: string | null
+        }
+        Relationships: []
+      }
+      user_daily_task_counts: {
+        Row: {
+          daily_count: number | null
+          user_id: string | null
         }
         Relationships: []
       }
