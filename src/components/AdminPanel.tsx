@@ -35,7 +35,6 @@ import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
-import { TaskApprovals } from "./admin/TaskApprovals";
 
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
@@ -44,7 +43,7 @@ import { FraudManager } from "./admin/FraudManager";
 import { AuditLogs } from "./admin/AuditLogs";
 import { PointsAuditLogs } from "./admin/PointsAuditLogs";
 import { cn } from "@/lib/utils";
-import { ListTodo, ShieldCheck, PieChart, TrendingDown, Settings, ClipboardList } from "lucide-react";
+import { ListTodo, PieChart, TrendingDown, Settings, ClipboardList } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 import { useState, useEffect } from "react";
 
@@ -145,7 +144,7 @@ export function AdminPanel() {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
       const savedTab = localStorage.getItem("noblegain_admin_last_tab");
-      return savedTab === "fraud" ? "audit" : (savedTab || "users");
+      return savedTab === "fraud" || savedTab === "verifications" ? "audit" : (savedTab || "users");
     }
     return "users";
   });
@@ -202,7 +201,6 @@ export function AdminPanel() {
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
-    { value: "verifications", icon: ShieldCheck, label: "Verifications", color: undefined },
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
@@ -335,10 +333,6 @@ export function AdminPanel() {
           {activeTab === 'tasks' && <TasksManager />}
         </TabsContent>
 
-        <TabsContent value="verifications" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'verifications' && <TaskApprovals />}
-        </TabsContent>
-        
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'rewards' && <RewardsManager />}
         </TabsContent>
