@@ -341,6 +341,11 @@ function Dashboard() {
                           <CheckCircle2 className="h-4 w-4" />
                           {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
                         </div>
+                      ) : dailyLimitReached ? (
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-4 w-4" />
+                          Limit Reached
+                        </div>
                       ) : (
                         <>
                           Start
