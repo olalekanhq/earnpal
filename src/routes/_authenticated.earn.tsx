@@ -40,28 +40,48 @@ function EarnPage() {
       if (!user) return [];
 
       const { data: tasksData } = await supabase
-        .from("tasks" as any)
-        .select("*")
+        .from("tasks")
+        .select("*, is_repeatable")
         .eq("is_active", true)
         .order("created_at", { ascending: false });
-      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note").eq("user_id", user.id);
+      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note, created_at").eq("user_id", user.id);
       const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
-      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, { status: s.status, admin_note: s.admin_note }]));
+      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, { status: s.status, admin_note: s.admin_note, created_at: s.created_at }]));
       const progressMap = new Map((videoProgress as any)?.map((p: any) => [p.task_id, p.watch_count]));
       
       return (tasksData as any)
         ?.map((task: any) => {
-          const submission = submissionsMap.get(task.id) as { status: string; admin_note: string } | undefined;
+          const submission = submissionsMap.get(task.id) as { status: string; admin_note: string; created_at: string } | undefined;
           return {
             ...task,
             status: submission?.status || null,
             admin_note: submission?.admin_note || null,
+            submission_date: submission?.created_at || null,
             watch_count: progressMap.get(task.id) || 0
           };
         }) || [];
     },
   });
+
+  const { data: dailyStats } = useQuery({
+    queryKey: ["daily-task-stats"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { daily_count: 0 };
+      
+      const { data, error } = await supabase
+        .from("user_daily_task_counts" as any)
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      
+      if (error) console.error('Error fetching daily stats:', error);
+      return (data as any) || { daily_count: 0 };
+    }
+  });
+
+  const dailyLimitReached = (dailyStats?.daily_count || 0) >= 10;
 
   const { data: socialCheck } = useQuery({
     queryKey: ["social-verification"],
@@ -104,17 +124,23 @@ function EarnPage() {
   ];
 
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
-    const isCompleted = t.status === "verified";
+    const isVerifiedToday = t.status === "verified" && t.submission_date && new Date(t.submission_date).toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
+    const isCompletedNonRepeatable = t.status === "verified" && !t.is_repeatable;
     const isPending = t.status === "pending";
     const isRejected = t.status === "rejected";
     
     let matchesStatus = false;
-    if (activeStatus === "completed") matchesStatus = isCompleted;
-    else if (activeStatus === "in_progress") matchesStatus = isPending;
-    else if (activeStatus === "rejected") matchesStatus = isRejected;
-    else matchesStatus = !isCompleted && !isPending && !isRejected;
+    if (activeStatus === "completed") {
+      matchesStatus = t.status === "verified";
+    } else if (activeStatus === "in_progress") {
+      matchesStatus = isPending;
+    } else if (activeStatus === "rejected") {
+      matchesStatus = isRejected;
+    } else {
+      // Available: not pending, not completed today, and (repeatable or never completed)
+      matchesStatus = !isPending && !isVerifiedToday && !isCompletedNonRepeatable;
+    }
 
-    // When showing in_progress, completed, or rejected tasks, show all of them (ignore category filter)
     const matchesCategory = activeStatus !== "available" || activeCategory === "All" || t.category === activeCategory;
     return matchesStatus && matchesCategory;
   });
@@ -130,6 +156,26 @@ function EarnPage() {
             Complete tasks to earn points and level up your account.
           </p>
         </div>
+        
+        {dailyStats && (
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-2xl border border-primary/10 shadow-sm">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">Daily Tasks</span>
+                <span className={cn("text-lg font-black leading-none", dailyLimitReached ? "text-amber-500" : "text-foreground")}>
+                  {dailyStats.daily_count}/10
+                </span>
+              </div>
+              <div className="h-8 w-[1px] bg-primary/10 mx-1" />
+              <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center">
+                <Zap className={cn("h-4 w-4", dailyLimitReached ? "text-amber-500 fill-amber-500" : "text-primary")} />
+              </div>
+            </div>
+            {dailyLimitReached && (
+              <p className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Limit reached for today</p>
+            )}
+          </div>
+        )}
       </header>
 
       {socialLocked && (
@@ -231,7 +277,12 @@ function EarnPage() {
                     <span className="text-green-600 font-bold text-[10px] sm:text-xs">{task.points}</span>
                   </div>
                 </div>
-                <CardTitle className="text-[15px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
+                <CardTitle className="text-[15px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight flex items-center justify-between">
+                  {task.title}
+                  {task.is_repeatable && (
+                    <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
+                  )}
+                </CardTitle>
                 <CardDescription className="text-[11px] sm:text-sm font-medium line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
                 
                 {task.status === 'rejected' && task.admin_note && (
@@ -270,7 +321,7 @@ function EarnPage() {
                 <Button
                   className="w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm shadow-sm group-hover:shadow-md transition-all px-2"
                   title={socialLocked ? "Complete your social profile to unlock tasks" : undefined}
-                  disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                  disabled={socialLocked || dailyLimitReached || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
                     const { data: { user } } = await supabase.auth.getUser();
                     if (!user) return;
@@ -341,6 +392,7 @@ function EarnPage() {
                           if (res.completed) {
                             toast.success(res.message);
                             queryClient.invalidateQueries({ queryKey: ["profile"] });
+                            queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
                           } else {
                             toast.success(res.message);
                           }
@@ -403,6 +455,7 @@ function EarnPage() {
                         toast.success((data as any)?.message || "Task submitted!");
                         refetchTasks();
                         queryClient.invalidateQueries({ queryKey: ["profile"] });
+                        queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
                         setTaskUiStates(prev => ({ ...prev, [task.id]: 'idle' }));
                       }
                       setCompletingTaskId(null);
@@ -440,7 +493,7 @@ function EarnPage() {
                       Try Again
                     </>
                   ) : (
-                    "Start Earning"
+                    dailyLimitReached ? "Daily Limit Reached" : "Start Earning"
                   )}
                 </Button>
               </CardContent>

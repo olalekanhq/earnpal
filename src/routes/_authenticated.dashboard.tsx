@@ -84,6 +84,25 @@ function Dashboard() {
     }
   });
 
+  const { data: dailyStats } = useQuery({
+    queryKey: ["daily-task-stats"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { daily_count: 0 };
+      
+      const { data, error } = await supabase
+        .from("user_daily_task_counts" as any)
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      
+      if (error) console.error('Error fetching daily stats:', error);
+      return (data as any) || { daily_count: 0 };
+    }
+  });
+
+  const dailyLimitReached = (dailyStats?.daily_count || 0) >= 10;
+
   const claimDailyStreak = useMutation({
     mutationFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -97,7 +116,7 @@ function Dashboard() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
-      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
       toast.success(result.message || `Daily bonus claimed! +${result.points} points`);
     },
     onError: (error: any) => {
@@ -183,13 +202,35 @@ function Dashboard() {
 
       {/* Profile Completion Warning Banner */}
       {/* Welcome bonus banner removed to ensure it never reappears after claiming */}
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">
-          Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
-        </h1>
-        <p className="text-muted-foreground">
-          Here's what's happening with your rewards today.
-        </p>
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
+            Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
+          </h1>
+          <p className="text-muted-foreground">
+            Here's what's happening with your rewards today.
+          </p>
+        </div>
+
+        {dailyStats && (
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-2xl border border-primary/10 shadow-sm">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">Daily Tasks</span>
+                <span className={cn("text-lg font-black leading-none", dailyLimitReached ? "text-amber-500" : "text-foreground")}>
+                  {dailyStats.daily_count}/10
+                </span>
+              </div>
+              <div className="h-8 w-[1px] bg-primary/10 mx-1" />
+              <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center">
+                <Zap className={cn("h-4 w-4", dailyLimitReached ? "text-amber-500 fill-amber-500" : "text-primary")} />
+              </div>
+            </div>
+            {dailyLimitReached && (
+              <p className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Limit reached for today</p>
+            )}
+          </div>
+        )}
       </header>
 
       <div className="flex flex-col lg:flex-row gap-6">
@@ -286,16 +327,23 @@ function Dashboard() {
                   </CardHeader>
                   <CardContent className="p-5 sm:p-6 pt-2">
                     <div className="space-y-1 mb-4 sm:mb-6">
-                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight">{task.title}</CardTitle>
+                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight flex items-center justify-between">
+                        {task.title}
+                        {(task as any).is_repeatable && (
+                          <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
+                        )}
+                      </CardTitle>
                       <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">{task.description}</CardDescription>
                     </div>
                     <Button 
                       className={cn(
                         "w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm transition-all px-2",
-                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
+                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : 
+                        dailyLimitReached ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
+                        "shadow-md shadow-primary/10"
                       )}
                       onClick={async () => {
-                        if (isCompleted) return;
+                        if (isCompleted || dailyLimitReached) return;
                         
                         const taskAny = task as any;
                         if (taskAny.link_url) {
@@ -308,12 +356,17 @@ function Dashboard() {
                         // Let's keep it simple: open link and toast instruction.
                         toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
                       }}
-                      disabled={isCompleted && submission?.status === 'verified'}
+                      disabled={(isCompleted && submission?.status === 'verified') || (!isCompleted && dailyLimitReached)}
                     >
                       {isCompleted ? (
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="h-4 w-4" />
                           {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
+                        </div>
+                      ) : dailyLimitReached ? (
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-4 w-4" />
+                          Limit Reached
                         </div>
                       ) : (
                         <>
