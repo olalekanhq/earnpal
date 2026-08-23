@@ -324,7 +324,7 @@ function AuthPage() {
     "auth-shell relative min-h-screen w-full px-4 py-1 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
 
   const Brand = () => (
-    <div className="flex flex-col items-center justify-center gap-2">
+    <div className="flex flex-col items-center justify-center">
       <div className="auth-mark flex size-10 items-center justify-center rounded-2xl">
         <img src="/logo.png" alt="Earn Pal" className="size-6 object-contain" />
       </div>
