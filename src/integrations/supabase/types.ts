@@ -890,6 +890,14 @@ export type Database = {
         Returns: Json
       }
       sync_points_balance: { Args: { p_user_id: string }; Returns: undefined }
+      verify_task_submission: {
+        Args: {
+          _admin_note?: string
+          _approve: boolean
+          _submission_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator" | "task_manager" | "tasker"
