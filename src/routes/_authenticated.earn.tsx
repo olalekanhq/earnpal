@@ -296,7 +296,7 @@ function EarnPage() {
                 <Button
                   className="w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm shadow-sm group-hover:shadow-md transition-all px-2"
                   title={socialLocked ? "Complete your social profile to unlock tasks" : undefined}
-                  disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
+                  disabled={socialLocked || dailyLimitReached || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
                     const { data: { user } } = await supabase.auth.getUser();
                     if (!user) return;
