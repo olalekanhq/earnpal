@@ -262,7 +262,12 @@ export function AnalyticsView() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                       <XAxis 
                         dataKey="completion_date" 
-                        tickFormatter={(str) => format(new Date(str), 'MMM d')}
+                        tickFormatter={(str) => {
+                          const d = new Date(str);
+                          if (granularity === 'month') return format(d, 'MMM yyyy');
+                          if (granularity === 'week') return `W${format(d, 'w')} (${format(d, 'MMM d')})`;
+                          return format(d, 'MMM d');
+                        }}
                         tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
                         axisLine={false}
                         tickLine={false}
