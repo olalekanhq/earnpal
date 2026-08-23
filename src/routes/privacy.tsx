@@ -40,7 +40,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
+    <div className="container mx-auto px-4 py-24 max-w-4xl">
       <div className="bg-card p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-border/50">
         <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Privacy Policy</h1>
         
