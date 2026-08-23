@@ -1,4 +1,4 @@
-// Leia o arquivo instrucoes.md em anexo e siga as instruções contidas nele.
+Leia o arquivo instrucoes.md em anexo e siga as instruções contidas nele.
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Coins, ArrowRight, ShieldCheck, Zap, Users, Gift, CheckCircle2, Layout, BarChart3, Rocket, Globe, Sparkles, TrendingUp, CircleDollarSign } from "lucide-react";
