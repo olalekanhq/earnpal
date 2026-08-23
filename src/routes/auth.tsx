@@ -64,6 +64,8 @@ function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [resending, setResending] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
 
   useEffect(() => {
     if (search.mode && search.mode !== activeTab) {
@@ -149,7 +151,12 @@ function AuthPage() {
         setError("Please enter your full name.");
         return false;
       }
+      if (!agreedToTerms) {
+        setError("You must agree to the Terms and Conditions.");
+        return false;
+      }
     }
+
     
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
@@ -653,8 +660,21 @@ function AuthPage() {
                       </p>
                     )}
                   </div>
+
+                  <div className="flex items-start gap-2 pt-1">
+                    <Checkbox
+                      id="terms"
+                      checked={agreedToTerms}
+                      onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                      required
+                    />
+                    <Label htmlFor="terms" className="cursor-pointer text-xs font-medium leading-tight text-muted-foreground">
+                      I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>
+                    </Label>
+                  </div>
                   
                   <div className="pt-2">
+
                     <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Create account
