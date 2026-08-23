@@ -18,20 +18,23 @@ export function TaskApprovals() {
     queryKey: ["admin-pending-tasks"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("task_submissions" as any)
+        .from("task_submissions")
         .select(`
           id,
           task_id,
           user_id,
           status,
           created_at,
-          tasks:task_id (title, points, category),
-          profiles:user_id (full_name, username)
+          tasks (id, title, points, category),
+          profiles (id, full_name, username)
         `)
         .eq("status", "pending")
         .order("created_at", { ascending: true });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching tasks:", error);
+        throw error;
+      }
       return data as any[];
     }
   });
