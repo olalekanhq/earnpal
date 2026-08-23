@@ -210,7 +210,7 @@ export function WelcomeBonusModal() {
           <Sparkles className="absolute top-3 left-3 h-4 w-4 md:h-6 md:w-6 text-white/20 animate-pulse" />
           <Sparkles className="absolute bottom-3 right-6 h-3 w-3 md:h-4 md:w-4 text-white/30 animate-bounce" />
           <div className="bg-white/20 p-2 md:p-4 rounded-2xl md:rounded-3xl backdrop-blur-sm relative z-10 border border-white/20">
-            <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 md:h-12 md:w-12 object-contain" />
+            <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 md:h-12 md:w-12 object-contain" />
           </div>
           {/* Decorative shapes */}
           <div className="absolute -top-10 -right-10 w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full blur-xl md:blur-2xl" />
@@ -224,9 +224,9 @@ export function WelcomeBonusModal() {
             </DialogTitle>
             <DialogDescription className="text-xs md:text-base font-medium text-muted-foreground pt-0.5 md:pt-2">
               {referrerName ? (
-                <>Thanks for joining Earn Pal via <span className="text-primary font-bold">{referrerName}'s</span> referral! You've unlocked a special welcome gift.</>
+                <>Thanks for joining Noble Gain via <span className="text-primary font-bold">{referrerName}'s</span> referral! You've unlocked a special welcome gift.</>
               ) : (
-                <>Welcome to Earn Pal! You've unlocked a special welcome gift for joining our community.</>
+                <>Welcome to Noble Gain! You've unlocked a special welcome gift for joining our community.</>
               )}
             </DialogDescription>
           </DialogHeader>

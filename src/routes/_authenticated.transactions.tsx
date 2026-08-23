@@ -18,8 +18,8 @@ export const Route = createFileRoute("/_authenticated/transactions")({
   validateSearch: (search) => transactionSearchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Transaction History | Earn Pal" },
-      { name: "description", content: "Detailed view of your point earnings and spending on Earn Pal." }
+      { title: "Transaction History | Noble Gain" },
+      { name: "description", content: "Detailed view of your point earnings and spending on Noble Gain." }
     ],
   }),
   component: TransactionsPage,

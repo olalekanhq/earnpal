@@ -30,7 +30,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center text-center max-w-md">
         <div className="bg-primary/10 p-6 rounded-3xl mb-8 shadow-xl shadow-primary/5 ring-1 ring-primary/20">
-          <img src="/logo.png" alt="Earn Pal" className="h-16 w-16 object-contain animate-pulse" />
+          <img src="/logo.png" alt="Noble Gain" className="h-16 w-16 object-contain animate-pulse" />
         </div>
         
         <h1 className="text-8xl font-black text-primary tracking-tighter mb-2">404</h1>
@@ -50,7 +50,7 @@ function NotFoundComponent() {
         </Link>
         
         <div className="mt-12 flex items-center gap-2 font-black text-xs text-muted-foreground/40 uppercase tracking-[0.2em]">
-          <span>Earn Pal</span>
+          <span>Noble Gain</span>
           <span className="h-1 w-1 rounded-full bg-muted-foreground/20" />
           <span>Security Protocol</span>
         </div>
@@ -70,10 +70,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center animate-pulse">
         <div className="bg-primary/10 p-4 rounded-3xl mb-4 shadow-xl shadow-primary/10">
-          <img src="/logo.png" alt="Earn Pal" className="h-12 w-12 object-contain" />
+          <img src="/logo.png" alt="Noble Gain" className="h-12 w-12 object-contain" />
         </div>
-        <div className="flex items-center gap-2 font-black text-2xl text-primary tracking-tighter uppercase">
-          <span>Earn Pal</span>
+        <div className="flex items-center gap-2 font-black text-2xl tracking-tighter uppercase">
+          <span className="text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
         </div>
         <p className="mt-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
           Loading your experience...
@@ -106,17 +106,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     // Domain redirects disabled - site works independently on all URLs
   },
   head: () => {
-    const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.qd.je';
+    const url = typeof window !== 'undefined' ? window.location.origin : 'https://noblegain.qd.je';
     const canonicalUrl = typeof window !== 'undefined' ? `${url}${window.location.pathname}` : url;
 
     return {
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
-        { title: "Earn Pal — Reward Your Time" },
+        { title: "Noble Gain — Reward Your Time" },
         { name: "description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
-        { name: "author", content: "Earn Pal" },
-        { property: "og:title", content: "Earn Pal — Reward Your Time" },
+        { name: "author", content: "Noble Gain" },
+        { property: "og:title", content: "Noble Gain — Reward Your Time" },
         { property: "og:description", content: "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes." },
         { property: "og:type", content: "website" },
         { property: "og:url", content: canonicalUrl },
@@ -144,7 +144,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "Earn Pal",
+            "name": "Noble Gain",
             "url": url,
             "logo": `${url}/logo.png`,
             "description": "The ultimate rewards platform. Earn points for simple tasks, refer friends, and redeem for amazing prizes."
@@ -155,7 +155,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "Earn Pal",
+            "name": "Noble Gain",
             "url": url,
             "potentialAction": {
               "@type": "SearchAction",

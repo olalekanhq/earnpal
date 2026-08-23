@@ -1,10 +1,10 @@
-# Earn Pal
+# Noble Gain
 
 i want to vibe code a website
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://earnpal.lovable.app
+**Live app**: https://noblegain.lovable.app
 
 ## Build with Lovable
 

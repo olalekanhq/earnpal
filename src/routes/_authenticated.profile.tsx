@@ -15,13 +15,13 @@ import { ImageCropper } from "@/components/ImageCropper";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
-    title: "My Identity & Account Details | Earn Pal",
+    title: "My Identity & Account Details | Noble Gain",
     meta: [
-      { name: "description", content: "View and manage your Earn Pal public identity, social handles, and personal reward milestones." },
-      { property: "og:title", content: "My Profile | Earn Pal" },
+      { name: "description", content: "View and manage your Noble Gain public identity, social handles, and personal reward milestones." },
+      { property: "og:title", content: "My Profile | Noble Gain" },
       { property: "og:description", content: "Check your earning stats, social connections, and profile details." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

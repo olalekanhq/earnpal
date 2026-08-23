@@ -79,7 +79,7 @@ export function ReferralStatsDashboard() {
 
   const copyLink = () => {
     if (!referralLink) return;
-    const referralNote = `Join me on Earn Pal and start earning rewards together! Use my link: ${referralLink}`;
+    const referralNote = `Join me on Noble Gain and start earning rewards together! Use my link: ${referralLink}`;
     navigator.clipboard.writeText(referralNote);
     setCopiedLink(true);
     toast.success("Referral message copied!");

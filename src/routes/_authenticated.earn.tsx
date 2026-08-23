@@ -12,13 +12,13 @@ import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/earn")({
   head: () => ({
-    title: "Earn Points | Tasks, Ads & Surveys | Earn Pal",
+    title: "Earn Points | Tasks, Ads & Surveys | Noble Gain",
     meta: [
-      { name: "description", content: "Discover multiple ways to earn points on Earn Pal. Complete social media tasks, watch video ads, and participate in surveys to boost your balance today." },
-      { property: "og:title", content: "Earn Points | Tasks & Rewards | Earn Pal" },
+      { name: "description", content: "Discover multiple ways to earn points on Noble Gain. Complete social media tasks, watch video ads, and participate in surveys to boost your balance today." },
+      { property: "og:title", content: "Earn Points | Tasks & Rewards | Noble Gain" },
       { property: "og:description", content: "Unlock daily earning opportunities. Complete simple tasks and watch your points grow in real-time." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

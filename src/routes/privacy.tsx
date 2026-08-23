@@ -3,15 +3,15 @@ import { useLocation } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/privacy")({
   head: () => {
-    const url = typeof window !== 'undefined' ? window.location.origin : 'https://earnpal.lovable.app';
+    const url = typeof window !== 'undefined' ? window.location.origin : 'https://noblegain.lovable.app';
     const canonicalUrl = `${url}/privacy`;
 
     return {
-      title: "Privacy Policy | Earn Pal",
+      title: "Privacy Policy | Noble Gain",
       meta: [
-        { name: "description", content: "Learn how Earn Pal collects, uses, and protects your personal data. Our privacy policy outlines our commitment to your security." },
-        { property: "og:title", content: "Privacy Policy | Earn Pal" },
-        { property: "og:description", content: "Your privacy is our priority. Read the Earn Pal privacy policy." },
+        { name: "description", content: "Learn how Noble Gain collects, uses, and protects your personal data. Our privacy policy outlines our commitment to your security." },
+        { property: "og:title", content: "Privacy Policy | Noble Gain" },
+        { property: "og:description", content: "Your privacy is our priority. Read the Noble Gain privacy policy." },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "website" },
         { property: "og:image", content: `${url}/api/public/og?title=Privacy Policy&description=Your privacy matters to us.` },
@@ -25,10 +25,10 @@ export const Route = createFileRoute("/privacy")({
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Privacy Policy",
-            "description": "Earn Pal Privacy Policy",
+            "description": "Noble Gain Privacy Policy",
             "publisher": {
               "@type": "Organization",
-              "name": "Earn Pal"
+              "name": "Noble Gain"
             }
           })
         }
@@ -49,7 +49,7 @@ function PrivacyPage() {
           
           <section className="space-y-4">
             <h2 className="text-2xl font-black text-foreground">1. Introduction</h2>
-            <p>Welcome to Earn Pal. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.</p>
+            <p>Welcome to Noble Gain. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.</p>
           </section>
 
           <section className="space-y-4">

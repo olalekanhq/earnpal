@@ -11,7 +11,7 @@ export const Route = createFileRoute('/api/public/og')({
             .replace(/[<>&"']/g, (c) =>
               c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c === '"' ? '&quot;' : '&apos;'
             );
-        const title = escapeXml(searchParams.get('title') || 'Earn Pal', 60);
+        const title = escapeXml(searchParams.get('title') || 'Noble Gain', 60);
         const description = escapeXml(searchParams.get('description') || 'Reward Your Time', 120);
 
         // We'll generate a high-quality SVG that serves as a dynamic OpenGraph image.
@@ -46,7 +46,7 @@ export const Route = createFileRoute('/api/public/og')({
               <circle cx="25" cy="25" r="25" fill="#FFFFFF" opacity="0.2" />
               <path d="M25 15C19.48 15 15 19.48 15 25C15 30.52 19.48 35 25 35C30.52 35 35 30.52 35 25C35 19.48 30.52 15 25 15ZM26 30H24V24H20V22H26V30Z" fill="#FFFFFF" />
               <text x="65" y="32" font-family="Inter, sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="0.1em">
-                EARN PAL
+                NOBLE GAIN
               </text>
             </g>
 
