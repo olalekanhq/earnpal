@@ -321,7 +321,7 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-2 flex flex-col items-center justify-center bg-background text-foreground";
+    "auth-shell relative min-h-screen w-full px-4 py-2 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center gap-2">
@@ -344,8 +344,8 @@ function AuthPage() {
 
   if (showVerification) {
     return (
-      <div className={shellClass}>
-        <div className="w-full max-w-md">
+      <div className={cn(shellClass, "px-4 sm:px-6")}>
+        <div className="w-full max-w-[92%] sm:max-w-md">
           <BackLink />
           <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
             <Brand />
