@@ -9,6 +9,7 @@ export const Route = createFileRoute('/api/public/robots')({
         
         const robots = `User-agent: *
 Allow: /
+Allow: /about
 Allow: /earn
 Allow: /redeem
 Allow: /refer

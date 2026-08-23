@@ -184,6 +184,14 @@ export function Navigation() {
 
             <nav className="flex flex-col gap-4">
               <Link 
+                to="/about" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg font-black uppercase text-foreground/70 hover:text-primary transition-colors flex items-center gap-3"
+              >
+                <Sparkles className="h-5 w-5" />
+                About
+              </Link>
+              <Link 
                 to="/earn" 
                 search={{ tab: 'tasks' }} 
                 onClick={() => setIsMobileMenuOpen(false)}

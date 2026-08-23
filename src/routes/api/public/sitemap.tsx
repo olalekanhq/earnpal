@@ -10,6 +10,7 @@ export const Route = createFileRoute('/api/public/sitemap')({
         const routes = [
           '',
           '/auth',
+          '/about',
           '/earn',
           '/redeem',
           '/refer',
