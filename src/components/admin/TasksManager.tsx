@@ -31,6 +31,7 @@ export function TasksManager() {
     link_url: "",
     verification_required: false,
     is_featured: false,
+    is_repeatable: false,
     video_ad_count: 0,
     vast_tag_url: ""
   });
