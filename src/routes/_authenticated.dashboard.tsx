@@ -334,7 +334,7 @@ function Dashboard() {
                         // Let's keep it simple: open link and toast instruction.
                         toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
                       }}
-                      disabled={isCompleted && submission?.status === 'verified'}
+                      disabled={(isCompleted && submission?.status === 'verified') || (!isCompleted && dailyLimitReached)}
                     >
                       {isCompleted ? (
                         <div className="flex items-center gap-2">
