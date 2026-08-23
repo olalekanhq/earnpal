@@ -186,8 +186,8 @@ function AuthPage() {
 
       // The session is stored in localStorage and persists across refreshes and
       // browser restarts until the user signs out manually.
-      localStorage.removeItem('earn-pal-session-transient');
-      sessionStorage.removeItem('earn-pal-session-active');
+      localStorage.removeItem('noble-gain-session-transient');
+      sessionStorage.removeItem('noble-gain-session-active');
 
 
       const { error } = await supabase.auth.signInWithPassword({ 
