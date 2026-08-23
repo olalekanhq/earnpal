@@ -551,6 +551,13 @@ export type Database = {
             foreignKeyName: "task_submissions_task_id_fkey"
             columns: ["task_id"]
             isOneToOne: false
+            referencedRelation: "repeatable_task_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
             referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
@@ -709,6 +716,13 @@ export type Database = {
             foreignKeyName: "video_ad_progress_task_id_fkey"
             columns: ["task_id"]
             isOneToOne: false
+            referencedRelation: "repeatable_task_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_ad_progress_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
             referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
@@ -747,6 +761,13 @@ export type Database = {
             foreignKeyName: "video_watch_sessions_task_id_fkey"
             columns: ["task_id"]
             isOneToOne: false
+            referencedRelation: "repeatable_task_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_watch_sessions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
             referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
@@ -754,6 +775,13 @@ export type Database = {
       }
     }
     Views: {
+      daily_task_completions: {
+        Row: {
+          completion_date: string | null
+          count: number | null
+        }
+        Relationships: []
+      }
       global_referral_stats: {
         Row: {
           completed_referrals: number | null
@@ -812,6 +840,16 @@ export type Database = {
           referrer_points_balance: number | null
           referrer_referral_code: string | null
           referrer_username: string | null
+        }
+        Relationships: []
+      }
+      repeatable_task_stats: {
+        Row: {
+          claims_per_user: number | null
+          id: string | null
+          title: string | null
+          total_claims: number | null
+          unique_users: number | null
         }
         Relationships: []
       }

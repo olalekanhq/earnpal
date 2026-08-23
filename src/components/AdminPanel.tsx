@@ -198,6 +198,7 @@ export function AdminPanel() {
   }, []);
 
 
+  const tabs = [
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
@@ -208,6 +209,7 @@ export function AdminPanel() {
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
     { value: "audit", icon: ClipboardList, label: "Audit Logs", color: undefined },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
+  ];
 
   
   const filteredTabs = tabs.filter(tab => {
