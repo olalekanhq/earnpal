@@ -420,13 +420,13 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-4 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-6 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-3">
+              <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
@@ -474,7 +474,7 @@ function AuthPage() {
               </button>
             </form>
           ) : (
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mt-2 w-full">
               <TabsList className="grid h-11 w-full grid-cols-2 rounded-full bg-muted/70 p-1">
                 <TabsTrigger
                   value="login"
