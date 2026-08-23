@@ -468,7 +468,7 @@ function EarnPage() {
                       Try Again
                     </>
                   ) : (
-                    "Start Earning"
+                    dailyLimitReached ? "Daily Limit Reached" : "Start Earning"
                   )}
                 </Button>
               </CardContent>
