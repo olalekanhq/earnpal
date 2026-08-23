@@ -190,6 +190,7 @@ function RootComponent() {
   const location = useLocation();
   const router = useRouter();
   const isLandingPage = location.pathname === "/";
+  const isAuthPage = location.pathname === "/auth";
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
@@ -270,13 +271,16 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="earn-pal-theme">
-        <div className="flex min-h-screen bg-background text-foreground relative w-full max-w-full flex-col">
-          <Navigation />
+        <div className={cn(
+          "flex min-h-screen relative w-full max-w-full flex-col",
+          !isAuthPage && "bg-background text-foreground"
+        )}>
+          {!isAuthPage && <Navigation />}
           <main className={cn(
             "flex-1 transition-all duration-300 w-full flex flex-col",
-            !isLandingPage && "md:ml-72"
+            !isLandingPage && !isAuthPage && "md:ml-72"
           )}>
-            <div className={cn("flex-1 w-full", !isLandingPage && "pt-24 md:pt-28 pb-12")}>
+            <div className={cn("flex-1 w-full", !isLandingPage && !isAuthPage && "pt-24 md:pt-28 pb-12")}>
               <Outlet />
             </div>
           </main>
