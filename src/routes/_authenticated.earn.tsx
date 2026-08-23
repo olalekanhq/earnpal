@@ -40,8 +40,8 @@ function EarnPage() {
       if (!user) return [];
 
       const { data: tasksData } = await supabase
-        .from("tasks" as any)
-        .select("*")
+        .from("tasks")
+        .select("*, is_repeatable")
         .eq("is_active", true)
         .order("created_at", { ascending: false });
       const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note, created_at").eq("user_id", user.id);
