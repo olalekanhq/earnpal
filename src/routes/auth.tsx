@@ -426,7 +426,7 @@ function AuthPage() {
                 Continue with Google
               </Button>
 
-              <div className="relative my-2">
+              <div className="relative my-1">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
