@@ -277,7 +277,12 @@ function EarnPage() {
                     <span className="text-green-600 font-bold text-[10px] sm:text-xs">{task.points}</span>
                   </div>
                 </div>
-                <CardTitle className="text-[15px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
+                <CardTitle className="text-[15px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight flex items-center justify-between">
+                  {task.title}
+                  {task.is_repeatable && (
+                    <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
+                  )}
+                </CardTitle>
                 <CardDescription className="text-[11px] sm:text-sm font-medium line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
                 
                 {task.status === 'rejected' && task.admin_note && (
