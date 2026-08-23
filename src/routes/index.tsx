@@ -1,4 +1,7 @@
-// Leia o arquivo instrucoes.md em anexo e siga as instruções contidas nele.
+// '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+//                                         
+//                                             
+//                                             hi
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Coins, ArrowRight, ShieldCheck, Zap, Users, Gift, CheckCircle2, Layout, BarChart3, Rocket, Globe, Sparkles, TrendingUp, CircleDollarSign } from "lucide-react";
