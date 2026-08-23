@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 function EarnPage() {
   const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeStatus, setActiveStatus] = useState<"available" | "completed">("available");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
@@ -96,14 +97,13 @@ function EarnPage() {
     { name: "Social", icon: MessageSquare },
     { name: "Surveys", icon: Zap },
     { name: "Videos", icon: Youtube },
-    { name: "Completed", icon: CheckCircle },
   ];
 
-  const filteredTasks = activeCategory === "All" 
-    ? (tasks as any[])?.filter((t: any) => t.status !== "verified")
-    : activeCategory === "Completed"
-      ? (tasks as any[])?.filter((t: any) => t.status === "verified")
-      : (tasks as any[])?.filter((t: any) => t.category === activeCategory && t.status !== "verified");
+  const filteredTasks = (tasks as any[])?.filter((t: any) => {
+    const matchesStatus = activeStatus === "completed" ? t.status === "verified" : t.status !== "verified";
+    const matchesCategory = activeCategory === "All" || t.category === activeCategory;
+    return matchesStatus && matchesCategory;
+  });
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
@@ -136,22 +136,49 @@ function EarnPage() {
         </div>
       )}
 
-      <div className="space-y-8">
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-          {categories.map((cat) => (
-            <Button 
-              key={cat.name} 
-              variant={activeCategory === cat.name ? 'default' : 'outline'} 
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+          <div className="flex p-1 bg-card rounded-2xl shadow-sm w-fit border border-primary/5">
+            <button
+              onClick={() => setActiveStatus("available")}
               className={cn(
-                "rounded-xl font-bold h-10 px-6 shrink-0 transition-all",
-                activeCategory === cat.name ? "shadow-md shadow-primary/20" : "bg-card border-none shadow-sm"
+                "px-6 py-2 rounded-xl text-sm font-bold transition-all",
+                activeStatus === "available" 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                  : "text-muted-foreground hover:text-foreground"
               )}
-              onClick={() => setActiveCategory(cat.name)}
             >
-              <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary-foreground" : "text-primary")} />
-              {cat.name}
-            </Button>
-          ))}
+              Available
+            </button>
+            <button
+              onClick={() => setActiveStatus("completed")}
+              className={cn(
+                "px-6 py-2 rounded-xl text-sm font-bold transition-all",
+                activeStatus === "completed" 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Completed
+            </button>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
+            {categories.map((cat) => (
+              <Button 
+                key={cat.name} 
+                variant={activeCategory === cat.name ? 'default' : 'ghost'} 
+                className={cn(
+                  "rounded-xl font-bold h-10 px-4 shrink-0 transition-all",
+                  activeCategory === cat.name ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground hover:bg-muted"
+                )}
+                onClick={() => setActiveCategory(cat.name)}
+              >
+                <cat.icon className={cn("mr-2 h-4 w-4", activeCategory === cat.name ? "text-primary" : "text-muted-foreground")} />
+                {cat.name}
+              </Button>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
