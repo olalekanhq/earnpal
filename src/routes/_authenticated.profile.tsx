@@ -676,16 +676,21 @@ function ProfilePage() {
                           instagram_handle: instagram
                         });
                       }}
-                      disabled={updateProfile.isPending || (
-                        fullName === profile?.full_name && 
-                        username === profile?.username &&
-                        avatarUrl === (profile?.avatar_url || "") &&
-                        `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "") &&
-                        twitter === (profile?.twitter_handle || "") &&
-                        facebook === (profile?.facebook_handle || "") &&
-                        telegram === (profile?.telegram_handle || "") &&
-                        instagram === (profile?.instagram_handle || "")
-                      )}
+                      disabled={updateProfile.isPending || 
+                        (twitter !== "" && !verifiedHandles['twitter']) ||
+                        (telegram !== "" && !verifiedHandles['telegram']) ||
+                        (facebook !== "" && !verifiedHandles['facebook']) ||
+                        (instagram !== "" && !verifiedHandles['instagram']) ||
+                        (
+                          fullName === profile?.full_name && 
+                          username === profile?.username &&
+                          avatarUrl === (profile?.avatar_url || "") &&
+                          `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "") &&
+                          twitter === (profile?.twitter_handle || "") &&
+                          facebook === (profile?.facebook_handle || "") &&
+                          telegram === (profile?.telegram_handle || "") &&
+                          instagram === (profile?.instagram_handle || "")
+                        )}
                     >
                       Save Changes
                     </Button>
