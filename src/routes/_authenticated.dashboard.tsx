@@ -321,7 +321,7 @@ function Dashboard() {
                         "shadow-md shadow-primary/10"
                       )}
                       onClick={async () => {
-                        if (isCompleted) return;
+                        if (isCompleted || dailyLimitReached) return;
                         
                         const taskAny = task as any;
                         if (taskAny.link_url) {
