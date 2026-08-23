@@ -137,7 +137,7 @@ export function AnalyticsView() {
             <Calendar
               initialFocus
               mode="range"
-              defaultMonth={date?.from}
+              defaultMonth={date?.from || new Date()}
               selected={date}
               onSelect={setDate}
               numberOfMonths={2}
