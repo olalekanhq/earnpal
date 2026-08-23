@@ -194,6 +194,7 @@ html, body {
   flex: 1;
   background: var(--color-background);
   isolation: isolate;
+  overflow-x: hidden;
 }
 
 .auth-shell::before,
