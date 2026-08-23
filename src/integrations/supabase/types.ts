@@ -517,27 +517,33 @@ export type Database = {
       }
       task_submissions: {
         Row: {
+          admin_note: string | null
           created_at: string | null
           id: string
           status: string
           task_id: string
           user_id: string
+          verified_at: string | null
           verified_by: string | null
         }
         Insert: {
+          admin_note?: string | null
           created_at?: string | null
           id?: string
           status: string
           task_id: string
           user_id: string
+          verified_at?: string | null
           verified_by?: string | null
         }
         Update: {
+          admin_note?: string | null
           created_at?: string | null
           id?: string
           status?: string
           task_id?: string
           user_id?: string
+          verified_at?: string | null
           verified_by?: string | null
         }
         Relationships: [
