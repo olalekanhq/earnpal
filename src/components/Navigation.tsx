@@ -147,14 +147,13 @@ export function Navigation() {
               </Link>
             </div>
             
-            {!isAuthPage && (
               <div className="hidden md:flex items-center gap-8">
+                <Link to="/about" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">About</Link>
                 <Link to="/earn" search={{ tab: 'tasks' }} className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Product</Link>
                 <Link to="/refer" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Network</Link>
                 <Link to="/redeem" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Rewards</Link>
                 <Link to="/dnsstatus" className="text-sm font-black uppercase text-foreground/70 hover:text-foreground">Domain Status</Link>
               </div>
-            )}
             
             <div className="flex items-center gap-4">
               {!isAuthPage && (
