@@ -267,31 +267,31 @@ function Dashboard() {
               Featured Tasks
             </h2>
           </div>
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-2">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
               const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
               
               return (
                 <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative">
-                  <CardHeader className="pb-2">
+                  <CardHeader className="p-3 sm:p-6 pb-2">
                     <div className="flex items-center justify-between">
-                      <div className="bg-primary/5 p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
-                        <Zap className="h-5 w-5" />
+                      <div className="bg-primary/5 p-1.5 sm:p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                        <Zap className="h-4 w-4 sm:h-5 sm:h-5" />
                       </div>
-                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5">
+                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5 text-[9px] sm:text-xs">
                         +{task.points} PTS
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-2">
-                    <div className="space-y-1 mb-6">
-                      <CardTitle className="text-lg font-black tracking-tight">{task.title}</CardTitle>
-                      <CardDescription className="text-xs font-medium line-clamp-2">{task.description}</CardDescription>
+                  <CardContent className="p-3 sm:p-6 pt-2">
+                    <div className="space-y-1 mb-4 sm:mb-6">
+                      <CardTitle className="text-sm sm:text-lg font-black tracking-tight line-clamp-1">{task.title}</CardTitle>
+                      <CardDescription className="text-[10px] sm:text-xs font-medium line-clamp-1">{task.description}</CardDescription>
                     </div>
                     <Button 
                       className={cn(
-                        "w-full rounded-xl font-bold h-11 transition-all",
+                        "w-full rounded-xl font-bold h-9 sm:h-11 text-xs sm:text-sm transition-all px-2",
                         isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
                       )}
                       onClick={async () => {
@@ -317,8 +317,8 @@ function Dashboard() {
                         </div>
                       ) : (
                         <>
-                          Start Task
-                          <ChevronRight className="ml-2 h-4 w-4" />
+                          Start
+                          <ChevronRight className="ml-1 h-3 w-3 sm:ml-2 sm:h-4 sm:h-4" />
                         </>
                       )}
                     </Button>
