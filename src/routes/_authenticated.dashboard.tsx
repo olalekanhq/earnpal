@@ -404,28 +404,28 @@ function Dashboard() {
         {/* Quick Stats & Promo */}
         <div className="lg:col-span-4 space-y-6">
           <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Earn More</h2>
-          <div className="grid grid-cols-1 gap-4">
-            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Lifetime Referrals</p>
+          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group flex flex-col justify-center">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-tight">Lifetime Referrals</p>
               <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
             </Card>
-          </div>
 
-          <Card className="border-none shadow-sm bg-primary/5 border border-primary/10 p-6 space-y-4 overflow-hidden relative group">
-            <div className="relative z-10 space-y-4">
-              <div className="bg-primary w-fit p-2 rounded-xl text-primary-foreground shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
-                <Share2 className="h-5 w-5" />
+            <Card className="border-none shadow-sm bg-primary/5 border border-primary/10 p-4 space-y-3 overflow-hidden relative group">
+              <div className="relative z-10 space-y-3">
+                <div className="bg-primary w-fit p-1.5 rounded-lg text-primary-foreground shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+                  <Share2 className="h-4 w-4" />
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="font-black text-xs text-foreground leading-tight">Invite friends</h3>
+                  <p className="text-[9px] text-muted-foreground font-medium leading-tight">Earn 50 pts per referral.</p>
+                </div>
+                <Button size="sm" className="w-full rounded-lg font-bold shadow-sm h-8 text-[10px] uppercase tracking-wider" asChild>
+                  <Link to="/refer">Invite</Link>
+                </Button>
               </div>
-              <div className="space-y-1">
-                <h3 className="font-black text-lg text-foreground leading-tight">Invite your friends</h3>
-                <p className="text-xs text-muted-foreground font-medium">Earn 50 points for every verified referral signup.</p>
-              </div>
-              <Button className="w-full rounded-xl font-bold shadow-sm" asChild>
-                <Link to="/refer">Get Referral Link</Link>
-              </Button>
-            </div>
-            <Share2 className="absolute -right-4 -bottom-4 h-24 w-24 text-primary/5 rotate-12" />
-          </Card>
+              <Share2 className="absolute -right-2 -bottom-2 h-12 w-12 text-primary/5 rotate-12" />
+            </Card>
+          </div>
         </div>
       </div>
     </div>
