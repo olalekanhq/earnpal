@@ -10,7 +10,6 @@ import {
   Clock,
   Loader2,
   Users2,
-  ShieldAlert,
   ChevronDown
 } from "lucide-react";
 import { 
@@ -145,7 +144,8 @@ export function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("noblegain_admin_last_tab") || "users";
+      const savedTab = localStorage.getItem("noblegain_admin_last_tab");
+      return savedTab === "fraud" ? "audit" : (savedTab || "users");
     }
     return "users";
   });
@@ -201,7 +201,6 @@ export function AdminPanel() {
   const tabs = [
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "users", icon: Users, label: "Users", color: undefined },
-    { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
     { value: "verifications", icon: ShieldCheck, label: "Verifications", color: undefined },
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
@@ -215,7 +214,9 @@ export function AdminPanel() {
   const filteredTabs = tabs.filter(tab => {
     if (isAdmin) return true;
     if (!permissions) return false;
-    return permissions.includes(tab.value);
+    return tab.value === "audit"
+      ? permissions.includes("audit") || permissions.includes("fraud")
+      : permissions.includes(tab.value);
   });
 
   const activeTabData = filteredTabs.find(t => t.value === activeTab) || filteredTabs[0] || tabs[0];
@@ -330,10 +331,6 @@ export function AdminPanel() {
           {activeTab === 'users' && <UsersManager />}
         </TabsContent>
 
-        <TabsContent value="fraud" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'fraud' && <FraudManager />}
-        </TabsContent>
-        
         <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'tasks' && <TasksManager />}
         </TabsContent>
@@ -357,6 +354,7 @@ export function AdminPanel() {
         <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'audit' && (
             <div className="space-y-12">
+              <FraudManager />
               <PointsAuditLogs />
               <AuditLogs />
             </div>
