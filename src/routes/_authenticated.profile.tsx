@@ -83,6 +83,18 @@ function ProfilePage() {
     resetForm();
   }, [profile]);
 
+  const handleManualVerify = async (type: string, handle: string) => {
+    if (!handle || getValidationError(handle, type)) return;
+    
+    setVerifyingHandles(prev => ({ ...prev, [type]: true }));
+    // Simulate platform verification
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    setVerifyingHandles(prev => ({ ...prev, [type]: false }));
+    setVerifiedHandles(prev => ({ ...prev, [type]: true }));
+    toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} handle format verified!`);
+  };
+
   const cleanHandle = (handle: string, type: string) => {
     if (!handle) return "";
     let clean = handle.trim();
