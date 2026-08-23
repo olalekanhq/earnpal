@@ -177,7 +177,7 @@ html, body {
   height: 100%;
   position: relative;
   scroll-behavior: smooth;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Global scroll management */
@@ -196,37 +196,10 @@ html, body {
   isolation: isolate;
 }
 
-.auth-shell::before,
-.auth-shell::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  border-radius: 999px;
-  filter: blur(2px);
-  opacity: .55;
-}
-
-.auth-shell::before {
-  width: 22rem;
-  height: 22rem;
-  top: -10rem;
-  left: -9rem;
-  background: color-mix(in oklch, var(--color-primary) 18%, transparent);
-}
-
-.auth-shell::after {
-  width: 18rem;
-  height: 18rem;
-  right: -8rem;
-  bottom: -7rem;
-  background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
-}
 
 .auth-card {
   position: relative;
-  border: 1px solid color-mix(in oklch, var(--color-border) 75%, transparent);
-  background: color-mix(in oklch, var(--color-card) 92%, transparent);
-  backdrop-filter: blur(18px);
+  background: var(--color-card);
   animation: auth-card-in .55s cubic-bezier(.2,.8,.2,1) both;
 }
 
