@@ -195,6 +195,7 @@ html, body {
   background: var(--color-background);
   isolation: isolate;
   overflow-x: clip;
+  overflow-y: hidden;
 }
 
 .auth-shell::before,
@@ -209,18 +210,18 @@ html, body {
 }
 
 .auth-shell::before {
-  width: 15rem;
-  height: 15rem;
-  top: -5rem;
-  left: -2rem;
+  width: 10rem;
+  height: 10rem;
+  top: -2rem;
+  left: -1rem;
   background: color-mix(in oklch, var(--color-primary) 18%, transparent);
 }
 
 .auth-shell::after {
-  width: 12rem;
-  height: 12rem;
-  right: -2rem;
-  bottom: -3rem;
+  width: 8rem;
+  height: 8rem;
+  right: -1rem;
+  bottom: -1rem;
   background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
 }
 
