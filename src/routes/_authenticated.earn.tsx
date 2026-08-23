@@ -124,7 +124,7 @@ function EarnPage() {
   ];
 
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
-    const isVerifiedToday = t.status === "verified" && t.submission_date && new Date(t.submission_date).getUTCDate() === new Date().getUTCDate();
+    const isVerifiedToday = t.status === "verified" && t.submission_date && new Date(t.submission_date).toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
     const isCompletedNonRepeatable = t.status === "verified" && !t.is_repeatable;
     const isPending = t.status === "pending";
     const isRejected = t.status === "rejected";
