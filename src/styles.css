@@ -177,7 +177,7 @@ html, body {
   min-height: 100%;
   position: relative;
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Global scroll management */
