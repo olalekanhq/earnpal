@@ -116,21 +116,40 @@ function ProfilePage() {
       }
     }
 
-    // Strip leading @
+    // Strip leading @ and any remaining slashes
     if (clean.startsWith('@')) clean = clean.slice(1);
+    clean = clean.replace(/^\/+|\/+$/g, '');
     
     return clean;
   };
 
-  const validateHandle = (handle: string, type: string) => {
-    if (!handle) return true;
+  const getValidationError = (handle: string, type: string) => {
+    if (!handle) return null;
     const clean = cleanHandle(handle, type);
     
-    if (type === 'twitter') return /^[a-zA-Z0-9_]{1,15}$/.test(clean);
-    if (type === 'telegram') return /^[a-zA-Z0-9_]{5,32}$/.test(clean);
-    if (type === 'facebook') return /^[a-zA-Z0-9.]{5,}$/.test(clean);
-    if (type === 'instagram') return /^[a-zA-Z0-9._]{1,30}$/.test(clean);
-    return true;
+    if (type === 'twitter') {
+      if (clean.length < 4) return "Too short (min 4)";
+      if (clean.length > 15) return "Too long (max 15)";
+      if (!/^[a-zA-Z0-9_]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'telegram') {
+      if (clean.length < 5) return "Too short (min 5)";
+      if (clean.length > 32) return "Too long (max 32)";
+      if (!/^[a-zA-Z0-9_]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'facebook') {
+      if (clean.length < 5) return "Too short (min 5)";
+      if (!/^[a-zA-Z0-9.]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'instagram') {
+      if (clean.length > 30) return "Too long (max 30)";
+      if (!/^[a-zA-Z0-9._]+$/.test(clean)) return "Invalid characters";
+    }
+    return null;
+  };
+
+  const validateHandle = (handle: string, type: string) => {
+    return getValidationError(handle, type) === null;
   };
 
   const updateProfile = useMutation({
