@@ -96,7 +96,10 @@ function ProfilePage() {
     if (platformBases) {
       for (const base of platformBases) {
         if (clean.includes(base)) {
-          clean = clean.split(base)[1].split('/')[0].split('?')[0];
+          const parts = clean.split(base);
+          if (parts.length > 1) {
+            clean = parts[1].split('/')[0].split('?')[0];
+          }
           break;
         }
       }
