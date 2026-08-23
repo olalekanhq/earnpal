@@ -238,7 +238,7 @@ export function AnalyticsView() {
                 <div className="flex items-center gap-2 mb-1">
                   <ListTodo className="h-4 w-4 text-primary" />
                   <CardTitle className="text-xs font-black uppercase tracking-widest text-foreground">
-                    Tasks Completed Per Day
+                    Tasks Completed ({granularity})
                   </CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold uppercase tracking-tight">
