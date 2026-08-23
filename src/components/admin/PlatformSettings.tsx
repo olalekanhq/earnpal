@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Save, Settings2, Shield } from "lucide-react";
+import { Loader2, Save, Settings2, Shield, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 // Define local interfaces since types might not be regenerated yet
