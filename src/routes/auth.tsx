@@ -349,8 +349,8 @@ function AuthPage() {
           <BackLink />
           <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
             <Brand />
-            <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
-            <p className="mt-1.5 text-center text-base text-muted-foreground">
+            <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
+            <p className="mt-1 text-center text-base text-muted-foreground">
               We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
             </p>
 
