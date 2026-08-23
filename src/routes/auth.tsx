@@ -354,7 +354,7 @@ function AuthPage() {
               We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
             </p>
 
-            <form onSubmit={handleVerifyOtp} className="mt-4 space-y-3">
+            <form onSubmit={handleVerifyOtp} className="mt-3 space-y-3">
               {error && (
                 <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
               )}
