@@ -100,8 +100,10 @@ function EarnPage() {
   ];
 
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
-    const matchesStatus = activeStatus === "completed" ? t.status === "verified" : t.status !== "verified";
-    const matchesCategory = activeCategory === "All" || t.category === activeCategory;
+    const isCompleted = t.status === "verified";
+    const matchesStatus = activeStatus === "completed" ? isCompleted : !isCompleted;
+    // When showing completed tasks, show all of them (ignore category filter)
+    const matchesCategory = activeStatus === "completed" || activeCategory === "All" || t.category === activeCategory;
     return matchesStatus && matchesCategory;
   });
 
@@ -164,7 +166,7 @@ function EarnPage() {
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-            {categories.map((cat) => (
+            {activeStatus === "available" && categories.map((cat) => (
               <Button 
                 key={cat.name} 
                 variant={activeCategory === cat.name ? 'default' : 'ghost'} 
