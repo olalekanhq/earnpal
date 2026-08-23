@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Save, Settings2, Shield } from "lucide-react";
+import { Loader2, Save, Settings2, Shield, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 // Define local interfaces since types might not be regenerated yet
@@ -28,7 +28,7 @@ interface AppSetting {
 import { useAuth } from "@/hooks/use-auth";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
+import { cn } from "@/lib/utils";
 
 function PermissionManager() {
   const queryClient = useQueryClient();
@@ -175,6 +175,45 @@ export function PlatformSettings() {
               <Settings2 className="h-5 w-5 text-primary" />
             </div>
             <div>
+              <CardTitle className="text-xl font-black uppercase tracking-tight">Platform Configuration</CardTitle>
+              <CardDescription className="font-medium">Configure core platform limits and reward rules</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Daily Task Limit</Label>
+              <div className="flex gap-2">
+                <Input 
+                  type="number"
+                  value={localValues['daily_task_limit'] ?? 10}
+                  onChange={(e) => setLocalValues(prev => ({ ...prev, daily_task_limit: parseInt(e.target.value) || 0 }))}
+                  className="rounded-xl font-bold"
+                />
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="rounded-xl flex-shrink-0"
+                  onClick={() => handleSave('daily_task_limit')}
+                  disabled={updateMutation.isPending}
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-[10px] text-muted-foreground font-medium italic ml-1">Maximum tasks a user can complete per 24h (GMT).</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/10 p-2 rounded-xl">
+              <Star className="h-5 w-5 text-primary" />
+            </div>
+            <div>
               <CardTitle className="text-xl font-black uppercase tracking-tight">Welcome Bonus Settings</CardTitle>
               <CardDescription className="font-medium">Configure eligibility and rewards for new referred users</CardDescription>
             </div>
@@ -204,7 +243,7 @@ export function PlatformSettings() {
                 <Input 
                   type="number"
                   value={localValues['welcome_bonus_amount_referee'] || 0}
-                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referee: parseInt(e.target.value) }))}
+                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referee: parseInt(e.target.value) || 0 }))}
                   className="rounded-xl font-bold"
                 />
                 <Button 
@@ -225,7 +264,7 @@ export function PlatformSettings() {
                 <Input 
                   type="number"
                   value={localValues['welcome_bonus_amount_referrer'] || 0}
-                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referrer: parseInt(e.target.value) }))}
+                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referrer: parseInt(e.target.value) || 0 }))}
                   className="rounded-xl font-bold"
                 />
                 <Button 
