@@ -96,7 +96,7 @@ export function AnalyticsView() {
   });
 
   const { data: economyData, isLoading: isLoadingEconomy } = useQuery({
-    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString(), selectedTaskId],
+    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString(), selectedTaskId, granularity],
     queryFn: async () => {
       const fromStr = date?.from ? startOfDay(date.from).toISOString() : subDays(new Date(), 30).toISOString();
       const toStr = date?.to ? endOfDay(date.to).toISOString() : new Date().toISOString();
