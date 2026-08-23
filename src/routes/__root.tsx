@@ -72,8 +72,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <div className="bg-primary/10 p-4 rounded-3xl mb-4 shadow-xl shadow-primary/10">
           <img src="/logo.png" alt="Noble Gain" className="h-12 w-12 object-contain" />
         </div>
-        <div className="flex items-center gap-2 font-black text-2xl text-primary tracking-tighter uppercase">
-          <span>Noble Gain</span>
+        <div className="flex items-center gap-2 font-black text-2xl tracking-tighter uppercase">
+          <span className="text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
         </div>
         <p className="mt-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
           Loading your experience...
