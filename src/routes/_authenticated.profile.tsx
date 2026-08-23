@@ -98,7 +98,10 @@ function ProfilePage() {
         if (clean.includes(base)) {
           const parts = clean.split(base);
           if (parts.length > 1) {
-            clean = parts[1].split('/')[0].split('?')[0];
+            const handlePart = parts[1];
+            if (handlePart) {
+              clean = handlePart.split('/')[0].split('?')[0];
+            }
           }
           break;
         }
