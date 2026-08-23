@@ -61,7 +61,7 @@ function PermissionManager() {
   if (isLoading) return <Loader2 className="h-4 w-4 animate-spin mx-auto" />;
 
   const roles = ['moderator', 'tasker'];
-  const tabs = ['users', 'fraud', 'tasks', 'rewards', 'redemptions', 'analytics', 'referrals', 'settings'];
+  const tabs = ['analytics', 'users', 'fraud', 'tasks', 'verifications', 'rewards', 'redemptions', 'referrals', 'audit', 'settings'];
 
   return (
     <div className="space-y-6">
