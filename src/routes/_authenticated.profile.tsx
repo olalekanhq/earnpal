@@ -95,8 +95,8 @@ function ProfilePage() {
     const platformBases = bases[type as keyof typeof bases];
     if (platformBases) {
       for (const base of platformBases) {
-        if (clean.includes(base)) {
-          const parts = clean.split(base);
+        if (clean.toLowerCase().includes(base)) {
+          const parts = clean.split(new RegExp(base, 'i'));
           if (parts.length > 1) {
             const handlePart = parts[1];
             if (handlePart) {
