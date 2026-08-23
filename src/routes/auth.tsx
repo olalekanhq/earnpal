@@ -420,13 +420,13 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-3 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-4 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-1">
+              <div className="relative my-3">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
@@ -442,7 +442,7 @@ function AuthPage() {
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-3">
+            <form onSubmit={handlePasswordReset} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
                 <Input
@@ -456,7 +456,8 @@ function AuthPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
+              <div className="pt-1">
+                <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
                 {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {resetSent ? "Resend link" : "Send reset link"}
               </Button>
@@ -489,7 +490,7 @@ function AuthPage() {
               </TabsList>
 
               <TabsContent value="login" className="mt-4">
-                <form onSubmit={handleEmailLogin} className="space-y-3">
+                <form onSubmit={handleEmailLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                     <Input
@@ -555,7 +556,7 @@ function AuthPage() {
               </TabsContent>
 
               <TabsContent value="signup" className="mt-4">
-                <form onSubmit={handleEmailSignUp} className="space-y-3">
+                <form onSubmit={handleEmailSignUp} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                     <Input
@@ -642,8 +643,9 @@ function AuthPage() {
                       </p>
                     )}
                   </div>
-
-                  <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                  
+                  <div className="pt-2">
+                    <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create account
                   </Button>
