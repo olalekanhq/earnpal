@@ -12,6 +12,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ImageCropper } from "@/components/ImageCropper";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -47,6 +48,9 @@ function ProfilePage() {
   const [cropImage, setCropImage] = useState<string | null>(null);
   const [isCropOpen, setIsCropOpen] = useState(false);
 
+  const [verifyingHandles, setVerifyingHandles] = useState<Record<string, boolean>>({});
+  const [verifiedHandles, setVerifiedHandles] = useState<Record<string, boolean>>({});
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -61,10 +65,22 @@ function ProfilePage() {
     if (profile?.full_name) setFullName(profile.full_name);
     if (profile?.username) setUsername(profile.username);
     if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
-    if (profile?.twitter_handle) setTwitter(profile.twitter_handle);
-    if (profile?.facebook_handle) setFacebook(profile.facebook_handle);
-    if (profile?.telegram_handle) setTelegram(profile.telegram_handle);
-    if (profile?.instagram_handle) setInstagram(profile.instagram_handle);
+    if (profile?.twitter_handle) {
+      setTwitter(profile.twitter_handle);
+      setVerifiedHandles(prev => ({ ...prev, twitter: true }));
+    }
+    if (profile?.facebook_handle) {
+      setFacebook(profile.facebook_handle);
+      setVerifiedHandles(prev => ({ ...prev, facebook: true }));
+    }
+    if (profile?.telegram_handle) {
+      setTelegram(profile.telegram_handle);
+      setVerifiedHandles(prev => ({ ...prev, telegram: true }));
+    }
+    if (profile?.instagram_handle) {
+      setInstagram(profile.instagram_handle);
+      setVerifiedHandles(prev => ({ ...prev, instagram: true }));
+    }
     if (profile?.phone_number) {
       const parts = profile.phone_number.split(" ");
       if (parts.length >= 2 && parts[0]) {
@@ -79,6 +95,18 @@ function ProfilePage() {
   useEffect(() => {
     resetForm();
   }, [profile]);
+
+  const handleManualVerify = async (type: string, handle: string) => {
+    if (!handle || getValidationError(handle, type)) return;
+    
+    setVerifyingHandles(prev => ({ ...prev, [type]: true }));
+    // Simulate platform verification
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    setVerifyingHandles(prev => ({ ...prev, [type]: false }));
+    setVerifiedHandles(prev => ({ ...prev, [type]: true }));
+    toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} handle format verified!`);
+  };
 
   const cleanHandle = (handle: string, type: string) => {
     if (!handle) return "";
@@ -116,21 +144,40 @@ function ProfilePage() {
       }
     }
 
-    // Strip leading @
+    // Strip leading @ and any remaining slashes
     if (clean.startsWith('@')) clean = clean.slice(1);
+    clean = clean.replace(/^\/+|\/+$/g, '');
     
     return clean;
   };
 
-  const validateHandle = (handle: string, type: string) => {
-    if (!handle) return true;
+  const getValidationError = (handle: string, type: string) => {
+    if (!handle) return null;
     const clean = cleanHandle(handle, type);
     
-    if (type === 'twitter') return /^[a-zA-Z0-9_]{1,15}$/.test(clean);
-    if (type === 'telegram') return /^[a-zA-Z0-9_]{5,32}$/.test(clean);
-    if (type === 'facebook') return /^[a-zA-Z0-9.]{5,}$/.test(clean);
-    if (type === 'instagram') return /^[a-zA-Z0-9._]{1,30}$/.test(clean);
-    return true;
+    if (type === 'twitter') {
+      if (clean.length < 4) return "Too short (min 4)";
+      if (clean.length > 15) return "Too long (max 15)";
+      if (!/^[a-zA-Z0-9_]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'telegram') {
+      if (clean.length < 5) return "Too short (min 5)";
+      if (clean.length > 32) return "Too long (max 32)";
+      if (!/^[a-zA-Z0-9_]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'facebook') {
+      if (clean.length < 5) return "Too short (min 5)";
+      if (!/^[a-zA-Z0-9.]+$/.test(clean)) return "Invalid characters";
+    }
+    if (type === 'instagram') {
+      if (clean.length > 30) return "Too long (max 30)";
+      if (!/^[a-zA-Z0-9._]+$/.test(clean)) return "Invalid characters";
+    }
+    return null;
+  };
+
+  const validateHandle = (handle: string, type: string) => {
+    return getValidationError(handle, type) === null;
   };
 
   const updateProfile = useMutation({
@@ -416,29 +463,47 @@ function ProfilePage() {
                       {/* Twitter Handle */}
                       <div className="space-y-2">
                         <Label htmlFor="twitter" className="text-xs font-semibold text-muted-foreground uppercase">Twitter / X</Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
-                            x.com/
-                          </span>
-                          <Input 
-                            id="twitter" 
-                            value={twitter} 
-                            onChange={(e) => setTwitter(cleanHandle(e.target.value, 'twitter'))} 
-                            className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
-                            placeholder="username" 
-                          />
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center flex-1">
+                            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
+                              x.com/
+                            </span>
+                            <Input 
+                              id="twitter" 
+                              value={twitter} 
+                              onChange={(e) => {
+                                setTwitter(cleanHandle(e.target.value, 'twitter'));
+                                setVerifiedHandles(prev => ({ ...prev, twitter: false }));
+                              }} 
+                              className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
+                              placeholder="username" 
+                            />
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={cn(
+                              "h-11 rounded-xl font-bold px-3 transition-all",
+                              verifiedHandles['twitter'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                            )}
+                            disabled={!twitter || !!getValidationError(twitter, 'twitter') || verifyingHandles['twitter'] || verifiedHandles['twitter']}
+                            onClick={() => handleManualVerify('twitter', twitter)}
+                          >
+                            {verifyingHandles['twitter'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['twitter'] ? <Check className="h-4 w-4" /> : "Verify"}
+                          </Button>
                         </div>
                         {twitter && (
                           <div className="flex items-center gap-1.5 px-1 animate-in fade-in duration-300">
-                            {validateHandle(twitter, 'twitter') ? (
-                              <>
+                            {getValidationError(twitter, 'twitter') ? (
+                              <span className="text-[10px] text-destructive font-medium">{getValidationError(twitter, 'twitter')}</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
                                 <Check className="h-3 w-3 text-green-500" />
                                 <span className="text-[10px] text-muted-foreground">
                                   Profile: <span className="text-foreground font-medium">x.com/{twitter}</span>
                                 </span>
-                              </>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Invalid handle format</span>
+                              </div>
                             )}
                           </div>
                         )}
@@ -447,29 +512,47 @@ function ProfilePage() {
                       {/* Telegram Handle */}
                       <div className="space-y-2">
                         <Label htmlFor="telegram" className="text-xs font-semibold text-muted-foreground uppercase">Telegram</Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
-                            t.me/
-                          </span>
-                          <Input 
-                            id="telegram" 
-                            value={telegram} 
-                            onChange={(e) => setTelegram(cleanHandle(e.target.value, 'telegram'))} 
-                            className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
-                            placeholder="username" 
-                          />
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center flex-1">
+                            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
+                              t.me/
+                            </span>
+                            <Input 
+                              id="telegram" 
+                              value={telegram} 
+                              onChange={(e) => {
+                                setTelegram(cleanHandle(e.target.value, 'telegram'));
+                                setVerifiedHandles(prev => ({ ...prev, telegram: false }));
+                              }} 
+                              className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
+                              placeholder="username" 
+                            />
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={cn(
+                              "h-11 rounded-xl font-bold px-3 transition-all",
+                              verifiedHandles['telegram'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                            )}
+                            disabled={!telegram || !!getValidationError(telegram, 'telegram') || verifyingHandles['telegram'] || verifiedHandles['telegram']}
+                            onClick={() => handleManualVerify('telegram', telegram)}
+                          >
+                            {verifyingHandles['telegram'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['telegram'] ? <Check className="h-4 w-4" /> : "Verify"}
+                          </Button>
                         </div>
                         {telegram && (
                           <div className="flex items-center gap-1.5 px-1 animate-in fade-in duration-300">
-                            {validateHandle(telegram, 'telegram') ? (
-                              <>
+                            {getValidationError(telegram, 'telegram') ? (
+                              <span className="text-[10px] text-destructive font-medium">{getValidationError(telegram, 'telegram')}</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
                                 <Check className="h-3 w-3 text-green-500" />
                                 <span className="text-[10px] text-muted-foreground">
                                   Profile: <span className="text-foreground font-medium">t.me/{telegram}</span>
                                 </span>
-                              </>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Min 5 characters</span>
+                              </div>
                             )}
                           </div>
                         )}
@@ -478,29 +561,47 @@ function ProfilePage() {
                       {/* Facebook Handle */}
                       <div className="space-y-2">
                         <Label htmlFor="facebook" className="text-xs font-semibold text-muted-foreground uppercase">Facebook</Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
-                            facebook.com/
-                          </span>
-                          <Input 
-                            id="facebook" 
-                            value={facebook} 
-                            onChange={(e) => setFacebook(cleanHandle(e.target.value, 'facebook'))} 
-                            className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
-                            placeholder="username" 
-                          />
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center flex-1">
+                            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
+                              facebook.com/
+                            </span>
+                            <Input 
+                              id="facebook" 
+                              value={facebook} 
+                              onChange={(e) => {
+                                setFacebook(cleanHandle(e.target.value, 'facebook'));
+                                setVerifiedHandles(prev => ({ ...prev, facebook: false }));
+                              }} 
+                              className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
+                              placeholder="username" 
+                            />
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={cn(
+                              "h-11 rounded-xl font-bold px-3 transition-all",
+                              verifiedHandles['facebook'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                            )}
+                            disabled={!facebook || !!getValidationError(facebook, 'facebook') || verifyingHandles['facebook'] || verifiedHandles['facebook']}
+                            onClick={() => handleManualVerify('facebook', facebook)}
+                          >
+                            {verifyingHandles['facebook'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['facebook'] ? <Check className="h-4 w-4" /> : "Verify"}
+                          </Button>
                         </div>
                         {facebook && (
                           <div className="flex items-center gap-1.5 px-1 animate-in fade-in duration-300">
-                            {validateHandle(facebook, 'facebook') ? (
-                              <>
+                            {getValidationError(facebook, 'facebook') ? (
+                              <span className="text-[10px] text-destructive font-medium">{getValidationError(facebook, 'facebook')}</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
                                 <Check className="h-3 w-3 text-green-500" />
                                 <span className="text-[10px] text-muted-foreground">
                                   Profile: <span className="text-foreground font-medium">facebook.com/{facebook}</span>
                                 </span>
-                              </>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Invalid username</span>
+                              </div>
                             )}
                           </div>
                         )}
@@ -509,29 +610,47 @@ function ProfilePage() {
                       {/* Instagram Handle */}
                       <div className="space-y-2">
                         <Label htmlFor="instagram" className="text-xs font-semibold text-muted-foreground uppercase">Instagram</Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
-                            instagram.com/
-                          </span>
-                          <Input 
-                            id="instagram" 
-                            value={instagram} 
-                            onChange={(e) => setInstagram(cleanHandle(e.target.value, 'instagram'))} 
-                            className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
-                            placeholder="username" 
-                          />
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center flex-1">
+                            <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-border bg-muted/50 text-muted-foreground text-sm h-11">
+                              instagram.com/
+                            </span>
+                            <Input 
+                              id="instagram" 
+                              value={instagram} 
+                              onChange={(e) => {
+                                setInstagram(cleanHandle(e.target.value, 'instagram'));
+                                setVerifiedHandles(prev => ({ ...prev, instagram: false }));
+                              }} 
+                              className="rounded-l-none rounded-r-xl h-11 border-l-0 focus-visible:ring-offset-0" 
+                              placeholder="username" 
+                            />
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={cn(
+                              "h-11 rounded-xl font-bold px-3 transition-all",
+                              verifiedHandles['instagram'] ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : "bg-primary/5 text-primary hover:bg-primary/10"
+                            )}
+                            disabled={!instagram || !!getValidationError(instagram, 'instagram') || verifyingHandles['instagram'] || verifiedHandles['instagram']}
+                            onClick={() => handleManualVerify('instagram', instagram)}
+                          >
+                            {verifyingHandles['instagram'] ? <Loader2 className="h-4 w-4 animate-spin" /> : 
+                             verifiedHandles['instagram'] ? <Check className="h-4 w-4" /> : "Verify"}
+                          </Button>
                         </div>
                         {instagram && (
                           <div className="flex items-center gap-1.5 px-1 animate-in fade-in duration-300">
-                            {validateHandle(instagram, 'instagram') ? (
-                              <>
+                            {getValidationError(instagram, 'instagram') ? (
+                              <span className="text-[10px] text-destructive font-medium">{getValidationError(instagram, 'instagram')}</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
                                 <Check className="h-3 w-3 text-green-500" />
                                 <span className="text-[10px] text-muted-foreground">
                                   Profile: <span className="text-foreground font-medium">instagram.com/{instagram}</span>
                                 </span>
-                              </>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Invalid username</span>
+                              </div>
                             )}
                           </div>
                         )}
@@ -569,16 +688,21 @@ function ProfilePage() {
                           instagram_handle: instagram
                         });
                       }}
-                      disabled={updateProfile.isPending || (
-                        fullName === profile?.full_name && 
-                        username === profile?.username &&
-                        avatarUrl === (profile?.avatar_url || "") &&
-                        `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "") &&
-                        twitter === (profile?.twitter_handle || "") &&
-                        facebook === (profile?.facebook_handle || "") &&
-                        telegram === (profile?.telegram_handle || "") &&
-                        instagram === (profile?.instagram_handle || "")
-                      )}
+                      disabled={updateProfile.isPending || 
+                        (twitter !== "" && !verifiedHandles['twitter']) ||
+                        (telegram !== "" && !verifiedHandles['telegram']) ||
+                        (facebook !== "" && !verifiedHandles['facebook']) ||
+                        (instagram !== "" && !verifiedHandles['instagram']) ||
+                        (
+                          fullName === profile?.full_name && 
+                          username === profile?.username &&
+                          avatarUrl === (profile?.avatar_url || "") &&
+                          `${countryCode} ${phoneBody}`.trim() === (profile?.phone_number || "") &&
+                          twitter === (profile?.twitter_handle || "") &&
+                          facebook === (profile?.facebook_handle || "") &&
+                          telegram === (profile?.telegram_handle || "") &&
+                          instagram === (profile?.instagram_handle || "")
+                        )}
                     >
                       Save Changes
                     </Button>
