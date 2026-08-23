@@ -275,9 +275,7 @@ export function Navigation() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full py-6 px-4">
       <div className="flex items-center gap-3 px-2 mb-8">
-        <div className="bg-primary/10 p-2 rounded-xl border border-primary/20 shadow-sm">
-          <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
-        </div>
+        <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
         <span className="font-black text-xl tracking-tighter uppercase text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
       </div>
 
