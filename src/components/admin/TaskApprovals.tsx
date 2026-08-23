@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 
 export function TaskApprovals() {
   const queryClient = useQueryClient();
-  const [adminNote, setAdminNote] = useState<string>("");
+  const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   const { data: pendingTasks, isLoading } = useQuery({
@@ -39,21 +39,26 @@ export function TaskApprovals() {
   const verifyMutation = useMutation({
     mutationFn: async ({ id, approve }: { id: string, approve: boolean }) => {
       setProcessingId(id);
+      const note = adminNotes[id] || "";
       const { data, error } = await (supabase.rpc as any)("verify_task_submission", {
         _submission_id: id,
         _approve: approve,
-        _admin_note: adminNote
+        _admin_note: note
       });
       
       if (error) throw error;
       if (data && !data.success) throw new Error(data.message);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin-pending-tasks"] });
       queryClient.invalidateQueries({ queryKey: ["adminStats"] });
       toast.success(data.message || "Task verification processed");
-      setAdminNote("");
+      setAdminNotes(prev => {
+        const next = { ...prev };
+        delete next[variables.id];
+        return next;
+      });
       setProcessingId(null);
     },
     onError: (error: any) => {
@@ -150,10 +155,10 @@ export function TaskApprovals() {
                         </Button>
                       </div>
                       <Input 
-                        placeholder="Add internal note..."
+                        placeholder="Add rejection reason..."
                         className="h-7 text-[10px] w-32 rounded-md"
-                        value={adminNote}
-                        onChange={(e) => setAdminNote(e.target.value)}
+                        value={adminNotes[sub.id] || ""}
+                        onChange={(e) => setAdminNotes(prev => ({ ...prev, [sub.id]: e.target.value }))}
                       />
                     </div>
                   </TableCell>
