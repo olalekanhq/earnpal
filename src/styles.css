@@ -283,11 +283,11 @@ html, body {
 
 @keyframes neon-pulse {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 10px rgba(0, 31, 63, 0.4);
     opacity: 0.8;
   }
   50% {
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.7);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.7);
     opacity: 1;
   }
 }
