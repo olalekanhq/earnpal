@@ -35,6 +35,7 @@ export function AnalyticsView() {
     to: new Date(),
   });
   const [selectedTaskId, setSelectedTaskId] = useState<string>("all");
+  const [granularity, setGranularity] = useState<"day" | "week" | "month">("day");
 
   const { data: tasks } = useQuery({
     queryKey: ["admin-tasks-simple-analytics"],
@@ -95,7 +96,7 @@ export function AnalyticsView() {
   });
 
   const { data: economyData, isLoading: isLoadingEconomy } = useQuery({
-    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString(), selectedTaskId],
+    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString(), selectedTaskId, granularity],
     queryFn: async () => {
       const fromStr = date?.from ? startOfDay(date.from).toISOString() : subDays(new Date(), 30).toISOString();
       const toStr = date?.to ? endOfDay(date.to).toISOString() : new Date().toISOString();
@@ -105,6 +106,7 @@ export function AnalyticsView() {
         supabase.rpc('get_daily_task_completions', { 
           start_date: fromStr, 
           end_date: toStr,
+          granularity: granularity,
           filter_task_id: taskId
         }),
         supabase.rpc('get_repeatable_task_stats', {
@@ -131,8 +133,25 @@ export function AnalyticsView() {
           <p className="text-sm text-muted-foreground font-medium">Monitor user behavior and economy trends.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <div className="w-full sm:w-[250px]">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex bg-card/50 backdrop-blur-sm p-1 rounded-xl border border-border/40">
+            {(['day', 'week', 'month'] as const).map((g) => (
+              <button
+                key={g}
+                onClick={() => setGranularity(g)}
+                className={cn(
+                  "px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all",
+                  granularity === g 
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
+
+          <div className="w-full sm:w-[200px]">
             <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
               <SelectTrigger className="rounded-xl border-border/40 bg-card/50 backdrop-blur-sm font-bold">
                 <div className="flex items-center gap-2">
@@ -219,7 +238,7 @@ export function AnalyticsView() {
                 <div className="flex items-center gap-2 mb-1">
                   <ListTodo className="h-4 w-4 text-primary" />
                   <CardTitle className="text-xs font-black uppercase tracking-widest text-foreground">
-                    Tasks Completed Per Day
+                    Tasks Completed ({granularity})
                   </CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold uppercase tracking-tight">
@@ -243,7 +262,12 @@ export function AnalyticsView() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                       <XAxis 
                         dataKey="completion_date" 
-                        tickFormatter={(str) => format(new Date(str), 'MMM d')}
+                        tickFormatter={(str) => {
+                          const d = new Date(str);
+                          if (granularity === 'month') return format(d, 'MMM yyyy');
+                          if (granularity === 'week') return `W${format(d, 'w')} (${format(d, 'MMM d')})`;
+                          return format(d, 'MMM d');
+                        }}
                         tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
                         axisLine={false}
                         tickLine={false}

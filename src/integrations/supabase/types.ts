@@ -908,6 +908,18 @@ export type Database = {
               count: number
             }[]
           }
+        | {
+            Args: {
+              end_date: string
+              filter_task_id?: string
+              granularity?: string
+              start_date: string
+            }
+            Returns: {
+              completion_date: string
+              count: number
+            }[]
+          }
       get_repeatable_task_stats:
         | {
             Args: { end_date: string; start_date: string }
