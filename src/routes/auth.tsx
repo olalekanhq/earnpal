@@ -333,8 +333,11 @@ function AuthPage() {
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center">
-      <div className="auth-mark flex size-10 items-center justify-center rounded-2xl">
-        <img src="/logo.png" alt="Noble Gain" className="size-6 object-contain" />
+      <div className="auth-mark flex size-12 items-center justify-center rounded-2xl">
+        <img src="/logo.png" alt="Noble Gain" className="size-8 object-contain" />
+      </div>
+      <div className="mt-2 font-black text-2xl tracking-tighter uppercase text-[#001f3f]">
+        Noble <span className="text-[#c5a059]">Gain</span>
       </div>
     </div>
   );
