@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, Clock, ShieldCheck, Loader2, Play, CheckCircle } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, Clock, ShieldCheck, Loader2, Play, CheckCircle, XCircle } from "lucide-react";
 import VastAdModal from "@/components/VastAdModal";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 function EarnPage() {
   const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState("All");
-  const [activeStatus, setActiveStatus] = useState<"available" | "in_progress" | "completed">("available");
+  const [activeStatus, setActiveStatus] = useState<"available" | "in_progress" | "completed" | "rejected">("available");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
@@ -44,18 +44,22 @@ function EarnPage() {
         .select("*")
         .eq("is_active", true)
         .order("created_at", { ascending: false });
-      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status").eq("user_id", user.id);
+      const { data: submissions } = await supabase.from("task_submissions" as any).select("task_id, status, admin_note").eq("user_id", user.id);
       const { data: videoProgress } = await supabase.from("video_ad_progress").select("task_id, watch_count").eq("user_id", user.id);
       
-      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, s.status]));
+      const submissionsMap = new Map((submissions as any)?.map((s: any) => [s.task_id, { status: s.status, admin_note: s.admin_note }]));
       const progressMap = new Map((videoProgress as any)?.map((p: any) => [p.task_id, p.watch_count]));
       
       return (tasksData as any)
-        ?.map((task: any) => ({
-          ...task,
-          status: submissionsMap.get(task.id) || null,
-          watch_count: progressMap.get(task.id) || 0
-        })) || [];
+        ?.map((task: any) => {
+          const submission = submissionsMap.get(task.id);
+          return {
+            ...task,
+            status: submission?.status || null,
+            admin_note: submission?.admin_note || null,
+            watch_count: progressMap.get(task.id) || 0
+          };
+        }) || [];
     },
   });
 
@@ -102,13 +106,15 @@ function EarnPage() {
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
     const isCompleted = t.status === "verified";
     const isPending = t.status === "pending";
+    const isRejected = t.status === "rejected";
     
     let matchesStatus = false;
     if (activeStatus === "completed") matchesStatus = isCompleted;
     else if (activeStatus === "in_progress") matchesStatus = isPending;
-    else matchesStatus = !isCompleted && !isPending;
+    else if (activeStatus === "rejected") matchesStatus = isRejected;
+    else matchesStatus = !isCompleted && !isPending && !isRejected;
 
-    // When showing in_progress or completed tasks, show all of them (ignore category filter)
+    // When showing in_progress, completed, or rejected tasks, show all of them (ignore category filter)
     const matchesCategory = activeStatus !== "available" || activeCategory === "All" || t.category === activeCategory;
     return matchesStatus && matchesCategory;
   });
@@ -180,6 +186,17 @@ function EarnPage() {
             >
               Completed
             </button>
+            <button
+              onClick={() => setActiveStatus("rejected")}
+              className={cn(
+                "px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap",
+                activeStatus === "rejected" 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Rejected
+            </button>
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
@@ -216,6 +233,13 @@ function EarnPage() {
                 </div>
                 <CardTitle className="text-[13px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
                 <CardDescription className="text-[9px] sm:text-sm font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
+                
+                {task.status === 'rejected' && task.admin_note && (
+                  <div className="mt-3 p-2 rounded-lg bg-destructive/5 border border-destructive/20">
+                    <p className="text-[10px] font-black uppercase text-destructive tracking-widest mb-1">Rejection Reason:</p>
+                    <p className="text-[11px] font-medium text-destructive/80 leading-tight">{task.admin_note}</p>
+                  </div>
+                )}
                 {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
                   <div className="mt-2 sm:mt-3 space-y-1 sm:space-y-2">
                     <div className="flex justify-between text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest text-muted-foreground">
@@ -410,6 +434,11 @@ function EarnPage() {
                     "Confirm Completion"
                   ) : (taskUiStates[task.id] === 'submitting' || completingTaskId === task.id) ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : task.status === 'rejected' ? (
+                    <>
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Try Again
+                    </>
                   ) : (
                     "Start Earning"
                   )}
