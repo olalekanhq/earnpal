@@ -103,7 +103,11 @@ function ProfilePage() {
               const segments = handlePart.split('/');
               const firstSegment = segments[0];
               if (firstSegment) {
-                clean = firstSegment.split('?')[0];
+                const querySegments = firstSegment.split('?');
+                const finalHandle = querySegments[0];
+                if (finalHandle) {
+                  clean = finalHandle;
+                }
               }
             }
           }
