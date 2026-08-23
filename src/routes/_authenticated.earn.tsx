@@ -124,17 +124,23 @@ function EarnPage() {
   ];
 
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
-    const isCompleted = t.status === "verified";
+    const isVerifiedToday = t.status === "verified" && t.submission_date && new Date(t.submission_date).getUTCDate() === new Date().getUTCDate();
+    const isCompletedNonRepeatable = t.status === "verified" && !t.is_repeatable;
     const isPending = t.status === "pending";
     const isRejected = t.status === "rejected";
     
     let matchesStatus = false;
-    if (activeStatus === "completed") matchesStatus = isCompleted;
-    else if (activeStatus === "in_progress") matchesStatus = isPending;
-    else if (activeStatus === "rejected") matchesStatus = isRejected;
-    else matchesStatus = !isCompleted && !isPending && !isRejected;
+    if (activeStatus === "completed") {
+      matchesStatus = t.status === "verified";
+    } else if (activeStatus === "in_progress") {
+      matchesStatus = isPending;
+    } else if (activeStatus === "rejected") {
+      matchesStatus = isRejected;
+    } else {
+      // Available: not pending, not completed today, and (repeatable or never completed)
+      matchesStatus = !isPending && !isVerifiedToday && !isCompletedNonRepeatable;
+    }
 
-    // When showing in_progress, completed, or rejected tasks, show all of them (ignore category filter)
     const matchesCategory = activeStatus !== "available" || activeCategory === "All" || t.category === activeCategory;
     return matchesStatus && matchesCategory;
   });
