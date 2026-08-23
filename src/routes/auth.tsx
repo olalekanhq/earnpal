@@ -458,9 +458,10 @@ function AuthPage() {
               </div>
               <div className="pt-1">
                 <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
-                {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {resetSent ? "Resend link" : "Send reset link"}
-              </Button>
+                  {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {resetSent ? "Resend link" : "Send reset link"}
+                </Button>
+              </div>
               <button
                 type="button"
                 className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground"
@@ -548,10 +549,12 @@ function AuthPage() {
                     </button>
                   </div>
 
-                  <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Sign in
-                  </Button>
+                  <div className="pt-2">
+                    <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Sign in
+                    </Button>
+                  </div>
                 </form>
               </TabsContent>
 
@@ -646,9 +649,10 @@ function AuthPage() {
                   
                   <div className="pt-2">
                     <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Create account
-                  </Button>
+                      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Create account
+                    </Button>
+                  </div>
                 </form>
               </TabsContent>
             </Tabs>
