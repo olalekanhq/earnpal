@@ -106,6 +106,7 @@ export function AnalyticsView() {
         supabase.rpc('get_daily_task_completions', { 
           start_date: fromStr, 
           end_date: toStr,
+          granularity: granularity,
           filter_task_id: taskId
         }),
         supabase.rpc('get_repeatable_task_stats', {
