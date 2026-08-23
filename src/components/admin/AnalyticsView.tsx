@@ -35,6 +35,7 @@ export function AnalyticsView() {
     to: new Date(),
   });
   const [selectedTaskId, setSelectedTaskId] = useState<string>("all");
+  const [granularity, setGranularity] = useState<"day" | "week" | "month">("day");
 
   const { data: tasks } = useQuery({
     queryKey: ["admin-tasks-simple-analytics"],
