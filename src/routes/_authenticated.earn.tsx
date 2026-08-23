@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, Clock, ShieldCheck, Loader2, Play } from "lucide-react";
+import { Coins, CheckCircle2, Star, Zap, Twitter, Youtube, MessageSquare, Clock, ShieldCheck, Loader2, Play, CheckCircle } from "lucide-react";
 import VastAdModal from "@/components/VastAdModal";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,8 +54,7 @@ function EarnPage() {
           ...task,
           status: submissionsMap.get(task.id) || null,
           watch_count: progressMap.get(task.id) || 0
-        }))
-        .filter((task: any) => task.status !== "verified") || [];
+        })) || [];
     },
   });
 
@@ -97,11 +96,14 @@ function EarnPage() {
     { name: "Social", icon: MessageSquare },
     { name: "Surveys", icon: Zap },
     { name: "Videos", icon: Youtube },
+    { name: "Completed", icon: CheckCircle },
   ];
 
   const filteredTasks = activeCategory === "All" 
-    ? tasks 
-    : (tasks as any[])?.filter((t: any) => t.category === activeCategory);
+    ? (tasks as any[])?.filter((t: any) => t.status !== "verified")
+    : activeCategory === "Completed"
+      ? (tasks as any[])?.filter((t: any) => t.status === "verified")
+      : (tasks as any[])?.filter((t: any) => t.category === activeCategory && t.status !== "verified");
 
   return (
     <div className="pb-12 px-4 md:px-8 max-w-6xl mx-auto space-y-8">
