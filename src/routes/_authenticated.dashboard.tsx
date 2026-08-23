@@ -178,7 +178,7 @@ function Dashboard() {
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
 
   return (
-    <div className="pb-12 px-4 md:px-10 max-w-7xl mx-auto space-y-8">
+    <div className="space-y-8 w-full">
 
 
       {/* Profile Completion Warning Banner */}
