@@ -143,7 +143,7 @@ export function Navigation() {
               )}
               <Link to="/" className="flex items-center gap-2 font-black text-2xl hover:opacity-80 transition-opacity uppercase tracking-tighter">
                 <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-                <span className="hidden xs:inline text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
+                <span className="hidden xs:inline text-foreground">Noble <span className="text-[#e6c17a]">Gain</span></span>
               </Link>
             </div>
             
@@ -179,7 +179,7 @@ export function Navigation() {
             <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl uppercase tracking-tighter">
                 <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-                <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
+                <span className="text-foreground">Noble <span className="text-[#e6c17a]">Gain</span></span>
               </Link>
             </div>
 
@@ -276,7 +276,7 @@ export function Navigation() {
     <div className="flex flex-col h-full py-6 px-4">
       <div className="flex items-center gap-3 px-2 mb-8">
         <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-        <span className="font-black text-xl tracking-tighter uppercase text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
+        <span className="font-black text-xl tracking-tighter uppercase text-foreground">Noble <span className="text-[#e6c17a]">Gain</span></span>
       </div>
 
       <div className="flex-1 space-y-8">
@@ -363,7 +363,7 @@ export function Navigation() {
         <div className="flex items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter ml-2">
             <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-            <span className="leading-tight text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
+            <span className="leading-tight text-foreground">Noble <span className="text-[#e6c17a]">Gain</span></span>
           </Link>
         </div>
         <div className="flex items-center gap-2">
