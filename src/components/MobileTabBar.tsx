@@ -15,8 +15,8 @@ export function MobileTabBar() {
   ];
 
   return (
-    <div className="md:hidden fixed bottom-6 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <nav className="relative flex items-center justify-around bg-card/80 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl px-2 py-3">
+    <div className="md:hidden fixed bottom-4 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <nav className="relative flex items-center justify-around bg-card/85 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl px-1.5 py-2.5">
         {/* Neon glow effect background */}
         <div className="absolute inset-0 rounded-3xl bg-primary/5 -z-10" />
         
@@ -27,18 +27,18 @@ export function MobileTabBar() {
               key={tab.name}
               to={tab.href as any}
               className={cn(
-                "relative flex flex-col items-center gap-1 transition-all duration-300 px-3 py-1.5",
-                isActive ? "text-primary scale-110" : "text-muted-foreground hover:text-foreground"
+                "relative flex flex-col items-center gap-1 transition-all duration-300 px-2 py-1",
+                isActive ? "text-primary scale-105" : "text-muted-foreground hover:text-foreground"
               )}
             >
               <tab.icon
                 className={cn(
-                  "h-6 w-6 transition-all duration-300",
+                  "h-5 w-5 transition-all duration-300",
                   isActive ? "fill-primary/10 stroke-[2.5px]" : "stroke-[2px]"
                 )}
               />
               <span className={cn(
-                "text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                "text-[9px] font-black uppercase tracking-wider transition-all duration-300",
                 isActive ? "opacity-100" : "opacity-0 h-0 w-0 scale-0"
               )}>
                 {tab.name}
