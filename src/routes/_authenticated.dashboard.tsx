@@ -84,6 +84,25 @@ function Dashboard() {
     }
   });
 
+  const { data: dailyStats } = useQuery({
+    queryKey: ["daily-task-stats"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { daily_count: 0 };
+      
+      const { data, error } = await supabase
+        .from("user_daily_task_counts" as any)
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      
+      if (error) console.error('Error fetching daily stats:', error);
+      return (data as any) || { daily_count: 0 };
+    }
+  });
+
+  const dailyLimitReached = (dailyStats?.daily_count || 0) >= 10;
+
   const claimDailyStreak = useMutation({
     mutationFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
