@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navigation } from "@/components/Navigation";
+import { MobileTabBar } from "@/components/MobileTabBar";
 import { Coins } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Onboarding } from "@/components/Onboarding";
@@ -276,9 +277,10 @@ function RootComponent() {
           !isAuthPage && "bg-background text-foreground"
         )}>
           {!isAuthPage && <Navigation />}
+          {!isAuthPage && !isLandingPage && <MobileTabBar />}
           <main className={cn(
             "flex-1 transition-all duration-300 w-full flex flex-col",
-            !isLandingPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)]"
+            !isLandingPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)] pb-24 md:pb-0"
           )}>
             <div className={cn("flex-1 w-full", !isLandingPage && !isAuthPage && "pt-24 md:pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto")}>
               <Outlet />
