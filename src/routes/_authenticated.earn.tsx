@@ -72,12 +72,12 @@ function EarnPage() {
       
       const { data, error } = await supabase
         .from("user_daily_task_counts" as any)
-        .select("daily_count")
+        .select("*")
         .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
       
-      if (error && error.code !== 'PGRST116') console.error('Error fetching daily stats:', error);
-      return data || { daily_count: 0 };
+      if (error) console.error('Error fetching daily stats:', error);
+      return (data as any) || { daily_count: 0 };
     }
   });
 
