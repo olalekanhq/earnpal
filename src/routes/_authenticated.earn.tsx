@@ -367,6 +367,7 @@ function EarnPage() {
                           if (res.completed) {
                             toast.success(res.message);
                             queryClient.invalidateQueries({ queryKey: ["profile"] });
+                            queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
                           } else {
                             toast.success(res.message);
                           }
