@@ -142,8 +142,8 @@ export function Navigation() {
                 </Button>
               )}
               <Link to="/" className="flex items-center gap-2 font-black text-2xl hover:opacity-80 transition-opacity uppercase tracking-tighter">
-                <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-                <span className="hidden xs:inline text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
+                <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain rounded-full" />
+                <span className="hidden xs:inline text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
               </Link>
             </div>
             
