@@ -178,7 +178,7 @@ export function Navigation() {
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl uppercase tracking-tighter">
-                <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
+                <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
                 <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
               </Link>
             </div>
