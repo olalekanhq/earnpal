@@ -198,7 +198,7 @@ export function AdminPanel() {
   }, []);
 
 
-  const tabs = [
+    { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
@@ -208,7 +208,6 @@ export function AdminPanel() {
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
     { value: "audit", icon: ClipboardList, label: "Audit Logs", color: undefined },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
-  ];
 
   
   const filteredTabs = tabs.filter(tab => {
@@ -320,6 +319,10 @@ export function AdminPanel() {
             </TabsList>
           </div>
         </div>
+
+        <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          {activeTab === 'analytics' && <AnalyticsView />}
+        </TabsContent>
 
         <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'users' && <UsersManager />}
