@@ -12,6 +12,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ImageCropper } from "@/components/ImageCropper";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
