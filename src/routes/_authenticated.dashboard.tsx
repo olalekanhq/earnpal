@@ -267,13 +267,13 @@ function Dashboard() {
               Featured Tasks
             </h2>
           </div>
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto">
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-1">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
               const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
               
               return (
-                <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative">
+                <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full">
                   <CardHeader className="p-3 sm:p-6 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="bg-primary/5 p-1.5 sm:p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
