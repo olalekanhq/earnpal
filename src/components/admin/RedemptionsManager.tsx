@@ -81,14 +81,14 @@ export function RedemptionsManager() {
         throw new Error(result.message);
       }
 
-      // Create notification for user
-      await supabase.from("notifications").insert({
-        user_id: userId,
-        title: status === 'approved' ? "Redemption Approved!" : "Redemption Rejected",
-        message: status === 'approved' 
-          ? `Your request for "${rewardTitle}" has been approved.${result.re_deducted ? ' The points were re-deducted from your balance.' : ''}` 
+      // Notify the user via the privileged notification RPC
+      await supabase.rpc('send_user_notification', {
+        _user_id: userId,
+        _title: status === 'approved' ? "Redemption Approved!" : "Redemption Rejected",
+        _message: status === 'approved'
+          ? `Your request for "${rewardTitle}" has been approved.${result.re_deducted ? ' The points were re-deducted from your balance.' : ''}`
           : `Your request for "${rewardTitle}" was rejected.${reason ? ` Reason: ${reason}.` : ''}${result.refunded ? ' The points have been returned to your balance.' : ''}`,
-        type: "redemption"
+        _type: "redemption"
       });
 
       return result;
