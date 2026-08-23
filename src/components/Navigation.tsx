@@ -141,9 +141,9 @@ export function Navigation() {
                   <Menu className="h-6 w-6 text-foreground" />
                 </Button>
               )}
-              <Link to="/" className="flex items-center gap-2 font-black text-2xl text-primary hover:opacity-80 transition-opacity uppercase tracking-tighter">
+              <Link to="/" className="flex items-center gap-2 font-black text-2xl hover:opacity-80 transition-opacity uppercase tracking-tighter">
                 <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
-                <span className="hidden xs:inline">Noble Gain</span>
+                <span className="hidden xs:inline text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
               </Link>
             </div>
             
