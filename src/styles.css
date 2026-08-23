@@ -177,6 +177,7 @@ html, body {
   min-height: 100%;
   position: relative;
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 /* Global scroll management */
@@ -193,6 +194,7 @@ html, body {
   flex: 1;
   background: var(--color-background);
   isolation: isolate;
+  overflow-x: clip;
 }
 
 .auth-shell::before,
@@ -203,21 +205,22 @@ html, body {
   border-radius: 999px;
   filter: blur(2px);
   opacity: .55;
+  z-index: -1;
 }
 
 .auth-shell::before {
-  width: 22rem;
-  height: 22rem;
-  top: -10rem;
-  left: -9rem;
+  width: 15rem;
+  height: 15rem;
+  top: -5rem;
+  left: -2rem;
   background: color-mix(in oklch, var(--color-primary) 18%, transparent);
 }
 
 .auth-shell::after {
-  width: 18rem;
-  height: 18rem;
-  right: -8rem;
-  bottom: -7rem;
+  width: 12rem;
+  height: 12rem;
+  right: -2rem;
+  bottom: -3rem;
   background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
 }
 
