@@ -73,7 +73,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           <img src="/logo.png" alt="Noble Gain" className="h-12 w-12 object-contain" />
         </div>
         <div className="flex items-center gap-2 font-black text-2xl tracking-tighter uppercase">
-          <span className="text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
+          <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
         </div>
         <p className="mt-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
           Loading your experience...

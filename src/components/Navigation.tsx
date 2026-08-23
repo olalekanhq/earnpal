@@ -178,8 +178,8 @@ export function Navigation() {
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8 pr-10">
               <Link to="/" className="flex items-center gap-2 font-black text-xl uppercase tracking-tighter">
-                <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
-                <span className="text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
+                <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain rounded-full" />
+                <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
               </Link>
             </div>
 
@@ -278,7 +278,7 @@ export function Navigation() {
         <div className="bg-primary/10 p-2 rounded-xl border border-primary/20 shadow-sm">
           <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
         </div>
-        <span className="font-black text-xl tracking-tighter uppercase text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
+        <span className="font-black text-xl tracking-tighter uppercase text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
       </div>
 
       <div className="flex-1 space-y-8">
@@ -364,8 +364,8 @@ export function Navigation() {
       <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1] animate-neon-pulse">
         <div className="flex items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter ml-2">
-            <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain" />
-            <span className="leading-tight text-[#001f3f]">Noble <span className="text-[#c5a059]">Gain</span></span>
+            <img src="/logo.png" alt="Noble Gain" className="h-6 w-6 object-contain rounded-full" />
+            <span className="leading-tight text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
           </Link>
         </div>
         <div className="flex items-center gap-2">
