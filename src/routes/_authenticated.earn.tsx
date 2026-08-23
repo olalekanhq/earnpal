@@ -54,8 +54,7 @@ function EarnPage() {
           ...task,
           status: submissionsMap.get(task.id) || null,
           watch_count: progressMap.get(task.id) || 0
-        }))
-        .filter((task: any) => task.status !== "verified" || activeCategory === "Completed") || [];
+        })) || [];
     },
   });
 
