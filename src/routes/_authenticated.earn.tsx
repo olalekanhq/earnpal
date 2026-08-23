@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
 function EarnPage() {
   const queryClient = useQueryClient();
   const [activeCategory, setActiveCategory] = useState("All");
-  const [activeStatus, setActiveStatus] = useState<"available" | "completed">("available");
+  const [activeStatus, setActiveStatus] = useState<"available" | "in_progress" | "completed">("available");
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [taskUiStates, setTaskUiStates] = useState<Record<string, 'idle' | 'verifying' | 'awaiting_confirmation' | 'submitting'>>({});
   const [activeVastTask, setActiveVastTask] = useState<any | null>(null);
@@ -101,9 +101,15 @@ function EarnPage() {
 
   const filteredTasks = (tasks as any[])?.filter((t: any) => {
     const isCompleted = t.status === "verified";
-    const matchesStatus = activeStatus === "completed" ? isCompleted : !isCompleted;
-    // When showing completed tasks, show all of them (ignore category filter)
-    const matchesCategory = activeStatus === "completed" || activeCategory === "All" || t.category === activeCategory;
+    const isPending = t.status === "pending";
+    
+    let matchesStatus = false;
+    if (activeStatus === "completed") matchesStatus = isCompleted;
+    else if (activeStatus === "in_progress") matchesStatus = isPending;
+    else matchesStatus = !isCompleted && !isPending;
+
+    // When showing in_progress or completed tasks, show all of them (ignore category filter)
+    const matchesCategory = activeStatus !== "available" || activeCategory === "All" || t.category === activeCategory;
     return matchesStatus && matchesCategory;
   });
 
@@ -144,7 +150,7 @@ function EarnPage() {
             <button
               onClick={() => setActiveStatus("available")}
               className={cn(
-                "px-6 py-2 rounded-xl text-sm font-bold transition-all",
+                "px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap",
                 activeStatus === "available" 
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
                   : "text-muted-foreground hover:text-foreground"
@@ -153,9 +159,20 @@ function EarnPage() {
               Available
             </button>
             <button
+              onClick={() => setActiveStatus("in_progress")}
+              className={cn(
+                "px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap",
+                activeStatus === "in_progress" 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              In Progress
+            </button>
+            <button
               onClick={() => setActiveStatus("completed")}
               className={cn(
-                "px-6 py-2 rounded-xl text-sm font-bold transition-all",
+                "px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap",
                 activeStatus === "completed" 
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
                   : "text-muted-foreground hover:text-foreground"
