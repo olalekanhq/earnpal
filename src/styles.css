@@ -255,7 +255,7 @@ html, body {
 
 .auth-mark {
   background: var(--color-secondary);
-  box-shadow: 0 12px 30px color-mix(in oklch, var(--color-primary) 18%, transparent);
+  box-shadow: 0 12px 30px rgba(0, 31, 63, 0.18);
 }
 
 .auth-input {
