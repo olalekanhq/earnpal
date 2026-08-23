@@ -316,7 +316,9 @@ function Dashboard() {
                     <Button 
                       className={cn(
                         "w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm transition-all px-2",
-                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
+                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : 
+                        dailyLimitReached ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
+                        "shadow-md shadow-primary/10"
                       )}
                       onClick={async () => {
                         if (isCompleted) return;
