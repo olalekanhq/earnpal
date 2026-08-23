@@ -210,7 +210,7 @@ function SettingsPage() {
               </CardContent>
             </Card>
           </div>
-        </div>
+      </div>
     </div>
   );
 }
