@@ -152,51 +152,51 @@ function EarnPage() {
           ))}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
             <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md">
-              <div className="h-1.5 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
-              <CardHeader className="pb-4">
-                <div className="flex justify-between items-start mb-3">
-                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-2.5 py-0.5 font-bold uppercase text-[10px]">
+              <div className="h-1 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
+              <CardHeader className="p-3 sm:p-4 pb-2 sm:pb-4">
+                <div className="flex justify-between items-start mb-2 sm:mb-3">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-1.5 sm:px-2.5 py-0.5 font-bold uppercase text-[8px] sm:text-[10px]">
                     {task.category}
                   </Badge>
-                  <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-lg">
-                    <Coins className="h-3 w-3 text-green-600" />
-                    <span className="text-green-600 font-bold text-xs">{task.points}</span>
+                  <div className="flex items-center gap-0.5 sm:gap-1 bg-green-500/10 px-1.5 sm:px-2 py-0.5 rounded-lg">
+                    <Coins className="h-2.5 w-2.5 sm:h-3 sm:h-3 text-green-600" />
+                    <span className="text-green-600 font-bold text-[10px] sm:text-xs">{task.points}</span>
                   </div>
                 </div>
-                <CardTitle className="text-lg font-black group-hover:text-primary transition-colors">{task.title}</CardTitle>
-                <CardDescription className="text-sm font-medium line-clamp-2 mt-1">{task.description}</CardDescription>
+                <CardTitle className="text-[13px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
+                <CardDescription className="text-[9px] sm:text-sm font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
                 {task.category === 'Videos' && task.video_ad_count > 0 && task.status !== 'verified' && (
-                  <div className="mt-3 space-y-2">
-                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <div className="mt-2 sm:mt-3 space-y-1 sm:space-y-2">
+                    <div className="flex justify-between text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest text-muted-foreground">
                       <span>Progress</span>
-                      <span>{task.watch_count || 0} / {task.video_ad_count} Ads</span>
+                      <span>{task.watch_count || 0}/{task.video_ad_count}</span>
                     </div>
-                    <div className="w-full bg-primary/10 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-primary/10 h-1 sm:h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-primary h-full transition-all duration-500" 
                         style={{ width: `${Math.min(100, ((task.watch_count || 0) / task.video_ad_count) * 100)}%` }}
                       />
                     </div>
-                    <p className="text-[10px] text-muted-foreground italic font-medium">Earn {task.points} points after {task.video_ad_count} watches.</p>
+                    <p className="text-[8px] sm:text-[10px] text-muted-foreground italic font-medium hidden xs:block">Earn {task.points} pts after {task.video_ad_count} watches.</p>
                   </div>
                 )}
               </CardHeader>
-              <CardContent className="mt-auto pt-0 pb-6 px-6">
-                <div className="flex items-center gap-4 mb-6 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="h-3 w-3" />
-                    <span>~5 mins</span>
+              <CardContent className="mt-auto pt-0 pb-3 sm:pb-6 px-3 sm:px-6">
+                <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6 text-[9px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <Clock className="h-2.5 w-2.5 sm:h-3 sm:h-3" />
+                    <span>~5m</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="h-3 w-3" />
-                    <span>Verified</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <ShieldCheck className="h-2.5 w-2.5 sm:h-3 sm:h-3" />
+                    <span>Ver.</span>
                   </div>
                 </div>
                 <Button
-                  className="w-full rounded-xl font-bold h-11 shadow-sm group-hover:shadow-md transition-all"
+                  className="w-full rounded-xl font-bold h-9 sm:h-11 text-xs sm:text-sm shadow-sm group-hover:shadow-md transition-all px-2"
                   title={socialLocked ? "Complete your social profile to unlock tasks" : undefined}
                   disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {
