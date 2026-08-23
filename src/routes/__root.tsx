@@ -69,7 +69,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <div className="flex flex-col items-center animate-pulse">
         <img src="/logo.png" alt="Noble Gain" className="h-20 w-20 object-contain mb-4" />
         <div className="flex items-center gap-2 font-black text-2xl tracking-tighter uppercase">
-          <span className="text-[#002d26]">Noble <span className="text-[#e6c17a]">Gain</span></span>
+          <span className="text-foreground">Noble <span className="text-[#e6c17a]">Gain</span></span>
         </div>
         <p className="mt-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
           Loading your experience...
@@ -237,8 +237,8 @@ function RootComponent() {
     });
 
     // Clean up flags from the previous transient-session implementation.
-    localStorage.removeItem('earn-pal-session-transient');
-    sessionStorage.removeItem('earn-pal-session-active');
+    localStorage.removeItem('noble-gain-session-transient');
+    sessionStorage.removeItem('noble-gain-session-active');
 
     return () => subscription.unsubscribe();
   }, [router]);
@@ -267,7 +267,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="earn-pal-theme">
+      <ThemeProvider defaultTheme="light" storageKey="noble-gain-theme">
         <div className={cn(
           "flex min-h-screen relative w-full max-w-full flex-col",
           !isAuthPage && "bg-background text-foreground"
