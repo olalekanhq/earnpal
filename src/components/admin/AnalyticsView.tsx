@@ -133,8 +133,25 @@ export function AnalyticsView() {
           <p className="text-sm text-muted-foreground font-medium">Monitor user behavior and economy trends.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <div className="w-full sm:w-[250px]">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex bg-card/50 backdrop-blur-sm p-1 rounded-xl border border-border/40">
+            {(['day', 'week', 'month'] as const).map((g) => (
+              <button
+                key={g}
+                onClick={() => setGranularity(g)}
+                className={cn(
+                  "px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all",
+                  granularity === g 
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
+
+          <div className="w-full sm:w-[200px]">
             <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
               <SelectTrigger className="rounded-xl border-border/40 bg-card/50 backdrop-blur-sm font-bold">
                 <div className="flex items-center gap-2">
