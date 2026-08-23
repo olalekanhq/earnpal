@@ -189,6 +189,9 @@ function ProfilePage() {
       if (!user) return 0;
       const { count } = await supabase.from("profiles").select("*", { count: "exact", head: true }).eq("referred_by", user.id);
       return count || 0;
+    },
+  });
+
   const { data: authInfo } = useQuery({
     queryKey: ["authInfo"],
     queryFn: async () => {
