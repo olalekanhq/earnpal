@@ -396,6 +396,30 @@ export function Navigation() {
                   Profile
                 </Link>
               </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                  <Link to="/admin" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Shield className="mr-3 h-4 w-4" />
+                    Admin Panel
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {isModerator && !isAdmin && (
+                <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                  <Link to="/moderator" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Shield className="mr-3 h-4 w-4" />
+                    Moderator Panel
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {isTasker && !isModerator && !isAdmin && (
+                <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
+                  <Link to="/tasker" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Shield className="mr-3 h-4 w-4" />
+                    Tasker Panel
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem asChild className="rounded-xl focus:bg-primary/5 focus:text-primary cursor-pointer px-3 py-2 font-bold text-sm">
                 <Link to="/transactions" className="flex items-center w-full" onClick={() => setIsMobileMenuOpen(false)}>
                   <History className="mr-3 h-4 w-4" />
