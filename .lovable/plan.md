@@ -1,32 +1,24 @@
-# Plan - Task Limits, Daily Reset, and Repeatable Tasks
+# Plan: Daily Task Limits and Repeatable Tasks
 
-Implement a daily task cap of 10 tasks per user, reset at 12am GMT, support for daily repeatable tasks, and ensure daily check-in is homepage-only.
+Implement a 10-task daily cap per user, support daily repeatable tasks, and optimize the UI by removing duplicate streak cards from the Earn page.
 
-## User Review Required
-
-> [!IMPORTANT]
-> - The 10-task cap will apply to both "Available" and "In Progress" states. Once a user hits 10 submissions in a day, other tasks will be hidden until the next GMT day.
-> - "Repeatable" tasks will reappear in the "Available" list after the 12am GMT reset if they were completed the previous day.
-
-## Proposed Changes
-
-### Database Schema & Logic
-- Add `is_repeatable` (boolean) to `public.tasks` table.
-- Create a new table `daily_task_stats` (or similar) or a view to track daily completions per user, reset by GMT.
-- Update `submit_task` and `record_video_watch` RPCs to:
-    - Check the daily 10-task limit (considering GMT timezone).
-    - Handle `is_repeatable` logic: if a task is repeatable, allow new submissions if the last one was on a previous GMT day.
-
-### Admin Panel
-- Update the Task Creation/Edit form to include the "Daily Repeatable" toggle.
-
-### Frontend (Earn Page)
-- Update the task fetching logic to only show up to 10 tasks if the user hasn't hit their limit, or show a "Daily Limit Reached" message.
-- Verify that the Daily Check-in card is exclusively on the Dashboard and not the Earn page (it currently appears to be Dashboard-only).
-
-### Security
-- Update RLS policies and GRANTs for any new tables/columns.
+## User-Facing Changes
+- **Daily Limit**: Users will be restricted to completing 10 tasks per 24-hour period (resetting at 00:00 GMT).
+- **Daily Repeatable Tasks**: Certain tasks (like social interactions) can now be completed once every day for recurring points.
+- **Clean Earn Page**: The "Daily Streak" section will be removed from the Earn page to avoid clutter, remaining accessible on the Dashboard.
+- **Improved Feedback**: Users will receive clear notifications when they reach their daily task limit.
 
 ## Technical Details
-- Timezone handling: Use `AT TIME ZONE 'GMT'` in Postgres queries to ensure consistent 12am GMT resets regardless of server local time.
-- Task visibility logic: `SELECT * FROM tasks WHERE ... AND (NOT EXISTS (completed today) OR is_repeatable) LIMIT (10 - count_today)`.
+- **Database Schema**:
+  - Add `is_repeatable` column to `public.tasks` table.
+  - Create `public.user_daily_task_counts` view to calculate daily completions using GMT timestamps.
+- **Hardened RPCs**:
+  - Update `submit_task` to check the daily limit and handle `is_repeatable` reset logic.
+  - Update `record_video_watch` to enforce the 10-task cap upon completion.
+- **Frontend Updates**:
+  - Modify `src/routes/_authenticated.earn.tsx` to remove the Daily Streak card.
+  - Add daily limit checks in the Task submission flow to disable buttons and show appropriate tooltips.
+
+## Security & Reliability
+- Enforce limits via `SECURITY DEFINER` server-side functions to prevent client-side bypass.
+- Use GMT consistently for all resets to ensure predictable behavior for a global user base.
