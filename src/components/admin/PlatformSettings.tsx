@@ -28,7 +28,7 @@ interface AppSetting {
 import { useAuth } from "@/hooks/use-auth";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
+import { cn } from "@/lib/utils";
 
 function PermissionManager() {
   const queryClient = useQueryClient();
@@ -235,7 +235,51 @@ export function PlatformSettings() {
               />
             </div>
           </div>
-          ...
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Referee Amount (Points)</Label>
+              <div className="flex gap-2">
+                <Input 
+                  type="number"
+                  value={localValues['welcome_bonus_amount_referee'] || 0}
+                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referee: parseInt(e.target.value) || 0 }))}
+                  className="rounded-xl font-bold"
+                />
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="rounded-xl flex-shrink-0"
+                  onClick={() => handleSave('welcome_bonus_amount_referee')}
+                  disabled={updateMutation.isPending}
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Referrer Amount (Points)</Label>
+              <div className="flex gap-2">
+                <Input 
+                  type="number"
+                  value={localValues['welcome_bonus_amount_referrer'] || 0}
+                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referrer: parseInt(e.target.value) || 0 }))}
+                  className="rounded-xl font-bold"
+                />
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="rounded-xl flex-shrink-0"
+                  onClick={() => handleSave('welcome_bonus_amount_referrer')}
+                  disabled={updateMutation.isPending}
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-4 p-4 rounded-2xl bg-accent/5 border border-border/50">
             <Label className="text-sm font-black uppercase tracking-wider block mb-2">Required Social Profiles</Label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
