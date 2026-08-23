@@ -52,7 +52,7 @@ function EarnPage() {
       
       return (tasksData as any)
         ?.map((task: any) => {
-          const submission = submissionsMap.get(task.id);
+          const submission = submissionsMap.get(task.id) as { status: string; admin_note: string } | undefined;
           return {
             ...task,
             status: submission?.status || null,
