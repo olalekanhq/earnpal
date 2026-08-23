@@ -29,9 +29,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center text-center max-w-md">
-        <div className="bg-primary/10 p-6 rounded-3xl mb-8 shadow-xl shadow-primary/5 ring-1 ring-primary/20">
-          <img src="/logo.png" alt="Noble Gain" className="h-16 w-16 object-contain animate-pulse" />
-        </div>
+        <img src="/logo.png" alt="Noble Gain" className="h-24 w-24 object-contain animate-pulse mb-8" />
         
         <h1 className="text-8xl font-black text-primary tracking-tighter mb-2">404</h1>
         <h2 className="text-2xl font-black uppercase tracking-tight text-foreground mb-4">
