@@ -421,9 +421,9 @@ function AuthPage() {
 
           <Brand />
 
-          <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">
+          <h2 className="mt-4 text-center text-xl font-black tracking-tight text-foreground uppercase">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
-          </h1>
+          </h2>
           <p className="mx-auto mt-1 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
