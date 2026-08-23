@@ -14,18 +14,38 @@ import {
   Area
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, TrendingUp, UserPlus, Gift, ListTodo, RefreshCw, Calendar as CalendarIcon } from "lucide-react";
+import { Loader2, TrendingUp, UserPlus, Gift, ListTodo, RefreshCw, Calendar as CalendarIcon, Filter } from "lucide-react";
 import { format, subDays, startOfDay, endOfDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 export function AnalyticsView() {
   const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(new Date(), 30),
     to: new Date(),
+  });
+  const [selectedTaskId, setSelectedTaskId] = useState<string>("all");
+
+  const { data: tasks } = useQuery({
+    queryKey: ["admin-tasks-simple"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tasks" as any)
+        .select("id, title")
+        .order("title");
+      if (error) throw error;
+      return data as { id: string; title: string }[];
+    }
   });
 
   const { data: analytics, isLoading: isLoadingFunnel } = useQuery({
@@ -75,20 +95,22 @@ export function AnalyticsView() {
   });
 
   const { data: economyData, isLoading: isLoadingEconomy } = useQuery({
-    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString()],
+    queryKey: ["economyAnalytics", date?.from?.toISOString(), date?.to?.toISOString(), selectedTaskId],
     queryFn: async () => {
       const fromStr = date?.from ? startOfDay(date.from).toISOString() : subDays(new Date(), 30).toISOString();
       const toStr = date?.to ? endOfDay(date.to).toISOString() : new Date().toISOString();
+      const taskId = selectedTaskId === "all" ? null : selectedTaskId;
 
-      // Query raw tables with filters since the views were static
       const [dailyRes, repeatableRes] = await Promise.all([
         supabase.rpc('get_daily_task_completions', { 
           start_date: fromStr, 
-          end_date: toStr 
+          end_date: toStr,
+          filter_task_id: taskId
         }),
         supabase.rpc('get_repeatable_task_stats', {
           start_date: fromStr,
-          end_date: toStr
+          end_date: toStr,
+          filter_task_id: taskId
         })
       ]);
 
@@ -103,47 +125,68 @@ export function AnalyticsView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <h3 className="text-xl font-black uppercase tracking-tight">Platform Analytics</h3>
           <p className="text-sm text-muted-foreground font-medium">Monitor user behavior and economy trends.</p>
         </div>
         
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full sm:w-[300px] justify-start text-left font-bold rounded-xl border-border/40 bg-card/50 backdrop-blur-sm",
-                !date && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "LLL dd, y")} -{" "}
-                    {format(date.to, "LLL dd, y")}
-                  </>
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="w-full sm:w-[250px]">
+            <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
+              <SelectTrigger className="rounded-xl border-border/40 bg-card/50 backdrop-blur-sm font-bold">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-primary" />
+                  <SelectValue placeholder="All Tasks" />
+                </div>
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl border-border/40">
+                <SelectItem value="all" className="font-bold">All Tasks</SelectItem>
+                {tasks?.map((task) => (
+                  <SelectItem key={task.id} value={task.id} className="font-bold">
+                    {task.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full sm:w-[300px] justify-start text-left font-bold rounded-xl border-border/40 bg-card/50 backdrop-blur-sm",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+                {date?.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} -{" "}
+                      {format(date.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(date.from, "LLL dd, y")
+                  )
                 ) : (
-                  format(date.from, "LLL dd, y")
-                )
-              ) : (
-                <span>Pick a date range</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 rounded-2xl border-border/40 shadow-2xl" align="end">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={date?.from || new Date()}
-              selected={date}
-              onSelect={setDate}
-              numberOfMonths={2}
-            />
-          </PopoverContent>
-        </Popover>
+                  <span>Pick a date range</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 rounded-2xl border-border/40 shadow-2xl" align="end">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={date?.from || new Date()}
+                selected={date}
+                onSelect={setDate}
+                numberOfMonths={2}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       {isLoading ? (
@@ -179,42 +222,50 @@ export function AnalyticsView() {
                     Tasks Completed Per Day
                   </CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-tight">Approved submissions in selected period</CardDescription>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-tight">
+                  {selectedTaskId === "all" ? "Approved submissions in selected period" : "Daily completions for selected task"}
+                </CardDescription>
               </CardHeader>
               <CardContent className="px-0 pb-0 h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={economyData?.dailyCompletions || []}>
-                    <defs>
-                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                    <XAxis 
-                      dataKey="completion_date" 
-                      tickFormatter={(str) => format(new Date(str), 'MMM d')}
-                      tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis 
-                      tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'var(--card)', 
-                        border: '1px solid var(--border)',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: 800
-                      }}
-                    />
-                    <Area type="monotone" dataKey="count" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorCount)" strokeWidth={3} />
-                  </AreaChart>
-                </ResponsiveContainer>
+                {economyData?.dailyCompletions.length === 0 ? (
+                  <div className="flex h-full items-center justify-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    No data for this selection
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={economyData?.dailyCompletions || []}>
+                      <defs>
+                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                      <XAxis 
+                        dataKey="completion_date" 
+                        tickFormatter={(str) => format(new Date(str), 'MMM d')}
+                        tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis 
+                        tick={{ fontSize: 9, fontWeight: 800, fill: "var(--muted-foreground)" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'var(--card)', 
+                          border: '1px solid var(--border)',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 800
+                        }}
+                      />
+                      <Area type="monotone" dataKey="count" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorCount)" strokeWidth={3} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
               </CardContent>
             </Card>
 
@@ -227,37 +278,45 @@ export function AnalyticsView() {
                     Repeatable Task Claim Rates
                   </CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-tight">Avg claims per user in selected period</CardDescription>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-tight">
+                  {selectedTaskId === "all" ? "Avg claims per user in selected period" : "Individual claim rate for selected task"}
+                </CardDescription>
               </CardHeader>
               <CardContent className="px-0 pb-0 h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={economyData?.repeatableStats || []} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
-                    <XAxis type="number" tick={{ fontSize: 9, fontWeight: 800 }} hide />
-                    <YAxis 
-                      dataKey="title" 
-                      type="category" 
-                      tick={{ fontSize: 8, fontWeight: 800, fill: "var(--muted-foreground)" }}
-                      width={100}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'var(--card)', 
-                        border: '1px solid var(--border)',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: 800
-                      }}
-                    />
-                    <Bar dataKey="claims_per_user" fill="#10b981" radius={[0, 4, 4, 0]} barSize={20}>
-                       {economyData?.repeatableStats.map((entry: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#10b981" : "#34d399"} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                {economyData?.repeatableStats.length === 0 ? (
+                  <div className="flex h-full items-center justify-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    No data for this selection
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={economyData?.repeatableStats || []} layout="vertical" margin={{ left: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
+                      <XAxis type="number" tick={{ fontSize: 9, fontWeight: 800 }} hide />
+                      <YAxis 
+                        dataKey="title" 
+                        type="category" 
+                        tick={{ fontSize: 8, fontWeight: 800, fill: "var(--muted-foreground)" }}
+                        width={100}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'var(--card)', 
+                          border: '1px solid var(--border)',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 800
+                        }}
+                      />
+                      <Bar dataKey="claims_per_user" fill="#10b981" radius={[0, 4, 4, 0]} barSize={20}>
+                         {economyData?.repeatableStats.map((entry: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#10b981" : "#34d399"} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </CardContent>
             </Card>
           </div>
