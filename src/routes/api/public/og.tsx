@@ -20,8 +20,8 @@ export const Route = createFileRoute('/api/public/og')({
           <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#7C3AED;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#4C1D95;stop-opacity:1" />
+                <stop offset="0%" style="stop-color:#002d26;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#001a16;stop-opacity:1" />
               </linearGradient>
               <filter id="shadow" x="0" y="0" width="200%" height="200%">
                 <feOffset result="offOut" in="SourceAlpha" dx="0" dy="4" />

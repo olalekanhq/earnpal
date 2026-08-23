@@ -238,8 +238,8 @@ export function Navigation() {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.removeItem('earn-pal-remember-me');
-      sessionStorage.removeItem('earn-pal-session-active');
+      localStorage.removeItem('noble-gain-remember-me');
+      sessionStorage.removeItem('noble-gain-session-active');
       toast.success("Successfully signed out. See you soon!");
       // Force a full reload to landing page to clear all states
       window.location.href = "/";
