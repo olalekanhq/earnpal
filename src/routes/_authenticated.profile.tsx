@@ -100,7 +100,11 @@ function ProfilePage() {
           if (parts.length > 1) {
             const handlePart = parts[1];
             if (handlePart) {
-              clean = handlePart.split('/')[0].split('?')[0];
+              const segments = handlePart.split('/');
+              const firstSegment = segments[0];
+              if (firstSegment) {
+                clean = firstSegment.split('?')[0];
+              }
             }
           }
           break;
