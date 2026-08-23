@@ -116,7 +116,7 @@ function Dashboard() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
-      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
       toast.success(result.message || `Daily bonus claimed! +${result.points} points`);
     },
     onError: (error: any) => {
