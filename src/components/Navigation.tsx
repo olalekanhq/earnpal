@@ -15,7 +15,8 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  Globe
+  Globe,
+  Sparkles
 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
