@@ -221,9 +221,9 @@ function EarnPage() {
           {filteredTasks?.length ? (filteredTasks as any[]).map((task: any) => (
             <Card key={task.id} className="group border-none shadow-sm bg-card overflow-hidden flex flex-col transition-all hover:shadow-md w-[94%] mx-auto md:w-full">
               <div className="h-1 w-full bg-primary/10 group-hover:bg-primary transition-colors" />
-              <CardHeader className="p-3 sm:p-4 pb-2 sm:pb-4">
+              <CardHeader className="p-5 sm:p-4 pb-2 sm:pb-4">
                 <div className="flex justify-between items-start mb-2 sm:mb-3">
-                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-1.5 sm:px-2.5 py-0.5 font-bold uppercase text-[8px] sm:text-[10px]">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-lg px-1.5 sm:px-2.5 py-0.5 font-bold uppercase text-[10px]">
                     {task.category}
                   </Badge>
                   <div className="flex items-center gap-0.5 sm:gap-1 bg-green-500/10 px-1.5 sm:px-2 py-0.5 rounded-lg">
@@ -231,8 +231,8 @@ function EarnPage() {
                     <span className="text-green-600 font-bold text-[10px] sm:text-xs">{task.points}</span>
                   </div>
                 </div>
-                <CardTitle className="text-[13px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
-                <CardDescription className="text-[9px] sm:text-sm font-medium line-clamp-1 sm:line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
+                <CardTitle className="text-[15px] sm:text-lg font-black group-hover:text-primary transition-colors line-clamp-1 leading-tight">{task.title}</CardTitle>
+                <CardDescription className="text-[11px] sm:text-sm font-medium line-clamp-2 mt-0.5 sm:mt-1">{task.description}</CardDescription>
                 
                 {task.status === 'rejected' && task.admin_note && (
                   <div className="mt-3 p-2 rounded-lg bg-destructive/5 border border-destructive/20">
@@ -268,7 +268,7 @@ function EarnPage() {
                   </div>
                 </div>
                 <Button
-                  className="w-full rounded-xl font-bold h-9 sm:h-11 text-xs sm:text-sm shadow-sm group-hover:shadow-md transition-all px-2"
+                  className="w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm shadow-sm group-hover:shadow-md transition-all px-2"
                   title={socialLocked ? "Complete your social profile to unlock tasks" : undefined}
                   disabled={socialLocked || task.status === 'verified' || task.status === 'pending' || completingTaskId === task.id || taskUiStates[task.id] === 'submitting'}
                   onClick={async () => {

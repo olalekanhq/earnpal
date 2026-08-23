@@ -274,24 +274,24 @@ function Dashboard() {
               
               return (
                 <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full">
-                  <CardHeader className="p-3 sm:p-6 pb-2">
+                  <CardHeader className="p-5 sm:p-6 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="bg-primary/5 p-1.5 sm:p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
                         <Zap className="h-4 w-4 sm:h-5 sm:h-5" />
                       </div>
-                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5 text-[9px] sm:text-xs">
+                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5 text-[10px] sm:text-xs">
                         +{task.points} PTS
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-3 sm:p-6 pt-2">
+                  <CardContent className="p-5 sm:p-6 pt-2">
                     <div className="space-y-1 mb-4 sm:mb-6">
-                      <CardTitle className="text-[13px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight">{task.title}</CardTitle>
-                      <CardDescription className="text-[9px] sm:text-xs font-medium line-clamp-1">{task.description}</CardDescription>
+                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight">{task.title}</CardTitle>
+                      <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">{task.description}</CardDescription>
                     </div>
                     <Button 
                       className={cn(
-                        "w-full rounded-xl font-bold h-9 sm:h-11 text-xs sm:text-sm transition-all px-2",
+                        "w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm transition-all px-2",
                         isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : "shadow-md shadow-primary/10"
                       )}
                       onClick={async () => {
