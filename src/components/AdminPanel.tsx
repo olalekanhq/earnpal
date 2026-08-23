@@ -36,6 +36,7 @@ import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
+import { TaskApprovals } from "./admin/TaskApprovals";
 
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
@@ -201,6 +202,7 @@ export function AdminPanel() {
     { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "fraud", icon: ShieldAlert, label: "Fraud", color: "text-destructive" },
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
+    { value: "verifications", icon: ShieldCheck, label: "Verifications", color: undefined },
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
@@ -329,6 +331,10 @@ export function AdminPanel() {
         
         <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
           {activeTab === 'tasks' && <TasksManager />}
+        </TabsContent>
+
+        <TabsContent value="verifications" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
+          {activeTab === 'verifications' && <TaskApprovals />}
         </TabsContent>
         
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
