@@ -194,35 +194,55 @@ html, body {
   flex: 1;
   background: var(--color-background);
   isolation: isolate;
-  overflow-x: clip;
-  overflow-y: hidden;
+  overflow: hidden;
+  position: relative;
 }
 
 .auth-shell::before,
-.auth-shell::after {
+.auth-shell::after,
+.auth-blob {
   content: "";
   position: absolute;
   pointer-events: none;
   border-radius: 999px;
-  filter: blur(2px);
-  opacity: .55;
+  filter: blur(80px);
+  opacity: 0.6;
   z-index: -1;
+  animation: blob-float 20s infinite ease-in-out;
 }
 
 .auth-shell::before {
-  width: 10rem;
-  height: 10rem;
-  top: -2rem;
-  left: -1rem;
-  background: color-mix(in oklch, var(--color-primary) 18%, transparent);
+  width: 25rem;
+  height: 25rem;
+  top: -5rem;
+  left: -5rem;
+  background: color-mix(in oklch, var(--color-primary) 15%, transparent);
+  animation-delay: 0s;
 }
 
 .auth-shell::after {
-  width: 8rem;
-  height: 8rem;
-  right: -1rem;
-  bottom: -1rem;
-  background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
+  width: 20rem;
+  height: 20rem;
+  right: -5rem;
+  bottom: -5rem;
+  background: color-mix(in oklch, var(--color-secondary) 60%, transparent);
+  animation-delay: -5s;
+}
+
+.auth-blob {
+  width: 15rem;
+  height: 15rem;
+  top: 40%;
+  left: 60%;
+  background: color-mix(in oklch, var(--color-primary) 10%, transparent);
+  animation-duration: 25s;
+  animation-delay: -10s;
+}
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 .auth-card {
