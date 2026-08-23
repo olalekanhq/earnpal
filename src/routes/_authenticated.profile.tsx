@@ -189,8 +189,26 @@ function ProfilePage() {
       if (!user) return 0;
       const { count } = await supabase.from("profiles").select("*", { count: "exact", head: true }).eq("referred_by", user.id);
       return count || 0;
+  const { data: authInfo } = useQuery({
+    queryKey: ["authInfo"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { isAdmin: false, isModerator: false, isTasker: false };
+      
+      const [{ data: isAdmin }, { data: isModerator }, { data: isTasker }] = await Promise.all([
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'admin' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'moderator' }),
+        supabase.rpc("has_role", { _user_id: user.id, _role: 'tasker' })
+      ]);
+      
+      return { isAdmin, isModerator, isTasker };
     },
   });
+
+  const isAdmin = authInfo?.isAdmin || false;
+  const isModerator = authInfo?.isModerator || false;
+  const isTasker = (authInfo?.isTasker as boolean) || false;
+  const hasSpecialRole = isAdmin || isModerator || isTasker;
 
   if (isLoading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
