@@ -202,13 +202,35 @@ function Dashboard() {
 
       {/* Profile Completion Warning Banner */}
       {/* Welcome bonus banner removed to ensure it never reappears after claiming */}
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black tracking-tight text-foreground">
-          Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
-        </h1>
-        <p className="text-muted-foreground">
-          Here's what's happening with your rewards today.
-        </p>
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
+            Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
+          </h1>
+          <p className="text-muted-foreground">
+            Here's what's happening with your rewards today.
+          </p>
+        </div>
+
+        {dailyStats && (
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-2xl border border-primary/10 shadow-sm">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">Daily Tasks</span>
+                <span className={cn("text-lg font-black leading-none", dailyLimitReached ? "text-amber-500" : "text-foreground")}>
+                  {dailyStats.daily_count}/10
+                </span>
+              </div>
+              <div className="h-8 w-[1px] bg-primary/10 mx-1" />
+              <div className="h-8 w-8 rounded-full bg-primary/5 flex items-center justify-center">
+                <Zap className={cn("h-4 w-4", dailyLimitReached ? "text-amber-500 fill-amber-500" : "text-primary")} />
+              </div>
+            </div>
+            {dailyLimitReached && (
+              <p className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Limit reached for today</p>
+            )}
+          </div>
+        )}
       </header>
 
       <div className="flex flex-col lg:flex-row gap-6">
