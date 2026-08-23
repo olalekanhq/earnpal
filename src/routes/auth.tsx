@@ -321,7 +321,8 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
+    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden";
+
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center">
@@ -400,7 +401,10 @@ function AuthPage() {
 
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
+      <div className="auth-blob" />
+      <div className="auth-blob" style={{ top: '10%', left: '20%', width: '12rem', height: '12rem', animationDelay: '-15s', opacity: 0.4 }} />
       <div className="w-full max-w-[92%] sm:max-w-md">
+
         <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
           <Brand />
 
