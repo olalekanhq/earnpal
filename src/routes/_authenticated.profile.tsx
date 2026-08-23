@@ -47,6 +47,9 @@ function ProfilePage() {
   const [cropImage, setCropImage] = useState<string | null>(null);
   const [isCropOpen, setIsCropOpen] = useState(false);
 
+  const [verifyingHandles, setVerifyingHandles] = useState<Record<string, boolean>>({});
+  const [verifiedHandles, setVerifiedHandles] = useState<Record<string, boolean>>({});
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
