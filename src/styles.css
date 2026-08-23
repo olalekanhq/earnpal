@@ -212,14 +212,14 @@ html, body {
   width: 22rem;
   height: 22rem;
   top: -10rem;
-  left: -9rem;
+  left: -2rem;
   background: color-mix(in oklch, var(--color-primary) 18%, transparent);
 }
 
 .auth-shell::after {
   width: 18rem;
   height: 18rem;
-  right: -8rem;
+  right: -2rem;
   bottom: -7rem;
   background: color-mix(in oklch, var(--color-secondary) 75%, transparent);
 }
