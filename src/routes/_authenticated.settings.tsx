@@ -111,7 +111,7 @@ function SettingsPage() {
 
   return (
     <div className="space-y-8 w-full">
-      <div className="w-full space-y-8">
+      <div>
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -211,7 +211,6 @@ function SettingsPage() {
             </Card>
           </div>
         </div>
-      </div>
     </div>
   );
 }
