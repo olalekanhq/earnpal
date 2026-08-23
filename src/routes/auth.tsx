@@ -347,7 +347,7 @@ function AuthPage() {
       <div className={shellClass}>
         <div className="w-full max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
+          <div className="auth-card p-2 sm:p-4">
             <Brand />
             <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
             <p className="mt-1.5 text-center text-base text-muted-foreground">
@@ -401,7 +401,7 @@ function AuthPage() {
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
       <div className="w-full max-w-[92%] sm:max-w-md">
-        <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
+        <div className="auth-card p-2 sm:p-4">
           <Brand />
 
           <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">
