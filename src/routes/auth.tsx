@@ -321,7 +321,7 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-2 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
+    "auth-shell relative min-h-screen w-full px-4 py-1 flex flex-col items-center justify-center bg-background text-foreground sm:px-6";
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center gap-2">
@@ -404,10 +404,10 @@ function AuthPage() {
         <div className="auth-card rounded-[2rem] bg-card p-5 shadow-2xl sm:px-7 sm:py-6">
           <Brand />
 
-          <h1 className="mt-3 text-center text-2xl font-black tracking-tight text-foreground">
+          <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h1>
-          <p className="mx-auto mt-1.5 max-w-xs text-center text-base leading-snug text-muted-foreground">
+          <p className="mx-auto mt-1 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
