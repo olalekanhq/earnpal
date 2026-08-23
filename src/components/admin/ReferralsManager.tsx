@@ -166,16 +166,15 @@ export function ReferralsManager() {
 
   const resendNotificationMutation = useMutation({
     mutationFn: async (userId: string) => {
-      const { error } = await supabase
-        .from("notifications")
-        .insert({
-          user_id: userId,
-          title: "Referral Validation",
-          message: "Your referral code has been validated. You can now track your progress in the Referral Dashboard.",
-          type: "referral"
-        });
-      
+      const { data, error } = await supabase.rpc('send_user_notification', {
+        _user_id: userId,
+        _title: "Referral Validation",
+        _message: "Your referral code has been validated. You can now track your progress in the Referral Dashboard.",
+        _type: "referral"
+      });
+
       if (error) throw error;
+      if (data && (data as any).success === false) throw new Error((data as any).message || "Failed to send notification");
     },
     onSuccess: () => {
       toast.success("Validation notification sent");
