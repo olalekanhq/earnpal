@@ -112,7 +112,7 @@ export function AnalyticsView() {
           </CardHeader>
           <CardContent className="px-0 pb-0 h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={economyData?.dailyCompletions}>
+              <AreaChart data={economyData?.dailyCompletions || []}>
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
@@ -160,7 +160,7 @@ export function AnalyticsView() {
           </CardHeader>
           <CardContent className="px-0 pb-0 h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={economyData?.repeatableStats} layout="vertical" margin={{ left: 20 }}>
+              <BarChart data={economyData?.repeatableStats || []} layout="vertical" margin={{ left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255,255,255,0.05)" />
                 <XAxis type="number" tick={{ fontSize: 9, fontWeight: 800 }} hide />
                 <YAxis 
