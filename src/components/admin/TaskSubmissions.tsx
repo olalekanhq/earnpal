@@ -14,24 +14,32 @@ import {
   Inbox,
   History,
   ShieldCheck,
+  ChevronDown,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-type SubmissionStatus = "pending" | "approved" | "rejected";
-type FilterValue = "pending" | "approved" | "rejected" | "all";
+type FilterValue = "pending" | "verified" | "rejected" | "all";
 
 const FILTERS: { value: FilterValue; label: string; icon: typeof Clock }[] = [
   { value: "pending", label: "Pending Approval", icon: Inbox },
-  { value: "approved", label: "Completed", icon: CheckCircle2 },
+  { value: "verified", label: "Completed", icon: CheckCircle2 },
   { value: "rejected", label: "Rejected", icon: XCircle },
   { value: "all", label: "All History", icon: History },
 ];
 
 export function TaskSubmissions() {
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<FilterValue>("pending");
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -43,11 +51,12 @@ export function TaskSubmissions() {
         .from("task_submissions")
         .select("status");
       if (error) throw error;
-      const tally: Record<SubmissionStatus, number> = { pending: 0, approved: 0, rejected: 0 };
+      const tally: Record<FilterValue, number> = { pending: 0, verified: 0, rejected: 0, all: 0 };
       data?.forEach((row) => {
-        const status = row.status as SubmissionStatus;
+        const status = row.status as FilterValue;
         if (status in tally) tally[status] += 1;
       });
+      tally.all = tally.pending + tally.verified + tally.rejected;
       return tally;
     },
   });
@@ -139,7 +148,7 @@ export function TaskSubmissions() {
     switch (filter) {
       case "pending":
         return "No pending verifications at the moment.";
-      case "approved":
+      case "verified":
         return "No completed tasks yet.";
       case "rejected":
         return "No rejected submissions yet.";
@@ -148,8 +157,10 @@ export function TaskSubmissions() {
     }
   }, [filter]);
 
+  const activeFilter = FILTERS.find((f) => f.value === filter) || FILTERS[0];
+
   const statusBadge = (status: string) => {
-    if (status === "approved") {
+    if (status === "verified" || status === "approved") {
       return (
         <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase px-1.5 h-5">
           <CheckCircle2 className="h-3 w-3 mr-1" /> Completed
@@ -182,37 +193,76 @@ export function TaskSubmissions() {
         </p>
       </div>
 
-      {/* Status filter tabs */}
-      <div className="flex flex-wrap gap-2">
-        {FILTERS.map((f) => {
-          const count =
-            f.value === "all"
-              ? (counts?.pending ?? 0) + (counts?.approved ?? 0) + (counts?.rejected ?? 0)
-              : counts?.[f.value as SubmissionStatus] ?? 0;
-          return (
-            <button
-              key={f.value}
-              onClick={() => setFilter(f.value)}
-              className={cn(
-                "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border",
-                filter === f.value
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 border-transparent"
-                  : "bg-card/50 text-muted-foreground border-border/40 hover:bg-primary/5 hover:text-primary"
-              )}
-            >
-              <f.icon className="h-4 w-4" />
-              {f.label}
-              <span
-                className={cn(
-                  "ml-1 rounded-md px-1.5 py-0.5 text-[9px]",
-                  filter === f.value ? "bg-primary-foreground/20" : "bg-primary/10 text-primary"
-                )}
+      {/* Status filter — mobile dropdown, desktop tabs */}
+      <div className="flex flex-col gap-4">
+        {isMobile ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-between rounded-xl px-4 py-5 text-[11px] font-black uppercase tracking-widest border-border/40 bg-card/50 backdrop-blur-sm"
               >
-                {count}
-              </span>
-            </button>
-          );
-        })}
+                <span className="flex items-center gap-2">
+                  <activeFilter.icon className="h-4 w-4 text-primary" />
+                  {activeFilter.label}
+                  <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
+                    {counts?.[filter] ?? 0}
+                  </span>
+                </span>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)] rounded-xl">
+              {FILTERS.map((f) => (
+                <DropdownMenuItem
+                  key={f.value}
+                  onClick={() => setFilter(f.value)}
+                  className={cn(
+                    "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[11px] font-black uppercase tracking-widest cursor-pointer",
+                    filter === f.value && "bg-primary/10 text-primary"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <f.icon className="h-4 w-4" />
+                    {f.label}
+                  </span>
+                  <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
+                    {counts?.[f.value] ?? 0}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((f) => {
+              const count = counts?.[f.value] ?? 0;
+              return (
+                <button
+                  key={f.value}
+                  onClick={() => setFilter(f.value)}
+                  className={cn(
+                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border",
+                    filter === f.value
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 border-transparent"
+                      : "bg-card/50 text-muted-foreground border-border/40 hover:bg-primary/5 hover:text-primary"
+                  )}
+                >
+                  <f.icon className="h-4 w-4" />
+                  {f.label}
+                  <span
+                    className={cn(
+                      "ml-1 rounded-md px-1.5 py-0.5 text-[9px]",
+                      filter === f.value ? "bg-primary-foreground/20" : "bg-primary/10 text-primary"
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {isLoading ? (
