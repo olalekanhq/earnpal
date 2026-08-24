@@ -2,7 +2,14 @@ import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { User, Bell, Shield, LogOut, Camera, Check, Loader2 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +22,16 @@ export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     title: "Account Settings & Preferences | Noble Gain",
     meta: [
-      { name: "description", content: "Customize your Noble Gain experience. Manage notification preferences, security settings, and account privacy." },
+      {
+        name: "description",
+        content:
+          "Customize your Noble Gain experience. Manage notification preferences, security settings, and account privacy.",
+      },
       { property: "og:title", content: "Settings | Noble Gain" },
-      { property: "og:description", content: "Tailor your earning experience and manage your account security." },
+      {
+        property: "og:description",
+        content: "Tailor your earning experience and manage your account security.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,7 +48,9 @@ function SettingsPage() {
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return null;
       const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       return data;
@@ -49,12 +65,11 @@ function SettingsPage() {
 
   const updateProfile = useMutation({
     mutationFn: async (updates: any) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
-      const { error } = await supabase
-        .from("profiles")
-        .update(updates)
-        .eq("id", user.id);
+      const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -72,21 +87,19 @@ function SettingsPage() {
       if (!file) return;
 
       setIsUploading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
       await updateProfile.mutateAsync({ avatar_url: data.publicUrl });
     } catch (error: any) {
@@ -110,7 +123,7 @@ function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 w-full">
+    <div className="premium-enter flex w-full flex-col gap-8">
       <div>
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
@@ -136,12 +149,16 @@ function SettingsPage() {
                       {profile?.full_name?.[0] || profile?.email?.[0] || "?"}
                     </AvatarFallback>
                   </Avatar>
-                  <label 
+                  <label
                     htmlFor="avatar-upload"
                     className="absolute bottom-0 right-0 p-1.5 bg-primary text-primary-foreground rounded-full shadow-md cursor-pointer hover:scale-110 transition-transform"
                   >
-                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                    <input 
+                    {isUploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Camera className="h-4 w-4" />
+                    )}
+                    <input
                       id="avatar-upload"
                       type="file"
                       accept="image/*"
@@ -159,16 +176,22 @@ function SettingsPage() {
             </Card>
 
             <nav className="space-y-1">
-              <Button variant="ghost" className="w-full justify-start gap-3 font-bold text-primary bg-primary/5">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 font-bold text-primary bg-primary/5"
+              >
                 <Bell className="h-4 w-4" />
                 Notifications
               </Button>
-              <Button variant="ghost" className="w-full justify-start gap-3 font-bold text-muted-foreground hover:text-primary">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 font-bold text-muted-foreground hover:text-primary"
+              >
                 <Shield className="h-4 w-4" />
                 Security
               </Button>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="w-full justify-start gap-3 font-bold text-red-500 hover:text-red-600 hover:bg-red-50"
                 onClick={handleLogout}
               >
@@ -188,22 +211,30 @@ function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label className="text-base font-bold">Email Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive updates about your account via email</p>
+                    <p className="text-sm text-muted-foreground">
+                      Receive updates about your account via email
+                    </p>
                   </div>
-                  <Switch 
+                  <Switch
                     checked={profile?.email_notifications ?? true}
-                    onCheckedChange={(checked) => updateProfile.mutate({ email_notifications: checked })}
+                    onCheckedChange={(checked) =>
+                      updateProfile.mutate({ email_notifications: checked })
+                    }
                     disabled={updateProfile.isPending}
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label className="text-base font-bold">Push Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive instant alerts on your device</p>
+                    <p className="text-sm text-muted-foreground">
+                      Receive instant alerts on your device
+                    </p>
                   </div>
-                  <Switch 
+                  <Switch
                     checked={profile?.push_notifications ?? true}
-                    onCheckedChange={(checked) => updateProfile.mutate({ push_notifications: checked })}
+                    onCheckedChange={(checked) =>
+                      updateProfile.mutate({ push_notifications: checked })
+                    }
                     disabled={updateProfile.isPending}
                   />
                 </div>

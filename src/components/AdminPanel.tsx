@@ -1,29 +1,19 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { 
-  Users, 
-  Coins, 
-  ShoppingBag, 
-  TrendingUp, 
-  ArrowUpRight, 
+import {
+  Users,
+  Coins,
+  ShoppingBag,
+  TrendingUp,
+  ArrowUpRight,
   ArrowDownRight,
   Clock,
   Loader2,
   Users2,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { 
-  Tabs, 
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,10 +42,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { Lock } from "lucide-react";
 
 export function AdminPanel() {
-  
   const { role, isAdmin } = useAuth();
   const queryClient = useQueryClient();
-  
+
   const { data: permissions } = useQuery({
     queryKey: ["rolePermissions", role],
     queryFn: async () => {
@@ -65,7 +54,7 @@ export function AdminPanel() {
         .select("tab_name")
         .eq("role", role)
         .eq("is_enabled", true);
-      return data?.map(p => p.tab_name) || [];
+      return data?.map((p) => p.tab_name) || [];
     },
     enabled: !!role,
   });
@@ -77,36 +66,55 @@ export function AdminPanel() {
       const thirtyDaysAgo = subDays(startOfDay(now), 30);
       const sixtyDaysAgo = subDays(startOfDay(now), 60);
 
-      const [
-        usersRes, 
-        usersPrevRes,
-        pointsRes, 
-        pointsPrevRes,
-        redemptionsRes,
-        redemptionsPrevRes
-      ] = await Promise.all([
-        // Current period
-        supabase.from("profiles").select("id", { count: "exact", head: true }),
-        supabase.from("profiles").select("id", { count: "exact", head: true }).lt("created_at", thirtyDaysAgo.toISOString()),
-        // Points Issued - Use a smaller selection
-        supabase.from("points_transactions").select("amount").gte("created_at", thirtyDaysAgo.toISOString()),
-        // Previous period
-        supabase.from("points_transactions").select("amount").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
-        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo.toISOString()),
-        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
-      ]);
+      const [usersRes, usersPrevRes, pointsRes, pointsPrevRes, redemptionsRes, redemptionsPrevRes] =
+        await Promise.all([
+          // Current period
+          supabase.from("profiles").select("id", { count: "exact", head: true }),
+          supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .lt("created_at", thirtyDaysAgo.toISOString()),
+          // Points Issued - Use a smaller selection
+          supabase
+            .from("points_transactions")
+            .select("amount")
+            .gte("created_at", thirtyDaysAgo.toISOString()),
+          // Previous period
+          supabase
+            .from("points_transactions")
+            .select("amount")
+            .gte("created_at", sixtyDaysAgo.toISOString())
+            .lt("created_at", thirtyDaysAgo.toISOString()),
+          supabase
+            .from("redemptions")
+            .select("id", { count: "exact", head: true })
+            .gte("created_at", thirtyDaysAgo.toISOString()),
+          supabase
+            .from("redemptions")
+            .select("id", { count: "exact", head: true })
+            .gte("created_at", sixtyDaysAgo.toISOString())
+            .lt("created_at", thirtyDaysAgo.toISOString()),
+        ]);
 
       // Calculate totals
       const totalUsers = usersRes.count || 0;
       const prevUsers = usersPrevRes.count || 0; // Cumulative up to 30 days ago
-      
+
       // Points Issued
-      const pointsIssued = pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
-      const prevPointsIssued = pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
+      const pointsIssued =
+        pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
+      const prevPointsIssued =
+        pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) ||
+        0;
 
       // Points Redeemed
-      const pointsSpent = Math.abs(pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
-      const prevPointsSpent = Math.abs(pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
+      const pointsSpent = Math.abs(
+        pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0,
+      );
+      const prevPointsSpent = Math.abs(
+        pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) ||
+          0,
+      );
 
       // Redemptions count
       const totalRedemptions = redemptionsRes.count || 0;
@@ -117,27 +125,29 @@ export function AdminPanel() {
         const diff = current - previous;
         const percentage = Math.round((Math.abs(diff) / previous) * 100);
         return {
-          trend: `${diff >= 0 ? '+' : '-'}${percentage}%`,
-          up: diff >= 0
+          trend: `${diff >= 0 ? "+" : "-"}${percentage}%`,
+          up: diff >= 0,
         };
       };
 
-      // For users, it's cumulative growth vs previous cumulative. 
+      // For users, it's cumulative growth vs previous cumulative.
       // But let's check new users in current 30 days vs previous 30 days for actual trend.
       const newUsersCurrent = (usersRes.count || 0) - (usersPrevRes.count || 0);
-      
+
       return {
         totalUsers,
-        totalPoints: pointsIssued, 
+        totalPoints: pointsIssued,
         pointsSpent,
         totalRedemptions,
-        redemptionRate: usersRes.count ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2) : 0,
+        redemptionRate: usersRes.count
+          ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2)
+          : 0,
         trends: {
           users: calculateTrend(totalUsers, prevUsers),
           points: calculateTrend(pointsIssued, prevPointsIssued),
           spent: calculateTrend(pointsSpent, prevPointsSpent),
-          redemptions: calculateTrend(totalRedemptions, prevRedemptions)
-        }
+          redemptions: calculateTrend(totalRedemptions, prevRedemptions),
+        },
       };
     },
   });
@@ -145,7 +155,11 @@ export function AdminPanel() {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
       const savedTab = localStorage.getItem("noblegain_admin_last_tab");
-      return savedTab === "fraud" ? "audit" : savedTab === "verifications" ? "approvals" : (savedTab || "users");
+      return savedTab === "fraud"
+        ? "audit"
+        : savedTab === "verifications"
+          ? "approvals"
+          : savedTab || "users";
     }
     return "users";
   });
@@ -166,7 +180,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        }
+        },
       )
       .on(
         "postgres_changes",
@@ -177,7 +191,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        }
+        },
       )
       .on(
         "postgres_changes",
@@ -188,7 +202,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        }
+        },
       )
       .subscribe();
 
@@ -196,7 +210,6 @@ export function AdminPanel() {
       supabase.removeChannel(channel);
     };
   }, []);
-
 
   const tabs = [
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
@@ -207,11 +220,15 @@ export function AdminPanel() {
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
     { value: "audit", icon: ClipboardList, label: "Audit Logs", color: undefined },
-    { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings", color: !isAdmin ? "text-muted-foreground" : undefined }
+    {
+      value: "settings",
+      icon: isAdmin ? Settings : Lock,
+      label: "Settings",
+      color: !isAdmin ? "text-muted-foreground" : undefined,
+    },
   ];
 
-  
-  const filteredTabs = tabs.filter(tab => {
+  const filteredTabs = tabs.filter((tab) => {
     if (isAdmin) return true;
     if (!permissions) return false;
     return tab.value === "audit"
@@ -221,9 +238,8 @@ export function AdminPanel() {
         : permissions.includes(tab.value);
   });
 
-  const activeTabData = filteredTabs.find(t => t.value === activeTab) || filteredTabs[0] || tabs[0];
-
-
+  const activeTabData =
+    filteredTabs.find((t) => t.value === activeTab) || filteredTabs[0] || tabs[0];
 
   const statCards = [
     {
@@ -232,7 +248,7 @@ export function AdminPanel() {
       icon: Users,
       trend: stats?.trends.users.trend || "0%",
       trendUp: stats?.trends.users.up ?? true,
-      description: "Active platform members"
+      description: "Active platform members",
     },
     {
       title: "Points Issued",
@@ -240,7 +256,7 @@ export function AdminPanel() {
       icon: Coins,
       trend: stats?.trends.points.trend || "0%",
       trendUp: stats?.trends.points.up ?? true,
-      description: "Last 30 days generation"
+      description: "Last 30 days generation",
     },
     {
       title: "Points Redeemed",
@@ -248,7 +264,7 @@ export function AdminPanel() {
       icon: ShoppingBag,
       trend: stats?.trends.spent.trend || "0%",
       trendUp: stats?.trends.spent.up ?? true,
-      description: "Last 30 days claims"
+      description: "Last 30 days claims",
     },
     {
       title: "Redemptions",
@@ -256,8 +272,8 @@ export function AdminPanel() {
       icon: TrendingUp,
       trend: stats?.trends.redemptions.trend || "0%",
       trendUp: stats?.trends.redemptions.up ?? true,
-      description: "Last 30 days count"
-    }
+      description: "Last 30 days count",
+    },
   ];
 
   if (isLoading) {
@@ -273,7 +289,10 @@ export function AdminPanel() {
       {/* Stats Overview */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
-          <Card key={stat.title} className="border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden group hover:border-primary/20 transition-all duration-300">
+          <Card
+            key={stat.title}
+            className="border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden group hover:border-primary/20 transition-all duration-300"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                 {stat.title}
@@ -285,11 +304,19 @@ export function AdminPanel() {
             <CardContent>
               <div className="text-2xl font-black tracking-tighter">{stat.value}</div>
               <div className="flex items-center gap-2 mt-1">
-                <span className={cn(
-                  "flex items-center text-[10px] font-black px-1.5 py-0.5 rounded-md",
-                  stat.trendUp ? "text-green-600 bg-green-500/10" : "text-destructive bg-destructive/10"
-                )}>
-                  {stat.trendUp ? <ArrowUpRight className="h-3 w-3 mr-0.5" /> : <ArrowDownRight className="h-3 w-3 mr-0.5" />}
+                <span
+                  className={cn(
+                    "flex items-center text-[10px] font-black px-1.5 py-0.5 rounded-md",
+                    stat.trendUp
+                      ? "text-green-600 bg-green-500/10"
+                      : "text-destructive bg-destructive/10",
+                  )}
+                >
+                  {stat.trendUp ? (
+                    <ArrowUpRight className="h-3 w-3 mr-0.5" />
+                  ) : (
+                    <ArrowDownRight className="h-3 w-3 mr-0.5" />
+                  )}
                   {stat.trend}
                 </span>
                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
@@ -314,10 +341,17 @@ export function AdminPanel() {
                   className={cn(
                     "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-transparent whitespace-nowrap",
                     "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
-                    "data-[state=inactive]:bg-card/50 data-[state=inactive]:backdrop-blur-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-primary/5 data-[state=inactive]:hover:text-primary data-[state=inactive]:border-border/40"
+                    "data-[state=inactive]:bg-card/50 data-[state=inactive]:backdrop-blur-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-primary/5 data-[state=inactive]:hover:text-primary data-[state=inactive]:border-border/40",
                   )}
                 >
-                  <tab.icon className={cn("h-4 w-4", activeTab === tab.value ? "text-primary-foreground" : (tab.color || "text-primary"))} />
+                  <tab.icon
+                    className={cn(
+                      "h-4 w-4",
+                      activeTab === tab.value
+                        ? "text-primary-foreground"
+                        : tab.color || "text-primary",
+                    )}
+                  />
                   {tab.label}
                 </TabsTrigger>
               ))}
@@ -325,36 +359,60 @@ export function AdminPanel() {
           </div>
         </div>
 
-        <TabsContent value="analytics" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'analytics' && <AnalyticsView />}
+        <TabsContent
+          value="analytics"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "analytics" && <AnalyticsView />}
         </TabsContent>
 
-        <TabsContent value="users" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'users' && <UsersManager />}
+        <TabsContent
+          value="users"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "users" && <UsersManager />}
         </TabsContent>
 
-        <TabsContent value="tasks" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'tasks' && <TasksManager />}
+        <TabsContent
+          value="tasks"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "tasks" && <TasksManager />}
         </TabsContent>
 
-        <TabsContent value="approvals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'approvals' && <TaskSubmissions />}
+        <TabsContent
+          value="approvals"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "approvals" && <TaskSubmissions />}
         </TabsContent>
 
-        <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'rewards' && <RewardsManager />}
-        </TabsContent>
-        
-        <TabsContent value="redemptions" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'redemptions' && <RedemptionsManager />}
-        </TabsContent>
-
-        <TabsContent value="referrals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'referrals' && <ReferralsManager />}
+        <TabsContent
+          value="rewards"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "rewards" && <RewardsManager />}
         </TabsContent>
 
-        <TabsContent value="audit" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'audit' && (
+        <TabsContent
+          value="redemptions"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "redemptions" && <RedemptionsManager />}
+        </TabsContent>
+
+        <TabsContent
+          value="referrals"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "referrals" && <ReferralsManager />}
+        </TabsContent>
+
+        <TabsContent
+          value="audit"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "audit" && (
             <div className="space-y-12">
               <FraudManager />
               <PointsAuditLogs />
@@ -363,8 +421,11 @@ export function AdminPanel() {
           )}
         </TabsContent>
 
-        <TabsContent value="settings" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'settings' && <PlatformSettings />}
+        <TabsContent
+          value="settings"
+          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
+        >
+          {activeTab === "settings" && <PlatformSettings />}
         </TabsContent>
       </Tabs>
     </div>

@@ -6,7 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   loader: async ({ location }) => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw redirect({
@@ -14,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
         search: { redirect: location.pathname },
       });
     }
-    
+
     return { userId: user.id };
   },
 
@@ -24,16 +26,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
 function AdminRouteComponent() {
   const { userId } = Route.useLoaderData();
 
-  
   const { data: roles, isLoading } = useQuery({
     queryKey: ["admin-role-check", userId],
     queryFn: async () => {
       const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
-        supabase.rpc("has_role", { _user_id: userId, _role: 'admin' }),
-        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' })
+        supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+        supabase.rpc("has_role", { _user_id: userId, _role: "moderator" }),
       ]);
       return { isAdmin, isModerator };
-    }
+    },
   });
 
   if (isLoading) {
@@ -55,15 +56,18 @@ function AdminRouteComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-accent/5 pb-12">
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <div className="min-h-screen bg-background pb-12">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:py-10">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Admin Panel</h1>
-          <p className="text-muted-foreground font-medium">Manage rewards, redemptions, and user activity.</p>
+          <h1 className="text-balance text-3xl font-black tracking-tight text-foreground uppercase sm:text-4xl">
+            Admin Panel
+          </h1>
+          <p className="text-muted-foreground font-medium">
+            Manage rewards, redemptions, and user activity.
+          </p>
         </div>
         <AdminPanel />
       </div>
     </div>
   );
 }
-

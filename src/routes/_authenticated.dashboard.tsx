@@ -1,7 +1,21 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, TrendingDown, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import {
+  Coins,
+  Gift,
+  Share2,
+  TrendingUp,
+  TrendingDown,
+  Clock,
+  ChevronRight,
+  Award,
+  Zap,
+  Star,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
+} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -16,9 +30,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     title: "Member Dashboard | My Earnings & Progress | Noble Gain",
     meta: [
-      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Noble Gain dashboard. Your hub for all earning activities." },
+      {
+        name: "description",
+        content:
+          "Manage your rewards, track your daily streaks, and watch your points balance grow on your Noble Gain dashboard. Your hub for all earning activities.",
+      },
       { property: "og:title", content: "Member Dashboard | Noble Gain" },
-      { property: "og:description", content: "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward." },
+      {
+        property: "og:description",
+        content:
+          "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,7 +54,9 @@ function Dashboard() {
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return null;
       const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       return data;
@@ -42,9 +66,15 @@ function Dashboard() {
   const { data: streak } = useQuery({
     queryKey: ["streak"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return null;
-      const { data } = await supabase.from("user_streaks").select("*").eq("user_id", user.id).single();
+      const { data } = await supabase
+        .from("user_streaks")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
       return data;
     },
   });
@@ -52,7 +82,9 @@ function Dashboard() {
   const { data: referralCount } = useQuery({
     queryKey: ["referralCount"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return 0;
       const { count } = await supabase
         .from("profiles")
@@ -62,52 +94,59 @@ function Dashboard() {
     },
   });
 
-
   const { data: featuredTasks } = useQuery({
     queryKey: ["featured-tasks"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
-      
+
       const { data: tasks, error } = await supabase
         .from("tasks")
-        .select(`
+        .select(
+          `
           *,
           task_submissions(status)
-        `)
+        `,
+        )
         .eq("is_active", true)
         .eq("is_featured", true)
         .limit(2);
-      
+
       if (error) throw error;
       return tasks;
-    }
+    },
   });
 
   const { data: dailyStats } = useQuery({
     queryKey: ["daily-task-stats"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return { daily_count: 0 };
-      
+
       const { data, error } = await supabase
         .from("user_daily_task_counts" as any)
         .select("*")
         .eq("user_id", user.id)
         .maybeSingle();
-      
-      if (error) console.error('Error fetching daily stats:', error);
+
+      if (error) console.error("Error fetching daily stats:", error);
       return (data as any) || { daily_count: 0 };
-    }
+    },
   });
 
   const dailyLimitReached = (dailyStats?.daily_count || 0) >= 10;
 
   const claimDailyStreak = useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
-      const { data, error } = await supabase.rpc('claim_daily_reward', { _user_id: user.id });
+      const { data, error } = await supabase.rpc("claim_daily_reward", { _user_id: user.id });
       if (error) throw new Error(error.message || "An unexpected error occurred.");
       const result = data as any;
       if (!result.success) throw new Error(result.message || "Failed to claim reward");
@@ -121,7 +160,7 @@ function Dashboard() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to claim reward.");
-    }
+    },
   });
 
   // Welcome bonus claim logic removed as it is now automatic on registration
@@ -130,15 +169,15 @@ function Dashboard() {
     isSuccess: false,
     mutate: () => {
       toast.info("Your welcome bonus is automatically credited upon registration!");
-    }
+    },
   };
-
-
 
   const { data: recentTransactions } = useQuery({
     queryKey: ["recentTransactions"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
       const { data } = await supabase
         .from("points_transactions")
@@ -153,7 +192,9 @@ function Dashboard() {
   const { data: balanceTrend } = useQuery({
     queryKey: ["balanceTrend"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return { percentage: 0, isPositive: true };
 
       const now = new Date();
@@ -186,44 +227,48 @@ function Dashboard() {
 
       const diff = currentTotal - previousTotal;
       const percentage = Math.round((Math.abs(diff) / previousTotal) * 100);
-      
+
       return {
         percentage,
-        isPositive: diff >= 0
+        isPositive: diff >= 0,
       };
     },
   });
 
-  const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+  const isClaimedToday =
+    streak?.last_activity_at &&
+    new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
 
   return (
-    <div className="space-y-8 w-full">
-
-
+    <div className="premium-enter flex w-full flex-col gap-8">
       {/* Profile Completion Warning Banner */}
       {/* Welcome bonus banner removed to ensure it never reappears after claiming */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <header className="flex flex-col justify-between gap-4 border-b border-border/70 pb-6 md:flex-row md:items-end">
         <div className="space-y-2">
           <h1 className="text-3xl font-black tracking-tight text-foreground">
-            Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
+            Welcome back,{" "}
+            {profile?.username
+              ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
+              : profile?.full_name?.split(" ")[0] || "User"}
+            ! 👋
           </h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your rewards today.
-          </p>
+          <p className="text-muted-foreground">Here's what's happening with your rewards today.</p>
         </div>
-
       </header>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col gap-5 lg:flex-row">
         {/* Main Balance Card - Inspired by Reference */}
-        <Card className="flex-1 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
+        <Card className="premium-surface relative flex-1 overflow-hidden border-primary/20 bg-primary text-primary-foreground shadow-xl shadow-primary/15">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">Total Balance</CardTitle>
+            <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">
+              Total Balance
+            </CardTitle>
           </CardHeader>
           <CardContent className="pt-2 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
             <div className="space-y-1">
               <div className="text-5xl font-black tracking-tighter">
-                {profile?.points_balance?.toLocaleString() || 0} <span className="text-xl opacity-60 ml-1">PTS</span>
+                {profile?.points_balance?.toLocaleString() || 0}{" "}
+                <span className="text-xl opacity-60 ml-1">PTS</span>
               </div>
               <p className="text-sm font-medium opacity-80 flex items-center gap-1">
                 {balanceTrend?.isPositive ? (
@@ -231,14 +276,25 @@ function Dashboard() {
                 ) : (
                   <TrendingDown className="h-4 w-4 text-white/70" />
                 )}
-                {balanceTrend?.isPositive ? '+' : '-'}{balanceTrend?.percentage || 0}% from last week
+                {balanceTrend?.isPositive ? "+" : "-"}
+                {balanceTrend?.percentage || 0}% from last week
               </p>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" className="rounded-xl font-bold px-6 h-11 bg-white text-primary hover:bg-white/90 border-none shadow-sm" asChild>
-                <Link to="/earn" search={{ tab: 'tasks' }}>Start Earning</Link>
+              <Button
+                variant="secondary"
+                className="rounded-xl font-bold px-6 h-11 bg-white text-primary hover:bg-white/90 border-none shadow-sm"
+                asChild
+              >
+                <Link to="/earn" search={{ tab: "tasks" }}>
+                  Start Earning
+                </Link>
               </Button>
-              <Button variant="outline" className="rounded-xl font-bold px-6 h-11 bg-white/10 border-white/20 hover:bg-white/20 text-white" asChild>
+              <Button
+                variant="outline"
+                className="rounded-xl font-bold px-6 h-11 bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                asChild
+              >
                 <Link to="/redeem">Redeem</Link>
               </Button>
             </div>
@@ -253,7 +309,9 @@ function Dashboard() {
         <Card className="lg:w-64 border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
+              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                Daily Streak
+              </CardTitle>
               <div className="bg-orange-50 p-2 rounded-xl text-orange-600 group-hover:scale-110 transition-transform">
                 <Clock className="h-4 w-4" />
               </div>
@@ -261,24 +319,33 @@ function Dashboard() {
           </CardHeader>
           <CardContent className="pt-2 flex-1 flex flex-col justify-between">
             <div className="space-y-1">
-              <div className="text-3xl font-black tracking-tight">{streak?.current_streak || 0} Days</div>
-              <p className="text-[11px] text-muted-foreground font-medium">Claim daily to earn bonus points</p>
+              <div className="text-3xl font-black tracking-tight">
+                {streak?.current_streak || 0} Days
+              </div>
+              <p className="text-[11px] text-muted-foreground font-medium">
+                Claim daily to earn bonus points
+              </p>
             </div>
             <div className="mt-6">
-              <Button 
+              <Button
                 className={cn(
                   "w-full rounded-xl font-bold h-12 transition-all",
-                  isClaimedToday ? "bg-muted text-muted-foreground border-none shadow-none cursor-default" : "shadow-md shadow-primary/10"
+                  isClaimedToday
+                    ? "bg-muted text-muted-foreground border-none shadow-none cursor-default"
+                    : "shadow-md shadow-primary/10",
                 )}
                 disabled={isClaimedToday || claimDailyStreak.isPending}
                 onClick={() => claimDailyStreak.mutate()}
               >
-                {claimDailyStreak.isPending ? "Claiming..." : isClaimedToday ? "✓ Claimed Today" : "Claim Daily Reward"}
+                {claimDailyStreak.isPending
+                  ? "Claiming..."
+                  : isClaimedToday
+                    ? "✓ Claimed Today"
+                    : "Claim Daily Reward"}
               </Button>
             </div>
           </CardContent>
         </Card>
-
       </div>
 
       {featuredTasks && featuredTasks.length > 0 && (
@@ -292,16 +359,23 @@ function Dashboard() {
           <div className="grid gap-6 grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-1">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
-              const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
-              
+              const isCompleted =
+                submission?.status === "verified" || submission?.status === "pending";
+
               return (
-                <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full">
+                <Card
+                  key={task.id}
+                  className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full"
+                >
                   <CardHeader className="p-5 sm:p-6 pb-2">
                     <div className="flex items-center justify-between">
                       <div className="bg-primary/5 p-1.5 sm:p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
                         <Zap className="h-4 w-4 sm:h-5 sm:h-5" />
                       </div>
-                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5 text-[10px] sm:text-xs">
+                      <Badge
+                        variant="outline"
+                        className="font-bold text-primary border-primary/20 bg-primary/5 text-[10px] sm:text-xs"
+                      >
                         +{task.points} PTS
                       </Badge>
                     </div>
@@ -311,38 +385,52 @@ function Dashboard() {
                       <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight flex items-center justify-between">
                         {task.title}
                         {(task as any).is_repeatable && (
-                          <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold"
+                          >
+                            Daily
+                          </Badge>
                         )}
                       </CardTitle>
-                      <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">{task.description}</CardDescription>
+                      <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">
+                        {task.description}
+                      </CardDescription>
                     </div>
-                    <Button 
+                    <Button
                       className={cn(
                         "w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm transition-all px-2",
-                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : 
-                        dailyLimitReached ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
-                        "shadow-md shadow-primary/10"
+                        isCompleted
+                          ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20"
+                          : dailyLimitReached
+                            ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                            : "shadow-md shadow-primary/10",
                       )}
                       onClick={async () => {
                         if (isCompleted || dailyLimitReached) return;
-                        
+
                         const taskAny = task as any;
                         if (taskAny.link_url) {
-                          window.open(taskAny.link_url, '_blank');
+                          window.open(taskAny.link_url, "_blank");
                         }
-                        
+
                         // Navigate to earn page to complete task or show feedback
                         // Since we want the user to carry it out, we'll open the link and then they can verify on the earn page
                         // Or we could implement the verification logic here too.
                         // Let's keep it simple: open link and toast instruction.
-                        toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
+                        toast.info(
+                          "Task opened! Complete it and confirm on the Earn page to receive points.",
+                        );
                       }}
-                      disabled={(isCompleted && submission?.status === 'verified') || (!isCompleted && dailyLimitReached)}
+                      disabled={
+                        (isCompleted && submission?.status === "verified") ||
+                        (!isCompleted && dailyLimitReached)
+                      }
                     >
                       {isCompleted ? (
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="h-4 w-4" />
-                          {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
+                          {submission?.status === "pending" ? "Verifying..." : "Task Completed"}
                         </div>
                       ) : dailyLimitReached ? (
                         <div className="flex items-center gap-2">
@@ -376,56 +464,106 @@ function Dashboard() {
         <div className="lg:col-span-8 space-y-6">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-xl font-black tracking-tight text-foreground">Recent Activity</h2>
-            <Link to="/transactions" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
+            <Link
+              to="/transactions"
+              className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors"
+            >
+              View all
+            </Link>
           </div>
           <Card className="border-none shadow-sm bg-card">
             <CardContent className="p-0">
               <div className="divide-y divide-border/50">
-                {recentTransactions?.length ? recentTransactions.map((tx: any) => (
-                  <div 
-                    key={tx.id} 
-                    className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors cursor-pointer"
-                    onClick={() => {
-                      toast.info(
-                        <div className="space-y-2">
-                          <p className="font-bold text-sm">Transaction Details</p>
-                          <div className="text-xs space-y-1 font-medium">
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Description:</span> {tx.description}</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Amount:</span> {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Type:</span> {tx.type}</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Date:</span> {new Date(tx.created_at).toLocaleString()}</p>
-                          </div>
-                        </div>,
-                        { duration: 5000 }
-                      );
-                    }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "p-2.5 rounded-xl transition-transform group-hover:scale-110",
-                        tx.status === 'pending' ? 'bg-amber-50 text-amber-600' :
-                        tx.type === 'earn' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                      )}>
-                        {tx.status === 'pending' ? <Clock className="h-4 w-4" /> :
-                         tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
+                {recentTransactions?.length ? (
+                  recentTransactions.map((tx: any) => (
+                    <div
+                      key={tx.id}
+                      className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors cursor-pointer"
+                      onClick={() => {
+                        toast.info(
+                          <div className="space-y-2">
+                            <p className="font-bold text-sm">Transaction Details</p>
+                            <div className="text-xs space-y-1 font-medium">
+                              <p>
+                                <span className="text-muted-foreground uppercase text-[10px] font-black mr-2">
+                                  Description:
+                                </span>{" "}
+                                {tx.description}
+                              </p>
+                              <p>
+                                <span className="text-muted-foreground uppercase text-[10px] font-black mr-2">
+                                  Amount:
+                                </span>{" "}
+                                {tx.amount > 0 ? "+" : ""}
+                                {tx.amount} PTS
+                              </p>
+                              <p>
+                                <span className="text-muted-foreground uppercase text-[10px] font-black mr-2">
+                                  Type:
+                                </span>{" "}
+                                {tx.type}
+                              </p>
+                              <p>
+                                <span className="text-muted-foreground uppercase text-[10px] font-black mr-2">
+                                  Date:
+                                </span>{" "}
+                                {new Date(tx.created_at).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>,
+                          { duration: 5000 },
+                        );
+                      }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={cn(
+                            "p-2.5 rounded-xl transition-transform group-hover:scale-110",
+                            tx.status === "pending"
+                              ? "bg-amber-50 text-amber-600"
+                              : tx.type === "earn"
+                                ? "bg-green-50 text-green-600"
+                                : "bg-red-50 text-red-600",
+                          )}
+                        >
+                          {tx.status === "pending" ? (
+                            <Clock className="h-4 w-4" />
+                          ) : tx.type === "earn" ? (
+                            <TrendingUp className="h-4 w-4" />
+                          ) : (
+                            <Gift className="h-4 w-4" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+                            {tx.description}
+                            {tx.status === "pending" && (
+                              <span className="ml-2 text-[8px] font-black uppercase text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">
+                                Pending
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
+                            {new Date(tx.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
-                          {tx.description}
-                          {tx.status === 'pending' && <span className="ml-2 text-[8px] font-black uppercase text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">Pending</span>}
-                        </p>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{new Date(tx.created_at).toLocaleDateString()}</p>
+                      <div
+                        className={cn(
+                          "text-sm font-black",
+                          tx.status === "pending"
+                            ? "text-amber-600"
+                            : tx.type === "earn"
+                              ? "text-green-600"
+                              : "text-red-600",
+                        )}
+                      >
+                        {tx.status === "pending" ? "" : tx.type === "earn" ? "+" : "-"}
+                        {tx.amount}
                       </div>
                     </div>
-                    <div className={cn(
-                      "text-sm font-black",
-                      tx.status === 'pending' ? 'text-amber-600' :
-                      tx.type === 'earn' ? 'text-green-600' : 'text-red-600'
-                    )}>
-                      {tx.status === 'pending' ? "" : tx.type === 'earn' ? '+' : '-'}{tx.amount}
-                    </div>
-                  </div>
-                )) : (
+                  ))
+                ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <p className="text-sm font-medium">No recent activity yet.</p>
                   </div>
@@ -440,8 +578,12 @@ function Dashboard() {
           <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Earn More</h2>
           <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
             <Card className="border-none shadow-sm bg-card p-4 space-y-1 group flex flex-col justify-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-tight">Lifetime Referrals</p>
-              <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-tight">
+                Lifetime Referrals
+              </p>
+              <p className="text-2xl font-black group-hover:text-primary transition-colors">
+                {referralCount}
+              </p>
             </Card>
 
             <Card className="border-none shadow-sm bg-primary/5 border border-primary/10 p-4 space-y-3 overflow-hidden relative group">
@@ -450,10 +592,18 @@ function Dashboard() {
                   <Share2 className="h-4 w-4" />
                 </div>
                 <div className="space-y-0.5">
-                  <h3 className="font-black text-xs text-foreground leading-tight">Invite friends</h3>
-                  <p className="text-[9px] text-muted-foreground font-medium leading-tight">Earn 50 pts per referral.</p>
+                  <h3 className="font-black text-xs text-foreground leading-tight">
+                    Invite friends
+                  </h3>
+                  <p className="text-[9px] text-muted-foreground font-medium leading-tight">
+                    Earn 50 pts per referral.
+                  </p>
                 </div>
-                <Button size="sm" className="w-full rounded-lg font-bold shadow-sm h-8 text-[10px] uppercase tracking-wider" asChild>
+                <Button
+                  size="sm"
+                  className="w-full rounded-lg font-bold shadow-sm h-8 text-[10px] uppercase tracking-wider"
+                  asChild
+                >
                   <Link to="/refer">Invite</Link>
                 </Button>
               </div>
@@ -470,7 +620,9 @@ function RecentReferrersList() {
   const { data: referredUsers } = useQuery({
     queryKey: ["recentReferralsList"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
       const { data } = await supabase
         .from("profiles")
@@ -487,12 +639,19 @@ function RecentReferrersList() {
   return (
     <div className="flex flex-wrap gap-2 py-1">
       {referredUsers.map((ref: any, i: number) => (
-        <Badge key={i} variant="secondary" className="rounded-lg font-bold px-3 py-1 bg-primary/5 text-primary border-primary/10">
+        <Badge
+          key={i}
+          variant="secondary"
+          className="rounded-lg font-bold px-3 py-1 bg-primary/5 text-primary border-primary/10"
+        >
           {ref.full_name || ref.username}
         </Badge>
       ))}
-      {(referredUsers.length >= 5) && (
-        <Link to="/refer" className="text-[10px] font-black uppercase text-primary hover:underline flex items-center ml-2">
+      {referredUsers.length >= 5 && (
+        <Link
+          to="/refer"
+          className="text-[10px] font-black uppercase text-primary hover:underline flex items-center ml-2"
+        >
           View All
         </Link>
       )}
