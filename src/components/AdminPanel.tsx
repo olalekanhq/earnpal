@@ -202,7 +202,7 @@ export function AdminPanel() {
     { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
     { value: "users", icon: Users, label: "Users", color: undefined },
     { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
-    { value: "approvals", icon: Clock, label: "Approvals", color: undefined },
+    { value: "approvals", icon: Clock, label: "Submissions", color: undefined },
     { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
     { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
     { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
