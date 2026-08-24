@@ -35,7 +35,7 @@ import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
-import { TaskApprovals } from "./admin/TaskApprovals";
+import { TaskSubmissions } from "./admin/TaskSubmissions";
 
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
@@ -338,7 +338,7 @@ export function AdminPanel() {
         </TabsContent>
 
         <TabsContent value="approvals" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
-          {activeTab === 'approvals' && <TaskApprovals />}
+          {activeTab === 'approvals' && <TaskSubmissions />}
         </TabsContent>
 
         <TabsContent value="rewards" className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300">
