@@ -8,14 +8,23 @@ import { CheckCircle2, XCircle, Clock, ExternalLink, User, ListTodo, Loader2 } f
 import { format } from "date-fns";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function TaskApprovals() {
   const queryClient = useQueryClient();
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("pending");
 
   const { data: pendingTasks, isLoading } = useQuery({
-    queryKey: ["admin-pending-tasks"],
+    queryKey: ["admin-task-submissions", statusFilter],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("task_submissions")
@@ -28,8 +37,25 @@ export function TaskApprovals() {
           tasks (id, title, points, category),
           profiles (id, full_name, username)
         `)
-        .eq("status", "pending")
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: false });
+
+      if (statusFilter !== "all") {
+        const filtered = await supabase
+          .from("task_submissions")
+          .select(`
+            id,
+            task_id,
+            user_id,
+            status,
+            created_at,
+            tasks (id, title, points, category),
+            profiles (id, full_name, username)
+          `)
+          .eq("status", statusFilter)
+          .order("created_at", { ascending: false });
+        if (filtered.error) throw filtered.error;
+        return filtered.data as any[];
+      }
       
       if (error) {
         console.error("Error fetching tasks:", error);
@@ -54,7 +80,7 @@ export function TaskApprovals() {
       return data;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["admin-pending-tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-task-submissions"] });
       queryClient.invalidateQueries({ queryKey: ["adminStats"] });
       toast.success(data.message || "Task verification processed");
       setAdminNotes(prev => {
@@ -74,20 +100,39 @@ export function TaskApprovals() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
-          <Clock className="h-5 w-5 text-primary" />
-          Pending Verifications
-        </h3>
-        <p className="text-sm text-muted-foreground font-medium">Review and approve task completions from users.</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
+            <Clock className="h-5 w-5 text-primary" />
+            Task Submissions
+          </h3>
+          <p className="text-sm text-muted-foreground font-medium">Review task completions and approval history.</p>
+        </div>
+        <div className="flex w-full flex-col gap-2 sm:w-52">
+          <Label htmlFor="submission-status" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            Status filter
+          </Label>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger id="submission-status" className="h-11 w-full rounded-xl">
+              <SelectValue placeholder="Filter submissions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="verified">Completed</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="all">All history</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <div className="rounded-2xl border border-border/50 bg-card overflow-hidden">
-        <Table>
+      <div className="overflow-x-auto rounded-2xl border border-border/50 bg-card">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/50">
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">User</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Task</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Status</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-center">Date</TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest px-6 text-right">Actions</TableHead>
             </TableRow>
@@ -95,8 +140,8 @@ export function TaskApprovals() {
           <TableBody>
             {pendingTasks?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground font-medium">
-                  No pending verifications at the moment.
+                <TableCell colSpan={5} className="text-center py-12 text-muted-foreground font-medium">
+                  No {statusFilter === "all" ? "task submissions" : `${statusFilter} submissions`} found.
                 </TableCell>
               </TableRow>
             ) : (
@@ -129,6 +174,11 @@ export function TaskApprovals() {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Badge variant={sub.status === "verified" ? "default" : sub.status === "rejected" ? "destructive" : "secondary"} className="uppercase text-[9px] font-black">
+                      {sub.status === "verified" ? "Completed" : sub.status}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="px-6 py-4 text-center">
                     <div className="text-xs font-medium text-muted-foreground">
                       {format(new Date(sub.created_at), "MMM d, HH:mm")}
@@ -136,7 +186,7 @@ export function TaskApprovals() {
                   </TableCell>
                   <TableCell className="px-6 py-4 text-right">
                     <div className="flex flex-col gap-2 items-end">
-                      <div className="flex items-center gap-2">
+                      {sub.status === "pending" && <div className="flex items-center gap-2">
                         <Button 
                           size="sm" 
                           variant="ghost"
@@ -156,13 +206,13 @@ export function TaskApprovals() {
                           {processingId === sub.id ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <CheckCircle2 className="h-3 w-3 mr-1" />}
                           Approve
                         </Button>
-                      </div>
-                      <Input 
+                      </div>}
+                      {sub.status === "pending" && <Input 
                         placeholder="Add rejection reason..."
                         className="h-7 text-[10px] w-32 rounded-md"
                         value={adminNotes[sub.id] || ""}
                         onChange={(e) => setAdminNotes(prev => ({ ...prev, [sub.id]: e.target.value }))}
-                      />
+                      />}
                     </div>
                   </TableCell>
                 </TableRow>
