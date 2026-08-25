@@ -61,7 +61,7 @@ export function TaskSubmissions() {
     },
   });
 
-  const { data: submissions, isLoading } = useQuery({
+  const { data: submissions, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ["admin-task-submissions", filter],
     queryFn: async () => {
       let query = supabase
