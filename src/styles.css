@@ -374,3 +374,88 @@ div[style*="Edit with Lovable"],
 @utility ink-breathe {
   animation: ink-breathe 12s ease-in-out infinite;
 }
+
+/* ---------- Landing mockup animations ---------- */
+@keyframes mock-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+@utility mock-float {
+  animation: mock-float 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes mock-sheen {
+  0% { transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateX(220%) skewX(-12deg); opacity: 0; }
+}
+@utility mock-sheen {
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-gold) 14%, transparent), transparent);
+    width: 40%;
+    animation: mock-sheen 6.5s ease-in-out infinite;
+  }
+}
+
+@keyframes mock-bar {
+  0% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0.35); }
+}
+@utility mock-bar {
+  transform-origin: bottom;
+  animation: mock-bar 3.6s ease-in-out infinite;
+}
+
+@keyframes mock-fill {
+  0% { width: 0%; }
+  100% { width: var(--fill, 100%); }
+}
+@utility mock-fill {
+  animation: mock-fill 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes mock-row-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  12%, 88% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@utility mock-row-in {
+  animation: mock-row-in 5s ease-out both;
+}
+
+@keyframes mock-count {
+  0%, 100% { opacity: 1; }
+  48% { opacity: 0.35; }
+}
+@utility mock-count {
+  animation: mock-count 4s ease-in-out infinite;
+}
+
+@keyframes mock-ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-gold) 55%, transparent); }
+  100% { box-shadow: 0 0 0 10px transparent; }
+}
+@utility mock-ping {
+  animation: mock-ping 2s ease-out infinite;
+}
+
+@utility ink-header-shadow {
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, var(--color-hairline) 80%, transparent) inset,
+    0 18px 40px -18px color-mix(in oklab, black 45%, transparent),
+    0 6px 18px -10px color-mix(in oklab, var(--color-gold) 22%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mock-float, .mock-bar, .mock-count, .mock-ping, .mock-row-in, .mock-fill { animation: none !important; }
+  .mock-sheen::after { animation: none !important; opacity: 0 !important; }
+}
