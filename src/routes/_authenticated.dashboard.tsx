@@ -196,195 +196,238 @@ function Dashboard() {
 
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
 
+  const firstName = profile?.username
+    ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
+    : profile?.full_name?.split(" ")[0] || "User";
+
   return (
-    <div className="space-y-8 w-full">
-
-
-      {/* Profile Completion Warning Banner */}
-      {/* Welcome bonus banner removed to ensure it never reappears after claiming */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-black tracking-tight text-foreground">
-            Welcome back, {profile?.username ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) : profile?.full_name?.split(' ')[0] || 'User'}! 👋
-          </h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your rewards today.
-          </p>
-        </div>
-
-      </header>
-
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Main Balance Card - Inspired by Reference */}
-        <Card className="flex-1 overflow-hidden border-none bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-black uppercase tracking-widest opacity-70">Total Balance</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-2 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
-            <div className="space-y-1">
-              <div className="text-5xl font-black tracking-tighter">
-                {profile?.points_balance?.toLocaleString() || 0} <span className="text-xl opacity-60 ml-1">PTS</span>
-              </div>
-              <p className="text-sm font-medium opacity-80 flex items-center gap-1">
-                {balanceTrend?.isPositive ? (
-                  <TrendingUp className="h-4 w-4 text-white" />
-                ) : (
-                  <TrendingDown className="h-4 w-4 text-white/70" />
-                )}
-                {balanceTrend?.isPositive ? '+' : '-'}{balanceTrend?.percentage || 0}% from last week
+    <div className="w-full space-y-10">
+      {/* ---------- Hero ---------- */}
+      <section className="ink-glow relative overflow-hidden rounded-3xl ink-panel">
+        <div className="ink-dots absolute inset-0 opacity-40 pointer-events-none" />
+        <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-end sm:justify-between">
+            <div className="min-w-0 space-y-2">
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
+                Member Dashboard
+              </p>
+              <h1 className="truncate text-2xl font-black tracking-tight text-foreground sm:text-4xl">
+                Welcome back, {firstName}
+              </h1>
+              <p className="text-sm font-medium text-muted-foreground">
+                Here's what's happening with your rewards today.
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="secondary" className="rounded-xl font-bold px-6 h-11 bg-white text-primary hover:bg-white/90 border-none shadow-sm" asChild>
-                <Link to="/earn" search={{ tab: 'tasks' }}>Start Earning</Link>
-              </Button>
-              <Button variant="outline" className="rounded-xl font-bold px-6 h-11 bg-white/10 border-white/20 hover:bg-white/20 text-white" asChild>
-                <Link to="/redeem">Redeem</Link>
-              </Button>
-            </div>
-          </CardContent>
-          <div className="absolute -top-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 right-12 -translate-y-1/2 opacity-10 pointer-events-none scale-150">
-            <img src="/logo.png" alt="" className="h-40 w-40 object-contain rotate-12" />
+            <Badge
+              variant="outline"
+              className="shrink-0 gap-1.5 rounded-full border-primary/25 bg-primary/5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary"
+            >
+              <Sparkles className="h-3 w-3" />
+              {streak?.current_streak || 0} day streak
+            </Badge>
           </div>
-        </Card>
 
-        {/* Daily Streak Card */}
-        <Card className="lg:w-64 border-none shadow-sm flex flex-col relative overflow-hidden bg-card group">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Daily Streak</CardTitle>
-              <div className="bg-orange-50 p-2 rounded-xl text-orange-600 group-hover:scale-110 transition-transform">
-                <Clock className="h-4 w-4" />
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            {/* Balance */}
+            <div className="relative overflow-hidden rounded-2xl border border-hairline bg-card/70 p-6 backdrop-blur-sm lg:col-span-2">
+              <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+              <div className="relative z-10 space-y-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
+                    Total balance
+                  </p>
+                  <span className="rounded-full border border-hairline p-2 text-primary">
+                    <Coins className="h-4 w-4" />
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-end gap-2">
+                    <span className="text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
+                      {profile?.points_balance?.toLocaleString() || 0}
+                    </span>
+                    <span className="pb-1.5 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                      pts
+                    </span>
+                  </div>
+                  <p className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
+                    {balanceTrend?.isPositive ? (
+                      <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                    ) : (
+                      <TrendingDown className="h-3.5 w-3.5 text-destructive" />
+                    )}
+                    {balanceTrend?.isPositive ? "+" : "-"}
+                    {balanceTrend?.percentage || 0}% from last week
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button className="h-11 rounded-xl px-6 font-bold" asChild>
+                    <Link to="/earn" search={{ tab: "tasks" }}>Start Earning</Link>
+                  </Button>
+                  <Button variant="outline" className="h-11 rounded-xl border-hairline px-6 font-bold" asChild>
+                    <Link to="/redeem">Redeem</Link>
+                  </Button>
+                </div>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="pt-2 flex-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="text-3xl font-black tracking-tight">{streak?.current_streak || 0} Days</div>
-              <p className="text-[11px] text-muted-foreground font-medium">Claim daily to earn bonus points</p>
-            </div>
-            <div className="mt-6">
-              <Button 
+
+            {/* Daily streak */}
+            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-hairline bg-card/70 p-6 backdrop-blur-sm">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
+                    Daily streak
+                  </p>
+                  <span className="rounded-full border border-hairline p-2 text-primary">
+                    <Clock className="h-4 w-4" />
+                  </span>
+                </div>
+                <div>
+                  <p className="text-3xl font-black tracking-tight text-foreground">
+                    {streak?.current_streak || 0} <span className="text-base font-bold text-muted-foreground">days</span>
+                  </p>
+                  <p className="mt-1 text-[11px] font-medium text-muted-foreground">
+                    Claim daily to earn bonus points
+                  </p>
+                </div>
+                <Progress value={Math.min(((streak?.current_streak || 0) % 7) * (100 / 7), 100)} className="h-1.5" />
+              </div>
+              <Button
                 className={cn(
-                  "w-full rounded-xl font-bold h-12 transition-all",
-                  isClaimedToday ? "bg-muted text-muted-foreground border-none shadow-none cursor-default" : "shadow-md shadow-primary/10"
+                  "h-12 w-full rounded-xl font-bold transition-all",
+                  isClaimedToday && "bg-muted text-muted-foreground shadow-none hover:bg-muted cursor-default"
                 )}
                 disabled={isClaimedToday || claimDailyStreak.isPending}
                 onClick={() => claimDailyStreak.mutate()}
               >
-                {claimDailyStreak.isPending ? "Claiming..." : isClaimedToday ? "✓ Claimed Today" : "Claim Daily Reward"}
+                {claimDailyStreak.isPending
+                  ? "Claiming..."
+                  : isClaimedToday
+                    ? "Claimed today"
+                    : "Claim Daily Reward"}
               </Button>
             </div>
-          </CardContent>
-        </Card>
-
-      </div>
-
-      {featuredTasks && featuredTasks.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-xl font-black tracking-tight text-foreground flex items-center gap-2">
-              <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
-              Featured Tasks
-            </h2>
           </div>
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 w-full max-w-7xl mx-auto px-1">
+        </div>
+      </section>
+
+      {/* ---------- Featured tasks ---------- */}
+      {featuredTasks && featuredTasks.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-lg font-black tracking-tight text-foreground sm:text-xl">
+              <Star className="h-4 w-4 fill-primary text-primary" />
+              Featured tasks
+            </h2>
+            <Link
+              to="/earn"
+              search={{ tab: "tasks" }}
+              className="text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/80"
+            >
+              View all
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
-              const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
-              
+              const isCompleted = submission?.status === "verified" || submission?.status === "pending";
+
               return (
-                <Card key={task.id} className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full">
-                  <CardHeader className="p-5 sm:p-6 pb-2">
-                    <div className="flex items-center justify-between">
-                      <div className="bg-primary/5 p-1.5 sm:p-2 rounded-xl text-primary group-hover:scale-110 transition-transform">
-                        <Zap className="h-4 w-4 sm:h-5 sm:h-5" />
-                      </div>
-                      <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-primary/5 text-[10px] sm:text-xs">
+                <div
+                  key={task.id}
+                  className="group relative overflow-hidden rounded-2xl border border-hairline bg-card p-5 transition-all hover:border-primary/30 sm:p-6"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="rounded-xl border border-hairline bg-primary/5 p-2 text-primary transition-transform group-hover:scale-110">
+                      <Zap className="h-4 w-4" />
+                    </span>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {(task as any).is_repeatable && (
+                        <Badge variant="outline" className="rounded-full border-hairline text-[9px] font-black uppercase tracking-wider text-muted-foreground">
+                          Daily
+                        </Badge>
+                      )}
+                      <Badge className="rounded-full bg-primary/10 text-[10px] font-black text-primary hover:bg-primary/10">
                         +{task.points} PTS
                       </Badge>
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-5 sm:p-6 pt-2">
-                    <div className="space-y-1 mb-4 sm:mb-6">
-                      <CardTitle className="text-[15px] sm:text-lg font-black tracking-tight line-clamp-1 leading-tight flex items-center justify-between">
-                        {task.title}
-                        {(task as any).is_repeatable && (
-                          <Badge variant="outline" className="ml-2 text-[8px] border-primary/20 text-primary uppercase font-bold">Daily</Badge>
-                        )}
-                      </CardTitle>
-                      <CardDescription className="text-[11px] sm:text-xs font-medium line-clamp-2">{task.description}</CardDescription>
-                    </div>
-                    <Button 
-                      className={cn(
-                        "w-full rounded-xl font-bold h-10 sm:h-11 text-xs sm:text-sm transition-all px-2",
-                        isCompleted ? "bg-green-500/10 text-green-600 border-none shadow-none hover:bg-green-500/20" : 
-                        dailyLimitReached ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
-                        "shadow-md shadow-primary/10"
-                      )}
-                      onClick={async () => {
-                        if (isCompleted || dailyLimitReached) return;
-                        
-                        const taskAny = task as any;
-                        if (taskAny.link_url) {
-                          window.open(taskAny.link_url, '_blank');
-                        }
-                        
-                        // Navigate to earn page to complete task or show feedback
-                        // Since we want the user to carry it out, we'll open the link and then they can verify on the earn page
-                        // Or we could implement the verification logic here too.
-                        // Let's keep it simple: open link and toast instruction.
-                        toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
-                      }}
-                      disabled={(isCompleted && submission?.status === 'verified') || (!isCompleted && dailyLimitReached)}
-                    >
-                      {isCompleted ? (
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4" />
-                          {submission?.status === 'pending' ? 'Verifying...' : 'Task Completed'}
-                        </div>
-                      ) : dailyLimitReached ? (
-                        <div className="flex items-center gap-2">
-                          <Zap className="h-4 w-4" />
-                          Limit Reached
-                        </div>
-                      ) : (
-                        <>
-                          Start
-                          <ChevronRight className="ml-1 h-3 w-3 sm:ml-2 sm:h-4 sm:h-4" />
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
+                  </div>
+
+                  <div className="mt-5 space-y-1">
+                    <h3 className="line-clamp-1 text-[15px] font-black tracking-tight text-foreground sm:text-base">
+                      {task.title}
+                    </h3>
+                    <p className="line-clamp-2 text-xs font-medium text-muted-foreground">
+                      {task.description}
+                    </p>
+                  </div>
+
+                  <Button
+                    variant={isCompleted || dailyLimitReached ? "outline" : "default"}
+                    className={cn(
+                      "mt-5 h-11 w-full rounded-xl text-xs font-bold sm:text-sm",
+                      (isCompleted || dailyLimitReached) && "border-hairline text-muted-foreground"
+                    )}
+                    onClick={async () => {
+                      if (isCompleted || dailyLimitReached) return;
+
+                      const taskAny = task as any;
+                      if (taskAny.link_url) {
+                        window.open(taskAny.link_url, "_blank");
+                      }
+
+                      toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
+                    }}
+                    disabled={(isCompleted && submission?.status === "verified") || (!isCompleted && dailyLimitReached)}
+                  >
+                    {isCompleted ? (
+                      <span className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4" />
+                        {submission?.status === "pending" ? "Verifying..." : "Task completed"}
+                      </span>
+                    ) : dailyLimitReached ? (
+                      <span className="flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        Limit reached
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5">
+                        Start
+                        <ChevronRight className="h-4 w-4" />
+                      </span>
+                    )}
+                  </Button>
+
                   {task.is_featured && !isCompleted && (
-                    <div className="absolute top-0 right-0">
-                      <div className="bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-tighter">
-                        High Priority
-                      </div>
+                    <div className="absolute right-0 top-0 rounded-bl-xl bg-primary px-2 py-0.5 text-[9px] font-black uppercase tracking-tight text-primary-foreground">
+                      Priority
                     </div>
                   )}
-                </Card>
+                </div>
               );
             })}
           </div>
-        </div>
+        </section>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-12">
-        {/* Recent Activity */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-xl font-black tracking-tight text-foreground">Recent Activity</h2>
-            <Link to="/transactions" className="text-xs font-bold text-primary hover:text-primary/80 uppercase tracking-widest transition-colors">View all</Link>
+      {/* ---------- Activity + Earn more ---------- */}
+      <section className="grid gap-6 lg:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-black tracking-tight text-foreground sm:text-xl">Recent activity</h2>
+            <Link
+              to="/transactions"
+              className="text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/80"
+            >
+              View all
+            </Link>
           </div>
-          <Card className="border-none shadow-sm bg-card">
+          <Card className="overflow-hidden rounded-2xl border border-hairline bg-card shadow-none">
             <CardContent className="p-0">
-              <div className="divide-y divide-border/50">
+              <div className="divide-y divide-border/60">
                 {recentTransactions?.length ? recentTransactions.map((tx: any) => (
-                  <div 
-                    key={tx.id} 
-                    className="flex items-center justify-between p-4 group hover:bg-accent/5 transition-colors cursor-pointer"
+                  <div
+                    key={tx.id}
+                    className="group flex cursor-pointer items-center justify-between gap-3 p-4 transition-colors hover:bg-accent/40"
                     onClick={() => {
                       toast.info(
                         <div className="space-y-2">
@@ -400,34 +443,39 @@ function Dashboard() {
                       );
                     }}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "p-2.5 rounded-xl transition-transform group-hover:scale-110",
-                        tx.status === 'pending' ? 'bg-amber-50 text-amber-600' :
-                        tx.type === 'earn' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                      )}>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="shrink-0 rounded-xl border border-hairline p-2.5 text-primary transition-transform group-hover:scale-110">
                         {tx.status === 'pending' ? <Clock className="h-4 w-4" /> :
                          tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-foreground">
                           {tx.description}
-                          {tx.status === 'pending' && <span className="ml-2 text-[8px] font-black uppercase text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">Pending</span>}
+                          {tx.status === 'pending' && (
+                            <span className="ml-2 rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-black uppercase text-accent-foreground">
+                              Pending
+                            </span>
+                          )}
                         </p>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{new Date(tx.created_at).toLocaleDateString()}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          {new Date(tx.created_at).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
-                    <div className={cn(
-                      "text-sm font-black",
-                      tx.status === 'pending' ? 'text-amber-600' :
-                      tx.type === 'earn' ? 'text-green-600' : 'text-red-600'
-                    )}>
+                    <div
+                      className={cn(
+                        "shrink-0 text-sm font-black tabular-nums",
+                        tx.status === 'pending' ? 'text-muted-foreground' :
+                        tx.type === 'earn' ? 'text-primary' : 'text-destructive'
+                      )}
+                    >
                       {tx.status === 'pending' ? "" : tx.type === 'earn' ? '+' : '-'}{tx.amount}
                     </div>
                   </div>
                 )) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <p className="text-sm font-medium">No recent activity yet.</p>
+                  <div className="flex flex-col items-center gap-2 py-14 text-center">
+                    <Award className="h-6 w-6 text-muted-foreground" />
+                    <p className="text-sm font-medium text-muted-foreground">No recent activity yet.</p>
                   </div>
                 )}
               </div>
@@ -435,36 +483,40 @@ function Dashboard() {
           </Card>
         </div>
 
-        {/* Quick Stats & Promo */}
-        <div className="lg:col-span-4 space-y-6">
-          <h2 className="text-xl font-black px-1 tracking-tight text-foreground">Earn More</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-            <Card className="border-none shadow-sm bg-card p-4 space-y-1 group flex flex-col justify-center">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-tight">Lifetime Referrals</p>
-              <p className="text-2xl font-black group-hover:text-primary transition-colors">{referralCount}</p>
-            </Card>
+        <div className="space-y-4 lg:col-span-4">
+          <h2 className="text-lg font-black tracking-tight text-foreground sm:text-xl">Earn more</h2>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+            <div className="flex flex-col justify-center gap-1 rounded-2xl border border-hairline bg-card p-5">
+              <p className="text-[10px] font-black uppercase leading-tight tracking-[0.18em] text-muted-foreground">
+                Lifetime referrals
+              </p>
+              <p className="text-3xl font-black tracking-tight text-foreground">{referralCount}</p>
+            </div>
 
-            <Card className="border-none shadow-sm bg-primary/5 border border-primary/10 p-4 space-y-3 overflow-hidden relative group">
+            <div className="relative overflow-hidden rounded-2xl border border-hairline bg-primary/5 p-5">
+              <Share2 className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 rotate-12 text-primary/10" />
               <div className="relative z-10 space-y-3">
-                <div className="bg-primary w-fit p-1.5 rounded-lg text-primary-foreground shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+                <span className="block w-fit rounded-xl bg-primary p-2 text-primary-foreground">
                   <Share2 className="h-4 w-4" />
-                </div>
+                </span>
                 <div className="space-y-0.5">
-                  <h3 className="font-black text-xs text-foreground leading-tight">Invite friends</h3>
-                  <p className="text-[9px] text-muted-foreground font-medium leading-tight">Earn 50 pts per referral.</p>
+                  <h3 className="text-sm font-black leading-tight text-foreground">Invite friends</h3>
+                  <p className="text-[10px] font-medium leading-tight text-muted-foreground">
+                    Earn 50 pts per referral.
+                  </p>
                 </div>
-                <Button size="sm" className="w-full rounded-lg font-bold shadow-sm h-8 text-[10px] uppercase tracking-wider" asChild>
+                <Button size="sm" className="h-9 w-full rounded-xl text-[10px] font-black uppercase tracking-[0.16em]" asChild>
                   <Link to="/refer">Invite</Link>
                 </Button>
               </div>
-              <Share2 className="absolute -right-2 -bottom-2 h-12 w-12 text-primary/5 rotate-12" />
-            </Card>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
+
 
 function RecentReferrersList() {
   const { data: referredUsers } = useQuery({
