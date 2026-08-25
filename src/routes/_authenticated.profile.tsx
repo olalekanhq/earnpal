@@ -236,13 +236,14 @@ function ProfilePage() {
         throw new Error(`Upload failed: ${uploadError.message}`);
       }
 
-      const { data } = supabase.storage
+      // Bucket is private, so we store a long-lived signed URL (1 year).
+      const { data, error: signError } = await supabase.storage
         .from('avatars')
-        .getPublicUrl(filePath);
+        .createSignedUrl(filePath, 60 * 60 * 24 * 365);
 
-      console.log("Generated avatar URL:", data.publicUrl);
-      // The URL stored in the DB will be the base public URL.
-      const url = data.publicUrl || "";
+      if (signError) throw new Error(`Could not generate avatar link: ${signError.message}`);
+
+      const url = data?.signedUrl || "";
       setAvatarUrl(url);
       await updateProfile.mutateAsync({ avatar_url: url });
 
