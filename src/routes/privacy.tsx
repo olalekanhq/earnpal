@@ -8,8 +8,8 @@ export const Route = createFileRoute("/privacy")({
     const canonicalUrl = `${url}/privacy`;
 
     return {
-      title: "Privacy Policy | Noble Gain",
       meta: [
+        { title: "Privacy Policy | Noble Gain" },
         { name: "description", content: "Learn how Noble Gain collects, uses, and protects your personal data. Our privacy policy outlines our commitment to your security." },
         { property: "og:title", content: "Privacy Policy | Noble Gain" },
         { property: "og:description", content: "Your privacy is our priority. Read the Noble Gain privacy policy." },

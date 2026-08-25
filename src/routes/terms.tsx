@@ -7,8 +7,8 @@ export const Route = createFileRoute("/terms")({
     const canonicalUrl = `${url}/terms`;
 
     return {
-      title: "Terms of Service | Noble Gain",
       meta: [
+        { title: "Terms of Service | Noble Gain" },
         { name: "description", content: "Read the Noble Gain terms of service. Understand our rules, user obligations, and platform policies before you start earning." },
         { property: "og:title", content: "Terms of Service | Noble Gain" },
         { property: "og:description", content: "The rules of the road for Noble Gain. Read our terms of service." },

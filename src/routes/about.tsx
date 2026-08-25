@@ -19,8 +19,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 export const Route = createFileRoute("/about")({
   head: () => ({
-    title: "About Noble Gain | Our Mission & Brand Story",
     meta: [
+      { title: "About Noble Gain | Our Mission & Brand Story" },
       { name: "description", content: "Learn about Noble Gain's mission to empower digital users through a transparent, secure, and rewarding platform. Discover our story and key features." },
       { property: "og:title", content: "About Noble Gain | Empowering Your Digital Time" },
       { property: "og:description", content: "Discover how Noble Gain is redefining the rewards economy with transparency, security, and global reach." },
@@ -241,5 +241,3 @@ function AboutPage() {
     </main>
   );
 }
-
-export default AboutPage;
