@@ -38,7 +38,9 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const search = useSearch({ from: "/auth" });
-  const [activeTab, setActiveTab] = useState<"login" | "signup">(search.mode || "login");
+  const [activeTab, setActiveTab] = useState<"login" | "signup">(
+    search.mode || (search.ref ? "signup" : "login")
+  );
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [email, setEmail] = useState("");
@@ -94,10 +96,12 @@ function AuthPage() {
 
 
   useEffect(() => {
-    if (search.mode && search.mode !== activeTab) {
+    if (search.mode) {
       setActiveTab(search.mode);
+    } else if (search.ref) {
+      setActiveTab("signup");
     }
-  }, [search.mode]);
+  }, [search.mode, search.ref]);
 
   useEffect(() => {
     if (search.ref) {

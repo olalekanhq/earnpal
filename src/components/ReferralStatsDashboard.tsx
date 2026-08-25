@@ -93,7 +93,7 @@ export function ReferralStatsDashboard() {
   });
 
   const referralCode = profile?.referral_code || profile?.id?.slice(0, 8) || '';
-  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/auth?ref=${referralCode}` : `https://noblegain.lovable.app/auth?ref=${referralCode}`;
+  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/auth?ref=${referralCode}&mode=signup` : `https://noblegain.lovable.app/auth?ref=${referralCode}&mode=signup`;
 
   const copyLink = () => {
     if (!referralLink) return;
