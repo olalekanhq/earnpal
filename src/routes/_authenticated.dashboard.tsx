@@ -27,7 +27,8 @@ import {
   HelpCircle,
   Activity,
   Layers,
-  Percent
+  Percent,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -259,13 +260,22 @@ function Dashboard() {
     : profile?.full_name?.split(' ')[0] || 'Member';
 
   const referralCode = profile?.referral_code || profile?.id?.slice(0, 8) || '';
-  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/auth?ref=${referralCode}` : `https://earnpal.lovable.app/auth?ref=${referralCode}`;
+  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/auth?ref=${referralCode}` : `https://noblegain.lovable.app/auth?ref=${referralCode}`;
+
+  const referralShareMessage = `🚀 Join me on Noble Gain and start earning real rewards and cash for completing quick daily tasks! Sign up with my invite link to get a 50 PTS welcome bonus:\n\n${referralLink}\n\nInvite Code: ${referralCode}`;
+
+  const hasCompletedSocialProfile = Boolean(
+    profile?.twitter_handle || 
+    profile?.telegram_handle || 
+    profile?.instagram_handle || 
+    profile?.facebook_handle
+  );
 
   const handleCopyReferral = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(referralLink);
+      navigator.clipboard.writeText(referralShareMessage);
       setCopiedLink(true);
-      toast.success("Referral link copied to clipboard!");
+      toast.success("Invite message & link copied to clipboard!");
       setTimeout(() => setCopiedLink(false), 2500);
     }
   };
@@ -287,7 +297,21 @@ function Dashboard() {
             <Sparkles className="size-3.5" />
             <span>{tier.name}</span>
             <span className="text-hairline">•</span>
-            <span className="text-ink-fg/70 font-medium">Verified Account</span>
+            {hasCompletedSocialProfile ? (
+              <span className="text-emerald-400 font-bold flex items-center gap-1">
+                <CheckCircle2 className="size-3 text-emerald-400" />
+                Verified Account
+              </span>
+            ) : (
+              <Link 
+                to="/profile" 
+                className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 hover:underline transition-colors"
+                title="Complete your social profiles to verify your account"
+              >
+                <AlertCircle className="size-3 text-amber-400" />
+                Incomplete Profile
+              </Link>
+            )}
           </div>
           <h1 className="text-3xl sm:text-4xl font-black tracking-[-0.04em] text-ink-fg">
             {getGreeting()}, <span className="text-gold">{displayName}</span>

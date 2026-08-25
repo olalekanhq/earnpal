@@ -97,10 +97,10 @@ export function ReferralStatsDashboard() {
 
   const copyLink = () => {
     if (!referralLink) return;
-    const referralNote = `Join me on Noble Gain and start earning rewards together! Use my link: ${referralLink}`;
+    const referralNote = `🚀 Join me on Noble Gain and start earning real rewards and cash for completing quick daily tasks! Sign up with my invite link to get a 50 PTS welcome bonus:\n\n${referralLink}\n\nInvite Code: ${referralCode}`;
     navigator.clipboard.writeText(referralNote);
     setCopiedLink(true);
-    toast.success("Referral message & link copied to clipboard!");
+    toast.success("Invite message & link copied to clipboard!");
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
