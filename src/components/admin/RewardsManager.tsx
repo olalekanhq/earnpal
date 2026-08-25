@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Plus, Edit2, Trash2, Loader2, Save, Image as ImageIcon, X } from "lucide-react";
+import { uploadImageWithFallback } from "@/lib/upload-image";
 
 export function RewardsManager() {
   const queryClient = useQueryClient();
@@ -120,32 +121,33 @@ export function RewardsManager() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Image file size must be under 10MB");
+      return;
+    }
+
     try {
       setIsUploading(true);
-      const fileExt = file.name.split('.').pop();
-      const filePath = `reward-${Math.random()}.${fileExt}`;
+      const fileExt = file.name.split('.').pop() || "jpg";
+      const filePath = `reward-${Date.now()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('rewards')
-        .upload(filePath, file);
+      const url = await uploadImageWithFallback({
+        bucket: 'rewards',
+        path: filePath,
+        fileOrBlob: file,
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.88,
+      });
 
-      if (uploadError) {
-        console.error("Reward upload error details:", uploadError);
-        throw new Error(`Upload failed: ${uploadError.message}`);
-      }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('rewards')
-        .getPublicUrl(filePath);
-
-      console.log("Generated reward image URL:", publicUrl);
-      setFormData(prev => ({ ...prev, image_url: publicUrl }));
-
-      toast.success("Image uploaded successfully");
+      setFormData(prev => ({ ...prev, image_url: url }));
+      toast.success("Reward image attached successfully!");
     } catch (error: any) {
-      toast.error("Error uploading image: " + error.message);
+      console.error("Reward image upload error:", error);
+      toast.error("Error uploading image: " + (error.message || "Upload failed"));
     } finally {
       setIsUploading(false);
+      e.target.value = "";
     }
   };
 

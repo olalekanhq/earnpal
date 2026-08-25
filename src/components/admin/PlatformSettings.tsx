@@ -13,11 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, Save, Settings2, Shield, Star, Globe } from "lucide-react";
+import { Loader2, Save, Settings2, Shield, Star, ShieldCheck, Check, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
-import { DomainStatusCard } from "./DomainStatusCard";
+import { useAuth } from "@/hooks/use-auth";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
-// Define local interfaces since types might not be regenerated yet
 interface AppSetting {
   id: string;
   key: string;
@@ -25,11 +27,6 @@ interface AppSetting {
   description: string | null;
   updated_at: string | null;
 }
-
-import { useAuth } from "@/hooks/use-auth";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
 
 function PermissionManager() {
   const queryClient = useQueryClient();
@@ -55,11 +52,17 @@ function PermissionManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] });
-      toast.success("Permission updated");
+      toast.success("Role permission updated");
     }
   });
 
-  if (isLoading) return <Loader2 className="h-4 w-4 animate-spin mx-auto" />;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center p-8">
+        <Loader2 className="size-6 animate-spin text-gold" />
+      </div>
+    );
+  }
 
   const roles = ['moderator', 'tasker'];
   const tabs = ['analytics', 'users', 'fraud', 'tasks', 'verifications', 'rewards', 'redemptions', 'referrals', 'audit', 'settings'];
@@ -67,27 +70,57 @@ function PermissionManager() {
   return (
     <div className="space-y-6">
       {roles.map(role => (
-        <div key={role} className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Badge className="font-black uppercase tracking-wider">{role}</Badge>
+        <div key={role} className="space-y-3 bg-ink/60 rounded-2xl p-4 border border-hairline">
+          <div className="flex items-center justify-between border-b border-hairline pb-2.5">
+            <div className="flex items-center gap-2">
+              <span className={cn(
+                "font-black uppercase tracking-wider text-[11px] px-2.5 py-0.5 rounded-lg border font-mono",
+                role === 'moderator' ? "bg-blue-500/15 text-blue-400 border-blue-500/30" : "bg-indigo-500/15 text-indigo-400 border-indigo-500/30"
+              )}>
+                {role} role
+              </span>
+              <span className="text-[11px] text-ink-muted font-medium">Accessible tabs</span>
+            </div>
+            <span className="text-[10px] text-ink-muted font-mono">
+              {permissions?.filter(p => p.role === role && p.is_enabled).length || 0} active
+            </span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+          <div className="grid grid-cols-2 gap-2.5">
             {tabs.map(tab => {
               const perm = permissions?.find(p => p.role === role && p.tab_name === tab);
+              const isEnabled = perm?.is_enabled ?? false;
+
               return (
-                <div key={tab} className="flex items-center justify-between p-3 rounded-xl bg-accent/5 border border-border/50">
-                  <span className="text-[10px] font-black uppercase tracking-widest">{tab}</span>
+                <div 
+                  key={tab} 
+                  className={cn(
+                    "flex items-center justify-between p-2.5 rounded-xl border transition-colors",
+                    isEnabled 
+                      ? "bg-ink-2/80 border-gold/25" 
+                      : "bg-ink-3/40 border-hairline opacity-75"
+                  )}
+                >
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-wider",
+                    isEnabled ? "text-ink-fg" : "text-ink-muted"
+                  )}>
+                    {tab}
+                  </span>
                   <Switch 
-                    checked={perm?.is_enabled ?? false}
+                    checked={isEnabled}
                     onCheckedChange={(checked) => {
                       if (perm) {
                         toggleMutation.mutate({ id: perm.id, is_enabled: checked });
                       } else {
-                        // Create if doesn't exist
-                        supabase.from("role_permissions").insert({ role: role as "admin" | "moderator" | "task_manager" | "tasker" | "user", tab_name: tab, is_enabled: checked })
-                          .then(() => queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] }));
+                        supabase.from("role_permissions").insert({ 
+                          role: role as "admin" | "moderator" | "task_manager" | "tasker" | "user", 
+                          tab_name: tab, 
+                          is_enabled: checked 
+                        }).then(() => queryClient.invalidateQueries({ queryKey: ["all-role-permissions"] }));
                       }
                     }}
+                    className="data-[state=checked]:bg-gold scale-90"
                   />
                 </div>
               );
@@ -107,7 +140,6 @@ export function PlatformSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["appSettings"],
     queryFn: async () => {
-      // Use any cast to bypass type check for new table
       const { data, error } = await (supabase.from("app_settings" as any) as any)
         .select("*");
       if (error) throw error;
@@ -134,7 +166,7 @@ export function PlatformSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appSettings"] });
-      toast.success("Setting updated successfully");
+      toast.success("Setting saved successfully");
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to update setting");
@@ -147,191 +179,186 @@ export function PlatformSettings() {
 
   if (isLoading || isAuthLoading) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-[350px] w-full items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-gold" />
       </div>
     );
   }
 
   if (!isAdmin) {
     return (
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-2xl">
-          <AlertCircle className="h-5 w-5" />
-          <AlertTitle className="font-black uppercase tracking-tight ml-2">Access Denied</AlertTitle>
-          <AlertDescription className="font-medium ml-2">
-            You do not have the required permissions to view or edit platform settings. Only administrators can access this section.
-          </AlertDescription>
-        </Alert>
+      <div className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-300">
+        <div className="flex items-center gap-3">
+          <AlertCircle className="size-6 text-rose-400 shrink-0" />
+          <div>
+            <h4 className="font-black text-sm uppercase tracking-wider text-rose-200">Access Restricted</h4>
+            <p className="text-xs text-rose-300/80 font-medium mt-0.5">
+              Only platform administrators can modify system parameters and role access.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <div className="md:col-span-2 space-y-6">
-        <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
-
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2 rounded-xl">
-              <Settings2 className="h-5 w-5 text-primary" />
+    <div className="grid gap-6 lg:grid-cols-12 items-start">
+      {/* Left Column: Platform Configuration & Welcome Bonus Settings */}
+      <div className="lg:col-span-6 space-y-6">
+        {/* Card 1: Platform Configuration */}
+        <div className="rounded-3xl border border-hairline bg-ink-2/70 p-6 sm:p-7 shadow-lg backdrop-blur-xl space-y-5">
+          <div className="flex items-center gap-3 border-b border-hairline pb-4">
+            <div className="size-9 rounded-xl bg-gold/15 text-gold flex items-center justify-center border border-gold/25">
+              <Settings2 className="size-4" />
             </div>
             <div>
-              <CardTitle className="text-xl font-black uppercase tracking-tight">Platform Configuration</CardTitle>
-              <CardDescription className="font-medium">Configure core platform limits and reward rules</CardDescription>
+              <h3 className="text-base font-black text-ink-fg">Platform Configuration</h3>
+              <p className="text-xs text-ink-muted font-medium">Configure global limits and operation rules</p>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Daily Task Limit</Label>
-              <div className="flex gap-2">
+
+          <div className="space-y-4">
+            <div className="space-y-1.5 bg-ink p-4 rounded-2xl border border-hairline">
+              <Label className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">Daily Task Completion Limit</Label>
+              <div className="flex gap-2 pt-1">
                 <Input 
                   type="number"
                   value={localValues['daily_task_limit'] ?? 10}
                   onChange={(e) => setLocalValues(prev => ({ ...prev, daily_task_limit: parseInt(e.target.value) || 0 }))}
-                  className="rounded-xl font-bold"
+                  className="rounded-xl h-11 bg-ink-2 border-hairline text-ink-fg font-mono font-bold" 
                 />
                 <Button 
-                  size="icon" 
-                  variant="outline" 
-                  className="rounded-xl flex-shrink-0"
+                  className="rounded-xl h-11 px-4 bg-gold text-ink hover:bg-gold-soft font-black text-xs cursor-pointer shadow-md shadow-gold/10 shrink-0"
                   onClick={() => handleSave('daily_task_limit')}
                   disabled={updateMutation.isPending}
                 >
-                  <Save className="h-4 w-4" />
+                  <Save className="size-4 mr-1.5" />
+                  Save
                 </Button>
               </div>
-              <p className="text-[10px] text-muted-foreground font-medium italic ml-1">Maximum tasks a user can complete per 24h (GMT).</p>
+              <p className="text-[11px] text-ink-muted font-medium pt-1">
+                Maximum tasks a user can complete every 24-hour cycle.
+              </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2 rounded-xl">
-              <Star className="h-5 w-5 text-primary" />
+        {/* Card 2: Welcome Bonus Settings */}
+        <div className="rounded-3xl border border-hairline bg-ink-2/70 p-6 sm:p-7 shadow-lg backdrop-blur-xl space-y-5">
+          <div className="flex items-center gap-3 border-b border-hairline pb-4">
+            <div className="size-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center border border-amber-500/25">
+              <Star className="size-4" />
             </div>
             <div>
-              <CardTitle className="text-xl font-black uppercase tracking-tight">Welcome Bonus Settings</CardTitle>
-              <CardDescription className="font-medium">Configure eligibility and rewards for new referred users</CardDescription>
+              <h3 className="text-base font-black text-ink-fg">Welcome Bonus & Referral Rewards</h3>
+              <p className="text-xs text-ink-muted font-medium">Configure signup and onboarding point rewards</p>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-accent/5 border border-border/50">
-            <div className="space-y-0.5">
-              <Label className="text-sm font-black uppercase tracking-wider">Enable Welcome Bonus</Label>
-              <p className="text-xs text-muted-foreground font-medium">Show the welcome popup to new referred users</p>
-            </div>
-            <div className="flex items-center gap-4">
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-ink border border-hairline">
+              <div className="space-y-0.5">
+                <Label className="text-xs font-bold uppercase tracking-wider text-ink-fg">Enable Welcome Bonus Popup</Label>
+                <p className="text-[11px] text-ink-muted font-medium">Display welcome bonus modal to newly registered users</p>
+              </div>
               <Switch 
                 checked={localValues['welcome_bonus_enabled'] === true}
                 onCheckedChange={(checked) => {
                   setLocalValues(prev => ({ ...prev, welcome_bonus_enabled: checked }));
                   updateMutation.mutate({ key: 'welcome_bonus_enabled', value: checked });
                 }}
+                className="data-[state=checked]:bg-gold"
               />
             </div>
-          </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Referee Amount (Points)</Label>
-              <div className="flex gap-2">
-                <Input 
-                  type="number"
-                  value={localValues['welcome_bonus_amount_referee'] || 0}
-                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referee: parseInt(e.target.value) || 0 }))}
-                  className="rounded-xl font-bold"
-                />
-                <Button 
-                  size="icon" 
-                  variant="outline" 
-                  className="rounded-xl flex-shrink-0"
-                  onClick={() => handleSave('welcome_bonus_amount_referee')}
-                  disabled={updateMutation.isPending}
-                >
-                  <Save className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Referrer Amount (Points)</Label>
-              <div className="flex gap-2">
-                <Input 
-                  type="number"
-                  value={localValues['welcome_bonus_amount_referrer'] || 0}
-                  onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referrer: parseInt(e.target.value) || 0 }))}
-                  className="rounded-xl font-bold"
-                />
-                <Button 
-                  size="icon" 
-                  variant="outline" 
-                  className="rounded-xl flex-shrink-0"
-                  onClick={() => handleSave('welcome_bonus_amount_referrer')}
-                  disabled={updateMutation.isPending}
-                >
-                  <Save className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 p-4 rounded-2xl bg-accent/5 border border-border/50">
-            <Label className="text-sm font-black uppercase tracking-wider block mb-2">Required Social Profiles</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {['twitter', 'telegram', 'instagram', 'facebook'].map(social => (
-                <div key={social} className="flex items-center gap-2">
-                  <Switch 
-                    id={`social-${social}`}
-                    checked={Array.isArray(localValues['welcome_bonus_required_socials']) && localValues['welcome_bonus_required_socials'].includes(social)}
-                    onCheckedChange={(checked) => {
-                      const current = Array.isArray(localValues['welcome_bonus_required_socials']) ? [...localValues['welcome_bonus_required_socials']] : [];
-                      let next;
-                      if (checked) {
-                        next = [...new Set([...current, social])];
-                      } else {
-                        next = current.filter(s => s !== social);
-                      }
-                      setLocalValues(prev => ({ ...prev, welcome_bonus_required_socials: next }));
-                      updateMutation.mutate({ key: 'welcome_bonus_required_socials', value: next });
-                    }}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="space-y-1.5 bg-ink p-4 rounded-2xl border border-hairline">
+                <Label className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">Referee Bonus (Points)</Label>
+                <div className="flex gap-2 pt-1">
+                  <Input 
+                    type="number"
+                    value={localValues['welcome_bonus_amount_referee'] || 0}
+                    onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referee: parseInt(e.target.value) || 0 }))}
+                    className="rounded-xl h-11 bg-ink-2 border-hairline text-ink-fg font-mono font-bold" 
                   />
-                  <Label htmlFor={`social-${social}`} className="text-xs font-bold capitalize cursor-pointer">{social}</Label>
+                  <Button 
+                    className="rounded-xl h-11 px-3 bg-gold text-ink hover:bg-gold-soft font-black text-xs cursor-pointer shadow-md shadow-gold/10 shrink-0"
+                    onClick={() => handleSave('welcome_bonus_amount_referee')}
+                    disabled={updateMutation.isPending}
+                  >
+                    <Save className="size-4" />
+                  </Button>
                 </div>
-              ))}
+              </div>
+
+              <div className="space-y-1.5 bg-ink p-4 rounded-2xl border border-hairline">
+                <Label className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">Referrer Bonus (Points)</Label>
+                <div className="flex gap-2 pt-1">
+                  <Input 
+                    type="number"
+                    value={localValues['welcome_bonus_amount_referrer'] || 0}
+                    onChange={(e) => setLocalValues(prev => ({ ...prev, welcome_bonus_amount_referrer: parseInt(e.target.value) || 0 }))}
+                    className="rounded-xl h-11 bg-ink-2 border-hairline text-ink-fg font-mono font-bold" 
+                  />
+                  <Button 
+                    className="rounded-xl h-11 px-3 bg-gold text-ink hover:bg-gold-soft font-black text-xs cursor-pointer shadow-md shadow-gold/10 shrink-0"
+                    onClick={() => handleSave('welcome_bonus_amount_referrer')}
+                    disabled={updateMutation.isPending}
+                  >
+                    <Save className="size-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium italic">Users must complete these social handles in their profile before they can claim the bonus.</p>
+
+            <div className="space-y-3 p-4 rounded-2xl bg-ink border border-hairline">
+              <Label className="text-xs font-bold uppercase tracking-wider text-ink-fg block">Required Social Profiles for Bonus</Label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {['twitter', 'telegram', 'instagram', 'facebook'].map(social => (
+                  <div key={social} className="flex items-center gap-2 bg-ink-2/80 p-2.5 rounded-xl border border-hairline">
+                    <Switch 
+                      id={`social-${social}`}
+                      checked={Array.isArray(localValues['welcome_bonus_required_socials']) && localValues['welcome_bonus_required_socials'].includes(social)}
+                      onCheckedChange={(checked) => {
+                        const current = Array.isArray(localValues['welcome_bonus_required_socials']) ? [...localValues['welcome_bonus_required_socials']] : [];
+                        let next;
+                        if (checked) {
+                          next = [...new Set([...current, social])];
+                        } else {
+                          next = current.filter(s => s !== social);
+                        }
+                        setLocalValues(prev => ({ ...prev, welcome_bonus_required_socials: next }));
+                        updateMutation.mutate({ key: 'welcome_bonus_required_socials', value: next });
+                      }}
+                      className="data-[state=checked]:bg-gold scale-90"
+                    />
+                    <Label htmlFor={`social-${social}`} className="text-xs font-bold capitalize cursor-pointer text-ink-fg">{social}</Label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] text-ink-muted font-medium">
+                Referees must link these social handles on their profile to claim the welcome bonus.
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2 rounded-xl">
-              <Shield className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-xl font-black uppercase tracking-tight">Role Permissions</CardTitle>
-              <CardDescription className="font-medium">Decide which admin panel tabs are visible to each role</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <PermissionManager />
-        </CardContent>
-      </Card>
+        </div>
       </div>
 
-      <div className="space-y-6">
-        <DomainStatusCard />
+      {/* Right Column: Role Permissions Card (Placed beside on desktop) */}
+      <div className="lg:col-span-6 space-y-6">
+        <div className="rounded-3xl border border-hairline bg-ink-2/70 p-6 sm:p-7 shadow-lg backdrop-blur-xl space-y-5">
+          <div className="flex items-center gap-3 border-b border-hairline pb-4">
+            <div className="size-9 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center border border-blue-500/25">
+              <ShieldCheck className="size-4" />
+            </div>
+            <div>
+              <h3 className="text-base font-black text-ink-fg">Role & Staff Permissions</h3>
+              <p className="text-xs text-ink-muted font-medium">Control which admin consoles each internal role can access</p>
+            </div>
+          </div>
+
+          <PermissionManager />
+        </div>
       </div>
     </div>
   );

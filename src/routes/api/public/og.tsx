@@ -34,10 +34,10 @@ export const Route = createFileRoute('/api/public/og')({
             <rect width="1160" height="590" x="20" y="20" rx="40" fill="url(#grad1)" />
             
             <g transform="translate(100, 200)">
-              <text font-family="Inter, sans-serif" font-weight="900" font-size="80" fill="#FFFFFF" letter-spacing="-0.04em">
+              <text font-family="Urbanist, sans-serif" font-weight="900" font-size="80" fill="#FFFFFF" letter-spacing="-0.04em">
                 ${title.toUpperCase()}
               </text>
-              <text font-family="Inter, sans-serif" font-weight="500" font-size="32" fill="#FFFFFF" opacity="0.8" y="80">
+              <text font-family="Urbanist, sans-serif" font-weight="500" font-size="32" fill="#FFFFFF" opacity="0.8" y="80">
                 ${description}
               </text>
             </g>
@@ -45,7 +45,7 @@ export const Route = createFileRoute('/api/public/og')({
             <g transform="translate(100, 500)">
               <circle cx="25" cy="25" r="25" fill="#FFFFFF" opacity="0.2" />
               <path d="M25 15C19.48 15 15 19.48 15 25C15 30.52 19.48 35 25 35C30.52 35 35 30.52 35 25C35 19.48 30.52 15 25 15ZM26 30H24V24H20V22H26V30Z" fill="#FFFFFF" />
-              <text x="65" y="32" font-family="Inter, sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="0.1em">
+              <text x="65" y="32" font-family="Urbanist, sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="0.1em">
                 NOBLE GAIN
               </text>
             </g>

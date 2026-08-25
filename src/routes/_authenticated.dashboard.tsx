@@ -1,34 +1,80 @@
-import { createFileRoute, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { Coins, Gift, Share2, TrendingUp, TrendingDown, Clock, ChevronRight, Award, Zap, Star, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { 
+  Coins, 
+  Gift, 
+  Share2, 
+  TrendingUp, 
+  TrendingDown, 
+  Clock, 
+  ChevronRight, 
+  Award, 
+  Zap, 
+  Star, 
+  CheckCircle2, 
+  Sparkles, 
+  Crown, 
+  Copy, 
+  ExternalLink,
+  Flame,
+  ArrowUpRight,
+  ShieldCheck,
+  Target,
+  Check,
+  DollarSign,
+  ArrowRight,
+  HelpCircle,
+  Activity,
+  Layers,
+  Percent
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { subDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
-    title: "Member Dashboard | My Earnings & Progress | Noble Gain",
+    title: "Member Dashboard | Noble Gain",
     meta: [
-      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Noble Gain dashboard. Your hub for all earning activities." },
+      { name: "description", content: "Manage your rewards, track your daily streaks, and watch your points balance grow on your Noble Gain dashboard." },
       { property: "og:title", content: "Member Dashboard | Noble Gain" },
       { property: "og:description", content: "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Dashboard,
 });
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.5, ease: [0.22, 0.8, 0.2, 1] as [number, number, number, number] } 
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { staggerChildren: 0.08 } 
+  }
+};
+
 function Dashboard() {
   const queryClient = useQueryClient();
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -62,7 +108,6 @@ function Dashboard() {
     },
   });
 
-
   const { data: featuredTasks } = useQuery({
     queryKey: ["featured-tasks"],
     queryFn: async () => {
@@ -77,7 +122,7 @@ function Dashboard() {
         `)
         .eq("is_active", true)
         .eq("is_featured", true)
-        .limit(2);
+        .limit(3);
       
       if (error) throw error;
       return tasks;
@@ -114,26 +159,22 @@ function Dashboard() {
       return result;
     },
     onSuccess: (result) => {
+      confetti({
+        particleCount: 90,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#002d26', '#e6c17a', '#10b981', '#f59e0b']
+      });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["streak"] });
       queryClient.invalidateQueries({ queryKey: ["daily-task-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
       toast.success(result.message || `Daily bonus claimed! +${result.points} points`);
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to claim reward.");
     }
   });
-
-  // Welcome bonus claim logic removed as it is now automatic on registration
-  const claimWelcomeBonus = {
-    isPending: false,
-    isSuccess: false,
-    mutate: () => {
-      toast.info("Your welcome bonus is automatically credited upon registration!");
-    }
-  };
-
-
 
   const { data: recentTransactions } = useQuery({
     queryKey: ["recentTransactions"],
@@ -145,7 +186,7 @@ function Dashboard() {
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
-        .limit(5);
+        .limit(6);
       return data;
     },
   });
@@ -160,7 +201,6 @@ function Dashboard() {
       const sevenDaysAgo = subDays(startOfDay(now), 7);
       const fourteenDaysAgo = subDays(startOfDay(now), 14);
 
-      // Current week earnings
       const { data: currentWeekData } = await supabase
         .from("points_transactions")
         .select("amount")
@@ -168,7 +208,6 @@ function Dashboard() {
         .eq("type", "earn")
         .gte("created_at", sevenDaysAgo.toISOString());
 
-      // Previous week earnings
       const { data: previousWeekData } = await supabase
         .from("points_transactions")
         .select("amount")
@@ -195,359 +234,629 @@ function Dashboard() {
   });
 
   const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+  const currentPoints = profile?.points_balance || 0;
+  const estimatedUsdValue = (currentPoints / 1000).toFixed(2);
 
-  const firstName = profile?.username
-    ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
-    : profile?.full_name?.split(" ")[0] || "User";
+  // Tier calculation logic
+  const getTierInfo = (points: number) => {
+    if (points >= 25000) return { name: "Diamond VIP", nextTier: "Max Tier", target: 25000, progress: 100, color: "text-sky-400", badgeBg: "bg-sky-500/15 border-sky-500/30 text-sky-400", icon: Crown };
+    if (points >= 10000) return { name: "Gold Elite", nextTier: "Diamond VIP", target: 25000, progress: Math.min(100, Math.round((points / 25000) * 100)), color: "text-gold", badgeBg: "bg-gold/15 border-gold/30 text-gold", icon: Award };
+    if (points >= 3000) return { name: "Silver Member", nextTier: "Gold Elite", target: 10000, progress: Math.min(100, Math.round((points / 10000) * 100)), color: "text-slate-300", badgeBg: "bg-slate-500/15 border-slate-400/30 text-slate-300", icon: Sparkles };
+    return { name: "Bronze Starter", nextTier: "Silver Member", target: 3000, progress: Math.min(100, Math.round((points / 3000) * 100)), color: "text-amber-500", badgeBg: "bg-amber-500/15 border-amber-500/30 text-amber-500", icon: Star };
+  };
+
+  const tier = getTierInfo(currentPoints);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
+  const displayName = profile?.username 
+    ? (profile.username.charAt(0).toUpperCase() + profile.username.slice(1)) 
+    : profile?.full_name?.split(' ')[0] || 'Member';
+
+  const referralCode = profile?.referral_code || profile?.id?.slice(0, 8) || '';
+  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/auth?ref=${referralCode}` : `https://earnpal.lovable.app/auth?ref=${referralCode}`;
+
+  const handleCopyReferral = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(referralLink);
+      setCopiedLink(true);
+      toast.success("Referral link copied to clipboard!");
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
+  };
 
   return (
-    <div className="w-full space-y-10">
-      {/* ---------- Hero ---------- */}
-      <section className="ink-glow relative overflow-hidden rounded-3xl ink-panel">
-        <div className="ink-dots absolute inset-0 opacity-40 pointer-events-none" />
-        <div className="relative z-10 p-6 sm:p-8 lg:p-10">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-end sm:justify-between">
-            <div className="min-w-0 space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
-                Member Dashboard
-              </p>
-              <h1 className="truncate text-2xl font-black tracking-tight text-foreground sm:text-4xl">
-                Welcome back, {firstName}
-              </h1>
-              <p className="text-sm font-medium text-muted-foreground">
-                Here's what's happening with your rewards today.
-              </p>
-            </div>
-            <Badge
-              variant="outline"
-              className="shrink-0 gap-1.5 rounded-full border-primary/25 bg-primary/5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary"
-            >
-              <Sparkles className="h-3 w-3" />
-              {streak?.current_streak || 0} day streak
-            </Badge>
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+      className="space-y-8 w-full max-w-7xl mx-auto pb-12"
+    >
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none fixed inset-0 -z-10 ink-dots opacity-20 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
+
+      {/* Header Greeting Banner */}
+      <motion.header variants={fadeInUp} className="flex flex-col md:flex-row md:items-center justify-between gap-5 border-b border-hairline/70 pb-6">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/25 text-[11px] font-bold text-gold tracking-widest uppercase">
+            <Sparkles className="size-3.5" />
+            <span>{tier.name}</span>
+            <span className="text-hairline">•</span>
+            <span className="text-ink-fg/70 font-medium">Verified Account</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-[-0.04em] text-ink-fg">
+            {getGreeting()}, <span className="text-gold">{displayName}</span>
+          </h1>
+          <p className="text-sm font-medium text-ink-muted">
+            Track your balance, maintain your daily streak, and unlock instant reward redemptions.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={handleCopyReferral}
+            className="h-11 rounded-xl px-4 text-xs font-bold border border-hairline bg-ink-2/80 text-ink-fg hover:border-gold/30 hover:bg-ink-3 transition-all flex items-center gap-2 cursor-pointer shadow-sm"
+          >
+            {copiedLink ? <Check className="size-4 text-emerald-400" /> : <Copy className="size-4 text-gold" />}
+            <span>{copiedLink ? "Link Copied!" : "Copy Invite Link"}</span>
+          </button>
+
+          <Button
+            asChild
+            className="h-11 rounded-xl px-5 font-bold bg-gold text-ink hover:bg-gold-soft transition-all text-xs shadow-lg shadow-gold/10 hover:-translate-y-0.5"
+          >
+            <Link to="/earn" search={{ tab: "tasks" }}>
+              <Zap className="size-4 mr-1.5 fill-ink" />
+              Earn Points
+            </Link>
+          </Button>
+        </div>
+      </motion.header>
+
+      {/* Main Luxury Hero & Balance Showcase */}
+      <motion.div variants={fadeInUp} className="grid lg:grid-cols-12 gap-6 items-stretch">
+        {/* Left: Luxury Points Showcase Card */}
+        <div className="lg:col-span-8 rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-gradient-to-br from-[#002d26] via-[#003830] to-[#011815] text-white border border-gold/25 flex flex-col justify-between shadow-2xl min-h-[320px]">
+          {/* Ambient Lighting Spheres */}
+          <div className="absolute -top-20 -right-20 size-72 bg-gold/15 rounded-full blur-3xl pointer-events-none ink-breathe" />
+          <div className="absolute -bottom-20 -left-20 size-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+          
+          {/* Subtle Logo Watermark */}
+          <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-[0.06] pointer-events-none hidden sm:block">
+            <img src="/logo.png" alt="" className="size-64 object-contain rotate-6" />
           </div>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            {/* Balance */}
-            <div className="relative overflow-hidden rounded-2xl border border-hairline bg-card/70 p-6 backdrop-blur-sm lg:col-span-2">
-              <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-              <div className="relative z-10 space-y-6">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
-                    Total balance
-                  </p>
-                  <span className="rounded-full border border-hairline p-2 text-primary">
-                    <Coins className="h-4 w-4" />
-                  </span>
+          <div className="relative z-10 space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/15 shadow-inner">
+                  <Coins className="size-5 text-gold" />
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
-                      {profile?.points_balance?.toLocaleString() || 0}
-                    </span>
-                    <span className="pb-1.5 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                      pts
-                    </span>
-                  </div>
-                  <p className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
-                    {balanceTrend?.isPositive ? (
-                      <TrendingUp className="h-3.5 w-3.5 text-primary" />
-                    ) : (
-                      <TrendingDown className="h-3.5 w-3.5 text-destructive" />
-                    )}
-                    {balanceTrend?.isPositive ? "+" : "-"}
-                    {balanceTrend?.percentage || 0}% from last week
-                  </p>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">Noble Vault</p>
+                  <p className="text-xs font-semibold text-white/90">Available Points Balance</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button className="h-11 rounded-xl px-6 font-bold" asChild>
-                    <Link to="/earn" search={{ tab: "tasks" }}>Start Earning</Link>
-                  </Button>
-                  <Button variant="outline" className="h-11 rounded-xl border-hairline px-6 font-bold" asChild>
-                    <Link to="/redeem">Redeem</Link>
-                  </Button>
-                </div>
+              </div>
+              
+              <div className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold border backdrop-blur-md", tier.badgeBg)}>
+                <tier.icon className="size-3.5" />
+                <span>{tier.name}</span>
               </div>
             </div>
 
-            {/* Daily streak */}
-            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-hairline bg-card/70 p-6 backdrop-blur-sm">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
-                    Daily streak
-                  </p>
-                  <span className="rounded-full border border-hairline p-2 text-primary">
-                    <Clock className="h-4 w-4" />
-                  </span>
-                </div>
-                <div>
-                  <p className="text-3xl font-black tracking-tight text-foreground">
-                    {streak?.current_streak || 0} <span className="text-base font-bold text-muted-foreground">days</span>
-                  </p>
-                  <p className="mt-1 text-[11px] font-medium text-muted-foreground">
-                    Claim daily to earn bonus points
-                  </p>
-                </div>
-                <Progress value={Math.min(((streak?.current_streak || 0) % 7) * (100 / 7), 100)} className="h-1.5" />
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-5xl sm:text-6xl font-black tracking-tight text-white font-mono">
+                  {currentPoints.toLocaleString()}
+                </span>
+                <span className="text-xl sm:text-2xl font-black text-gold tracking-tight">
+                  PTS
+                </span>
+                <span className="text-xs font-semibold text-white/60 pl-2">
+                  (≈ ${estimatedUsdValue} USD value)
+                </span>
               </div>
-              <Button
-                className={cn(
-                  "h-12 w-full rounded-xl font-bold transition-all",
-                  isClaimedToday && "bg-muted text-muted-foreground shadow-none hover:bg-muted cursor-default"
-                )}
-                disabled={isClaimedToday || claimDailyStreak.isPending}
-                onClick={() => claimDailyStreak.mutate()}
+
+              <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
+                <div className={cn(
+                  "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-bold",
+                  balanceTrend?.isPositive ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                )}>
+                  {balanceTrend?.isPositive ? (
+                    <TrendingUp className="size-3.5" />
+                  ) : (
+                    <TrendingDown className="size-3.5" />
+                  )}
+                  {balanceTrend?.isPositive ? '+' : '-'}{balanceTrend?.percentage || 0}%
+                </div>
+                <span>vs last 7 days</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Tier Progress Bar & Action Buttons */}
+          <div className="relative z-10 pt-6 mt-6 border-t border-white/10 space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-bold text-white/80">
+                <span className="flex items-center gap-1.5">
+                  <Crown className="size-3.5 text-gold" />
+                  Next Milestone: <strong className="text-white">{tier.nextTier}</strong>
+                </span>
+                <span className="text-gold">{tier.progress}% completed</span>
+              </div>
+              <div className="h-2.5 bg-black/40 rounded-full overflow-hidden p-0.5 border border-white/10">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${tier.progress}%` }}
+                  transition={{ duration: 1.2, ease: [0.22, 0.8, 0.2, 1] as [number, number, number, number] }}
+                  className="h-full bg-gradient-to-r from-gold to-emerald-400 rounded-full"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button 
+                className="h-11 rounded-xl px-6 font-bold bg-gold text-ink hover:bg-gold-soft border-none shadow-lg shadow-black/20 hover:-translate-y-0.5 transition-all text-xs"
+                asChild
               >
-                {claimDailyStreak.isPending
-                  ? "Claiming..."
-                  : isClaimedToday
-                    ? "Claimed today"
-                    : "Claim Daily Reward"}
+                <Link to="/earn" search={{ tab: 'tasks' }}>
+                  <span>Start Earning</span>
+                  <ArrowUpRight className="size-4 ml-1.5" />
+                </Link>
+              </Button>
+              <Button 
+                asChild
+                className="h-11 rounded-xl px-6 font-bold bg-white/15 hover:bg-white/25 text-white border border-white/30 shadow-md shadow-black/20 hover:-translate-y-0.5 transition-all text-xs"
+              >
+                <Link to="/redeem">
+                  <Gift className="size-4 mr-1.5 text-gold" />
+                  <span>Redeem Rewards</span>
+                </Link>
               </Button>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* ---------- Featured tasks ---------- */}
-      {featuredTasks && featuredTasks.length > 0 && (
-        <section className="space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-lg font-black tracking-tight text-foreground sm:text-xl">
-              <Star className="h-4 w-4 fill-primary text-primary" />
-              Featured tasks
-            </h2>
-            <Link
-              to="/earn"
-              search={{ tab: "tasks" }}
-              className="text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/80"
+        {/* Right: Daily Streak Booster Card */}
+        <div className="lg:col-span-4 rounded-3xl p-6 sm:p-7 border border-hairline bg-ink-2/70 flex flex-col justify-between relative overflow-hidden shadow-xl backdrop-blur-xl group">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center border border-amber-500/20 group-hover:scale-105 transition-transform">
+                  <Flame className="size-5 fill-amber-500 text-amber-500" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black tracking-tight text-ink-fg">Daily Streak</h3>
+                  <p className="text-[11px] text-ink-muted font-medium">Claim consecutive check-ins</p>
+                </div>
+              </div>
+              <Badge variant="outline" className="font-bold text-amber-500 border-amber-500/30 bg-amber-500/10 text-xs px-2.5 py-0.5">
+                {streak?.current_streak || 0}d Streak
+              </Badge>
+            </div>
+
+            {/* Streak Day Circles Visualizer */}
+            <div className="py-2">
+              <div className="grid grid-cols-7 gap-1.5">
+                {[1, 2, 3, 4, 5, 6, 7].map((day) => {
+                  const currentStreakMod = (streak?.current_streak || 0) % 7 || ((streak?.current_streak || 0) > 0 ? 7 : 0);
+                  const isPassed = currentStreakMod >= day;
+                  const isCurrent = currentStreakMod === day;
+
+                  return (
+                    <div 
+                      key={day} 
+                      className={cn(
+                        "flex flex-col items-center justify-center p-2 rounded-xl text-center border transition-all",
+                        isCurrent && !isClaimedToday
+                          ? "bg-gold/20 border-gold text-gold ring-1 ring-gold shadow-sm"
+                          : isPassed 
+                            ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" 
+                            : "bg-ink-3/60 border-hairline text-ink-muted"
+                      )}
+                    >
+                      <span className="text-[9px] font-bold uppercase">D{day}</span>
+                      <span className="text-xs font-black">+{day * 5}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-ink-3/70 p-3.5 border border-hairline space-y-1.5 text-xs">
+              <div className="flex items-center justify-between font-bold">
+                <span className="text-ink-muted">Today's Status:</span>
+                <span className={cn(isClaimedToday ? "text-emerald-400" : "text-gold")}>
+                  {isClaimedToday ? "✓ Checked-in Today" : "⚡ Ready to Claim"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between font-bold">
+                <span className="text-ink-muted">Longest Record:</span>
+                <span className="text-ink-fg">{streak?.longest_streak || 0} Days</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-5">
+            <Button 
+              className={cn(
+                "w-full rounded-xl font-bold h-12 text-xs transition-all shadow-md",
+                isClaimedToday 
+                  ? "bg-ink-3 text-ink-muted border border-hairline cursor-default hover:bg-ink-3" 
+                  : "bg-gradient-to-r from-gold to-[#d4af37] text-ink hover:opacity-95 hover:-translate-y-0.5"
+              )}
+              disabled={isClaimedToday || claimDailyStreak.isPending}
+              onClick={() => claimDailyStreak.mutate()}
             >
-              View all
+              {claimDailyStreak.isPending ? (
+                "Claiming Bonus..."
+              ) : isClaimedToday ? (
+                <span className="flex items-center gap-2">
+                  <CheckCircle2 className="size-4 text-emerald-400" />
+                  Claimed for Today
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <Sparkles className="size-4 fill-ink" />
+                  Claim Day Bonus (+{((((streak?.current_streak || 0) % 7) + 1) * 5)} PTS)
+                </span>
+              )}
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 4-Card Bento Metric Grid */}
+      <motion.div variants={fadeInUp} className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Card 1: Total Points Earned */}
+        <div className="rounded-2xl p-5 sm:p-6 bg-ink-2/60 border border-hairline shadow-md hover:border-gold/30 transition-all hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-ink-muted">Points Balance</span>
+            <div className="size-9 rounded-xl bg-gold/10 text-gold flex items-center justify-center border border-gold/20">
+              <Coins className="size-4.5" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black tracking-tight text-ink-fg font-mono">
+            {currentPoints.toLocaleString()}
+          </p>
+          <p className="text-xs font-semibold text-ink-muted mt-1.5 flex items-center gap-1">
+            <ShieldCheck className="size-3.5 text-gold" />
+            Verified & Redeemable
+          </p>
+        </div>
+
+        {/* Card 2: Lifetime Referrals */}
+        <div className="rounded-2xl p-5 sm:p-6 bg-ink-2/60 border border-hairline shadow-md hover:border-gold/30 transition-all hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-ink-muted">Referral Network</span>
+            <div className="size-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/20">
+              <Share2 className="size-4.5" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black tracking-tight text-ink-fg font-mono">
+            {referralCount}
+          </p>
+          <p className="text-xs font-semibold text-ink-muted mt-1.5">
+            +50 PTS per active invite
+          </p>
+        </div>
+
+        {/* Card 3: Daily Task Count */}
+        <div className="rounded-2xl p-5 sm:p-6 bg-ink-2/60 border border-hairline shadow-md hover:border-gold/30 transition-all hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-ink-muted">Daily Tasks Limit</span>
+            <div className="size-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+              <Target className="size-4.5" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black tracking-tight text-ink-fg font-mono">
+            {dailyStats?.daily_count || 0} <span className="text-sm font-bold text-ink-muted">/ 10</span>
+          </p>
+          <p className="text-xs font-semibold text-ink-muted mt-1.5">
+            {10 - (dailyStats?.daily_count || 0)} available today
+          </p>
+        </div>
+
+        {/* Card 4: VIP Tier Rank */}
+        <div className="rounded-2xl p-5 sm:p-6 bg-ink-2/60 border border-hairline shadow-md hover:border-gold/30 transition-all hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-ink-muted">Member Tier</span>
+            <div className="size-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
+              <Crown className="size-4.5" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black tracking-tight text-ink-fg">
+            {tier.name.split(' ')[0]}
+          </p>
+          <p className="text-xs font-bold text-gold mt-1.5">
+            {tier.progress}% to {tier.nextTier}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Featured Missions / High Priority Tasks */}
+      {featuredTasks && featuredTasks.length > 0 && (
+        <motion.section variants={fadeInUp} className="space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2.5">
+              <div className="size-8 rounded-xl bg-gold/10 flex items-center justify-center text-gold border border-gold/20">
+                <Star className="size-4 fill-gold" />
+              </div>
+              <h2 className="text-xl font-black tracking-tight text-ink-fg">
+                Featured Opportunities
+              </h2>
+            </div>
+            <Link 
+              to="/earn" 
+              search={{ tab: "tasks" }}
+              className="text-xs font-bold text-gold hover:underline uppercase tracking-widest flex items-center gap-1"
+            >
+              View All Tasks
+              <ChevronRight className="size-3.5" />
             </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+
+          <div className="grid gap-5 grid-cols-1 md:grid-cols-3">
             {featuredTasks.map((task: any) => {
               const submission = task.task_submissions?.[0];
-              const isCompleted = submission?.status === "verified" || submission?.status === "pending";
-
+              const isCompleted = submission?.status === 'verified' || submission?.status === 'pending';
+              
               return (
-                <div
-                  key={task.id}
-                  className="group relative overflow-hidden rounded-2xl border border-hairline bg-card p-5 transition-all hover:border-primary/30 sm:p-6"
+                <div 
+                  key={task.id} 
+                  className="rounded-3xl p-6 bg-ink-2/60 border border-hairline shadow-lg flex flex-col justify-between relative overflow-hidden group hover:border-gold/30 transition-all"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="rounded-xl border border-hairline bg-primary/5 p-2 text-primary transition-transform group-hover:scale-110">
-                      <Zap className="h-4 w-4" />
-                    </span>
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      {(task as any).is_repeatable && (
-                        <Badge variant="outline" className="rounded-full border-hairline text-[9px] font-black uppercase tracking-wider text-muted-foreground">
-                          Daily
-                        </Badge>
-                      )}
-                      <Badge className="rounded-full bg-primary/10 text-[10px] font-black text-primary hover:bg-primary/10">
+                  <div className="space-y-3.5">
+                    <div className="flex items-center justify-between">
+                      <div className="size-11 rounded-2xl bg-gold/10 text-gold flex items-center justify-center border border-gold/20 group-hover:scale-105 transition-transform">
+                        <Zap className="size-5 fill-gold" />
+                      </div>
+                      <Badge className="bg-gold/15 text-gold border-gold/30 font-black text-xs px-3 py-1 rounded-xl font-mono">
                         +{task.points} PTS
                       </Badge>
                     </div>
-                  </div>
 
-                  <div className="mt-5 space-y-1">
-                    <h3 className="line-clamp-1 text-[15px] font-black tracking-tight text-foreground sm:text-base">
-                      {task.title}
-                    </h3>
-                    <p className="line-clamp-2 text-xs font-medium text-muted-foreground">
-                      {task.description}
-                    </p>
-                  </div>
-
-                  <Button
-                    variant={isCompleted || dailyLimitReached ? "outline" : "default"}
-                    className={cn(
-                      "mt-5 h-11 w-full rounded-xl text-xs font-bold sm:text-sm",
-                      (isCompleted || dailyLimitReached) && "border-hairline text-muted-foreground"
-                    )}
-                    onClick={async () => {
-                      if (isCompleted || dailyLimitReached) return;
-
-                      const taskAny = task as any;
-                      if (taskAny.link_url) {
-                        window.open(taskAny.link_url, "_blank");
-                      }
-
-                      toast.info("Task opened! Complete it and confirm on the Earn page to receive points.");
-                    }}
-                    disabled={(isCompleted && submission?.status === "verified") || (!isCompleted && dailyLimitReached)}
-                  >
-                    {isCompleted ? (
-                      <span className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4" />
-                        {submission?.status === "pending" ? "Verifying..." : "Task completed"}
-                      </span>
-                    ) : dailyLimitReached ? (
-                      <span className="flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        Limit reached
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5">
-                        Start
-                        <ChevronRight className="h-4 w-4" />
-                      </span>
-                    )}
-                  </Button>
-
-                  {task.is_featured && !isCompleted && (
-                    <div className="absolute right-0 top-0 rounded-bl-xl bg-primary px-2 py-0.5 text-[9px] font-black uppercase tracking-tight text-primary-foreground">
-                      Priority
+                    <div className="space-y-1.5">
+                      <h3 className="text-base font-bold text-ink-fg leading-snug line-clamp-1">
+                        {task.title}
+                      </h3>
+                      <p className="text-xs font-medium text-ink-muted line-clamp-2 leading-relaxed">
+                        {task.description}
+                      </p>
                     </div>
-                  )}
+                  </div>
+
+                  <div className="pt-5 mt-4 border-t border-hairline">
+                    <Button 
+                      className={cn(
+                        "w-full rounded-xl font-bold h-11 text-xs transition-all",
+                        isCompleted 
+                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 shadow-none" 
+                          : dailyLimitReached 
+                            ? "bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-none" 
+                            : "bg-gold text-ink hover:bg-gold-soft shadow-md shadow-gold/10 hover:-translate-y-0.5"
+                      )}
+                      onClick={() => {
+                        if (isCompleted || dailyLimitReached) return;
+                        if (task.link_url) {
+                          window.open(task.link_url, '_blank');
+                        }
+                        toast.info("Task opened! Complete it and submit proof on the Earn page.");
+                      }}
+                      disabled={(isCompleted && submission?.status === 'verified') || (!isCompleted && dailyLimitReached)}
+                    >
+                      {isCompleted ? (
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="size-4 text-emerald-400" />
+                          {submission?.status === 'pending' ? 'Verification Pending' : 'Completed'}
+                        </span>
+                      ) : dailyLimitReached ? (
+                        <span>Daily Limit Reached</span>
+                      ) : (
+                        <span className="flex items-center gap-1">
+                          Start Task
+                          <ChevronRight className="size-4 ml-1" />
+                        </span>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               );
             })}
           </div>
-        </section>
+        </motion.section>
       )}
 
-      {/* ---------- Activity + Earn more ---------- */}
-      <section className="grid gap-6 lg:grid-cols-12">
-        <div className="space-y-4 lg:col-span-8">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-black tracking-tight text-foreground sm:text-xl">Recent activity</h2>
-            <Link
-              to="/transactions"
-              className="text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/80"
+      {/* Main Split Grid: Activity Stream & Referral Hub */}
+      <motion.div variants={fadeInUp} className="grid gap-8 lg:grid-cols-12">
+        {/* Left Column: Recent Activity Log */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <Activity className="size-4.5 text-gold" />
+              <h2 className="text-xl font-black tracking-tight text-ink-fg">Recent Activity</h2>
+            </div>
+            <Link 
+              to="/transactions" 
+              className="text-xs font-bold text-gold hover:underline uppercase tracking-widest flex items-center gap-1"
             >
-              View all
+              View Full Ledger
+              <ChevronRight className="size-3.5" />
             </Link>
           </div>
-          <Card className="overflow-hidden rounded-2xl border border-hairline bg-card shadow-none">
-            <CardContent className="p-0">
-              <div className="divide-y divide-border/60">
-                {recentTransactions?.length ? recentTransactions.map((tx: any) => (
-                  <div
-                    key={tx.id}
-                    className="group flex cursor-pointer items-center justify-between gap-3 p-4 transition-colors hover:bg-accent/40"
+
+          <div className="rounded-3xl border border-hairline bg-ink-2/60 shadow-xl overflow-hidden backdrop-blur-xl">
+            <div className="divide-y divide-hairline">
+              {recentTransactions?.length ? recentTransactions.map((tx: any) => {
+                const isEarn = tx.type === 'earn';
+                const isPending = tx.status === 'pending';
+
+                return (
+                  <div 
+                    key={tx.id} 
+                    className="flex items-center justify-between p-4 sm:p-5 hover:bg-ink-3/50 transition-colors cursor-pointer"
                     onClick={() => {
                       toast.info(
-                        <div className="space-y-2">
-                          <p className="font-bold text-sm">Transaction Details</p>
-                          <div className="text-xs space-y-1 font-medium">
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Description:</span> {tx.description}</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Amount:</span> {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Type:</span> {tx.type}</p>
-                            <p><span className="text-muted-foreground uppercase text-[10px] font-black mr-2">Date:</span> {new Date(tx.created_at).toLocaleString()}</p>
+                        <div className="space-y-1.5">
+                          <p className="font-bold text-sm text-ink-fg">{tx.description}</p>
+                          <div className="text-xs text-ink-muted font-semibold space-y-0.5">
+                            <p>Amount: {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
+                            <p>Status: {tx.status || 'completed'}</p>
+                            <p>Timestamp: {new Date(tx.created_at).toLocaleString()}</p>
                           </div>
-                        </div>,
-                        { duration: 5000 }
+                        </div>
                       );
                     }}
                   >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="shrink-0 rounded-xl border border-hairline p-2.5 text-primary transition-transform group-hover:scale-110">
-                        {tx.status === 'pending' ? <Clock className="h-4 w-4" /> :
-                         tx.type === 'earn' ? <TrendingUp className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-bold text-foreground">
+                    <div className="flex items-center gap-3.5">
+                      <div className={cn(
+                        "size-11 rounded-2xl flex items-center justify-center transition-transform border",
+                        isPending 
+                          ? "bg-amber-500/15 text-amber-400 border-amber-500/30" 
+                          : isEarn 
+                            ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" 
+                            : "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                      )}>
+                        {isPending ? <Clock className="size-5" /> : isEarn ? <TrendingUp className="size-5" /> : <Gift className="size-5" />}
+                      </div>
+                      <div className="space-y-0.5">
+                        <p className="font-bold text-sm text-ink-fg flex items-center gap-2">
                           {tx.description}
-                          {tx.status === 'pending' && (
-                            <span className="ml-2 rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-black uppercase text-accent-foreground">
+                          {isPending && (
+                            <Badge variant="outline" className="text-[10px] font-bold text-amber-400 bg-amber-500/15 border-amber-500/30">
                               Pending
-                            </span>
+                            </Badge>
                           )}
                         </p>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                          {new Date(tx.created_at).toLocaleDateString()}
+                        <p className="text-xs font-medium text-ink-muted">
+                          {new Date(tx.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </p>
                       </div>
                     </div>
-                    <div
-                      className={cn(
-                        "shrink-0 text-sm font-black tabular-nums",
-                        tx.status === 'pending' ? 'text-muted-foreground' :
-                        tx.type === 'earn' ? 'text-primary' : 'text-destructive'
-                      )}
-                    >
-                      {tx.status === 'pending' ? "" : tx.type === 'earn' ? '+' : '-'}{tx.amount}
+
+                    <div className={cn(
+                      "text-base font-black font-mono",
+                      isPending ? "text-amber-400" : isEarn ? "text-emerald-400" : "text-rose-400"
+                    )}>
+                      {isPending ? "" : isEarn ? "+" : "-"}{tx.amount.toLocaleString()} PTS
                     </div>
                   </div>
-                )) : (
-                  <div className="flex flex-col items-center gap-2 py-14 text-center">
-                    <Award className="h-6 w-6 text-muted-foreground" />
-                    <p className="text-sm font-medium text-muted-foreground">No recent activity yet.</p>
+                );
+              }) : (
+                <div className="text-center py-16 px-4 space-y-3">
+                  <div className="size-12 rounded-2xl bg-ink-3 text-ink-muted flex items-center justify-center mx-auto border border-hairline">
+                    <Coins className="size-6 opacity-40" />
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-4 lg:col-span-4">
-          <h2 className="text-lg font-black tracking-tight text-foreground sm:text-xl">Earn more</h2>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
-            <div className="flex flex-col justify-center gap-1 rounded-2xl border border-hairline bg-card p-5">
-              <p className="text-[10px] font-black uppercase leading-tight tracking-[0.18em] text-muted-foreground">
-                Lifetime referrals
-              </p>
-              <p className="text-3xl font-black tracking-tight text-foreground">{referralCount}</p>
-            </div>
-
-            <div className="relative overflow-hidden rounded-2xl border border-hairline bg-primary/5 p-5">
-              <Share2 className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 rotate-12 text-primary/10" />
-              <div className="relative z-10 space-y-3">
-                <span className="block w-fit rounded-xl bg-primary p-2 text-primary-foreground">
-                  <Share2 className="h-4 w-4" />
-                </span>
-                <div className="space-y-0.5">
-                  <h3 className="text-sm font-black leading-tight text-foreground">Invite friends</h3>
-                  <p className="text-[10px] font-medium leading-tight text-muted-foreground">
-                    Earn 50 pts per referral.
-                  </p>
+                  <p className="text-sm font-bold text-ink-muted">No recent transactions recorded yet.</p>
+                  <Button size="sm" className="rounded-xl font-bold bg-gold text-ink hover:bg-gold-soft" asChild>
+                    <Link to="/earn" search={{ tab: "tasks" }}>Start First Opportunity</Link>
+                  </Button>
                 </div>
-                <Button size="sm" className="h-9 w-full rounded-xl text-[10px] font-black uppercase tracking-[0.16em]" asChild>
-                  <Link to="/refer">Invite</Link>
-                </Button>
-              </div>
+              )}
             </div>
           </div>
         </div>
-      </section>
-    </div>
-  );
-}
 
+        {/* Right Column: Referral Hub & Fast Redemptions */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Referral Booster Card */}
+          <div className="space-y-3">
+            <h2 className="text-xl font-black px-1 tracking-tight text-ink-fg">Invite Partners</h2>
+            <div className="rounded-3xl p-6 bg-gradient-to-br from-gold/10 via-ink-2 to-ink-2/60 border border-gold/25 shadow-xl space-y-4 relative overflow-hidden backdrop-blur-xl">
+              <div className="flex items-center gap-3">
+                <div className="size-11 rounded-2xl bg-gold text-ink flex items-center justify-center shadow-lg shadow-gold/20">
+                  <Share2 className="size-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-ink-fg">Referral Bonus</h3>
+                  <p className="text-xs font-bold text-gold">+50 PTS on their first task</p>
+                </div>
+              </div>
 
-function RecentReferrersList() {
-  const { data: referredUsers } = useQuery({
-    queryKey: ["recentReferralsList"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
-      const { data } = await supabase
-        .from("profiles")
-        .select("full_name, username")
-        .eq("referred_by", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-      return data || [];
-    },
-  });
+              <p className="text-xs font-medium text-ink-muted leading-relaxed">
+                Invite friends and colleagues. Both you and your partner earn bonus points when they complete their first verified task.
+              </p>
 
-  if (!referredUsers || referredUsers.length === 0) return null;
+              <div className="flex items-center gap-2 p-2 rounded-xl bg-ink border border-hairline text-xs">
+                <input 
+                  readOnly 
+                  value={referralLink} 
+                  className="bg-transparent flex-1 px-2 font-mono text-[11px] outline-none truncate text-ink-fg/90"
+                />
+                <Button 
+                  size="sm" 
+                  onClick={handleCopyReferral} 
+                  className="h-8 rounded-lg font-bold px-3 text-xs shrink-0 bg-gold text-ink hover:bg-gold-soft"
+                >
+                  {copiedLink ? "Copied" : "Copy"}
+                </Button>
+              </div>
 
-  return (
-    <div className="flex flex-wrap gap-2 py-1">
-      {referredUsers.map((ref: any, i: number) => (
-        <Badge key={i} variant="secondary" className="rounded-lg font-bold px-3 py-1 bg-primary/5 text-primary border-primary/10">
-          {ref.full_name || ref.username}
-        </Badge>
-      ))}
-      {(referredUsers.length >= 5) && (
-        <Link to="/refer" className="text-[10px] font-black uppercase text-primary hover:underline flex items-center ml-2">
-          View All
-        </Link>
-      )}
-    </div>
+              <Button 
+                variant="outline" 
+                className="w-full rounded-xl font-bold h-10 text-xs border-hairline hover:border-gold/30 hover:bg-ink-3 text-ink-fg transition-colors" 
+                asChild
+              >
+                <Link to="/refer">
+                  Open Referral Center
+                  <ChevronRight className="size-4 ml-1 text-gold" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Rewards Target */}
+          <div className="rounded-3xl p-6 bg-ink-2/60 border border-hairline shadow-xl space-y-4 backdrop-blur-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Gift className="size-5 text-gold" />
+                <h3 className="font-black text-sm text-ink-fg">Next Reward Goal</h3>
+              </div>
+              <Badge variant="outline" className="text-[10px] font-bold text-gold border-gold/30 bg-gold/10 font-mono">
+                5,000 PTS
+              </Badge>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-ink-3/70 border border-hairline flex items-center gap-3">
+              <div className="size-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center font-black text-gold text-xs">
+                $5
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-ink-fg truncate">Amazon / Visa Gift Card</p>
+                <p className="text-[10px] text-ink-muted font-medium">Instant digital delivery</p>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-bold text-ink-muted font-mono">
+                <span>Progress: {Math.min(100, Math.round((currentPoints / 5000) * 100))}%</span>
+                <span>{currentPoints} / 5,000 PTS</span>
+              </div>
+              <div className="h-2 bg-ink-3 rounded-full overflow-hidden border border-hairline">
+                <div 
+                  style={{ width: `${Math.min(100, (currentPoints / 5000) * 100)}%` }} 
+                  className="h-full bg-gradient-to-r from-gold to-emerald-400 rounded-full transition-all duration-500" 
+                />
+              </div>
+            </div>
+
+            <Button 
+              variant="outline" 
+              className="w-full rounded-xl font-bold h-10 text-xs border-hairline hover:border-gold/30 hover:bg-ink-3 text-ink-fg" 
+              asChild
+            >
+              <Link to="/redeem">Browse Rewards Catalog</Link>
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

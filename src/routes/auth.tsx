@@ -328,13 +328,13 @@ function AuthPage() {
 
 
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden";
+    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden hero-gradient";
 
 
   const Brand = () => (
     <div className="flex flex-col items-center justify-center">
       <img src="/logo.png" alt="Noble Gain" className="size-12 object-contain mb-2" />
-      <div className="mt-2 font-black text-2xl tracking-tighter uppercase text-[#002d26]">
+      <div className="mt-2 font-black text-2xl tracking-tighter uppercase text-foreground">
         Noble <span className="text-[#e6c17a]">Gain</span>
       </div>
     </div>
@@ -344,7 +344,7 @@ function AuthPage() {
     <button
       type="button"
       onClick={() => navigate({ to: "/" })}
-      className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
     >
       <ArrowLeft className="h-4 w-4" />
       Back to home
@@ -356,34 +356,34 @@ function AuthPage() {
       <div className={cn(shellClass, "px-4 sm:px-6")}>
         <div className="w-full max-w-[92%] sm:max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
+          <div className="glass-card rounded-[2rem] p-4 premium-shadow-lg sm:px-6 sm:py-5">
             <Brand />
             <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
             <p className="mt-1 text-center text-base text-muted-foreground">
-              We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
+              We sent a 6-digit code to <span className="font-bold text-foreground">{email}</span>
             </p>
 
             <form onSubmit={handleVerifyOtp} className="mt-3 space-y-3">
               {error && (
-                <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
+                <div className="rounded-2xl bg-destructive/10 p-3 text-sm font-bold text-destructive">{error}</div>
               )}
               <Input
                 id="otp"
                 inputMode="numeric"
                 placeholder="000000"
-                className="h-12 rounded-2xl text-center text-xl font-black tracking-[0.5em]"
+                className="h-12 rounded-2xl text-center text-xl font-black tracking-[0.5em] glass-card"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 required
               />
-              <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={isVerifying}>
+              <Button type="submit" className="h-12 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={isVerifying}>
                 {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Verify account
               </Button>
               <div className="flex flex-col items-center gap-2 text-sm">
                 <button
                   type="button"
-                  className="font-semibold text-primary hover:underline disabled:opacity-50"
+                  className="font-bold text-primary hover:underline disabled:opacity-50 transition-colors"
                   onClick={handleResendOtp}
                   disabled={resending}
                 >
@@ -391,7 +391,7 @@ function AuthPage() {
                 </button>
                 <button
                   type="button"
-                  className="font-medium text-muted-foreground hover:underline"
+                  className="font-bold text-muted-foreground hover:text-primary transition-colors"
                   onClick={() => setShowVerification(false)}
                 >
                   Back to sign up
@@ -404,18 +404,18 @@ function AuthPage() {
     );
   }
 
-  const fieldLabel = "text-sm font-semibold text-foreground";
-  const fieldInput = "auth-input h-11 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
+  const fieldLabel = "text-sm font-bold text-foreground";
+  const fieldInput = "auth-input h-11 rounded-2xl border-border/70 bg-background px-4 text-base glass-card";
 
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
-      <div className="auth-blob" />
-      <div className="auth-blob" style={{ top: '10%', left: '20%', width: '12rem', height: '12rem', animationDelay: '-15s', opacity: 0.4 }} />
+      <div className="floating-blob w-96 h-96 bg-primary/20 top-0 left-0" style={{ animationDelay: '0s' }} />
+      <div className="floating-blob w-80 h-80 bg-secondary/20 top-1/3 right-0" style={{ animationDelay: '-5s' }} />
       <div className="w-full max-w-[92%] sm:max-w-md">
         <div className="flex justify-start">
           <BackLink />
         </div>
-        <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
+        <div className="glass-card rounded-[2rem] p-4 premium-shadow-lg sm:px-6 sm:py-5">
 
           <Brand />
 
@@ -435,7 +435,7 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-6 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
+                className="mt-6 h-11 w-full rounded-2xl border-border/70 bg-background text-base font-bold glass-card hover:bg-primary/5 transition-colors"
               >
                 <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
@@ -446,14 +446,14 @@ function AuthPage() {
                   <span className="w-full border-t border-border/70" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider font-semibold">or email</span>
+                  <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider font-bold">or email</span>
                 </div>
               </div>
             </>
           )}
 
           {error && (
-            <div className="mb-3 rounded-xl bg-destructive/10 p-2.5 text-sm font-medium text-destructive">{error}</div>
+            <div className="mb-3 rounded-2xl bg-destructive/10 p-2.5 text-sm font-bold text-destructive">{error}</div>
           )}
 
           {showReset ? (
@@ -472,14 +472,14 @@ function AuthPage() {
                 />
               </div>
               <div className="pt-1">
-                <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
+                <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={resetLoading}>
                   {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {resetSent ? "Resend link" : "Send reset link"}
                 </Button>
               </div>
               <button
                 type="button"
-                className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground"
+                className="w-full text-center text-sm font-bold text-muted-foreground hover:text-primary transition-colors"
                 onClick={() => {
                   setShowReset(false);
                   setError("");
@@ -518,7 +518,7 @@ function AuthPage() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
                           aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                           {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -551,17 +551,17 @@ function AuthPage() {
                     </div>
 
                     <div className="pt-2">
-                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                      <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Sign in
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-sm font-medium text-muted-foreground">
+                  <p className="text-center text-sm font-bold text-muted-foreground">
                     Don't have an account?{" "}
                     <button
                       type="button"
-                      className="font-bold text-primary hover:underline"
+                      className="font-bold text-primary hover:underline transition-colors"
                       onClick={() => setActiveTab("signup")}
                     >
                       Sign up
@@ -616,7 +616,7 @@ function AuthPage() {
                         <button
                           type="button"
                           onClick={() => setShowSignupPassword(!showSignupPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
                           aria-label={showSignupPassword ? "Hide password" : "Show password"}
                         >
                           {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -671,17 +671,17 @@ function AuthPage() {
                     </div>
                     
                     <div className="pt-2">
-                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
+                      <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create account
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-sm font-medium text-muted-foreground">
+                  <p className="text-center text-sm font-bold text-muted-foreground">
                     Already have an account?{" "}
                     <button
                       type="button"
-                      className="font-bold text-primary hover:underline"
+                      className="font-bold text-primary hover:underline transition-colors"
                       onClick={() => setActiveTab("login")}
                     >
                       Sign in

@@ -1,30 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LandingNav } from "@/components/landing/LandingNav";
 import { motion } from "framer-motion";
 import { 
   ShieldCheck, 
   Target, 
   Users, 
   Sparkles, 
-  Award, 
-  Rocket, 
   ArrowRight,
   Globe,
   Zap,
-  BarChart3,
-  CircleDollarSign
+  TrendingUp,
+  CircleCheck
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { LandingNav } from "@/components/LandingNav";
+import { PublicFooter } from "@/components/PublicFooter";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
+    title: "About Noble Gain | Our Mission & Brand Story",
     meta: [
-      { title: "About Noble Gain | Our Mission & Brand Story" },
-      { name: "description", content: "Learn about Noble Gain's mission to empower digital users through a transparent, secure, and rewarding platform. Discover our story and key features." },
+      { 
+        name: "description", 
+        content: "Learn about Noble Gain's mission to empower digital users through a transparent, secure, and rewarding platform. Discover our story and key features." 
+      },
       { property: "og:title", content: "About Noble Gain | Empowering Your Digital Time" },
       { property: "og:description", content: "Discover how Noble Gain is redefining the rewards economy with transparency, security, and global reach." },
-      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
+      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -33,211 +33,237 @@ export const Route = createFileRoute("/about")({
 });
 
 const reveal = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 22 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { duration: 0.65, ease: "easeOut" as const } 
+    transition: { duration: 0.6, ease: [0.22, 0.8, 0.2, 1] as [number, number, number, number] } 
   }
 };
 
 const storyTimeline = [
   {
-    year: "The Beginning",
+    year: "Phase 1",
     title: "A Simple Vision",
-    description: "Noble Gain started with a single goal: to prove that digital activity should have tangible value for the user, not just the platform."
+    description: "Noble Gain started with a single purpose: to prove that digital activity should have tangible, predictable value for everyday users, not just large networks."
   },
   {
-    year: "The Evolution",
-    title: "Premium Rewards",
-    description: "We transitioned from a basic task-earning site to a premium rewards community, focusing on high-quality partnerships and instant redemptions."
+    year: "Phase 2",
+    title: "Transparent Rewards",
+    description: "We built an upfront rewards architecture where point values, verification statuses, and payout criteria remain 100% visible before users spend their time."
   },
   {
-    year: "Today",
-    title: "Noble Gain",
-    description: "Now a global platform, we continue to innovate with smart referrals, enterprise-grade security, and a user-first philosophy."
+    year: "Phase 3",
+    title: "Global Platform",
+    description: "Today, Noble Gain empowers users worldwide with streamlined task submissions, verified referrals, instant redemptions, and enterprise security."
   }
 ];
 
 const pillars = [
   {
-    title: "Transparency",
+    title: "Transparency First",
     icon: Globe,
-    desc: "Every point earned and every referral tracked is visible in real-time. No hidden fees, no opaque rules."
+    desc: "Every point earned and every referral credited is recorded in real-time. No hidden deductions, no surprise fees, and no opaque status updates."
   },
   {
-    title: "Security",
+    title: "Protected Security",
     icon: ShieldCheck,
-    desc: "We employ multi-layer encryption and anti-fraud protocols to ensure your balance and data are always protected."
+    desc: "We enforce role-based access, strict per-account database isolation, and encrypted transaction trails to ensure your balance is safe."
   },
   {
-    title: "Community",
+    title: "Empowered Community",
     icon: Users,
-    desc: "Our platform thrives on the success of our users. Our referral network is designed to reward growth together."
+    desc: "Our ecosystem thrives on genuine participation. Our referral network gives back high-tier bonuses when your friends complete their first tasks."
   }
 ];
 
 function AboutPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-ink text-ink-fg flex flex-col">
       <LandingNav />
-      {/* Hero Section */}
-      <section className="relative px-4 pt-32 pb-20 sm:px-6 md:pt-40 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-grid opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
-        <div className="container mx-auto max-w-7xl">
-          <motion.div 
-            initial="hidden" 
-            animate="visible" 
-            variants={reveal} 
-            className="text-center max-w-3xl mx-auto"
-          >
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-primary">
-              <Sparkles className="size-4" /> Our Story & Mission
-            </div>
-            <h1 className="text-balance text-5xl font-black leading-[0.94] tracking-[-0.06em] text-foreground sm:text-6xl md:text-7xl">
-              Empowering your <span className="text-[#e6c17a]">digital footprint.</span>
-            </h1>
-            <p className="mt-7 text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">
-              Noble Gain is built on the belief that every action you take online has value. We provide the tools to capture that value and turn it into rewards.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative isolate overflow-hidden px-4 pb-20 pt-32 sm:px-6 md:pb-28 md:pt-40">
+          <div className="pointer-events-none absolute inset-0 -z-10 ink-dots opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
+          <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 size-[34rem] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px] ink-breathe" />
 
-      {/* Mission Section */}
-      <section className="px-4 py-24 sm:px-6 md:py-32 bg-card/50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="mx-auto max-w-4xl text-center">
             <motion.div 
               initial="hidden" 
-              whileInView="visible" 
-              viewport={{ once: true }} 
-              variants={reveal}
+              animate="visible" 
+              variants={reveal} 
             >
-              <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6">
-                <Target className="size-7" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-ink-2/70 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-gold mb-6">
+                <Sparkles className="size-3.5" /> Our Mission & Vision
               </div>
-              <h2 className="text-4xl font-black tracking-tight mb-6">Our Mission</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                Our mission is to democratize the digital economy. We want to ensure that users are compensated fairly for the attention and activity they contribute to the internet.
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                By creating a transparent and secure ecosystem, we enable thousands of users worldwide to earn real prizes through simple, daily digital interactions.
+              <h1 className="text-balance text-[clamp(2.4rem,7vw,4.2rem)] font-black leading-[0.96] tracking-[-0.055em] text-ink-fg">
+                Empowering your <span className="text-gold">digital time.</span>
+              </h1>
+              <p className="mt-6 mx-auto max-w-2xl text-pretty text-[15px] leading-7 text-ink-muted sm:text-lg sm:leading-8">
+                Noble Gain is built on a clear principle: everyday digital interactions have real value. We give you transparent tools to collect rewards, track your progress, and redeem with confidence.
               </p>
             </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-square md:aspect-auto md:h-[500px] rounded-[2rem] overflow-hidden border border-border shadow-2xl"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-[#e6c17a]/10" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <img src="/logo.png" alt="Noble Gain" className="w-48 h-48 object-contain" />
-              </div>
-            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Pillars Section */}
-      <section className="px-4 py-24 sm:px-6 md:py-32">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-black tracking-tight sm:text-4xl">The Noble Pillars</h2>
-            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              Built on trust, transparency, and a commitment to our users.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {pillars.map((pillar, i) => (
+        {/* Mission Section */}
+        <section className="border-t border-hairline px-4 py-20 sm:px-6 md:py-28 bg-ink-2/30">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
               <motion.div 
-                key={pillar.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0, transition: { delay: i * 0.1 } }
-                }}
-                className="group rounded-3xl border border-border bg-card p-8 transition-all hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
-              >
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6 group-hover:scale-110 transition-transform">
-                  <pillar.icon className="size-6" />
-                </div>
-                <h3 className="text-xl font-bold mb-4">{pillar.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{pillar.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Story Timeline */}
-      <section className="px-4 py-24 sm:px-6 md:py-32 bg-muted/30">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-black tracking-tight sm:text-4xl">The Evolution of Noble Gain</h2>
-          </div>
-          <div className="space-y-12">
-            {storyTimeline.map((item, i) => (
-              <motion.div 
-                key={item.year}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+                initial="hidden" 
+                whileInView="visible" 
+                viewport={{ once: true }} 
                 variants={reveal}
-                className="flex flex-col md:flex-row gap-8 items-start"
               >
-                <div className="md:w-32 flex-shrink-0">
-                  <span className="text-sm font-black uppercase tracking-widest text-primary/60">{item.year}</span>
+                <div className="flex size-12 items-center justify-center rounded-xl bg-gold/10 text-gold mb-6">
+                  <Target className="size-6" />
                 </div>
-                <div className="flex-1 rounded-3xl border border-border bg-card p-8 shadow-sm">
-                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gold">The Goal</p>
+                <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-[-0.04em] text-ink-fg">
+                  Democratizing the digital rewards economy.
+                </h2>
+                <p className="mt-5 text-sm leading-7 text-ink-muted sm:text-[15px]">
+                  Too often, internet users provide valuable engagement without receiving anything tangible in return. Noble Gain connects users directly with verified opportunities, displaying the point value upfront before you commit your time.
+                </p>
+                <p className="mt-4 text-sm leading-7 text-ink-muted sm:text-[15px]">
+                  Whether you are checking in daily, exploring partner tasks, or referring colleagues, our system tracks every step until fulfillment.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-4 text-xs font-semibold text-ink-fg/90">
+                  <span className="flex items-center gap-1.5"><CircleCheck className="size-4 text-gold" /> Zero hidden fees</span>
+                  <span className="flex items-center gap-1.5"><CircleCheck className="size-4 text-gold" /> Clear point calculations</span>
+                  <span className="flex items-center gap-1.5"><CircleCheck className="size-4 text-gold" /> Fast reward payouts</span>
                 </div>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="border-y border-primary/20 bg-primary px-4 py-24 text-primary-foreground sm:px-6 md:py-32">
-        <div className="container mx-auto max-w-3xl text-center">
-          <h2 className="text-balance text-4xl font-black tracking-[-0.04em] sm:text-6xl">Ready to join the community?</h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 opacity-85">
-            Start your earning journey today and see why thousands trust Noble Gain.
-          </p>
-          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" variant="secondary" className="h-14 rounded-2xl px-7 font-bold shadow-xl" asChild>
-              <Link to="/auth">Create your account <ArrowRight className="ml-2 size-4" /></Link>
-            </Button>
-            <Button size="lg" variant="outline" className="h-14 rounded-2xl border-primary-foreground/30 px-7 font-bold text-primary-foreground hover:bg-primary-foreground/10" asChild>
-              <Link to="/earn" search={{ tab: "tasks" }}>Explore Opportunities</Link>
-            </Button>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="relative overflow-hidden rounded-3xl border border-hairline bg-ink-2/80 p-8 sm:p-12 shadow-2xl flex flex-col items-center justify-center text-center mock-sheen"
+              >
+                <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gold/5 blur-2xl" />
+                <img src="/logo.png" alt="Noble Gain" className="size-28 sm:size-36 object-contain mb-6 mock-float" />
+                <h3 className="text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  Noble<span className="text-gold">Gain</span>
+                </h3>
+                <p className="mt-2 text-xs font-medium text-ink-muted max-w-xs">
+                  Transparent rewards community built for everyday users worldwide.
+                </p>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer (Simplified or reused from index) */}
-      <footer className="border-t border-border bg-card px-4 py-10 sm:px-6">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-7 md:flex-row">
-          <Link to="/" className="flex items-center gap-2 text-xl font-black tracking-tight">
-            <img src="/logo.png" alt="Noble Gain" className="size-8 object-contain" />
-            <span className="text-foreground">NOBLE <span className="text-[#e6c17a]">GAIN</span></span>
-          </Link>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <Link to="/" className="hover:text-primary">Home</Link>
-            <Link to="/about" className="text-primary underline underline-offset-4">About</Link>
-            <Link to="/earn" search={{ tab: "tasks" }} className="hover:text-primary">Earn</Link>
-            <Link to="/redeem" className="hover:text-primary">Redeem</Link>
-            <Link to="/privacy" className="hover:text-primary">Privacy</Link>
-            <Link to="/terms" className="hover:text-primary">Terms</Link>
+        {/* Pillars Section */}
+        <section className="border-t border-hairline px-4 py-20 sm:px-6 md:py-28">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gold">Our Foundation</p>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-[-0.04em] text-ink-fg">
+                The Noble Principles
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-ink-muted sm:text-[15px]">
+                Built on honesty, robust engineering, and a focus on straightforward member experiences.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pillars.map((pillar, i) => (
+                <motion.article 
+                  key={pillar.title}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={{
+                    hidden: { opacity: 0, y: 18 },
+                    visible: { opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.5 } }
+                  }}
+                  className="group rounded-2xl border border-hairline bg-ink-2/50 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:border-gold/25"
+                >
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-gold/10 text-gold mb-6 group-hover:scale-105 transition-transform">
+                    <pillar.icon className="size-5" />
+                  </div>
+                  <h3 className="text-lg font-black tracking-[-0.03em] text-ink-fg mb-2">{pillar.title}</h3>
+                  <p className="text-sm leading-6 text-ink-muted">{pillar.desc}</p>
+                </motion.article>
+              ))}
+            </div>
           </div>
-          <p className="text-center text-xs font-medium text-muted-foreground">© 2026 Noble Gain. All rights reserved.</p>
-        </div>
-      </footer>
-    </main>
+        </section>
+
+        {/* Story Timeline */}
+        <section className="border-t border-hairline px-4 py-20 sm:px-6 md:py-28 bg-ink-2/30">
+          <div className="mx-auto max-w-4xl">
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gold">Roadmap</p>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-[-0.04em] text-ink-fg">
+                The Journey
+              </h2>
+            </div>
+
+            <div className="space-y-6">
+              {storyTimeline.map((item, idx) => (
+                <motion.div 
+                  key={item.year}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={reveal}
+                  className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start rounded-2xl border border-hairline bg-ink p-6 sm:p-8 transition-colors hover:bg-ink-2/60"
+                >
+                  <div className="sm:w-28 shrink-0">
+                    <span className="text-2xl font-black tracking-[-0.04em] text-gold">{item.year}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-black tracking-[-0.02em] text-ink-fg mb-2">{item.title}</h3>
+                    <p className="text-sm leading-6 text-ink-muted">{item.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="border-t border-hairline px-4 py-16 sm:px-6 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="relative overflow-hidden rounded-3xl border border-hairline bg-ink-2/60 px-6 py-14 text-center sm:px-12 sm:py-20">
+              <div className="pointer-events-none absolute -top-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-gold/12 blur-3xl ink-breathe" />
+              <div className="relative">
+                <h2 className="text-[clamp(1.85rem,5.2vw,3rem)] font-black leading-[1.03] tracking-[-0.045em] text-ink-fg">
+                  Ready to experience Noble Gain?
+                </h2>
+                <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-ink-muted sm:text-base">
+                  Start your earning journey today with zero upfront cost.
+                </p>
+                <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+                  <Link
+                    to="/auth"
+                    search={{ mode: "signup" }}
+                    className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-sm font-bold tracking-tight text-ink transition-transform duration-200 hover:-translate-y-0.5 sm:h-13"
+                  >
+                    Create Free Account
+                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </Link>
+                  <Link
+                    to="/auth"
+                    className="inline-flex h-12 items-center justify-center rounded-xl border border-hairline px-6 text-sm font-bold tracking-tight text-ink-fg transition-colors duration-200 hover:border-gold/30 hover:text-gold sm:h-13"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <PublicFooter />
+    </div>
   );
 }
+
+export default AboutPage;

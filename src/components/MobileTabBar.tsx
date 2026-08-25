@@ -16,10 +16,7 @@ export function MobileTabBar() {
 
   return (
     <div className="md:hidden fixed bottom-4 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <nav className="relative flex items-center justify-around bg-card/85 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl px-1.5 py-2.5">
-        {/* Neon glow effect background */}
-        <div className="absolute inset-0 rounded-3xl bg-primary/5 -z-10" />
-        
+      <nav className="relative flex items-center justify-around bg-ink/90 backdrop-blur-xl border border-hairline shadow-2xl rounded-2xl px-2 py-2">
         {tabs.map((tab) => {
           const isActive = currentPath === tab.href;
           return (
@@ -27,14 +24,14 @@ export function MobileTabBar() {
               key={tab.name}
               to={tab.href as any}
               className={cn(
-                "relative flex flex-col items-center gap-1 transition-all duration-300 px-2 py-1",
-                isActive ? "text-primary scale-105" : "text-muted-foreground hover:text-foreground"
+                "relative flex flex-col items-center gap-1 transition-all duration-300 px-3 py-1.5 rounded-xl",
+                isActive ? "text-gold font-bold bg-gold/10" : "text-ink-muted hover:text-ink-fg"
               )}
             >
               <tab.icon
                 className={cn(
-                  "h-5 w-5 transition-all duration-300",
-                  isActive ? "fill-primary/10 stroke-[2.5px]" : "stroke-[2px]"
+                  "h-4.5 w-4.5 transition-all duration-300",
+                  isActive ? "fill-gold/20 stroke-[2.5px] text-gold" : "stroke-[2px]"
                 )}
               />
               <span className={cn(
@@ -45,7 +42,7 @@ export function MobileTabBar() {
               </span>
               
               {isActive && (
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.8)]" />
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-0.5 rounded-full bg-gold shadow-[0_0_6px_rgba(230,193,122,0.9)]" />
               )}
             </Link>
           );
