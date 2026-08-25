@@ -47,9 +47,9 @@ function Bar({ value, delay }: { value: number; delay: number }) {
 }
 
 /** Hero: balance + progress + activity, resembling the real dashboard. */
-export function DashboardMock() {
+export function DashboardMock({ className = "" }: { className?: string }) {
   return (
-    <MockShell title="Dashboard">
+    <MockShell title="Dashboard" className={className}>
       <div className="grid gap-3 sm:grid-cols-[1.15fr_1fr]">
         <div className="rounded-xl border border-hairline bg-ink/60 p-4">
           <div className="flex items-start justify-between gap-3">
