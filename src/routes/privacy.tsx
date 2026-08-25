@@ -8,8 +8,8 @@ export const Route = createFileRoute("/privacy")({
     const canonicalUrl = `${url}/privacy`;
 
     return {
-      title: "Privacy Policy | Noble Gain",
       meta: [
+        { title: "Privacy Policy | Noble Gain" },
         { name: "description", content: "Learn how Noble Gain collects, uses, and protects your personal data. Our privacy policy outlines our commitment to your security." },
         { property: "og:title", content: "Privacy Policy | Noble Gain" },
         { property: "og:description", content: "Your privacy is our priority. Read the Noble Gain privacy policy." },
@@ -43,8 +43,8 @@ function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background">
       <LandingNav />
-      <div className="container mx-auto px-4 pt-32 pb-24 max-w-4xl">
-      <div className="bg-card p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-border/50">
+      <div className="container mx-auto max-w-4xl px-4 pt-32 pb-24 sm:px-6">
+      <div className="rounded-[2.5rem] border border-border/50 bg-card p-6 shadow-xl sm:p-8 md:p-12">
         <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Privacy Policy</h1>
         
         <div className="prose prose-slate dark:prose-invert max-w-none space-y-6 text-muted-foreground font-medium">

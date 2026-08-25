@@ -7,8 +7,8 @@ export const Route = createFileRoute("/terms")({
     const canonicalUrl = `${url}/terms`;
 
     return {
-      title: "Terms of Service | Noble Gain",
       meta: [
+        { title: "Terms of Service | Noble Gain" },
         { name: "description", content: "Read the Noble Gain terms of service. Understand our rules, user obligations, and platform policies before you start earning." },
         { property: "og:title", content: "Terms of Service | Noble Gain" },
         { property: "og:description", content: "The rules of the road for Noble Gain. Read our terms of service." },
@@ -42,8 +42,8 @@ function TermsPage() {
   return (
     <div className="min-h-screen bg-background">
       <LandingNav />
-      <div className="container mx-auto px-4 pt-32 pb-24 max-w-4xl">
-      <div className="bg-card p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-border/50">
+      <div className="container mx-auto max-w-4xl px-4 pt-32 pb-24 sm:px-6">
+      <div className="rounded-[2.5rem] border border-border/50 bg-card p-6 shadow-xl sm:p-8 md:p-12">
         <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Terms of Service</h1>
         
         <div className="prose prose-slate dark:prose-invert max-w-none space-y-6 text-muted-foreground font-medium">
