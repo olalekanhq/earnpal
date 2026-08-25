@@ -30,15 +30,17 @@ export function LandingNav() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-        scrolled
-          ? "border-b border-hairline bg-ink/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
-      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:px-6 md:h-20 lg:grid-cols-[auto_1fr_auto]">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
+      <div
+        className={cn(
+          "mx-auto max-w-6xl rounded-2xl transition-all duration-300",
+          scrolled
+            ? "ink-header-shadow border border-hairline bg-ink/85 backdrop-blur-xl"
+            : "border border-hairline/60 bg-ink/60 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.55)] backdrop-blur-md",
+        )}
+      >
+        <div className="grid h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-3 sm:h-16 sm:px-5 lg:grid-cols-[auto_1fr_auto]">
+
         <Link to="/" className="flex min-w-0 items-center gap-2.5">
           <img src="/logo.png" alt="Earn Pal" className="h-8 w-8 shrink-0 object-contain" />
           <span className="truncate text-[17px] font-black tracking-[-0.03em] text-ink-fg">
@@ -84,7 +86,10 @@ export function LandingNav() {
             <Menu className="size-5" />
           </button>
         </div>
+        </div>
       </div>
+
+
 
       {/* Mobile sheet */}
       <div
