@@ -276,9 +276,9 @@ function RootComponent() {
           {!isAuthPage && !isLandingPage && <MobileTabBar />}
           <main className={cn(
             "flex-1 transition-all duration-300 w-full flex flex-col",
-            !isLandingPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)] pb-20 md:pb-0"
+            !isLandingPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)] pb-24 md:pb-0"
           )}>
-            <div className={cn("flex-1 w-full", !isLandingPage && !isAuthPage && "pt-24 md:pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto")}>
+            <div className={cn("flex-1 w-full", !isLandingPage && !isAuthPage && "pt-20 sm:pt-24 md:pt-28 pb-12 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto")}>
               <Outlet />
             </div>
           </main>
