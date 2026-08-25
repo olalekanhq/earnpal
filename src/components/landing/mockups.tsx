@@ -20,10 +20,10 @@ export function MockShell({
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-hairline bg-ink-2/90 ${className}`}
+      className={`mock-sheen overflow-hidden rounded-2xl border border-hairline bg-ink-2/90 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.6)] ${className}`}
     >
       <div className="flex items-center gap-2 border-b border-hairline px-4 py-3">
-        <span className="size-2 rounded-full bg-gold/70" />
+        <span className="mock-ping size-2 rounded-full bg-gold/70" />
         <span className="size-2 rounded-full bg-ink-fg/20" />
         <span className="size-2 rounded-full bg-ink-fg/20" />
         <span className="ml-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
@@ -39,8 +39,8 @@ function Bar({ value, delay }: { value: number; delay: number }) {
   return (
     <div className="flex h-full w-full items-end">
       <div
-        className="w-full rounded-t-[4px] bg-gradient-to-t from-gold/30 to-gold/85"
-        style={{ height: `${value}%`, animation: `ink-breathe ${10 + delay}s ease-in-out infinite` }}
+        className="mock-bar w-full rounded-t-[4px] bg-gradient-to-t from-gold/30 to-gold/85"
+        style={{ height: `${value}%`, animationDelay: `${delay * 0.14}s` }}
       />
     </div>
   );
@@ -57,7 +57,7 @@ export function DashboardMock({ className = "" }: { className?: string }) {
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
                 Points balance
               </p>
-              <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-ink-fg sm:text-4xl">
+              <p className="mock-count mt-2 text-3xl font-black tracking-[-0.04em] text-ink-fg sm:text-4xl">
                 12,480
               </p>
             </div>
@@ -66,7 +66,7 @@ export function DashboardMock({ className = "" }: { className?: string }) {
             </span>
           </div>
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-ink-fg/10">
-            <div className="h-full w-[68%] rounded-full bg-gold" />
+            <div className="mock-fill h-full rounded-full bg-gold" style={{ ["--fill" as string]: "68%" }} />
           </div>
           <div className="mt-2 flex justify-between text-[11px] font-medium text-ink-muted">
             <span>Next reward tier</span>
@@ -94,8 +94,12 @@ export function DashboardMock({ className = "" }: { className?: string }) {
               { icon: Share2, label: "Referral bonus", value: "+75" },
               { icon: CheckCircle2, label: "Task verified", value: "+120" },
               { icon: Gift, label: "Reward redeemed", value: "-2,500" },
-            ].map((row) => (
-              <li key={row.label} className="flex items-center gap-2.5">
+            ].map((row, i) => (
+              <li
+                key={row.label}
+                className="mock-row-in flex items-center gap-2.5"
+                style={{ animationDelay: `${i * 0.12}s` }}
+              >
                 <span className="grid size-7 shrink-0 place-items-center rounded-md bg-ink-fg/6 text-gold">
                   <row.icon className="size-3.5" />
                 </span>
@@ -134,10 +138,11 @@ export function OpportunitiesMock() {
   return (
     <MockShell title="Opportunities">
       <ul className="space-y-2.5">
-        {items.map((it) => (
+        {items.map((it, i) => (
           <li
             key={it.title}
-            className="group flex items-center gap-3 rounded-xl border border-hairline p-3 transition-colors hover:border-gold/30"
+            style={{ animationDelay: `${i * 0.12}s` }}
+            className="mock-row-in group flex items-center gap-3 rounded-xl border border-hairline p-3 transition-colors hover:border-gold/30"
           >
             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-gold/10 text-gold">
               <ArrowUpRight className="size-4" />
@@ -167,8 +172,8 @@ export function HistoryMock() {
   return (
     <MockShell title="Activity">
       <ul className="divide-y divide-[color:var(--hairline)]">
-        {rows.map((r) => (
-          <li key={r.label} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+        {rows.map((r, i) => (
+          <li key={r.label} style={{ animationDelay: `${i * 0.12}s` }} className="mock-row-in flex items-center gap-3 py-3 first:pt-0 last:pb-0">
             <span className="grid size-7 shrink-0 place-items-center rounded-md bg-ink-fg/6 text-gold">
               <r.icon className="size-3.5" />
             </span>
@@ -200,7 +205,7 @@ export function RedeemMock() {
           </span>
         </div>
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-ink-fg/10">
-          <div className="h-full w-[82%] rounded-full bg-gold" />
+          <div className="mock-fill h-full rounded-full bg-gold" style={{ ["--fill" as string]: "82%" }} />
         </div>
         <p className="mt-2 text-[11px] font-medium text-ink-muted">
           2,050 of 2,500 points collected
