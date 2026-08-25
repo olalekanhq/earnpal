@@ -81,38 +81,39 @@
   --hairline: oklch(0.19 0.012 80 / 0.1);
   --gold: oklch(0.58 0.12 82);
   --gold-soft: oklch(0.7 0.11 82);
-  --background: oklch(0.984 0.005 247.858);
-  --foreground: #002d26; /* Deep Green from new Noble Gain logo */
-  --card: oklch(1 0 0);
-  --card-foreground: #002d26;
-  --popover: oklch(1 0 0);
-  --popover-foreground: #002d26;
-  --primary: #002d26; /* Deep Green from new Noble Gain logo */
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: #e6c17a; /* Muted Gold from new Noble Gain logo */
-  --secondary-foreground: #002d26;
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.7 0.01 247.858);
-  --accent: #e6c17a22;
-  --accent-foreground: #002d26;
+  /* App surfaces mirror the landing ink/gold system */
+  --background: var(--ink-2);
+  --foreground: var(--ink-fg);
+  --card: var(--ink);
+  --card-foreground: var(--ink-fg);
+  --popover: var(--ink);
+  --popover-foreground: var(--ink-fg);
+  --primary: var(--gold);
+  --primary-foreground: oklch(0.19 0.012 80);
+  --secondary: var(--ink-3);
+  --secondary-foreground: var(--ink-fg);
+  --muted: var(--ink-3);
+  --muted-foreground: var(--ink-muted);
+  --accent: oklch(0.58 0.12 82 / 0.12);
+  --accent-foreground: var(--ink-fg);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: #002d26;
-  --chart-1: #002d26;
-  --chart-2: #e6c17a;
-  --chart-3: oklch(0.398 0.07 227.392);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--gold);
+  --chart-1: var(--gold);
+  --chart-2: var(--ink-fg);
+  --chart-3: oklch(0.7 0.11 82);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.005 247.858);
-  --sidebar-foreground: #002d26;
-  --sidebar-primary: #002d26;
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: #e6c17a22;
-  --sidebar-accent-foreground: #002d26;
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: #002d26;
+  --sidebar: var(--ink);
+  --sidebar-foreground: var(--ink-fg);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: oklch(0.19 0.012 80);
+  --sidebar-accent: oklch(0.58 0.12 82 / 0.12);
+  --sidebar-accent-foreground: var(--ink-fg);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--gold);
 }
 
 .dark {
