@@ -291,7 +291,7 @@ export function Benefits() {
             is in, and what your points can be exchanged for — before you commit your time.
           </p>
           <div className="mt-8">
-            <DashboardMock />
+            <DashboardMock className="mock-float" />
           </div>
         </Reveal>
 
