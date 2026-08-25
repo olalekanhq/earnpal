@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LandingNav } from "@/components/landing/LandingNav";
 import { motion } from "framer-motion";
 import { 
   ShieldCheck, 
