@@ -86,7 +86,10 @@ export function LandingNav() {
             <Menu className="size-5" />
           </button>
         </div>
+        </div>
       </div>
+
+
 
       {/* Mobile sheet */}
       <div
