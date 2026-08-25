@@ -60,7 +60,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* Landing (premium dark) surface tokens */
+  /* Landing surface tokens */
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
@@ -73,14 +73,14 @@
 
 :root {
   --radius: 1rem;
-  --ink: #ffffff;
-  --ink-2: #f7f9f7;
-  --ink-3: #eef2ef;
-  --ink-fg: #06251f;
-  --ink-muted: #5c7169;
-  --hairline: rgba(6, 37, 31, 0.1);
-  --gold: #9a7526;
-  --gold-soft: #b8913c;
+  --ink: oklch(1 0 0);
+  --ink-2: oklch(0.982 0.003 95);
+  --ink-3: oklch(0.948 0.006 95);
+  --ink-fg: oklch(0.19 0.012 80);
+  --ink-muted: oklch(0.48 0.018 80);
+  --hairline: oklch(0.19 0.012 80 / 0.1);
+  --gold: oklch(0.58 0.12 82);
+  --gold-soft: oklch(0.7 0.11 82);
   --background: oklch(0.984 0.005 247.858);
   --foreground: #002d26; /* Deep Green from new Noble Gain logo */
   --card: oklch(1 0 0);
@@ -116,46 +116,46 @@
 }
 
 .dark {
-  --ink: #04211c;
-  --ink-2: #072b24;
-  --ink-3: #0b3730;
-  --ink-fg: #edf5f1;
-  --ink-muted: #9cb7ac;
-  --hairline: rgba(237, 245, 241, 0.1);
-  --gold: #e6c17a;
-  --gold-soft: #f3ddb4;
-  --background: oklch(0.12 0.02 264);
-  --foreground: oklch(0.98 0.01 247);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.7 0.2 273.428);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.75 0.02 260);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --ink: oklch(0.115 0.004 285);
+  --ink-2: oklch(0.165 0.006 285);
+  --ink-3: oklch(0.235 0.008 285);
+  --ink-fg: oklch(0.972 0.004 95);
+  --ink-muted: oklch(0.72 0.012 285);
+  --hairline: oklch(1 0 0 / 0.11);
+  --gold: oklch(0.76 0.13 82);
+  --gold-soft: oklch(0.86 0.09 82);
+  --background: oklch(0.115 0.004 285);
+  --foreground: oklch(0.972 0.004 95);
+  --card: oklch(0.165 0.006 285);
+  --card-foreground: oklch(0.972 0.004 95);
+  --popover: oklch(0.155 0.006 285);
+  --popover-foreground: oklch(0.972 0.004 95);
+  --primary: oklch(0.76 0.13 82);
+  --primary-foreground: oklch(0.13 0.006 285);
+  --secondary: oklch(0.235 0.008 285);
+  --secondary-foreground: oklch(0.972 0.004 95);
+  --muted: oklch(0.235 0.008 285);
+  --muted-foreground: oklch(0.72 0.012 285);
+  --accent: oklch(0.76 0.13 82 / 0.14);
+  --accent-foreground: oklch(0.972 0.004 95);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 15%);
-  --input: oklch(1 0 0 / 20%);
-  --ring: oklch(0.7 0.2 273.428);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.76 0.13 82);
+  --chart-1: oklch(0.76 0.13 82);
+  --chart-2: oklch(0.7 0.12 250);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.7 0.2 273.428);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar: oklch(0.145 0.005 285);
+  --sidebar-foreground: oklch(0.972 0.004 95);
+  --sidebar-primary: oklch(0.76 0.13 82);
+  --sidebar-primary-foreground: oklch(0.13 0.006 285);
+  --sidebar-accent: oklch(0.235 0.008 285);
+  --sidebar-accent-foreground: oklch(0.972 0.004 95);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.7 0.2 273.428);
+  --sidebar-ring: oklch(0.76 0.13 82);
 }
 
 @layer base {

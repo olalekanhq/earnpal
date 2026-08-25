@@ -104,7 +104,7 @@ function Hero() {
           className="relative w-full"
         >
           <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gold/6 blur-2xl" />
-          <DashboardMock className="shadow-2xl shadow-black/40" />
+          <DashboardMock className="shadow-2xl shadow-foreground/10" />
         </motion.div>
       </div>
     </section>
