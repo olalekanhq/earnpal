@@ -90,7 +90,7 @@ export function DashboardMock({ className = "" }: { className?: string }) {
           </p>
           <ul className="mt-3 space-y-2.5">
             {[
-              { icon: PlayCircle, label: "Watch & earn", value: "+40" },
+              { icon: PlayCircle, label: "Watch & earn", value: "+50" },
               { icon: Share2, label: "Referral bonus", value: "+75" },
               { icon: CheckCircle2, label: "Task verified", value: "+120" },
               { icon: Gift, label: "Reward redeemed", value: "-2,500" },
@@ -130,7 +130,7 @@ export function DashboardMock({ className = "" }: { className?: string }) {
 /** Opportunity discovery list. */
 export function OpportunitiesMock() {
   const items = [
-    { title: "Watch a short video", meta: "Videos · instant", pts: "+40" },
+    { title: "Watch a short video", meta: "Videos · instant", pts: "+50" },
     { title: "Follow on social", meta: "Social · review required", pts: "+120" },
     { title: "Daily check-in", meta: "Daily · repeatable", pts: "+20" },
     { title: "Invite a friend", meta: "Referral · on completion", pts: "+75" },
