@@ -24,7 +24,7 @@ export const Route = createFileRoute("/about")({
       },
       { property: "og:title", content: "About Noble Gain | Empowering Your Digital Time" },
       { property: "og:description", content: "Discover how Noble Gain is redefining the rewards economy with transparency, security, and global reach." },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

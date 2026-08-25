@@ -119,7 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:url", content: canonicalUrl },
         { property: "og:image", content: `${url}/logo.png` },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:site", content: "@Lovable" },
+        { name: "twitter:site", content: "@NobleGain" },
         { name: "6a97888e-site-verification", content: "2a365eac71037194b13cbbf9bee6c208" },
       ],
       links: [

@@ -57,7 +57,7 @@ export const Route = createFileRoute("/_authenticated/earn")({
       { property: "og:title", content: "Earn Points | Tasks, Blogs & Rewards | Noble Gain" },
       { property: "og:description", content: "Complete daily verified tasks and watch your points grow in real-time." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

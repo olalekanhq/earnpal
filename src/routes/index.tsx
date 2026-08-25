@@ -45,7 +45,7 @@ export const Route = createFileRoute("/")({
         content:
           "Discover opportunities, complete them, and watch your points grow. Transparent tracking, secure accounts and simple reward redemption.",
       },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

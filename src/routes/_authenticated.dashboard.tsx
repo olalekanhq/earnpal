@@ -48,7 +48,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
       { property: "og:title", content: "Member Dashboard | Noble Gain" },
       { property: "og:description", content: "See your latest earnings, claim daily bonuses, and track your progress toward your next big reward." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://earnpal.lovable.app/logo.png" },
+      { property: "og:image", content: "https://noblegain.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
