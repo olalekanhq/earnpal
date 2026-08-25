@@ -17,7 +17,8 @@ import {
   Flame, 
   Crown,
   Lightbulb,
-  CheckCircle
+  CheckCircle,
+  AlertCircle
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -225,9 +226,19 @@ function ReferralPage() {
                                   <p className="text-sm font-bold text-ink-fg leading-none">
                                     {ref.full_name || ref.username || "Anonymous Member"}
                                   </p>
-                                  {!isComplete && (
-                                    <span className="text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/30 px-2 py-0.5 rounded-md">
-                                      Verification Pending
+                                  {!hasSocial ? (
+                                    <span className="text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
+                                      <AlertCircle className="size-2.5 text-amber-400" />
+                                      Pending Social Verification
+                                    </span>
+                                  ) : !isComplete ? (
+                                    <span className="text-[10px] font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-md">
+                                      Profile Linked
+                                    </span>
+                                  ) : (
+                                    <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
+                                      <CheckCircle2 className="size-2.5 text-emerald-400" />
+                                      Active Member
                                     </span>
                                   )}
                                 </div>
@@ -239,12 +250,29 @@ function ReferralPage() {
 
                             <div>
                               <span className={cn(
-                                "font-bold text-xs px-3 py-1 rounded-xl border inline-block",
-                                isComplete 
-                                  ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 font-black" 
-                                  : "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                                "font-bold text-xs px-3 py-1 rounded-xl border inline-flex items-center gap-1.5",
+                                !hasSocial
+                                  ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                                  : isComplete 
+                                    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 font-black" 
+                                    : "bg-sky-500/15 text-sky-400 border-sky-500/30"
                               )}>
-                                {isComplete ? "+75 PTS Credited" : "Pending First Task"}
+                                {!hasSocial ? (
+                                  <>
+                                    <Clock className="size-3 text-amber-400" />
+                                    <span>Pending Profile Setup</span>
+                                  </>
+                                ) : isComplete ? (
+                                  <>
+                                    <CheckCircle2 className="size-3 text-emerald-400" />
+                                    <span>+75 PTS Credited</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Clock className="size-3 text-sky-400" />
+                                    <span>Pending First Task</span>
+                                  </>
+                                )}
                               </span>
                             </div>
                           </div>
@@ -255,9 +283,13 @@ function ReferralPage() {
                               <span className="text-[10px] font-bold uppercase tracking-wider text-ink-muted">Verification Checklist</span>
                               <span className={cn(
                                 "text-[10px] font-bold px-2 py-0.5 rounded-lg",
-                                isComplete ? "bg-emerald-500/15 text-emerald-400" : "bg-gold/15 text-gold"
+                                isComplete 
+                                  ? "bg-emerald-500/15 text-emerald-400" 
+                                  : !hasSocial
+                                    ? "bg-amber-500/15 text-amber-400"
+                                    : "bg-sky-500/15 text-sky-400"
                               )}>
-                                {isComplete ? "Completed" : "In Progress"}
+                                {isComplete ? "Completed" : !hasSocial ? "Awaiting Social Profile" : "In Progress"}
                               </span>
                             </div>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -270,8 +302,10 @@ function ReferralPage() {
                                 <span className="text-[11px] font-medium text-ink-muted">Phone Verified</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <div className={cn("size-2 rounded-full", hasSocial ? "bg-emerald-500" : "bg-ink-muted/40")} />
-                                <span className="text-[11px] font-medium text-ink-muted">Social Linked</span>
+                                <div className={cn("size-2 rounded-full", hasSocial ? "bg-emerald-500" : "bg-amber-500/60")} />
+                                <span className={cn("text-[11px] font-medium", hasSocial ? "text-emerald-400" : "text-amber-400 font-bold")}>
+                                  {hasSocial ? "Social Verified" : "Social Pending"}
+                                </span>
                               </div>
                               <div className="flex items-center gap-1.5">
                                 <div className={cn("size-2 rounded-full", isComplete ? "bg-emerald-500" : "bg-ink-muted/40")} />

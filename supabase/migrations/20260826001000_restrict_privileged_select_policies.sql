@@ -10,12 +10,18 @@ DROP POLICY IF EXISTS "Privileged roles can view all profiles" ON public.profile
 DROP POLICY IF EXISTS "Users can read their own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Users can select their own profile" ON public.profiles;
 
--- Normal users can only read their own profile
-CREATE POLICY "Users can select their own profile"
+-- Normal users can only read their own profile or profiles of users who signed up using their referral link
+CREATE POLICY "Users can select their own and referee profiles"
 ON public.profiles
 FOR SELECT
 TO authenticated
-USING (auth.uid() = id);
+USING (
+  auth.uid() = id 
+  OR EXISTS (
+    SELECT 1 FROM public.referrals r 
+    WHERE r.referrer_id = auth.uid() AND r.referee_id = public.profiles.id
+  )
+);
 
 -- Only admin and moderator roles can select all profiles
 CREATE POLICY "Admins and moderators can select all profiles"
