@@ -328,3 +328,41 @@ div[style*="Edit with Lovable"],
   position: absolute !important;
   z-index: -9999 !important;
 }
+
+/* ---------- Landing page primitives ---------- */
+@utility ink-hairline {
+  border-color: var(--color-hairline);
+}
+
+@utility ink-panel {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-ink-2) 92%, transparent), color-mix(in oklab, var(--color-ink) 96%, transparent));
+  border: 1px solid var(--color-hairline);
+}
+
+@utility ink-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 60%;
+    pointer-events: none;
+    background: radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--color-gold) 16%, transparent), transparent 70%);
+    filter: blur(40px);
+    z-index: 0;
+  }
+}
+
+@utility ink-dots {
+  background-image: radial-gradient(var(--color-hairline) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@keyframes ink-breathe {
+  0%, 100% { opacity: 0.45; transform: translate3d(0, 0, 0) scale(1); }
+  50% { opacity: 0.75; transform: translate3d(0, -12px, 0) scale(1.04); }
+}
+
+@utility ink-breathe {
+  animation: ink-breathe 12s ease-in-out infinite;
+}
