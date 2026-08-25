@@ -131,7 +131,7 @@ export function DashboardMock({ className = "" }: { className?: string }) {
 export function OpportunitiesMock() {
   const items = [
     { title: "Watch a short video", meta: "Videos · instant", pts: "+40" },
-    { title: "Follow on social", meta: "Social · review required", pts: "+120" },
+    { title: "Follow on social", meta: "Social · review required", pts: "+60" },
     { title: "Daily check-in", meta: "Daily · repeatable", pts: "+20" },
     { title: "Invite a friend", meta: "Referral · on completion", pts: "+75" },
   ];
