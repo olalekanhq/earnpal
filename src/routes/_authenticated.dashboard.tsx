@@ -205,14 +205,14 @@ function Dashboard() {
         .from("points_transactions")
         .select("amount")
         .eq("user_id", user.id)
-        .eq("type", "earn")
+        .gt("amount", 0)
         .gte("created_at", sevenDaysAgo.toISOString());
 
       const { data: previousWeekData } = await supabase
         .from("points_transactions")
         .select("amount")
         .eq("user_id", user.id)
-        .eq("type", "earn")
+        .gt("amount", 0)
         .gte("created_at", fourteenDaysAgo.toISOString())
         .lt("created_at", sevenDaysAgo.toISOString());
 
@@ -446,9 +446,10 @@ function Dashboard() {
             <div className="py-2">
               <div className="grid grid-cols-7 gap-1.5">
                 {[1, 2, 3, 4, 5, 6, 7].map((day) => {
+                  const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
                   const currentStreakMod = (streak?.current_streak || 0) % 7 || ((streak?.current_streak || 0) > 0 ? 7 : 0);
-                  const isPassed = currentStreakMod >= day;
-                  const isCurrent = currentStreakMod === day;
+                  const isPassed = (streak?.current_streak || 0) >= 7 ? true : currentStreakMod >= day;
+                  const isCurrent = (streak?.current_streak || 0) >= 7 ? day === 7 : (currentStreakMod === day || (currentStreakMod === 0 && day === 1));
 
                   return (
                     <div 
@@ -463,7 +464,7 @@ function Dashboard() {
                       )}
                     >
                       <span className="text-[9px] font-bold uppercase">D{day}</span>
-                      <span className="text-xs font-black">+{day * 5}</span>
+                      <span className="text-xs font-black">+{STREAK_BONUSES[day - 1]}</span>
                     </div>
                   );
                 })}
@@ -505,7 +506,12 @@ function Dashboard() {
               ) : (
                 <span className="flex items-center gap-2">
                   <Sparkles className="size-4 fill-ink" />
-                  Claim Day Bonus (+{((((streak?.current_streak || 0) % 7) + 1) * 5)} PTS)
+                  Claim Day Bonus (+{(() => {
+                    const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
+                    const nextDay = ((streak?.current_streak || 0) + 1);
+                    if (nextDay >= 7) return 20;
+                    return STREAK_BONUSES[Math.max(0, nextDay - 1)] || 5;
+                  })()} PTS)
                 </span>
               )}
             </Button>
@@ -695,8 +701,9 @@ function Dashboard() {
           <div className="rounded-3xl border border-hairline bg-ink-2/60 shadow-xl overflow-hidden backdrop-blur-xl">
             <div className="divide-y divide-hairline">
               {recentTransactions?.length ? recentTransactions.map((tx: any) => {
-                const isEarn = tx.type === 'earn';
                 const isPending = tx.status === 'pending';
+                const isDebit = tx.amount < 0 || tx.type === 'redeem' || tx.type === 'redemption';
+                const isPositive = !isDebit;
 
                 return (
                   <div 
@@ -707,7 +714,7 @@ function Dashboard() {
                         <div className="space-y-1.5">
                           <p className="font-bold text-sm text-ink-fg">{tx.description}</p>
                           <div className="text-xs text-ink-muted font-semibold space-y-0.5">
-                            <p>Amount: {tx.amount > 0 ? '+' : ''}{tx.amount} PTS</p>
+                            <p>Amount: {isPositive ? '+' : '-'}{Math.abs(tx.amount)} PTS</p>
                             <p>Status: {tx.status || 'completed'}</p>
                             <p>Timestamp: {new Date(tx.created_at).toLocaleString()}</p>
                           </div>
@@ -720,11 +727,11 @@ function Dashboard() {
                         "size-11 rounded-2xl flex items-center justify-center transition-transform border",
                         isPending 
                           ? "bg-amber-500/15 text-amber-400 border-amber-500/30" 
-                          : isEarn 
+                          : isPositive 
                             ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" 
                             : "bg-rose-500/15 text-rose-400 border-rose-500/30"
                       )}>
-                        {isPending ? <Clock className="size-5" /> : isEarn ? <TrendingUp className="size-5" /> : <Gift className="size-5" />}
+                        {isPending ? <Clock className="size-5" /> : isPositive ? <TrendingUp className="size-5" /> : <Gift className="size-5" />}
                       </div>
                       <div className="space-y-0.5">
                         <p className="font-bold text-sm text-ink-fg flex items-center gap-2">
@@ -743,9 +750,9 @@ function Dashboard() {
 
                     <div className={cn(
                       "text-base font-black font-mono",
-                      isPending ? "text-amber-400" : isEarn ? "text-emerald-400" : "text-rose-400"
+                      isPending ? "text-amber-400" : isPositive ? "text-emerald-400" : "text-rose-400"
                     )}>
-                      {isPending ? "" : isEarn ? "+" : "-"}{tx.amount.toLocaleString()} PTS
+                      {isPending ? "" : isPositive ? "+" : "-"}{Math.abs(tx.amount).toLocaleString()} PTS
                     </div>
                   </div>
                 );
