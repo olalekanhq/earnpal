@@ -137,7 +137,7 @@ function RedeemPage() {
             </p>
           </div>
 
-          <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4 min-w-[200px]">
+          <Card className="premium-surface flex min-w-[200px] items-center gap-4 bg-card p-4">
             <div className="bg-primary/10 p-3 rounded-2xl text-primary">
               <Wallet className="h-5 w-5" />
             </div>

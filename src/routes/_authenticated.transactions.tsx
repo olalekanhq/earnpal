@@ -109,7 +109,7 @@ function TransactionsPage() {
               {transactions.map((tx: any) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
+                  className="flex min-h-20 items-center justify-between gap-4 p-4 sm:p-5 hover:bg-accent/5 transition-colors cursor-pointer group"
                   onClick={() => handleTxClick(tx)}
                 >
                   <div className="flex items-center gap-4">

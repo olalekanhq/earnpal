@@ -15,8 +15,8 @@ export function MobileTabBar() {
   ];
 
   return (
-    <div className="md:hidden fixed bottom-4 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <nav className="relative flex items-center justify-around bg-card/85 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl px-1.5 py-2.5">
+    <div className="fixed inset-x-0 bottom-0 z-[60] px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <nav aria-label="Mobile navigation" className="premium-surface relative mx-auto flex max-w-lg items-center justify-around rounded-3xl bg-card/90 px-1.5 py-2.5 backdrop-blur-xl">
         {/* Neon glow effect background */}
         <div className="absolute inset-0 rounded-3xl bg-primary/5 -z-10" />
         
@@ -27,8 +27,8 @@ export function MobileTabBar() {
               key={tab.name}
               to={tab.href as any}
               className={cn(
-                "relative flex flex-col items-center gap-1 transition-all duration-300 px-2 py-1",
-                isActive ? "text-primary scale-105" : "text-muted-foreground hover:text-foreground"
+                "relative flex min-h-11 min-w-14 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-1 transition-all duration-300",
+                isActive ? "bg-primary/10 text-primary scale-105" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
               )}
             >
               <tab.icon

@@ -250,9 +250,9 @@ function Dashboard() {
             {profile?.username
               ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
               : profile?.full_name?.split(" ")[0] || "User"}
-            ! 👋
+              !
           </h1>
-          <p className="text-muted-foreground">Here's what's happening with your rewards today.</p>
+          <p className="text-muted-foreground leading-relaxed">A clear view of your balance, activity, and next opportunities.</p>
         </div>
       </header>
 
@@ -365,7 +365,7 @@ function Dashboard() {
               return (
                 <Card
                   key={task.id}
-                  className="border-none shadow-sm overflow-hidden bg-card group relative w-[94%] mx-auto md:w-full"
+                  className="premium-surface w-full overflow-hidden bg-card group relative transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 >
                   <CardHeader className="p-5 sm:p-6 pb-2">
                     <div className="flex items-center justify-between">
