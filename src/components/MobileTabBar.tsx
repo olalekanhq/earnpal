@@ -44,7 +44,7 @@ export function MobileTabBar() {
               </span>
               
               {isActive && (
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.8)]" />
+                <div className="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_var(--color-gold)]" />
               )}
             </Link>
           );
