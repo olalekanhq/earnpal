@@ -274,7 +274,7 @@ function RootComponent() {
           "flex min-h-screen relative w-full max-w-full flex-col",
           !isAuthPage && "bg-background text-foreground"
         )}>
-          {!isAuthPage && <Navigation />}
+          {!isAuthPage && !isLandingPage && <Navigation />}
           {!isAuthPage && !isLandingPage && <MobileTabBar />}
           <main className={cn(
             "flex-1 transition-all duration-300 w-full flex flex-col",
