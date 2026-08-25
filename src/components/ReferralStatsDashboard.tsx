@@ -115,7 +115,7 @@ export function ReferralStatsDashboard() {
         </Card>
         <Card className="border-none shadow-sm bg-card p-4">
           <div className="flex flex-col h-full justify-between gap-2">
-            <div className="p-2 bg-primary/10 w-fit rounded-lg text-primary">
+            <div className="p-2 bg-violet-50 w-fit rounded-lg text-violet-600">
               <Users className="h-4 w-4" />
             </div>
             <div>
@@ -149,18 +149,18 @@ export function ReferralStatsDashboard() {
         </Card>
       </div>
 
-      <Card className="border-none shadow-sm bg-primary text-primary-foreground p-6 md:p-8 overflow-hidden relative">
+      <Card className="border-none shadow-sm bg-violet-600 text-white p-6 md:p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
         <div className="relative z-10 space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-black">Your Referral Details</h2>
-            <p className="text-primary-foreground/80 font-medium">Copy your link message or code and share it to earn rewards.</p>
+            <p className="text-violet-100 font-medium">Copy your link message or code and share it to earn rewards.</p>
           </div>
           
           <div className="grid gap-6 md:grid-cols-2">
             {/* Referral Link Section */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground/70">Referral Link Message</label>
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Link Message</label>
               <Button 
                 onClick={copyLink}
                 className="w-full h-12 bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-xl flex items-center justify-between px-4 transition-all"
@@ -172,7 +172,7 @@ export function ReferralStatsDashboard() {
 
             {/* Referral Code Section */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-foreground/70">Referral Code Only</label>
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">Referral Code Only</label>
               <div className="relative">
                 <Input 
                   readOnly 
@@ -192,7 +192,7 @@ export function ReferralStatsDashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
-            <p className="text-xs font-bold text-primary-foreground/70 uppercase tracking-widest">Quick Share:</p>
+            <p className="text-xs font-bold text-violet-200 uppercase tracking-widest">Quick Share:</p>
             <div className="flex gap-2">
               <Dialog>
                 <DialogTrigger asChild>
@@ -257,13 +257,13 @@ export function ReferralStatsDashboard() {
             <Progress value={progress} className="h-2 bg-muted" />
           </div>
 
-          <div className="bg-primary/5 rounded-2xl p-4 border border-hairline flex items-start gap-3">
-            <div className="bg-white p-2 rounded-xl shadow-sm text-primary shrink-0">
+          <div className="bg-violet-50 rounded-2xl p-4 border border-violet-100 flex items-start gap-3">
+            <div className="bg-white p-2 rounded-xl shadow-sm text-violet-600 shrink-0">
               <Shield className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-bold leading-tight text-foreground">Unlock Super Referrer</p>
-              <p className="text-xs text-muted-foreground font-medium mt-1">
+              <p className="text-sm font-bold leading-tight text-violet-900">Unlock Super Referrer</p>
+              <p className="text-xs text-violet-700 font-medium mt-1">
                 Invite {Math.max(0, nextMilestone - count)} more friends to unlock the badge and get a 200 point bonus!
               </p>
             </div>
