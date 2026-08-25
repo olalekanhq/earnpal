@@ -60,10 +60,27 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Landing (premium dark) surface tokens */
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-fg: var(--ink-fg);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
 }
 
 :root {
   --radius: 1rem;
+  --ink: #04211c;
+  --ink-2: #072b24;
+  --ink-3: #0b3730;
+  --ink-fg: #edf5f1;
+  --ink-muted: #9cb7ac;
+  --hairline: rgba(237, 245, 241, 0.1);
+  --gold: #e6c17a;
+  --gold-soft: #f3ddb4;
   --background: oklch(0.984 0.005 247.858);
   --foreground: #002d26; /* Deep Green from new Noble Gain logo */
   --card: oklch(1 0 0);
@@ -310,4 +327,42 @@ div[style*="Edit with Lovable"],
   pointer-events: none !important;
   position: absolute !important;
   z-index: -9999 !important;
+}
+
+/* ---------- Landing page primitives ---------- */
+@utility ink-hairline {
+  border-color: var(--color-hairline);
+}
+
+@utility ink-panel {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-ink-2) 92%, transparent), color-mix(in oklab, var(--color-ink) 96%, transparent));
+  border: 1px solid var(--color-hairline);
+}
+
+@utility ink-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 60%;
+    pointer-events: none;
+    background: radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--color-gold) 16%, transparent), transparent 70%);
+    filter: blur(40px);
+    z-index: 0;
+  }
+}
+
+@utility ink-dots {
+  background-image: radial-gradient(var(--color-hairline) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@keyframes ink-breathe {
+  0%, 100% { opacity: 0.45; transform: translate3d(0, 0, 0) scale(1); }
+  50% { opacity: 0.75; transform: translate3d(0, -12px, 0) scale(1.04); }
+}
+
+@utility ink-breathe {
+  animation: ink-breathe 12s ease-in-out infinite;
 }
