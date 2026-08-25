@@ -332,9 +332,9 @@ function AuthPage() {
 
 
   const Brand = () => (
-    <div className="flex flex-col items-center justify-center">
-      <img src="/logo.png" alt="Noble Gain" className="size-12 object-contain mb-2" />
-      <div className="mt-2 font-black text-2xl tracking-tighter uppercase text-foreground">
+    <div className="flex items-center justify-center gap-2.5">
+      <img src="/logo.png" alt="Noble Gain" className="size-7 sm:size-9 object-contain" />
+      <div className="font-black text-xl sm:text-2xl tracking-tighter uppercase text-foreground">
         Noble <span className="text-[#e6c17a]">Gain</span>
       </div>
     </div>
@@ -344,9 +344,9 @@ function AuthPage() {
     <button
       type="button"
       onClick={() => navigate({ to: "/" })}
-      className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
+      className="mb-2 sm:mb-3 inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
     >
-      <ArrowLeft className="h-4 w-4" />
+      <ArrowLeft className="h-3.5 w-3.5" />
       Back to home
     </button>
   );
@@ -354,33 +354,33 @@ function AuthPage() {
   if (showVerification) {
     return (
       <div className={cn(shellClass, "px-4 sm:px-6")}>
-        <div className="w-full max-w-[92%] sm:max-w-md">
+        <div className="w-full max-w-[94%] sm:max-w-md">
           <BackLink />
-          <div className="glass-card rounded-[2rem] p-4 premium-shadow-lg sm:px-6 sm:py-5">
+          <div className="glass-card rounded-[2rem] p-4 sm:p-6 sm:py-5 premium-shadow-lg">
             <Brand />
-            <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
-            <p className="mt-1 text-center text-base text-muted-foreground">
+            <h1 className="mt-2 text-center text-xl sm:text-2xl font-black tracking-tight text-foreground">Verify email</h1>
+            <p className="mt-0.5 text-center text-xs sm:text-sm text-muted-foreground">
               We sent a 6-digit code to <span className="font-bold text-foreground">{email}</span>
             </p>
 
             <form onSubmit={handleVerifyOtp} className="mt-3 space-y-3">
               {error && (
-                <div className="rounded-2xl bg-destructive/10 p-3 text-sm font-bold text-destructive">{error}</div>
+                <div className="rounded-2xl bg-destructive/10 p-2.5 text-xs sm:text-sm font-bold text-destructive">{error}</div>
               )}
               <Input
                 id="otp"
                 inputMode="numeric"
                 placeholder="000000"
-                className="h-12 rounded-2xl text-center text-xl font-black tracking-[0.5em] glass-card"
+                className="h-11 sm:h-12 rounded-2xl text-center text-lg sm:text-xl font-black tracking-[0.5em] glass-card"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 required
               />
-              <Button type="submit" className="h-12 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={isVerifying}>
+              <Button type="submit" className="h-11 sm:h-12 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={isVerifying}>
                 {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Verify account
               </Button>
-              <div className="flex flex-col items-center gap-2 text-sm">
+              <div className="flex flex-col items-center gap-1.5 text-xs sm:text-sm">
                 <button
                   type="button"
                   className="font-bold text-primary hover:underline disabled:opacity-50 transition-colors"
@@ -404,30 +404,30 @@ function AuthPage() {
     );
   }
 
-  const fieldLabel = "text-sm font-bold text-foreground";
-  const fieldInput = "auth-input h-11 rounded-2xl border-border/70 bg-background px-4 text-base glass-card";
+  const fieldLabel = "text-xs sm:text-sm font-bold text-foreground";
+  const fieldInput = "auth-input h-10 sm:h-11 rounded-2xl border-border/70 bg-background px-3.5 sm:px-4 text-sm sm:text-base glass-card";
 
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
       <div className="floating-blob w-96 h-96 bg-primary/20 top-0 left-0" style={{ animationDelay: '0s' }} />
       <div className="floating-blob w-80 h-80 bg-secondary/20 top-1/3 right-0" style={{ animationDelay: '-5s' }} />
-      <div className="w-full max-w-[92%] sm:max-w-md">
+      <div className="w-full max-w-[94%] sm:max-w-md">
         <div className="flex justify-start">
           <BackLink />
         </div>
-        <div className="glass-card rounded-[2rem] p-4 premium-shadow-lg sm:px-6 sm:py-5">
+        <div className="glass-card rounded-[2rem] p-4 sm:p-6 sm:py-5 premium-shadow-lg">
 
           <Brand />
 
-          <h2 className="mt-4 text-center text-xl font-black tracking-tight text-foreground uppercase">
+          <h2 className="mt-2 text-center text-lg sm:text-xl font-black tracking-tight text-foreground uppercase">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h2>
-          <p className="mx-auto mt-1 max-w-xs text-center text-base leading-snug text-muted-foreground">
+          <p className="mx-auto mt-0.5 max-w-xs text-center text-xs sm:text-sm leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
-                ? "Sign in to track your points and rewards. Browsing needs no account."
-                : "Join Noble Gain and start earning points from simple tasks today."}
+                ? "Sign in to track your points and rewards."
+                : "Join Noble Gain and start earning points from simple tasks."}
           </p>
 
           {!showReset && (
@@ -435,18 +435,18 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-6 h-11 w-full rounded-2xl border-border/70 bg-background text-base font-bold glass-card hover:bg-primary/5 transition-colors"
+                className="mt-3.5 sm:mt-4 h-10 sm:h-11 w-full rounded-2xl border-border/70 bg-background text-xs sm:text-sm font-bold glass-card hover:bg-primary/5 transition-colors"
               >
-                <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
+                <img src="https://www.google.com/favicon.ico" className="mr-2.5 h-3.5 w-3.5" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-4">
+              <div className="relative my-2.5 sm:my-3.5">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider font-bold">or email</span>
+                  <span className="bg-card px-2.5 text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-bold">or email</span>
                 </div>
               </div>
             </>
@@ -457,8 +457,8 @@ function AuthPage() {
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handlePasswordReset} className="space-y-3 sm:space-y-3.5">
+              <div className="space-y-1 sm:space-y-1.5">
                 <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
                 <Input
                   id="reset-email"
@@ -472,14 +472,14 @@ function AuthPage() {
                 />
               </div>
               <div className="pt-1">
-                <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={resetLoading}>
+                <Button type="submit" className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={resetLoading}>
                   {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {resetSent ? "Resend link" : "Send reset link"}
                 </Button>
               </div>
               <button
                 type="button"
-                className="w-full text-center text-sm font-bold text-muted-foreground hover:text-primary transition-colors"
+                className="w-full text-center text-xs sm:text-sm font-bold text-muted-foreground hover:text-primary transition-colors"
                 onClick={() => {
                   setShowReset(false);
                   setError("");
@@ -489,11 +489,11 @@ function AuthPage() {
               </button>
             </form>
           ) : (
-            <div className="mt-4 w-full">
+            <div className="mt-2.5 sm:mt-3.5 w-full">
               {activeTab === "login" ? (
-                <div className="space-y-4">
-                  <form onSubmit={handleEmailLogin} className="space-y-4">
-                    <div className="space-y-2">
+                <div className="space-y-3 sm:space-y-3.5">
+                  <form onSubmit={handleEmailLogin} className="space-y-3 sm:space-y-3.5">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                       <Input
                         id="identifier"
@@ -504,7 +504,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="password" className={fieldLabel}>Password</Label>
                       <div className="relative">
                         <Input
@@ -521,25 +521,25 @@ function AuthPage() {
                           className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
                           aria-label={showPassword ? "Hide password" : "Show password"}
                         >
-                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between pt-0.5">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         <Checkbox
                           id="rememberMe"
                           checked={rememberMe}
                           onCheckedChange={(checked) => setRememberMe(checked === true)}
                         />
-                        <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-medium text-muted-foreground">
+                        <Label htmlFor="rememberMe" className="cursor-pointer text-xs sm:text-sm font-medium text-muted-foreground">
                           Remember me
                         </Label>
                       </div>
                       <button
                         type="button"
-                        className="text-sm font-semibold text-primary hover:underline"
+                        className="text-xs sm:text-sm font-semibold text-primary hover:underline"
                         onClick={() => {
                           setShowReset(true);
                           setResetEmail(identifier.trim());
@@ -550,14 +550,14 @@ function AuthPage() {
                       </button>
                     </div>
 
-                    <div className="pt-2">
-                      <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
+                    <div className="pt-1">
+                      <Button type="submit" className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Sign in
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-sm font-bold text-muted-foreground">
+                  <p className="text-center text-xs sm:text-sm font-bold text-muted-foreground pt-0.5">
                     Don't have an account?{" "}
                     <button
                       type="button"
@@ -569,9 +569,9 @@ function AuthPage() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  <form onSubmit={handleEmailSignUp} className="space-y-4">
-                    <div className="space-y-2">
+                <div className="space-y-3 sm:space-y-3.5">
+                  <form onSubmit={handleEmailSignUp} className="space-y-3 sm:space-y-3.5">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                       <Input
                         id="full-name"
@@ -581,7 +581,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="signup-username" className={fieldLabel}>Username</Label>
                       <Input
                         id="signup-username"
@@ -591,7 +591,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="signup-email" className={fieldLabel}>Email</Label>
                       <Input
                         id="signup-email"
@@ -602,7 +602,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="signup-password" className={fieldLabel}>Password</Label>
                       <div className="relative">
                         <Input
@@ -619,11 +619,11 @@ function AuthPage() {
                           className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
                           aria-label={showSignupPassword ? "Hide password" : "Show password"}
                         >
-                          {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-1.5">
                       <Label htmlFor="referral-code" className={fieldLabel}>Referral code (optional)</Label>
                       <div className="relative">
                         <Input
@@ -641,7 +641,7 @@ function AuthPage() {
                           <Loader2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
                         )}
                         {referralStatus.owner && (
-                          <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
+                          <CheckCircle2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-green-500" />
                         )}
                       </div>
                       {referralStatus.message && (
@@ -663,21 +663,32 @@ function AuthPage() {
                         id="terms"
                         checked={agreedToTerms}
                         onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
-                        required
+                        className="mt-0.5"
                       />
-                      <Label htmlFor="terms" className="cursor-pointer text-xs font-medium leading-tight text-muted-foreground">
-                        I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>
-                      </Label>
+                      <label htmlFor="terms" className="cursor-pointer text-xs font-medium text-muted-foreground">
+                        I agree to the{" "}
+                        <Link to="/terms" className="font-bold text-primary underline underline-offset-2">
+                          Terms of Service
+                        </Link>{" "}
+                        and{" "}
+                        <Link to="/privacy" className="font-bold text-primary underline underline-offset-2">
+                          Privacy Policy
+                        </Link>
+                      </label>
                     </div>
                     
-                    <div className="pt-2">
-                      <Button type="submit" className="h-11 w-full rounded-2xl text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
+                    <div className="pt-1">
+                      <Button
+                        type="submit"
+                        className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform"
+                        disabled={loading || !agreedToTerms}
+                      >
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create account
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-sm font-bold text-muted-foreground">
+                  <p className="text-center text-xs sm:text-sm font-bold text-muted-foreground pt-0.5">
                     Already have an account?{" "}
                     <button
                       type="button"
