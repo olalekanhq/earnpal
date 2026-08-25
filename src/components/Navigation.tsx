@@ -128,7 +128,7 @@ export function Navigation() {
   if (isLandingPage) {
     return (
       <>
-        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/20 max-w-[calc(100vw-1rem)] md:after:hidden after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1] animate-neon-pulse">
+        <nav className="fixed top-2 left-2 right-2 z-50 bg-card/80 backdrop-blur-md border border-hairline rounded-2xl ink-header-shadow max-w-[calc(100vw-1rem)]">
           <div className="container mx-auto px-4 flex h-20 items-center justify-between">
             <div className="flex items-center gap-2">
               {!isAuthPage && (
@@ -359,7 +359,7 @@ export function Navigation() {
         </AlertDialogContent>
       </AlertDialog>
       {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-20 px-4 bg-card/95 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 dark:shadow-black/20 rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:shadow-[0_0_15px_rgba(124,58,237,0.5)] after:pointer-events-none after:z-[-1] animate-neon-pulse">
+      <div className="ink-header-shadow md:hidden fixed top-2 left-2 right-2 z-50 flex items-center justify-between h-16 px-3 bg-card/85 backdrop-blur-xl border border-hairline rounded-2xl">
         <div className="flex items-center gap-2">
           <Link to="/dashboard" className="flex items-center gap-1.5 font-black text-lg uppercase tracking-tighter ml-2">
             <img src="/logo.png" alt="Noble Gain" className="h-8 w-8 object-contain" />
@@ -441,12 +441,12 @@ export function Navigation() {
       </MobileMenuOverlay>
 
       {/* Desktop Sidebar (Persistent) */}
-      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-card border-r border-border/50">
+      <aside className="hidden md:flex fixed top-0 left-0 z-40 w-72 h-screen bg-card border-r border-hairline">
         <SidebarContent />
       </aside>
 
       {/* Desktop Top Bar */}
-      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 left-0 bg-card/80 backdrop-blur-md border-b border-border/40">
+      <header className="hidden md:flex fixed top-0 right-0 z-30 h-20 items-center justify-between pl-80 pr-8 left-0 bg-card/80 backdrop-blur-xl border-b border-hairline">
         <div className="flex flex-col">
           <h1 className="text-lg font-black uppercase tracking-tight text-foreground">
             {location.pathname === "/dashboard" && "Dashboard Overview"}

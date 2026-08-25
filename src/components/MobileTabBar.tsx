@@ -16,9 +16,8 @@ export function MobileTabBar() {
 
   return (
     <div className="md:hidden fixed bottom-4 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <nav className="relative flex items-center justify-around bg-card/85 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl px-1.5 py-2.5">
-        {/* Neon glow effect background */}
-        <div className="absolute inset-0 rounded-3xl bg-primary/5 -z-10" />
+      <nav className="ink-header-shadow relative flex items-center justify-around rounded-3xl border border-hairline bg-card/85 px-1.5 py-2.5 backdrop-blur-xl">
+        <div className="absolute inset-0 -z-10 rounded-3xl bg-primary/5" />
         
         {tabs.map((tab) => {
           const isActive = currentPath === tab.href;
@@ -45,7 +44,7 @@ export function MobileTabBar() {
               </span>
               
               {isActive && (
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(124,58,237,0.8)]" />
+                <div className="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_var(--color-gold)]" />
               )}
             </Link>
           );

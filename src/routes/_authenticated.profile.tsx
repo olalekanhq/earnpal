@@ -840,15 +840,15 @@ function ProfilePage() {
                     {isTasker && !isModerator && !isAdmin && (
                       <Link 
                         to="/tasker" 
-                        className="flex items-center justify-between p-4 bg-indigo-500/5 rounded-2xl border border-indigo-500/10 hover:bg-indigo-500/10 transition-all group"
+                        className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-hairline hover:bg-primary/10 transition-all group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-indigo-500 p-2 rounded-xl text-white group-hover:rotate-12 transition-transform">
+                          <div className="bg-primary p-2 rounded-xl text-primary-foreground group-hover:rotate-12 transition-transform">
                             <Shield className="h-4 w-4" />
                           </div>
                           <span className="text-sm font-black text-foreground">Tasker Workspace</span>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-indigo-500 opacity-50 group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="h-4 w-4 text-primary opacity-50 group-hover:translate-x-1 transition-all" />
                       </Link>
                     )}
                   </div>
@@ -866,7 +866,7 @@ function ProfilePage() {
                   </div>
                 </Card>
                 <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
-                  <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
+                  <div className="bg-primary/10 p-3 rounded-xl text-primary">
                     <User className="h-5 w-5" />
                   </div>
                   <div>
@@ -884,7 +884,7 @@ function ProfilePage() {
                   </div>
                 </Card>
                 <Card className="border-none shadow-sm bg-card p-4 flex items-center gap-4">
-                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600">
+                  <div className="bg-primary/10 p-3 rounded-xl text-primary">
                     <Globe className="h-5 w-5" />
                   </div>
                   <div>
