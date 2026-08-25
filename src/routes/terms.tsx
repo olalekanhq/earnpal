@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LandingNav } from "@/components/landing/LandingNav";
 
 export const Route = createFileRoute("/terms")({
   head: () => {
@@ -39,7 +40,9 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <div className="container mx-auto px-4 py-24 max-w-4xl">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="container mx-auto px-4 pt-32 pb-24 max-w-4xl">
       <div className="bg-card p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-border/50">
         <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Terms of Service</h1>
         
@@ -83,6 +86,7 @@ function TermsPage() {
             </Button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LandingNav } from "@/components/landing/LandingNav";
 import { motion } from "framer-motion";
 import { 
   ShieldCheck, 
@@ -79,6 +80,7 @@ const pillars = [
 function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
+      <LandingNav />
       {/* Hero Section */}
       <section className="relative px-4 pt-32 pb-20 sm:px-6 md:pt-40 md:pb-28 overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-grid opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />

@@ -188,8 +188,9 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const location = useLocation();
   const router = useRouter();
-  const isLandingPage = location.pathname === "/";
-  const isAuthPage = location.pathname === "/auth";
+  const PUBLIC_PATHS = ["/", "/landing", "/about", "/privacy", "/terms", "/contact"];
+  const isLandingPage = PUBLIC_PATHS.includes(location.pathname);
+  const isAuthPage = location.pathname.startsWith("/auth");
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
