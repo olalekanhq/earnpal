@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const links = [
   { label: "Opportunities", href: "#opportunities" },
@@ -58,6 +59,9 @@ export function LandingNav() {
         </nav>
 
         <div className="flex items-center justify-end gap-2 sm:gap-3">
+          <span className="text-ink-fg">
+            <ThemeToggle />
+          </span>
           <Link
             to="/auth"
             className="hidden text-[13px] font-semibold text-ink-muted transition-colors hover:text-ink-fg sm:block"
@@ -105,6 +109,9 @@ export function LandingNav() {
           <div className="flex items-center justify-between">
             <span className="text-base font-black tracking-[-0.03em] text-ink-fg">
               Earn<span className="text-gold">Pal</span>
+            </span>
+            <span className="ml-auto mr-2 text-ink-fg">
+              <ThemeToggle />
             </span>
             <button
               type="button"

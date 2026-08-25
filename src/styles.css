@@ -73,14 +73,14 @@
 
 :root {
   --radius: 1rem;
-  --ink: #04211c;
-  --ink-2: #072b24;
-  --ink-3: #0b3730;
-  --ink-fg: #edf5f1;
-  --ink-muted: #9cb7ac;
-  --hairline: rgba(237, 245, 241, 0.1);
-  --gold: #e6c17a;
-  --gold-soft: #f3ddb4;
+  --ink: #ffffff;
+  --ink-2: #f7f9f7;
+  --ink-3: #eef2ef;
+  --ink-fg: #06251f;
+  --ink-muted: #5c7169;
+  --hairline: rgba(6, 37, 31, 0.1);
+  --gold: #9a7526;
+  --gold-soft: #b8913c;
   --background: oklch(0.984 0.005 247.858);
   --foreground: #002d26; /* Deep Green from new Noble Gain logo */
   --card: oklch(1 0 0);
@@ -116,6 +116,14 @@
 }
 
 .dark {
+  --ink: #04211c;
+  --ink-2: #072b24;
+  --ink-3: #0b3730;
+  --ink-fg: #edf5f1;
+  --ink-muted: #9cb7ac;
+  --hairline: rgba(237, 245, 241, 0.1);
+  --gold: #e6c17a;
+  --gold-soft: #f3ddb4;
   --background: oklch(0.12 0.02 264);
   --foreground: oklch(0.98 0.01 247);
   --card: oklch(0.208 0.042 265.755);
