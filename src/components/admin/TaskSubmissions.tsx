@@ -269,6 +269,24 @@ export function TaskSubmissions() {
         <div className="flex justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
+      ) : error ? (
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-3">
+          <XCircle className="h-8 w-8 text-destructive mx-auto" />
+          <div className="font-black uppercase text-sm tracking-tight">Could not load submissions</div>
+          <p className="text-xs text-muted-foreground font-medium max-w-sm mx-auto">
+            {(error as Error).message || "An unexpected error occurred."}
+          </p>
+          <Button
+            size="sm"
+            variant="outline"
+            className="rounded-lg font-bold text-xs"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+          >
+            {isRefetching && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
+            Try again
+          </Button>
+        </div>
       ) : (
         <div className="rounded-2xl border border-border/50 bg-card overflow-hidden overflow-x-auto">
           <Table>
