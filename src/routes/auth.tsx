@@ -75,8 +75,9 @@ function AuthPage() {
 
   useEffect(() => {
     if (search.ref) {
-      setReferralCode(search.ref);
-      validateReferral(search.ref);
+      const normalizedCode = search.ref.trim().toUpperCase();
+      setReferralCode(normalizedCode);
+      validateReferral(normalizedCode);
     }
   }, [search.ref]);
 
@@ -121,7 +122,7 @@ function AuthPage() {
   };
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, "").toUpperCase();
     setReferralCode(val);
     
     // Manual debounce using a simple ref-like approach via window for stability in this env
@@ -210,18 +211,46 @@ function AuthPage() {
     if (!validate('signup')) return;
     setLoading(true);
     try {
-      const options: any = { 
-        email, 
+      const normalizedReferralCode = referralCode.trim().toUpperCase();
+      let referralOwnerId: string | null = null;
+
+      if (normalizedReferralCode) {
+        const { data: referralData, error: referralError } = await supabase.rpc("check_referral_code", {
+          _code: normalizedReferralCode,
+        });
+        if (referralError) throw referralError;
+
+        const referralResult = Array.isArray(referralData) ? referralData[0] : referralData;
+        if (!referralResult?.is_valid) {
+          setError("Please enter a valid referral code or remove it before signing up.");
+          return;
+        }
+
+        const { data: referrerProfile, error: referrerError } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("referral_code", normalizedReferralCode)
+          .maybeSingle();
+        if (referrerError || !referrerProfile?.id) {
+          setError("We could not recognize that referral code. Please check it and try again.");
+          return;
+        }
+        referralOwnerId = referrerProfile.id;
+      }
+
+      const options: any = {
+        email: email.trim().toLowerCase(),
         password,
         options: {
           data: {
-            username,
-            full_name: fullName,
-            referral_code_used: referralCode || null,
+            username: username.trim(),
+            full_name: fullName.trim(),
+            referral_code_used: normalizedReferralCode || null,
+            referred_by: referralOwnerId,
             fingerprint: (window as any)._ep_fingerprint || null,
-            ip_address: 'client_side_placeholder' // IP is usually handled by Supabase Auth metadata or server-side detection
-          }
-        }
+            ip_address: "client_side_placeholder",
+          },
+        },
       };
 
       const { error } = await supabase.auth.signUp(options);
