@@ -10,6 +10,7 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -118,7 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:url", content: canonicalUrl },
         { property: "og:image", content: `${url}/logo.png` },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:site", content: "@Lovable" },
+        { name: "twitter:site", content: "@NobleGain" },
         { name: "6a97888e-site-verification", content: "2a365eac71037194b13cbbf9bee6c208" },
       ],
       links: [
@@ -129,7 +130,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap",
         },
         { rel: "icon", href: "/logo.png", type: "image/png" },
         { rel: "apple-touch-icon", href: "/logo.png" },
@@ -177,6 +178,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <SpeedInsights />
         <Scripts />
       </body>
     </html>
@@ -186,8 +188,9 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const location = useLocation();
   const router = useRouter();
-  const isLandingPage = location.pathname === "/";
-  const isAuthPage = location.pathname === "/auth";
+  const publicRoutes = ["/", "/landing", "/about", "/privacy", "/terms"];
+  const isPublicPage = publicRoutes.includes(location.pathname);
+  const isAuthPage = location.pathname.startsWith("/auth");
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
@@ -229,7 +232,7 @@ function RootComponent() {
 
       if (event === 'SIGNED_OUT') {
         const currentPath = window.location.pathname;
-        const publicPages = ['/', '/auth', '/landing', '/privacy', '/terms'];
+        const publicPages = ['/', '/auth', '/landing', '/about', '/privacy', '/terms'];
         if (!publicPages.includes(currentPath)) {
           router.navigate({ to: '/auth' });
         }
@@ -270,15 +273,15 @@ function RootComponent() {
       <ThemeProvider defaultTheme="light" storageKey="noble-gain-theme">
         <div className={cn(
           "flex min-h-screen relative w-full max-w-full flex-col",
-          !isAuthPage && "bg-background text-foreground"
+          !isAuthPage && !isPublicPage && "bg-background text-foreground"
         )}>
-          {!isAuthPage && <Navigation />}
-          {!isAuthPage && !isLandingPage && <MobileTabBar />}
+          {!isAuthPage && !isPublicPage && <Navigation />}
+          {!isAuthPage && !isPublicPage && <MobileTabBar />}
           <main className={cn(
             "flex-1 transition-all duration-300 w-full flex flex-col",
-            !isLandingPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)] pb-24 md:pb-0"
+            !isPublicPage && !isAuthPage && "md:ml-72 w-full md:w-[calc(100%-18rem)] pb-20 md:pb-0"
           )}>
-            <div className={cn("flex-1 w-full", !isLandingPage && !isAuthPage && "pt-20 sm:pt-24 md:pt-28 pb-12 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto")}>
+            <div className={cn("flex-1 w-full", !isPublicPage && !isAuthPage && "pt-24 md:pt-28 pb-12 px-4 md:px-8 max-w-7xl mx-auto")}>
               <Outlet />
             </div>
           </main>

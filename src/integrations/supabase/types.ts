@@ -944,15 +944,6 @@ export type Database = {
           username: string
         }[]
       }
-      resolve_referral_code: {
-        Args: { _code: string }
-        Returns: {
-          is_valid: boolean
-          message: string
-          referrer_id: string
-          username: string
-        }[]
-      }
       claim_daily_reward: { Args: { _user_id: string }; Returns: Json }
       claim_welcome_bonus: { Args: { _user_id: string }; Returns: Json }
       get_daily_task_completions:

@@ -6,9 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/moderator")({
   loader: async ({ location }) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
       throw redirect({
@@ -16,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/moderator")({
         search: { redirect: location.pathname },
       });
     }
-
+    
     return { userId: user.id };
   },
   component: ModeratorRouteComponent,
@@ -29,11 +27,11 @@ function ModeratorRouteComponent() {
     queryKey: ["moderator-role-check", userId],
     queryFn: async () => {
       const [{ data: isAdmin }, { data: isModerator }] = await Promise.all([
-        supabase.rpc("has_role", { _user_id: userId, _role: "admin" as any }),
-        supabase.rpc("has_role", { _user_id: userId, _role: "moderator" as any }),
+        supabase.rpc("has_role", { _user_id: userId, _role: 'admin' as any }),
+        supabase.rpc("has_role", { _user_id: userId, _role: 'moderator' as any })
       ]);
       return { isAdmin, isModerator };
-    },
+    }
   });
 
   if (isLoading) {
@@ -55,15 +53,11 @@ function ModeratorRouteComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:py-10">
+    <div className="min-h-screen bg-accent/5 pb-12">
+      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">
-            Moderator Panel
-          </h1>
-          <p className="text-muted-foreground font-medium">
-            Review tasks, handle redemptions, and monitor platform activity.
-          </p>
+          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase">Moderator Panel</h1>
+          <p className="text-muted-foreground font-medium">Review tasks, handle redemptions, and monitor platform activity.</p>
         </div>
         <AdminPanel />
       </div>

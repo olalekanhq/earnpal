@@ -1,32 +1,38 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Users,
-  Coins,
-  ShoppingBag,
-  TrendingUp,
-  ArrowUpRight,
+import { 
+  Users, 
+  Coins, 
+  ShoppingBag, 
+  TrendingUp, 
+  ArrowUpRight, 
   ArrowDownRight,
   Clock,
   Loader2,
   Users2,
   ChevronDown,
+  Sparkles,
+  Shield,
+  Sliders
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { 
+  Tabs, 
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { RedemptionsManager } from "./admin/RedemptionsManager";
 import { RewardsManager } from "./admin/RewardsManager";
 import { UsersManager } from "./admin/UsersManager";
 import { TasksManager } from "./admin/TasksManager";
 import { TaskSubmissions } from "./admin/TaskSubmissions";
-
 import { AnalyticsView } from "./admin/AnalyticsView";
 import { ReferralsManager } from "./admin/ReferralsManager";
 import { PlatformSettings } from "./admin/PlatformSettings";
@@ -37,14 +43,31 @@ import { cn } from "@/lib/utils";
 import { ListTodo, PieChart, TrendingDown, Settings, ClipboardList } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
 import { useState, useEffect } from "react";
-
 import { useAuth } from "@/hooks/use-auth";
 import { Lock } from "lucide-react";
+import { motion } from "framer-motion";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.45, ease: [0.22, 0.8, 0.2, 1] as [number, number, number, number] } 
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { staggerChildren: 0.06 } 
+  }
+};
 
 export function AdminPanel() {
   const { role, isAdmin } = useAuth();
   const queryClient = useQueryClient();
-
+  
   const { data: permissions } = useQuery({
     queryKey: ["rolePermissions", role],
     queryFn: async () => {
@@ -54,7 +77,7 @@ export function AdminPanel() {
         .select("tab_name")
         .eq("role", role)
         .eq("is_enabled", true);
-      return data?.map((p) => p.tab_name) || [];
+      return data?.map(p => p.tab_name) || [];
     },
     enabled: !!role,
   });
@@ -66,57 +89,31 @@ export function AdminPanel() {
       const thirtyDaysAgo = subDays(startOfDay(now), 30);
       const sixtyDaysAgo = subDays(startOfDay(now), 60);
 
-      const [usersRes, usersPrevRes, pointsRes, pointsPrevRes, redemptionsRes, redemptionsPrevRes] =
-        await Promise.all([
-          // Current period
-          supabase.from("profiles").select("id", { count: "exact", head: true }),
-          supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true })
-            .lt("created_at", thirtyDaysAgo.toISOString()),
-          // Points Issued - Use a smaller selection
-          supabase
-            .from("points_transactions")
-            .select("amount")
-            .gte("created_at", thirtyDaysAgo.toISOString()),
-          // Previous period
-          supabase
-            .from("points_transactions")
-            .select("amount")
-            .gte("created_at", sixtyDaysAgo.toISOString())
-            .lt("created_at", thirtyDaysAgo.toISOString()),
-          supabase
-            .from("redemptions")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", thirtyDaysAgo.toISOString()),
-          supabase
-            .from("redemptions")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", sixtyDaysAgo.toISOString())
-            .lt("created_at", thirtyDaysAgo.toISOString()),
-        ]);
+      const [
+        usersRes, 
+        usersPrevRes,
+        pointsRes, 
+        pointsPrevRes,
+        redemptionsRes,
+        redemptionsPrevRes
+      ] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("profiles").select("id", { count: "exact", head: true }).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("points_transactions").select("amount").gte("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("points_transactions").select("amount").gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo.toISOString()),
+        supabase.from("redemptions").select("id", { count: "exact", head: true }).gte("created_at", sixtyDaysAgo.toISOString()).lt("created_at", thirtyDaysAgo.toISOString()),
+      ]);
 
-      // Calculate totals
       const totalUsers = usersRes.count || 0;
-      const prevUsers = usersPrevRes.count || 0; // Cumulative up to 30 days ago
+      const prevUsers = usersPrevRes.count || 0;
+      
+      const pointsIssued = pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
+      const prevPointsIssued = pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
 
-      // Points Issued
-      const pointsIssued =
-        pointsRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) || 0;
-      const prevPointsIssued =
-        pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount > 0 ? curr.amount : 0), 0) ||
-        0;
+      const pointsSpent = Math.abs(pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
+      const prevPointsSpent = Math.abs(pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0);
 
-      // Points Redeemed
-      const pointsSpent = Math.abs(
-        pointsRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) || 0,
-      );
-      const prevPointsSpent = Math.abs(
-        pointsPrevRes.data?.reduce((acc, curr) => acc + (curr.amount < 0 ? curr.amount : 0), 0) ||
-          0,
-      );
-
-      // Redemptions count
       const totalRedemptions = redemptionsRes.count || 0;
       const prevRedemptions = redemptionsPrevRes.count || 0;
 
@@ -125,29 +122,23 @@ export function AdminPanel() {
         const diff = current - previous;
         const percentage = Math.round((Math.abs(diff) / previous) * 100);
         return {
-          trend: `${diff >= 0 ? "+" : "-"}${percentage}%`,
-          up: diff >= 0,
+          trend: `${diff >= 0 ? '+' : '-'}${percentage}%`,
+          up: diff >= 0
         };
       };
 
-      // For users, it's cumulative growth vs previous cumulative.
-      // But let's check new users in current 30 days vs previous 30 days for actual trend.
-      const newUsersCurrent = (usersRes.count || 0) - (usersPrevRes.count || 0);
-
       return {
         totalUsers,
-        totalPoints: pointsIssued,
+        totalPoints: pointsIssued, 
         pointsSpent,
         totalRedemptions,
-        redemptionRate: usersRes.count
-          ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2)
-          : 0,
+        redemptionRate: usersRes.count ? ((redemptionsRes.count || 0) / usersRes.count).toFixed(2) : 0,
         trends: {
           users: calculateTrend(totalUsers, prevUsers),
           points: calculateTrend(pointsIssued, prevPointsIssued),
           spent: calculateTrend(pointsSpent, prevPointsSpent),
-          redemptions: calculateTrend(totalRedemptions, prevRedemptions),
-        },
+          redemptions: calculateTrend(totalRedemptions, prevRedemptions)
+        }
       };
     },
   });
@@ -155,11 +146,7 @@ export function AdminPanel() {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
       const savedTab = localStorage.getItem("noblegain_admin_last_tab");
-      return savedTab === "fraud"
-        ? "audit"
-        : savedTab === "verifications"
-          ? "approvals"
-          : savedTab || "users";
+      return savedTab === "fraud" ? "audit" : savedTab === "verifications" ? "approvals" : (savedTab || "users");
     }
     return "users";
   });
@@ -180,7 +167,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        },
+        }
       )
       .on(
         "postgres_changes",
@@ -191,7 +178,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        },
+        }
       )
       .on(
         "postgres_changes",
@@ -202,7 +189,7 @@ export function AdminPanel() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["adminStats"] });
-        },
+        }
       )
       .subscribe();
 
@@ -212,23 +199,18 @@ export function AdminPanel() {
   }, []);
 
   const tabs = [
-    { value: "analytics", icon: PieChart, label: "Analytics", color: undefined },
-    { value: "users", icon: Users, label: "Users", color: undefined },
-    { value: "tasks", icon: ListTodo, label: "Tasks", color: undefined },
-    { value: "approvals", icon: Clock, label: "Submissions", color: undefined },
-    { value: "rewards", icon: ShoppingBag, label: "Rewards", color: undefined },
-    { value: "redemptions", icon: Clock, label: "Redemptions", color: undefined },
-    { value: "referrals", icon: Users2, label: "Referrals", color: undefined },
-    { value: "audit", icon: ClipboardList, label: "Audit Logs", color: undefined },
-    {
-      value: "settings",
-      icon: isAdmin ? Settings : Lock,
-      label: "Settings",
-      color: !isAdmin ? "text-muted-foreground" : undefined,
-    },
+    { value: "analytics", icon: PieChart, label: "Analytics" },
+    { value: "users", icon: Users, label: "Users" },
+    { value: "tasks", icon: ListTodo, label: "Tasks" },
+    { value: "approvals", icon: Clock, label: "Submissions" },
+    { value: "rewards", icon: ShoppingBag, label: "Rewards" },
+    { value: "redemptions", icon: Clock, label: "Redemptions" },
+    { value: "referrals", icon: Users2, label: "Referrals" },
+    { value: "audit", icon: ClipboardList, label: "Audit Logs" },
+    { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings" }
   ];
 
-  const filteredTabs = tabs.filter((tab) => {
+  const filteredTabs = tabs.filter(tab => {
     if (isAdmin) return true;
     if (!permissions) return false;
     return tab.value === "audit"
@@ -238,196 +220,147 @@ export function AdminPanel() {
         : permissions.includes(tab.value);
   });
 
-  const activeTabData =
-    filteredTabs.find((t) => t.value === activeTab) || filteredTabs[0] || tabs[0];
-
   const statCards = [
     {
-      title: "Total Users",
-      value: stats?.totalUsers.toLocaleString(),
+      title: "Total Registered Users",
+      value: stats?.totalUsers.toLocaleString() || "0",
       icon: Users,
+      iconColor: "text-gold",
+      iconBg: "bg-gold/15 border-gold/25",
       trend: stats?.trends.users.trend || "0%",
       trendUp: stats?.trends.users.up ?? true,
-      description: "Active platform members",
+      description: "Active members"
     },
     {
-      title: "Points Issued",
-      value: stats?.totalPoints.toLocaleString(),
+      title: "Points Distributed",
+      value: stats?.totalPoints.toLocaleString() || "0",
       icon: Coins,
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/15 border-emerald-500/25",
       trend: stats?.trends.points.trend || "0%",
       trendUp: stats?.trends.points.up ?? true,
-      description: "Last 30 days generation",
+      description: "Last 30 days"
     },
     {
       title: "Points Redeemed",
-      value: stats?.pointsSpent.toLocaleString(),
+      value: stats?.pointsSpent.toLocaleString() || "0",
       icon: ShoppingBag,
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/15 border-purple-500/25",
       trend: stats?.trends.spent.trend || "0%",
       trendUp: stats?.trends.spent.up ?? true,
-      description: "Last 30 days claims",
+      description: "Vault claims"
     },
     {
-      title: "Redemptions",
-      value: stats?.totalRedemptions.toLocaleString(),
+      title: "Total Redemptions",
+      value: stats?.totalRedemptions.toLocaleString() || "0",
       icon: TrendingUp,
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/15 border-blue-500/25",
       trend: stats?.trends.redemptions.trend || "0%",
       trendUp: stats?.trends.redemptions.up ?? true,
-      description: "Last 30 days count",
-    },
+      description: "Completed orders"
+    }
   ];
 
   if (isLoading) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-[350px] w-full items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-gold" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Stats Overview */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+      className="space-y-8"
+    >
+      {/* 4 Bento KPI Metric Cards */}
+      <motion.div variants={fadeInUp} className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
-          <Card
-            key={stat.title}
-            className="border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden group hover:border-primary/20 transition-all duration-300"
+          <div 
+            key={stat.title} 
+            className="rounded-3xl p-5 bg-ink-2/70 border border-hairline shadow-md backdrop-blur-xl group hover:border-gold/30 transition-all duration-300 space-y-3"
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 {stat.title}
-              </CardTitle>
-              <div className="bg-primary/5 p-2 rounded-xl group-hover:bg-primary/10 transition-colors">
-                <stat.icon className="h-4 w-4 text-primary" strokeWidth={2.5} />
+              </span>
+              <div className={cn("size-8 rounded-xl flex items-center justify-center border", stat.iconBg, stat.iconColor)}>
+                <stat.icon className="size-4" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-black tracking-tighter">{stat.value}</div>
-              <div className="flex items-center gap-2 mt-1">
-                <span
-                  className={cn(
-                    "flex items-center text-[10px] font-black px-1.5 py-0.5 rounded-md",
-                    stat.trendUp
-                      ? "text-green-600 bg-green-500/10"
-                      : "text-destructive bg-destructive/10",
-                  )}
-                >
-                  {stat.trendUp ? (
-                    <ArrowUpRight className="h-3 w-3 mr-0.5" />
-                  ) : (
-                    <ArrowDownRight className="h-3 w-3 mr-0.5" />
-                  )}
+            </div>
+
+            <div>
+              <div className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-ink-fg">
+                {stat.value}
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className={cn(
+                  "flex items-center text-[10px] font-black px-2 py-0.5 rounded-md border",
+                  stat.trendUp 
+                    ? "text-emerald-400 bg-emerald-500/15 border-emerald-500/30" 
+                    : "text-rose-400 bg-rose-500/15 border-rose-500/30"
+                )}>
+                  {stat.trendUp ? <ArrowUpRight className="size-3 mr-0.5" /> : <ArrowDownRight className="size-3 mr-0.5" />}
                   {stat.trend}
                 </span>
-                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                <p className="text-[11px] text-ink-muted font-medium">
                   {stat.description}
                 </p>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Main Content Area */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <div className="flex flex-col gap-4 border-b border-border/40 pb-4">
-          {/* Responsive Tabs Navigation */}
-          <div className="w-full overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            <TabsList className="h-auto w-max sm:w-full flex justify-start gap-2 bg-transparent p-0 pb-1">
-              {filteredTabs.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-transparent whitespace-nowrap",
-                    "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
-                    "data-[state=inactive]:bg-card/50 data-[state=inactive]:backdrop-blur-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-primary/5 data-[state=inactive]:hover:text-primary data-[state=inactive]:border-border/40",
-                  )}
-                >
-                  <tab.icon
-                    className={cn(
-                      "h-4 w-4",
-                      activeTab === tab.value
-                        ? "text-primary-foreground"
-                        : tab.color || "text-primary",
-                    )}
-                  />
-                  {tab.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            </div>
           </div>
+        ))}
+      </motion.div>
+
+      {/* Main Admin Tabbed Suite */}
+      <motion.div variants={fadeInUp} className="space-y-6">
+        {/* Navigation Tabs Bar */}
+        <div className="flex p-1.5 bg-ink-2/80 rounded-2xl border border-hairline shadow-sm overflow-x-auto scrollbar-none gap-1">
+          {filteredTabs.map((tab) => {
+            const isActive = activeTab === tab.value;
+            return (
+              <button
+                key={tab.value}
+                type="button"
+                onClick={() => setActiveTab(tab.value)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0",
+                  isActive
+                    ? "bg-gold text-ink font-black shadow-md shadow-gold/10"
+                    : "text-ink-muted hover:text-ink-fg hover:bg-ink-3/60"
+                )}
+              >
+                <tab.icon className={cn("size-3.5", isActive ? "text-ink" : "text-gold/80")} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        <TabsContent
-          value="analytics"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "analytics" && <AnalyticsView />}
-        </TabsContent>
-
-        <TabsContent
-          value="users"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "users" && <UsersManager />}
-        </TabsContent>
-
-        <TabsContent
-          value="tasks"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "tasks" && <TasksManager />}
-        </TabsContent>
-
-        <TabsContent
-          value="approvals"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "approvals" && <TaskSubmissions />}
-        </TabsContent>
-
-        <TabsContent
-          value="rewards"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "rewards" && <RewardsManager />}
-        </TabsContent>
-
-        <TabsContent
-          value="redemptions"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "redemptions" && <RedemptionsManager />}
-        </TabsContent>
-
-        <TabsContent
-          value="referrals"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "referrals" && <ReferralsManager />}
-        </TabsContent>
-
-        <TabsContent
-          value="audit"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "audit" && (
-            <div className="space-y-12">
+        {/* Tab Panels */}
+        <div className="pt-2">
+          {activeTab === 'analytics' && <AnalyticsView />}
+          {activeTab === 'users' && <UsersManager />}
+          {activeTab === 'tasks' && <TasksManager />}
+          {activeTab === 'approvals' && <TaskSubmissions />}
+          {activeTab === 'rewards' && <RewardsManager />}
+          {activeTab === 'redemptions' && <RedemptionsManager />}
+          {activeTab === 'referrals' && <ReferralsManager />}
+          {activeTab === 'audit' && (
+            <div className="space-y-8">
               <FraudManager />
               <PointsAuditLogs />
               <AuditLogs />
             </div>
           )}
-        </TabsContent>
-
-        <TabsContent
-          value="settings"
-          className="mt-0 border-none p-0 outline-none animate-in slide-in-from-bottom-2 duration-300"
-        >
-          {activeTab === "settings" && <PlatformSettings />}
-        </TabsContent>
-      </Tabs>
-    </div>
+          {activeTab === 'settings' && <PlatformSettings />}
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
