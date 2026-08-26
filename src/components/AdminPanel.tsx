@@ -204,6 +204,7 @@ export function AdminPanel() {
     { value: "approvals", icon: Clock, label: "Submissions" },
     { value: "rewards", icon: ShoppingBag, label: "Rewards" },
     { value: "redemptions", icon: Clock, label: "Redemptions" },
+    { value: "referrals", icon: Users2, label: "Referrals" },
     { value: "audit", icon: ClipboardList, label: "Audit Logs" },
     { value: "settings", icon: isAdmin ? Settings : Lock, label: "Settings" }
   ];
@@ -348,6 +349,7 @@ export function AdminPanel() {
           {activeTab === 'approvals' && <TaskSubmissions />}
           {activeTab === 'rewards' && <RewardsManager />}
           {activeTab === 'redemptions' && <RedemptionsManager />}
+          {activeTab === 'referrals' && <ReferralsManager />}
           {activeTab === 'audit' && (
             <div className="space-y-8">
               <FraudManager />

@@ -148,6 +148,8 @@ export function TaskSubmissions() {
     }
   }, [filter]);
 
+  const activeFilter = FILTERS.find((f) => f.value === filter) ?? FILTERS[0]!;
+
   const statusBadge = (status: string) => {
     if (status === "verified" || status === "approved") {
       return (
