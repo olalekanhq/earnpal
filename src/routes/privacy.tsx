@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useLocation } from "@tanstack/react-router";
+import { LandingNav } from "@/components/LandingNav";
+import { PublicFooter } from "@/components/PublicFooter";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/privacy")({
   head: () => {
@@ -14,25 +16,10 @@ export const Route = createFileRoute("/privacy")({
         { property: "og:description", content: "Your privacy is our priority. Read the Noble Gain privacy policy." },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: `${url}/api/public/og?title=Privacy Policy&description=Your privacy matters to us.` },
+        { property: "og:image", content: `${url}/logo.png` },
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: canonicalUrl }],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Privacy Policy",
-            "description": "Noble Gain Privacy Policy",
-            "publisher": {
-              "@type": "Organization",
-              "name": "Noble Gain"
-            }
-          })
-        }
-      ]
     };
   },
   component: PrivacyPage,
@@ -40,61 +27,112 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-20 md:py-24">
-      <div className="premium-surface rounded-[2.5rem] bg-card p-6 sm:p-8 md:p-12">
-        <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Privacy Policy</h1>
-        
-        <div className="prose prose-slate dark:prose-invert max-w-none space-y-6 text-muted-foreground font-medium">
-          <p className="text-lg">Last updated: August 19, 2026</p>
-          
-          <section className="space-y-4">
-            <h2 className="text-2xl font-black text-foreground">1. Introduction</h2>
-            <p>Welcome to Noble Gain. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.</p>
-          </section>
+    <div className="min-h-screen bg-ink text-ink-fg flex flex-col">
+      <LandingNav />
 
-          <section className="space-y-4">
-            <h2 className="text-2xl font-black text-foreground">2. Data We Collect</h2>
-            <p>We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Identity Data:</strong> includes first name, last name, username or similar identifier.</li>
-              <li><strong>Contact Data:</strong> includes email address and telephone numbers.</li>
-              <li><strong>Technical Data:</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location.</li>
-              <li><strong>Usage Data:</strong> includes information about how you use our website and services.</li>
-            </ul>
-          </section>
+      <main className="flex-1">
+        <section className="relative isolate overflow-hidden px-4 pb-12 pt-32 sm:px-6 md:pb-16 md:pt-40">
+          <div className="pointer-events-none absolute inset-0 -z-10 ink-dots opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
+          <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 size-[34rem] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px] ink-breathe" />
 
-          <section className="space-y-4">
-            <h2 className="text-2xl font-black text-foreground">3. How We Use Your Data</h2>
-            <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
-              <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and fundamental rights do not override those interests.</li>
-              <li>Where we need to comply with a legal obligation.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-2xl font-black text-foreground">4. Data Security</h2>
-            <p>We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed.</p>
-          </section>
-
-          <div className="pt-8 border-t border-border/50 mt-12">
-            <Button asChild className="rounded-xl font-bold uppercase tracking-widest">
-              <Link to="/">Back to Home</Link>
-            </Button>
+          <div className="mx-auto max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-ink-2/70 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-gold mb-6">
+              <ShieldCheck className="size-3.5" /> Legal & Security
+            </div>
+            <h1 className="text-balance text-4xl sm:text-5xl font-black tracking-[-0.04em] text-ink-fg">
+              Privacy Policy
+            </h1>
+            <p className="mt-3 text-sm text-ink-muted">
+              Last updated: August 2026
+            </p>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="border-t border-hairline px-4 py-12 sm:px-6 md:py-16">
+          <div className="mx-auto max-w-4xl">
+            <div className="rounded-3xl border border-hairline bg-ink-2/50 p-6 sm:p-10 md:p-12 space-y-10 text-sm sm:text-[15px] leading-7 text-ink-fg/85">
+              <section className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  1. Overview & Commitment
+                </h2>
+                <p className="text-ink-muted leading-relaxed">
+                  Welcome to Noble Gain. We respect your privacy and are committed to safeguarding your personal information. This Privacy Policy details how we collect, store, utilize, and protect your data when you access our web application, participate in reward opportunities, and manage your account balance.
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  2. Information We Collect
+                </h2>
+                <p className="text-ink-muted leading-relaxed">
+                  To provide seamless reward tracking, anti-abuse security, and payout fulfillment, we may collect the following categories of data:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-ink-muted">
+                  <li><strong className="text-ink-fg">Account Identification:</strong> Email address, user identifier, and public profile handle.</li>
+                  <li><strong className="text-ink-fg">Activity & Task Data:</strong> Task submission proofs, screenshots, referral clicks, daily login streaks, and point logs.</li>
+                  <li><strong className="text-ink-fg">Technical & Device Metadata:</strong> IP address, browser type, device resolution, and approximate timezone used solely for anti-fraud detection and duplicate account prevention.</li>
+                  <li><strong className="text-ink-fg">Redemption Details:</strong> Payout destination addresses (e.g. gift card delivery email or payment identifier).</li>
+                </ul>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  3. How Your Information Is Used
+                </h2>
+                <p className="text-ink-muted leading-relaxed">
+                  We use the information we collect strictly to:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-ink-muted">
+                  <li>Authenticate and maintain your personal account.</li>
+                  <li>Verify completion of reward tasks and calculate accurate point balances.</li>
+                  <li>Process, review, and fulfill reward redemption requests.</li>
+                  <li>Protect our community and partners against botting, duplicate accounts, and fraudulent activity.</li>
+                  <li>Provide critical service updates and support assistance.</li>
+                </ul>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  4. Data Protection & Security
+                </h2>
+                <p className="text-ink-muted leading-relaxed">
+                  We implement database-level row access policies (RLS), end-to-end encryption in transit (HTTPS/TLS), and restricted access protocols. Your account credentials and tokens are encrypted, and passwords are never stored in plaintext.
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-black tracking-[-0.03em] text-ink-fg">
+                  5. Your Data Rights
+                </h2>
+                <p className="text-ink-muted leading-relaxed">
+                  You have the right to request a copy of your activity data, update your account settings, or request account closure and deletion of associated personal data at any time through your Profile settings or by contacting our support team.
+                </p>
+              </section>
+
+              <div className="pt-8 border-t border-hairline flex flex-col sm:flex-row gap-4 justify-between items-center">
+                <Link
+                  to="/"
+                  className="group inline-flex items-center gap-2 text-sm font-bold text-gold hover:underline"
+                >
+                  ← Return to Home
+                </Link>
+                <Link
+                  to="/auth"
+                  search={{ mode: "signup" }}
+                  className="group inline-flex h-11 items-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-ink transition-transform hover:-translate-y-0.5"
+                >
+                  Create Free Account
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <PublicFooter />
     </div>
   );
 }
 
-// Minimal Button shim if not using the component directly
-function Button({ children, asChild, className, ...props }: any) {
-  const Comp = asChild ? "span" : "button";
-  return (
-    <Comp className={`inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 ${className}`} {...props}>
-      {children}
-    </Comp>
-  );
-}
+export default PrivacyPage;
