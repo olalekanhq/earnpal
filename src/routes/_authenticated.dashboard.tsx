@@ -255,7 +255,6 @@ function Dashboard() {
   const STREAK_BONUS_SCHEDULE = [5, 5, 10, 10, 15, 15, 20];
   const nextClaimPoints = nextClaimDay >= 7 ? 20 : (STREAK_BONUS_SCHEDULE[nextClaimDay - 1] || 5);
 
-  const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
   const currentPoints = profile?.points_balance || 0;
   const estimatedUsdValue = (currentPoints / 1000).toFixed(2);
 
@@ -497,10 +496,6 @@ function Dashboard() {
                   
                   const isCurrent = day === targetDay;
                   const isPassed = isClaimedToday ? day <= targetDay : (isConsecutiveYesterday && day < targetDay);
-                  const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
-                  const currentStreakMod = (streak?.current_streak || 0) % 7 || ((streak?.current_streak || 0) > 0 ? 7 : 0);
-                  const isPassed = (streak?.current_streak || 0) >= 7 ? true : currentStreakMod >= day;
-                  const isCurrent = (streak?.current_streak || 0) >= 7 ? day === 7 : (currentStreakMod === day || (currentStreakMod === 0 && day === 1));
 
                   return (
                     <div 
@@ -516,7 +511,6 @@ function Dashboard() {
                     >
                       <span className="text-[9px] font-bold uppercase">D{day}</span>
                       <span className="text-xs font-black">+{STREAK_BONUS_SCHEDULE[day - 1]}</span>
-                      <span className="text-xs font-black">+{STREAK_BONUSES[day - 1]}</span>
                     </div>
                   );
                 })}
@@ -559,12 +553,6 @@ function Dashboard() {
                 <span className="flex items-center gap-2">
                   <Sparkles className="size-4 fill-ink" />
                   Claim Day {nextClaimDay} Bonus (+{nextClaimPoints} PTS)
-                  Claim Day Bonus (+{(() => {
-                    const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
-                    const nextDay = ((streak?.current_streak || 0) + 1);
-                    if (nextDay >= 7) return 20;
-                    return STREAK_BONUSES[Math.max(0, nextDay - 1)] || 5;
-                  })()} PTS)
                 </span>
               )}
             </Button>
