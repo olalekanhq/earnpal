@@ -233,10 +233,12 @@ function AuthPage() {
         referralOwnerId = referralResult.referrer_id;
       }
 
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : 'https://noblegain.lovable.app/dashboard';
       const options: any = {
         email: email.trim().toLowerCase(),
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             username: username.trim(),
             full_name: fullName.trim(),
@@ -248,11 +250,16 @@ function AuthPage() {
         },
       };
 
-      const { error } = await supabase.auth.signUp(options);
+      const { data: signUpData, error } = await supabase.auth.signUp(options);
       if (error) throw error;
       
-      setShowVerification(true);
-      toast.success("Verification code sent to your email!");
+      if (signUpData?.session) {
+        toast.success("Account created successfully!");
+        navigate({ to: (search.redirect as any) || "/dashboard" });
+      } else {
+        setShowVerification(true);
+        toast.success("Verification confirmation link sent to your email!");
+      }
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -260,46 +267,22 @@ function AuthPage() {
     }
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otp || otp.length < 6) {
-      setError("Please enter the 6-digit code.");
-      return;
-    }
-    setIsVerifying(true);
-    try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: 'signup'
-      });
-      if (error) throw error;
-      
-      toast.success("Account verified successfully!");
-      // Use any cast to bypass type errors until types are regenerated
-      (supabase.from('analytics_events' as any) as any).insert({ 
-        event_name: 'signup_complete', 
-        metadata: { email, username } 
-      }).then();
-      navigate({ to: "/dashboard" });
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-  
-  const handleResendOtp = async () => {
+  const handleResendVerificationLink = async () => {
     setResending(true);
     try {
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : 'https://noblegain.lovable.app/dashboard';
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email,
+        email: email.trim().toLowerCase(),
+        options: {
+          emailRedirectTo: redirectUrl,
+        }
       });
       if (error) throw error;
-      toast.success("Verification code resent!");
+      toast.success("Verification link resent to your email!");
     } catch (error: any) {
       setError(error.message);
+      toast.error(error.message || "Failed to resend confirmation email.");
     } finally {
       setResending(false);
     }
@@ -349,16 +332,13 @@ function AuthPage() {
     }
   };
 
-
-
   const shellClass =
     "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden";
 
-
   const Brand = () => (
-    <div className="flex flex-col items-center justify-center">
-      <img src="/logo.png" alt="Noble Gain" className="size-12 object-contain mb-2" />
-      <div className="mt-2 font-black text-2xl tracking-tighter uppercase text-[#002d26]">
+    <div className="flex items-center justify-center gap-3">
+      <img src="/logo.png" alt="Noble Gain" className="size-10 object-contain" />
+      <div className="font-black text-2xl tracking-tighter uppercase text-[#002d26] dark:text-foreground">
         Noble <span className="text-[#e6c17a]">Gain</span>
       </div>
     </div>
@@ -380,48 +360,67 @@ function AuthPage() {
       <div className={cn(shellClass, "px-4 sm:px-6")}>
         <div className="w-full max-w-[92%] sm:max-w-md">
           <BackLink />
-          <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
+          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-8 text-center">
             <Brand />
-            <h1 className="mt-2 text-center text-2xl font-black tracking-tight text-foreground">Verify email</h1>
-            <p className="mt-1 text-center text-base text-muted-foreground">
-              We sent a 6-digit code to <span className="font-semibold text-foreground">{email}</span>
+            
+            {/* Concentric Rolling Circle Animation */}
+            <div className="relative my-8 mx-auto flex items-center justify-center size-24">
+              <div className="absolute inset-0 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+              <div className="absolute inset-2 rounded-full border-4 border-[#e6c17a]/30 border-b-[#e6c17a] animate-spin [animation-direction:reverse] [animation-duration:3s]" />
+              <div className="relative flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary shadow-inner">
+                <Mail className="size-7 text-[#e6c17a] animate-bounce" />
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-black tracking-tight text-foreground">
+              Check Your Inbox
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+              We've dispatched a secure verification link to:
+            </p>
+            <div className="my-3 inline-block rounded-xl bg-primary/10 px-3.5 py-1.5 font-bold text-foreground text-sm border border-primary/20">
+              {email}
+            </div>
+
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">
+              Please click the confirmation link in your email to instantly activate your account and unlock your welcome bonus.
             </p>
 
-            <form onSubmit={handleVerifyOtp} className="mt-3 space-y-3">
-              {error && (
-                <div className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">{error}</div>
-              )}
-              <Input
-                id="otp"
-                inputMode="numeric"
-                placeholder="000000"
-                className="h-12 rounded-2xl text-center text-xl font-black tracking-[0.5em]"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                required
-              />
-              <Button type="submit" className="h-12 w-full rounded-full text-base font-semibold" disabled={isVerifying}>
-                {isVerifying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Verify account
-              </Button>
-              <div className="flex flex-col items-center gap-2 text-sm">
-                <button
-                  type="button"
-                  className="font-semibold text-primary hover:underline disabled:opacity-50"
-                  onClick={handleResendOtp}
-                  disabled={resending}
-                >
-                  {resending ? "Resending..." : "Resend code"}
-                </button>
-                <button
-                  type="button"
-                  className="font-medium text-muted-foreground hover:underline"
-                  onClick={() => setShowVerification(false)}
-                >
-                  Back to sign up
-                </button>
+            <div className="mt-6 rounded-2xl bg-muted/40 p-3.5 text-xs text-muted-foreground border border-border/50 text-left space-y-1.5">
+              <div className="font-bold text-foreground flex items-center gap-1.5">
+                <CheckCircle2 className="size-3.5 text-emerald-500" />
+                <span>Quick Tip:</span>
               </div>
-            </form>
+              <p>• If you don't see it within 60 seconds, check your <strong>Spam</strong>, <strong>Junk</strong>, or <strong>Promotions</strong> folder.</p>
+              <p>• This window will automatically update as soon as you confirm.</p>
+            </div>
+
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 w-full rounded-full border-border/80 font-bold text-sm hover:bg-muted"
+                onClick={handleResendVerificationLink}
+                disabled={resending}
+              >
+                {resending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Resending Link...
+                  </>
+                ) : (
+                  "Resend Confirmation Email"
+                )}
+              </Button>
+
+              <button
+                type="button"
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setShowVerification(false)}
+              >
+                Use a different email address
+              </button>
+            </div>
           </div>
         </div>
       </div>
