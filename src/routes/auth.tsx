@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff, Share2, Clock, RefreshCw, Sparkles, Inbox } from "lucide-react";
+import { Coins, Loader2, Mail, Lock, User, CheckCircle2, ArrowLeft, Eye, EyeOff, Share2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -38,9 +38,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const search = useSearch({ from: "/auth" });
-  const [activeTab, setActiveTab] = useState<"login" | "signup">(
-    search.mode || (search.ref ? "signup" : "login")
-  );
+  const [activeTab, setActiveTab] = useState<"login" | "signup">(search.mode || "login");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [email, setEmail] = useState("");
@@ -57,6 +55,8 @@ function AuthPage() {
     message: null
   });
   const [showVerification, setShowVerification] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
@@ -66,47 +66,18 @@ function AuthPage() {
   const [resending, setResending] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  useEffect(() => {
-    if (!showVerification) return;
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        toast.success("Email verified successfully! Welcome to Noble Gain.");
-        (supabase.from('analytics_events' as any) as any).insert({ 
-          event_name: 'signup_complete', 
-          metadata: { email, username } 
-        }).then();
-        navigate({ to: (search.redirect as any) || "/dashboard" });
-      }
-    });
-
-    const interval = setInterval(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        toast.success("Email verified successfully! Welcome to Noble Gain.");
-        navigate({ to: (search.redirect as any) || "/dashboard" });
-      }
-    }, 3000);
-
-    return () => {
-      subscription.unsubscribe();
-      clearInterval(interval);
-    };
-  }, [showVerification, email, username, navigate, search.redirect]);
-
 
   useEffect(() => {
-    if (search.mode) {
+    if (search.mode && search.mode !== activeTab) {
       setActiveTab(search.mode);
-    } else if (search.ref) {
-      setActiveTab("signup");
     }
-  }, [search.mode, search.ref]);
+  }, [search.mode]);
 
   useEffect(() => {
     if (search.ref) {
-      setReferralCode(search.ref);
-      validateReferral(search.ref);
+      const normalizedCode = search.ref.trim().toUpperCase();
+      setReferralCode(normalizedCode);
+      validateReferral(normalizedCode);
     }
   }, [search.ref]);
 
@@ -151,7 +122,7 @@ function AuthPage() {
   };
 
   const handleReferralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, '');
+    const val = e.target.value.replace(/[^a-zA-Z0-9_]/g, "").toUpperCase();
     setReferralCode(val);
     
     // Manual debounce using a simple ref-like approach via window for stability in this env
@@ -240,25 +211,55 @@ function AuthPage() {
     if (!validate('signup')) return;
     setLoading(true);
     try {
-      const options: any = { 
-        email, 
+      const normalizedReferralCode = referralCode.trim().toUpperCase();
+      let referralOwnerId: string | null = null;
+
+      if (normalizedReferralCode) {
+        const { data: referralData, error: referralError } = await supabase.rpc("resolve_referral_code", {
+          _code: normalizedReferralCode,
+        });
+        if (referralError) throw referralError;
+
+        const referralResult = Array.isArray(referralData) ? referralData[0] : referralData;
+        if (!referralResult?.is_valid) {
+          setError("Please enter a valid referral code or remove it before signing up.");
+          return;
+        }
+
+        if (!referralResult?.referrer_id) {
+          setError("We could not recognize that referral code. Please check it and try again.");
+          return;
+        }
+        referralOwnerId = referralResult.referrer_id;
+      }
+
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : 'https://noblegain.lovable.app/dashboard';
+      const options: any = {
+        email: email.trim().toLowerCase(),
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
-            username,
-            full_name: fullName,
-            referral_code_used: referralCode || null,
+            username: username.trim(),
+            full_name: fullName.trim(),
+            referral_code_used: normalizedReferralCode || null,
+            referred_by: referralOwnerId,
             fingerprint: (window as any)._ep_fingerprint || null,
-            ip_address: 'client_side_placeholder' // IP is usually handled by Supabase Auth metadata or server-side detection
-          }
-        }
+            ip_address: "client_side_placeholder",
+          },
+        },
       };
 
-      const { error } = await supabase.auth.signUp(options);
+      const { data: signUpData, error } = await supabase.auth.signUp(options);
       if (error) throw error;
       
-      setShowVerification(true);
-      toast.success("Verification link sent to your email!");
+      if (signUpData?.session) {
+        toast.success("Account created successfully!");
+        navigate({ to: (search.redirect as any) || "/dashboard" });
+      } else {
+        setShowVerification(true);
+        toast.success("Verification confirmation link sent to your email!");
+      }
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -268,19 +269,20 @@ function AuthPage() {
 
   const handleResendVerificationLink = async () => {
     setResending(true);
-    setError("");
     try {
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : 'https://noblegain.lovable.app/dashboard';
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email,
+        email: email.trim().toLowerCase(),
         options: {
-          emailRedirectTo: window.location.origin + "/dashboard",
+          emailRedirectTo: redirectUrl,
         }
       });
       if (error) throw error;
-      toast.success("A fresh verification link has been sent to your email!");
+      toast.success("Verification link resent to your email!");
     } catch (error: any) {
       setError(error.message);
+      toast.error(error.message || "Failed to resend confirmation email.");
     } finally {
       setResending(false);
     }
@@ -330,16 +332,13 @@ function AuthPage() {
     }
   };
 
-
-
   const shellClass =
-    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden hero-gradient";
-
+    "auth-shell relative min-h-screen w-full px-4 py-0 flex flex-col items-center justify-center bg-background text-foreground sm:px-6 overflow-hidden";
 
   const Brand = () => (
-    <div className="flex items-center justify-center gap-2.5">
-      <img src="/logo.png" alt="Noble Gain" className="size-7 sm:size-9 object-contain" />
-      <div className="font-black text-xl sm:text-2xl tracking-tighter uppercase text-foreground">
+    <div className="flex items-center justify-center gap-3">
+      <img src="/logo.png" alt="Noble Gain" className="size-10 object-contain" />
+      <div className="font-black text-2xl tracking-tighter uppercase text-[#002d26] dark:text-foreground">
         Noble <span className="text-[#e6c17a]">Gain</span>
       </div>
     </div>
@@ -349,9 +348,9 @@ function AuthPage() {
     <button
       type="button"
       onClick={() => navigate({ to: "/" })}
-      className="mb-2 sm:mb-3 inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
+      className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
     >
-      <ArrowLeft className="h-3.5 w-3.5" />
+      <ArrowLeft className="h-4 w-4" />
       Back to home
     </button>
   );
@@ -359,81 +358,67 @@ function AuthPage() {
   if (showVerification) {
     return (
       <div className={cn(shellClass, "px-4 sm:px-6")}>
-        <div className="w-full max-w-[94%] sm:max-w-md">
+        <div className="w-full max-w-[92%] sm:max-w-md">
           <BackLink />
-          <div className="glass-card rounded-[2rem] p-5 sm:p-7 premium-shadow-lg text-center space-y-4">
+          <div className="auth-card rounded-[2rem] bg-card p-6 shadow-2xl sm:p-8 text-center">
             <Brand />
-
-            {/* Rolling Circle Animation with Mail Glow */}
-            <div className="py-2 flex flex-col items-center justify-center">
-              <div className="relative size-20 sm:size-24 flex items-center justify-center">
-                {/* Outer spinning ring */}
-                <div className="absolute inset-0 rounded-full border-4 border-gold/20 border-t-gold animate-spin" />
-                {/* Secondary counter-spinning faint ring */}
-                <div className="absolute inset-2 rounded-full border-2 border-primary/20 border-b-primary animate-spin [animation-direction:reverse] [animation-duration:3s]" />
-                {/* Central Glowing Icon */}
-                <div className="size-12 sm:size-14 rounded-full bg-gold/15 flex items-center justify-center border border-gold/30 shadow-lg shadow-gold/10">
-                  <Mail className="size-6 sm:size-7 text-gold animate-pulse" />
-                </div>
-              </div>
-              
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-[11px] font-bold text-gold mt-3">
-                <span className="size-1.5 rounded-full bg-gold animate-ping" />
-                <span>Waiting for email confirmation...</span>
+            
+            {/* Concentric Rolling Circle Animation */}
+            <div className="relative my-8 mx-auto flex items-center justify-center size-24">
+              <div className="absolute inset-0 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+              <div className="absolute inset-2 rounded-full border-4 border-[#e6c17a]/30 border-b-[#e6c17a] animate-spin [animation-direction:reverse] [animation-duration:3s]" />
+              <div className="relative flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary shadow-inner">
+                <Mail className="size-7 text-[#e6c17a] animate-bounce" />
               </div>
             </div>
 
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground uppercase">
-                Check Your Inbox
-              </h2>
-              <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                We have sent a secure verification link to{" "}
-                <span className="font-bold text-foreground break-all">{email}</span>. Click the link in the message to activate your account.
-              </p>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">
+              Check Your Inbox
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+              We've dispatched a secure verification link to:
+            </p>
+            <div className="my-3 inline-block rounded-xl bg-primary/10 px-3.5 py-1.5 font-bold text-foreground text-sm border border-primary/20">
+              {email}
             </div>
 
-            {/* Helpful Hint Card */}
-            <div className="rounded-2xl bg-accent/10 border border-border/60 p-3.5 text-left space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
-                <Sparkles className="size-3.5 text-gold" />
-                <span>Quick Verification Tips:</span>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">
+              Please click the confirmation link in your email to instantly activate your account and unlock your welcome bonus.
+            </p>
+
+            <div className="mt-6 rounded-2xl bg-muted/40 p-3.5 text-xs text-muted-foreground border border-border/50 text-left space-y-1.5">
+              <div className="font-bold text-foreground flex items-center gap-1.5">
+                <CheckCircle2 className="size-3.5 text-emerald-500" />
+                <span>Quick Tip:</span>
               </div>
-              <ul className="text-[11px] sm:text-xs text-muted-foreground space-y-1 pl-4 list-disc font-medium">
-                <li>Check your <strong className="text-foreground">Spam</strong>, <strong className="text-foreground">Junk</strong>, or <strong className="text-foreground">Promotions</strong> folder if not in your primary inbox.</li>
-                <li>This window will automatically proceed to your dashboard once confirmed.</li>
-              </ul>
+              <p>• If you don't see it within 60 seconds, check your <strong>Spam</strong>, <strong>Junk</strong>, or <strong>Promotions</strong> folder.</p>
+              <p>• This window will automatically update as soon as you confirm.</p>
             </div>
 
-            {error && (
-              <div className="rounded-2xl bg-destructive/10 p-2.5 text-xs sm:text-sm font-bold text-destructive">{error}</div>
-            )}
-
-            <div className="space-y-2 pt-1">
+            <div className="mt-6 flex flex-col items-center gap-3">
               <Button
                 type="button"
                 variant="outline"
+                className="h-11 w-full rounded-full border-border/80 font-bold text-sm hover:bg-muted"
                 onClick={handleResendVerificationLink}
                 disabled={resending}
-                className="w-full h-11 rounded-2xl border-border/70 bg-background text-xs sm:text-sm font-bold glass-card hover:bg-primary/5 transition-colors"
               >
                 {resending ? (
-                  <Loader2 className="size-4 animate-spin mr-2" />
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Resending Link...
+                  </>
                 ) : (
-                  <RefreshCw className="size-3.5 mr-2 text-gold" />
+                  "Resend Confirmation Email"
                 )}
-                {resending ? "Resending Link..." : "Resend Verification Link"}
               </Button>
 
               <button
                 type="button"
-                className="w-full text-center text-xs sm:text-sm font-bold text-muted-foreground hover:text-primary transition-colors py-1 cursor-pointer"
-                onClick={() => {
-                  setShowVerification(false);
-                  setActiveTab("login");
-                }}
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setShowVerification(false)}
               >
-                Already verified? Return to sign in
+                Use a different email address
               </button>
             </div>
           </div>
@@ -442,30 +427,30 @@ function AuthPage() {
     );
   }
 
-  const fieldLabel = "text-xs sm:text-sm font-bold text-foreground";
-  const fieldInput = "auth-input h-10 sm:h-11 rounded-2xl border-border/70 bg-background px-3.5 sm:px-4 text-sm sm:text-base glass-card";
+  const fieldLabel = "text-sm font-semibold text-foreground";
+  const fieldInput = "auth-input h-11 rounded-2xl border-border/70 bg-background px-4 text-base shadow-sm";
 
   return (
     <div className={cn(shellClass, "px-4 sm:px-6")}>
-      <div className="floating-blob w-96 h-96 bg-primary/20 top-0 left-0" style={{ animationDelay: '0s' }} />
-      <div className="floating-blob w-80 h-80 bg-secondary/20 top-1/3 right-0" style={{ animationDelay: '-5s' }} />
-      <div className="w-full max-w-[94%] sm:max-w-md">
+      <div className="auth-blob" />
+      <div className="auth-blob" style={{ top: '10%', left: '20%', width: '12rem', height: '12rem', animationDelay: '-15s', opacity: 0.4 }} />
+      <div className="w-full max-w-[92%] sm:max-w-md">
         <div className="flex justify-start">
           <BackLink />
         </div>
-        <div className="glass-card rounded-[2rem] p-4 sm:p-6 sm:py-5 premium-shadow-lg">
+        <div className="auth-card rounded-[2rem] bg-card p-4 shadow-2xl sm:px-6 sm:py-5">
 
           <Brand />
 
-          <h2 className="mt-2 text-center text-lg sm:text-xl font-black tracking-tight text-foreground uppercase">
+          <h2 className="mt-4 text-center text-xl font-black tracking-tight text-foreground uppercase">
             {showReset ? "Reset password" : activeTab === "login" ? "Welcome" : "Create account"}
           </h2>
-          <p className="mx-auto mt-0.5 max-w-xs text-center text-xs sm:text-sm leading-snug text-muted-foreground">
+          <p className="mx-auto mt-1 max-w-xs text-center text-base leading-snug text-muted-foreground">
             {showReset
               ? "Enter your email or username and we'll send you a reset link."
               : activeTab === "login"
-                ? "Sign in to track your points and rewards."
-                : "Join Noble Gain and start earning points from simple tasks."}
+                ? "Sign in to track your points and rewards. Browsing needs no account."
+                : "Join Noble Gain and start earning points from simple tasks today."}
           </p>
 
           {!showReset && (
@@ -473,30 +458,30 @@ function AuthPage() {
               <Button
                 variant="outline"
                 onClick={handleGoogleLogin}
-                className="mt-3.5 sm:mt-4 h-10 sm:h-11 w-full rounded-2xl border-border/70 bg-background text-xs sm:text-sm font-bold glass-card hover:bg-primary/5 transition-colors"
+                className="mt-6 h-11 w-full rounded-full border-border/70 bg-background text-base font-semibold shadow-sm hover:bg-muted/50"
               >
-                <img src="https://www.google.com/favicon.ico" className="mr-2.5 h-3.5 w-3.5" alt="" />
+                <img src="https://www.google.com/favicon.ico" className="mr-3 h-4 w-4" alt="" />
                 Continue with Google
               </Button>
 
-              <div className="relative my-2.5 sm:my-3.5">
+              <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-border/70" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-card px-2.5 text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-bold">or email</span>
+                  <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider font-semibold">or email</span>
                 </div>
               </div>
             </>
           )}
 
           {error && (
-            <div className="mb-3 rounded-2xl bg-destructive/10 p-2.5 text-sm font-bold text-destructive">{error}</div>
+            <div className="mb-3 rounded-xl bg-destructive/10 p-2.5 text-sm font-medium text-destructive">{error}</div>
           )}
 
           {showReset ? (
-            <form onSubmit={handlePasswordReset} className="space-y-3 sm:space-y-3.5">
-              <div className="space-y-1 sm:space-y-1.5">
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <div className="space-y-2">
                 <Label htmlFor="reset-email" className={fieldLabel}>Email or username</Label>
                 <Input
                   id="reset-email"
@@ -510,14 +495,14 @@ function AuthPage() {
                 />
               </div>
               <div className="pt-1">
-                <Button type="submit" className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={resetLoading}>
+                <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={resetLoading}>
                   {resetLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {resetSent ? "Resend link" : "Send reset link"}
                 </Button>
               </div>
               <button
                 type="button"
-                className="w-full text-center text-xs sm:text-sm font-bold text-muted-foreground hover:text-primary transition-colors"
+                className="w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground"
                 onClick={() => {
                   setShowReset(false);
                   setError("");
@@ -527,11 +512,11 @@ function AuthPage() {
               </button>
             </form>
           ) : (
-            <div className="mt-2.5 sm:mt-3.5 w-full">
+            <div className="mt-4 w-full">
               {activeTab === "login" ? (
-                <div className="space-y-3 sm:space-y-3.5">
-                  <form onSubmit={handleEmailLogin} className="space-y-3 sm:space-y-3.5">
-                    <div className="space-y-1 sm:space-y-1.5">
+                <div className="space-y-4">
+                  <form onSubmit={handleEmailLogin} className="space-y-4">
+                    <div className="space-y-2">
                       <Label htmlFor="identifier" className={fieldLabel}>Email</Label>
                       <Input
                         id="identifier"
@@ -542,7 +527,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-1 sm:space-y-1.5">
+                    <div className="space-y-2">
                       <Label htmlFor="password" className={fieldLabel}>Password</Label>
                       <div className="relative">
                         <Input
@@ -556,28 +541,28 @@ function AuthPage() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                           aria-label={showPassword ? "Hide password" : "Show password"}
                         >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-0.5">
-                      <div className="flex items-center gap-1.5 sm:gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <Checkbox
                           id="rememberMe"
                           checked={rememberMe}
                           onCheckedChange={(checked) => setRememberMe(checked === true)}
                         />
-                        <Label htmlFor="rememberMe" className="cursor-pointer text-xs sm:text-sm font-medium text-muted-foreground">
+                        <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-medium text-muted-foreground">
                           Remember me
                         </Label>
                       </div>
                       <button
                         type="button"
-                        className="text-xs sm:text-sm font-semibold text-primary hover:underline"
+                        className="text-sm font-semibold text-primary hover:underline"
                         onClick={() => {
                           setShowReset(true);
                           setResetEmail(identifier.trim());
@@ -588,18 +573,18 @@ function AuthPage() {
                       </button>
                     </div>
 
-                    <div className="pt-1">
-                      <Button type="submit" className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform" disabled={loading}>
+                    <div className="pt-2">
+                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Sign in
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-xs sm:text-sm font-bold text-muted-foreground pt-0.5">
+                  <p className="text-center text-sm font-medium text-muted-foreground">
                     Don't have an account?{" "}
                     <button
                       type="button"
-                      className="font-bold text-primary hover:underline transition-colors"
+                      className="font-bold text-primary hover:underline"
                       onClick={() => setActiveTab("signup")}
                     >
                       Sign up
@@ -607,9 +592,9 @@ function AuthPage() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3 sm:space-y-3.5">
-                  <form onSubmit={handleEmailSignUp} className="space-y-3 sm:space-y-3.5">
-                    <div className="space-y-1 sm:space-y-1.5">
+                <div className="space-y-4">
+                  <form onSubmit={handleEmailSignUp} className="space-y-4">
+                    <div className="space-y-2">
                       <Label htmlFor="full-name" className={fieldLabel}>Full name</Label>
                       <Input
                         id="full-name"
@@ -619,7 +604,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-1 sm:space-y-1.5">
+                    <div className="space-y-2">
                       <Label htmlFor="signup-username" className={fieldLabel}>Username</Label>
                       <Input
                         id="signup-username"
@@ -629,7 +614,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-1 sm:space-y-1.5">
+                    <div className="space-y-2">
                       <Label htmlFor="signup-email" className={fieldLabel}>Email</Label>
                       <Input
                         id="signup-email"
@@ -640,7 +625,7 @@ function AuthPage() {
                         required
                       />
                     </div>
-                    <div className="space-y-1 sm:space-y-1.5">
+                    <div className="space-y-2">
                       <Label htmlFor="signup-password" className={fieldLabel}>Password</Label>
                       <div className="relative">
                         <Input
@@ -654,14 +639,14 @@ function AuthPage() {
                         <button
                           type="button"
                           onClick={() => setShowSignupPassword(!showSignupPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-primary"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                           aria-label={showSignupPassword ? "Hide password" : "Show password"}
                         >
-                          {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showSignupPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </button>
                       </div>
                     </div>
-                    <div className="space-y-1 sm:space-y-1.5">
+                    <div className="space-y-2">
                       <Label htmlFor="referral-code" className={fieldLabel}>Referral code (optional)</Label>
                       <div className="relative">
                         <Input
@@ -679,7 +664,7 @@ function AuthPage() {
                           <Loader2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
                         )}
                         {referralStatus.owner && (
-                          <CheckCircle2 className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-green-500" />
+                          <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
                         )}
                       </div>
                       {referralStatus.message && (
@@ -701,36 +686,25 @@ function AuthPage() {
                         id="terms"
                         checked={agreedToTerms}
                         onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
-                        className="mt-0.5"
+                        required
                       />
-                      <label htmlFor="terms" className="cursor-pointer text-xs font-medium text-muted-foreground">
-                        I agree to the{" "}
-                        <Link to="/terms" className="font-bold text-primary underline underline-offset-2">
-                          Terms of Service
-                        </Link>{" "}
-                        and{" "}
-                        <Link to="/privacy" className="font-bold text-primary underline underline-offset-2">
-                          Privacy Policy
-                        </Link>
-                      </label>
+                      <Label htmlFor="terms" className="cursor-pointer text-xs font-medium leading-tight text-muted-foreground">
+                        I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>
+                      </Label>
                     </div>
                     
-                    <div className="pt-1">
-                      <Button
-                        type="submit"
-                        className="h-10 sm:h-11 w-full rounded-2xl text-sm sm:text-base font-bold premium-shadow hover:scale-105 transition-transform"
-                        disabled={loading || !agreedToTerms}
-                      >
+                    <div className="pt-2">
+                      <Button type="submit" className="h-11 w-full rounded-full text-base font-semibold" disabled={loading}>
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create account
                       </Button>
                     </div>
                   </form>
-                  <p className="text-center text-xs sm:text-sm font-bold text-muted-foreground pt-0.5">
+                  <p className="text-center text-sm font-medium text-muted-foreground">
                     Already have an account?{" "}
                     <button
                       type="button"
-                      className="font-bold text-primary hover:underline transition-colors"
+                      className="font-bold text-primary hover:underline"
                       onClick={() => setActiveTab("login")}
                     >
                       Sign in
