@@ -215,7 +215,7 @@ function AuthPage() {
       let referralOwnerId: string | null = null;
 
       if (normalizedReferralCode) {
-        const { data: referralData, error: referralError } = await supabase.rpc("check_referral_code", {
+        const { data: referralData, error: referralError } = await supabase.rpc("resolve_referral_code", {
           _code: normalizedReferralCode,
         });
         if (referralError) throw referralError;
@@ -226,16 +226,11 @@ function AuthPage() {
           return;
         }
 
-        const { data: referrerProfile, error: referrerError } = await supabase
-          .from("profiles")
-          .select("id")
-          .eq("referral_code", normalizedReferralCode)
-          .maybeSingle();
-        if (referrerError || !referrerProfile?.id) {
+        if (!referralResult?.referrer_id) {
           setError("We could not recognize that referral code. Please check it and try again.");
           return;
         }
-        referralOwnerId = referrerProfile.id;
+        referralOwnerId = referralResult.referrer_id;
       }
 
       const options: any = {

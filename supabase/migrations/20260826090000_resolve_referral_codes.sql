@@ -9,6 +9,7 @@ BEGIN
   SELECT p.id, p.username, true, 'Referral code recognized.'::text
   FROM public.profiles p
   WHERE upper(trim(p.referral_code)) = upper(trim(_code))
+    AND p.id IS NOT NULL
   LIMIT 1;
 
   IF NOT FOUND THEN
