@@ -92,6 +92,9 @@ begin
     insert into public.notifications (user_id, title, message, type, created_at)
     values (_user_id, 'Daily Streak Bonus Claimed! 🔥', format('You claimed +%s PTS for maintaining your Day %s streak!', v_points_to_add, v_result_streak), 'points', v_now);
 
+    -- 6. Synchronize points balance
+    perform public.sync_points_balance(_user_id);
+
     return json_build_object(
         'success', true, 
         'points', v_points_to_add, 

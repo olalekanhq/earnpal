@@ -234,7 +234,27 @@ function Dashboard() {
     },
   });
 
-  const isClaimedToday = streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString();
+  const isClaimedToday = Boolean(streak?.last_activity_at && new Date(streak.last_activity_at).toDateString() === new Date().toDateString());
+  
+  // Check if yesterday was claimed (streak is still intact if claiming today)
+  const isConsecutiveYesterday = Boolean(
+    streak?.last_activity_at && 
+    new Date(streak.last_activity_at).toDateString() === new Date(Date.now() - 86400000).toDateString()
+  );
+  
+  // Next streak day that will be awarded on next claim:
+  // - If claimed today: current_streak is today's day.
+  // - If not claimed today and claimed yesterday: current_streak + 1.
+  // - If not claimed today and broke streak (or new user): restarts at Day 1.
+  const nextClaimDay = isClaimedToday
+    ? (streak?.current_streak || 1)
+    : isConsecutiveYesterday
+      ? ((streak?.current_streak || 0) + 1)
+      : 1;
+
+  const STREAK_BONUS_SCHEDULE = [5, 5, 10, 10, 15, 15, 20];
+  const nextClaimPoints = nextClaimDay >= 7 ? 20 : (STREAK_BONUS_SCHEDULE[nextClaimDay - 1] || 5);
+
   const currentPoints = profile?.points_balance || 0;
   const estimatedUsdValue = (currentPoints / 1000).toFixed(2);
 
@@ -470,10 +490,12 @@ function Dashboard() {
             <div className="py-2">
               <div className="grid grid-cols-7 gap-1.5">
                 {[1, 2, 3, 4, 5, 6, 7].map((day) => {
-                  const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
-                  const currentStreakMod = (streak?.current_streak || 0) % 7 || ((streak?.current_streak || 0) > 0 ? 7 : 0);
-                  const isPassed = (streak?.current_streak || 0) >= 7 ? true : currentStreakMod >= day;
-                  const isCurrent = (streak?.current_streak || 0) >= 7 ? day === 7 : (currentStreakMod === day || (currentStreakMod === 0 && day === 1));
+                  const targetDay = isClaimedToday 
+                    ? ((streak?.current_streak || 1) >= 7 ? 7 : (streak?.current_streak || 1))
+                    : (nextClaimDay >= 7 ? 7 : nextClaimDay);
+                  
+                  const isCurrent = day === targetDay;
+                  const isPassed = isClaimedToday ? day <= targetDay : (isConsecutiveYesterday && day < targetDay);
 
                   return (
                     <div 
@@ -488,7 +510,7 @@ function Dashboard() {
                       )}
                     >
                       <span className="text-[9px] font-bold uppercase">D{day}</span>
-                      <span className="text-xs font-black">+{STREAK_BONUSES[day - 1]}</span>
+                      <span className="text-xs font-black">+{STREAK_BONUS_SCHEDULE[day - 1]}</span>
                     </div>
                   );
                 })}
@@ -530,12 +552,7 @@ function Dashboard() {
               ) : (
                 <span className="flex items-center gap-2">
                   <Sparkles className="size-4 fill-ink" />
-                  Claim Day Bonus (+{(() => {
-                    const STREAK_BONUSES = [5, 5, 10, 10, 15, 15, 20];
-                    const nextDay = ((streak?.current_streak || 0) + 1);
-                    if (nextDay >= 7) return 20;
-                    return STREAK_BONUSES[Math.max(0, nextDay - 1)] || 5;
-                  })()} PTS)
+                  Claim Day {nextClaimDay} Bonus (+{nextClaimPoints} PTS)
                 </span>
               )}
             </Button>

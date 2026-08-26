@@ -14,19 +14,11 @@ import {
   Inbox,
   History,
   ShieldCheck,
-  ChevronDown,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 type FilterValue = "pending" | "verified" | "rejected" | "all";
 
@@ -39,7 +31,6 @@ const FILTERS: { value: FilterValue; label: string; icon: typeof Clock }[] = [
 
 export function TaskSubmissions() {
   const queryClient = useQueryClient();
-  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<FilterValue>("pending");
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -157,8 +148,6 @@ export function TaskSubmissions() {
     }
   }, [filter]);
 
-  const activeFilter = FILTERS.find((f) => f.value === filter) ?? FILTERS[0]!;
-
   const statusBadge = (status: string) => {
     if (status === "verified" || status === "approved") {
       return (
@@ -193,76 +182,38 @@ export function TaskSubmissions() {
         </p>
       </div>
 
-      {/* Status filter — mobile dropdown, desktop tabs */}
-      <div className="flex flex-col gap-4">
-        {isMobile ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-between rounded-xl px-4 py-5 text-[11px] font-black uppercase tracking-widest border-border/40 bg-card/50 backdrop-blur-sm"
+      {/* Task history category / status filter tabs */}
+      <div className="flex p-1.5 bg-ink-2/80 rounded-2xl border border-hairline shadow-sm overflow-x-auto scrollbar-none gap-1.5">
+        {FILTERS.map((f) => {
+          const isActive = filter === f.value;
+          const count = counts?.[f.value] ?? 0;
+          return (
+            <button
+              key={f.value}
+              type="button"
+              onClick={() => setFilter(f.value)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0",
+                isActive
+                  ? "bg-gold text-ink font-black shadow-md shadow-gold/10"
+                  : "text-ink-muted hover:text-ink-fg hover:bg-ink-3/60"
+              )}
+            >
+              <f.icon className={cn("size-3.5", isActive ? "text-ink" : "text-gold/80")} />
+              <span>{f.label}</span>
+              <span
+                className={cn(
+                  "ml-1 rounded-md px-1.5 py-0.5 text-[10px] font-mono font-black",
+                  isActive
+                    ? "bg-ink/15 text-ink"
+                    : "bg-ink-3 text-ink-muted"
+                )}
               >
-                <span className="flex items-center gap-2">
-                  <activeFilter.icon className="h-4 w-4 text-primary" />
-                  {activeFilter.label}
-                  <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
-                    {counts?.[filter] ?? 0}
-                  </span>
-                </span>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)] rounded-xl">
-              {FILTERS.map((f) => (
-                <DropdownMenuItem
-                  key={f.value}
-                  onClick={() => setFilter(f.value)}
-                  className={cn(
-                    "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[11px] font-black uppercase tracking-widest cursor-pointer",
-                    filter === f.value && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <f.icon className="h-4 w-4" />
-                    {f.label}
-                  </span>
-                  <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
-                    {counts?.[f.value] ?? 0}
-                  </span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {FILTERS.map((f) => {
-              const count = counts?.[f.value] ?? 0;
-              return (
-                <button
-                  key={f.value}
-                  onClick={() => setFilter(f.value)}
-                  className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all duration-300 border",
-                    filter === f.value
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 border-transparent"
-                      : "bg-card/50 text-muted-foreground border-border/40 hover:bg-primary/5 hover:text-primary"
-                  )}
-                >
-                  <f.icon className="h-4 w-4" />
-                  {f.label}
-                  <span
-                    className={cn(
-                      "ml-1 rounded-md px-1.5 py-0.5 text-[9px]",
-                      filter === f.value ? "bg-primary-foreground/20" : "bg-primary/10 text-primary"
-                    )}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {isLoading ? (

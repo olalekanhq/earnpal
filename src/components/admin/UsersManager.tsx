@@ -102,14 +102,21 @@ export function UsersManager() {
       const to = from + itemsPerPage - 1;
       const { data: profiles, count, error: profilesError } = await query.order("created_at", { ascending: false }).range(from, to);
       if (profilesError) throw profilesError;
-      const { data: roles, error: rolesError } = await supabase.from("user_roles").select("user_id, role").in("user_id", profiles.map(p => p.id));
-      if (rolesError) throw rolesError;
+      const userIds = profiles.map(p => p.id);
+      const [rolesRes, refStatsRes] = await Promise.all([
+        supabase.from("user_roles").select("user_id, role").in("user_id", userIds),
+        supabase.from("referral_stats_summary").select("user_id, total_referrals").in("user_id", userIds)
+      ]);
+      if (rolesRes.error) throw rolesRes.error;
+      const roles = rolesRes.data;
+      const refStats = refStatsRes.data;
       const mappedUsers = profiles.map(profile => ({
         ...profile,
         isAdmin: roles?.some(r => r.user_id === profile.id && r.role === 'admin'),
         isModerator: roles?.some(r => r.user_id === profile.id && r.role === 'moderator'),
         isTaskManager: roles?.some(r => r.user_id === profile.id && r.role === 'task_manager'),
-        currentRole: roles?.find(r => r.user_id === profile.id)?.role || 'user'
+        currentRole: roles?.find(r => r.user_id === profile.id)?.role || 'user',
+        referralCount: refStats?.find(r => r.user_id === profile.id)?.total_referrals || 0
       }));
       let finalUsers = mappedUsers;
       if (roleFilter !== "all") {
@@ -174,7 +181,16 @@ export function UsersManager() {
       </div>
       <div className="rounded-2xl border bg-card overflow-hidden">
         <Table>
-          <TableHeader><TableRow><TableHead>User</TableHead><TableHead>Contact</TableHead><TableHead>Balance</TableHead><TableHead>Joined</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+          <TableHeader>
+            <TableRow>
+              <TableHead>User</TableHead>
+              <TableHead>Contact</TableHead>
+              <TableHead>Balance</TableHead>
+              <TableHead>Referrals</TableHead>
+              <TableHead>Joined</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
@@ -186,6 +202,11 @@ export function UsersManager() {
                 </TableCell>
                 <TableCell><div className="text-xs">{user.email}</div></TableCell>
                 <TableCell><Badge variant="outline">{user.points_balance || 0} pts</Badge></TableCell>
+                <TableCell>
+                  <Badge variant="secondary" className="font-bold text-xs gap-1">
+                    <UsersIcon className="h-3 w-3 text-primary" /> {user.referralCount || 0}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-xs">{format(new Date(user.created_at), "MMM d, yyyy")}</TableCell>
                 <TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => { setSelectedUser(user); setIsDetailsOpen(true); }}><Eye className="h-4 w-4" /></Button></TableCell>
               </TableRow>
